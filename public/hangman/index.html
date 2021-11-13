@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html>
+  
+  <!-- This is the HANGMAN -->
+  
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <script src="ipAddress.js"></script>
+    <script>
+      const icon = document.createElement("link");
+      icon.rel = "icon";
+      icon.type = "image/jpeg";
+      icon.href = IP_ADDRESS + "favicon.jpg";
+      document.head.appendChild(icon);
+    </script>
+    <title>
+      Catch the Bananas 🍌 on Michael Zhang's Website
+    </title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = IP_ADDRESS + "navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = IP_ADDRESS + "navBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <div id="gameContainerBackground">
+        <div id="centerLine"></div>
+        <div id="hangmanImages">
+          <img id="hangmanZero" src="http://71.184.230.97:8080/hangman/hangmanZero.png">
+          <img id="hangmanOne" src="http://71.184.230.97:8080/hangman/hangmanOne.png">
+          <img id="hangmanTwo" src="http://71.184.230.97:8080/hangman/hangmanTwo.png">
+          <img id="hangmanThree" src="http://71.184.230.97:8080/hangman/hangmanThree.png">
+          <img id="hangmanFour" src="http://71.184.230.97:8080/hangman/hangmanFour.png">
+          <img id="hangmanFive" src="http://71.184.230.97:8080/hangman/hangmanFive.png">
+          <img id="hangmanSix" src="http://71.184.230.97:8080/hangman/hangmanSix.png">
+          <img id="hangmanSeven" src="http://71.184.230.97:8080/hangman/hangmanSeven.png">
+          <img id="hangmanEight" src="http://71.184.230.97:8080/hangman/hangmanEight.png">
+          <img id="hangmanNine" src="http://71.184.230.97:8080/hangman/hangmanNine.png">
+          <img id="hangmanTen" src="http://71.184.230.97:8080/hangman/hangmanTen.png">
+        </div>
+      </div>
+      <center>
+        <div id="computerSliderContainer">
+          <p style="margin:0; padding:0; font-size:15px; height:5px">Generate A Random Word</p>
+          <div id="sliderContainer">
+            <label id="computerSwitch">
+              <input type="checkbox" id="computerCheckBox">
+              <span id="computerSlider"></span>
+            </label>
+          </div>
+        </div>
+        <div id="startMenuContainer">
+          <h1 id="hangmanTitle">Hangman!</h1>
+          <br><br><br>
+          <div id="beginningButtons">
+            <button id="playGameButton" width="100px" height="5px" style="font-size:20px; position:relative; width:100px; height:50px; border-radius:8px; border:2px solid #000000;">Play!</button>
+            <br clear="all"><br><br><br><br>
+            <br clear="all"><br><br><br><br>
+            <button id="howToPlayButton" width="100px" height="5px" style="font-size:20px; position:relative; width:150px; height:50px; border-radius:8px; border:2px solid #000000;">How to Play</button>
+          </div>
+          <p id="hangmanRules">
+            Not gonna lie, this game is a little hard to understand at first glance, but once you know how to play, it will be more intuitive.
+            <br>You have one moderator who comes up with a word or phrase (spaces are okay) and inputs it in without the guessers looking.
+            <br>You then give the computer the number of guessers and every guesser's name.
+            <br>The guessers have to guess this word by typing in any letter on the box at the left or any phrase at the box on the right.
+            <br>If they guess a correct letter, it will pop up for all of the letters in the word.
+            <br>If they guess the whole phrase correctly, it will automatically fill in and you win!
+            <br>There are eleven stages to the hangman. If you guess anything wrong, the hangman will gain a body part.
+          </p>
+          <br clear="all"><br clear="all">
+          <p id="recommendedScreenSize">
+            It is highly recommended to play this game on a computer with a screen at least 13 inches long.
+          </p>
+        </div>
+      </center>
+      <div id="gameContainer">
+        <button id="quitToHomeButton">Quit</button>
+        <p id="correctTeam">Correct: 0</p>
+        <p id="incorrectTeam">Incorrect: 0</p>
+        <br clear="all">
+        <p id="guessingWord"></p>
+        <br clear="all"><br>
+        <p id="usedLettersBox">Letters Used: </p>
+        <br clear="all">
+        <div id="guessingFields">
+          <input id="guessLetterInput" placeholder="e.g. &quot;a&quot;">
+          <br clear="all">
+          <button id="guessLetterButton">Submit Letter Guess!</button>
+          <input id="guessFinalInput" placeholder="e.g. Donkeys are supa white">
+          <br clear="all">
+          <button id="guessFinalButton">Submit Final Guess!</button>
+          <br clear="all">
+          <center>
+            <select id="playerSelect"></select>
+            <p id="playerScoreDescription">The values below with player names tell you the correct answers for this player <br>
+            represented by the first value and the incorrect answers represented by the second value.
+            </p>
+          </center>
+        </div>
+        <br clear="all"><br clear="all">
+        <p id="playerScores"></p>
+      </div>
+      <div id="winnerPage">
+        <!-- Animations and emojis only -->
+        <center>
+          <p id="fireworkLeft">
+            🎆
+          </p>
+          <p id="fireworkRight">
+            🎆
+          </p>
+          <br clear="all">
+          <p id="winText">
+            Great Job! You Win!!!
+          </p>
+          <br clear="all">
+          <p id="partyPopperLeft">
+            🎉
+          </p>
+          <p id="partyPopperRight">
+            🎉
+          </p>
+        </center>
+      </div>
+      <div id="loserPage">
+        <!-- Animations and emojis only -->
+        <!-- VIDEO ANIMATIONN OF HANGMAN -->
+        <p>insert video here; you lost btw</p>
+      </div>
+      <div id="playAgainPage">
+        <center>
+          <button id="playAgainButton">Play Again!</button>
+          <br clear="all">
+          <button id="backButton">Back</button>
+          <br clear="all">
+          <p id="endStats"></p>
+        </center>
+      </div>
+      <style>
+        #computerSliderContainer {
+          position:relative;
+          top:250px;
+          z-index:1;
+        }
+        #sliderContainer {
+          position:relative;
+          top:20px;
+        }
+        #computerSwitch {
+          position:relative;
+          display:inline-block;
+          width:60px;
+          height:34px;
+        }
+        #computerSwitch input {
+          opacity:0;
+          width:0;
+          height:0;
+        }
+        #computerSlider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 34px;
+        }
+        #computerSlider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 50%;
+        }
+        #computerCheckBox:checked + #computerSlider {
+          background-color: #2196F3;
+        }
+        #computerCheckBox:checked + #computerSlider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+        #endStats {
+          position:relative;
+          font-size:20px;
+          font-family:"Cabin";
+          top:350px;
+        }
+        #fireworkLeft {
+          position:relative;
+          font-size:60px;
+          float:left;
+        }
+        #fireworkRight {
+          position:relative;
+          font-size:60px;
+          float:right;
+        }
+        #partyPopperLeft {
+          position:relative;
+          font-size:60px;
+          float:left;
+          top:250px;
+        }
+        #partyPopperRight {
+          position:relative;
+          font-size:60px;
+          float:right;
+          top:250px;
+          transform: scale(-1, 1);
+          -moz-transform: scale(-1, 1);
+          -webkit-transform: scale(-1, 1);
+          -o-transform: scale(-1, 1);
+          -ms-transform: scale(-1, 1);
+        }
+        #winText {
+          position:relative;
+          font-size:40px;
+          top:100px;
+          font-family:"Cabin";
+        }
+        #quitToHomeButton {
+          position:relative;
+          top:0%;
+          left:98%;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          font-size:15px;
+          font-family:"Cabin";
+          font-size:12px;
+        }
+        #playAgainButton {
+          position:relative;
+          top:125px;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          padding:10px;
+          font-size:15px;
+          font-family:"Cabin";
+          font-size:20px;
+        }
+        #backButton {
+          position:relative;
+          top:300px;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          padding:10px;
+          font-size:15px;
+          font-family:"Cabin";
+          font-size:20px;
+        }
+        #playerSelect {
+          position:relative;
+          top:-25px;
+          outline:none;
+          height:20px;
+          font-size:15px;
+          font-family:"Cabin";
+        }
+        #usedLettersBox {
+          top:50px;
+          position:relative;
+          font-size:25px;
+          font-family:"Cabin";
+          text-align:right;
+          float:right;
+        }
+        #playerScoreDescription {
+          font-size:14px;
+          font-family:"Cabin";
+          position:relative;
+          margin:0px;
+        }
+        #guessingWord {
+          font-family:"Cabin";
+          font-size:30px;
+          left:1%;
+          position:relative;
+          width:50%;
+          top:-100px;
+          margin:0px;
+        }
+        #spacingBlock {
+          top:100px;
+          position:relative;
+          margin:0px;
+          width:100px;
+          height:100px;
+        }
+        #guessLetterInput {
+          padding:7px 7px;
+          float:left;
+          position:relative;
+          width:20%;
+          height:50px;
+          font-size:20px;
+          font-family:"Cabin";
+          top:60px;
+        }
+        #guessFinalInput {
+          padding:7px 7px;
+          float:right;
+          position:relative;
+          height:50px;
+          font-size:18px;
+          font-family:"Cabin";
+          width:30%;
+        }
+        #guessLetterButton {
+          float:left;
+          position:relative;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          padding:10px;
+          font-size:15px;
+          font-family:"Cabin";
+          top:60px;
+        }
+        #guessFinalButton {
+          float:right;
+          position:relative;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          padding:10px;
+          font-size:15px;
+          font-family:"Cabin";
+        }
+        #playerScores {
+          font-size: 25px;
+          color:black;
+        }
+        #correctTeam {
+          font-size:30px;
+          position:absolute;
+          text-align:left;
+          color:green;
+          top:75px;
+        }
+        #incorrectTeam {
+          font-size:30px;
+          position:absolute;
+          text-align:left;
+          color:red;
+          top:110px;
+        }
+        #centerLine {
+          border-left: 2px solid black;
+          height: 500px;
+          position: absolute;
+          left: 50%;
+          margin-left:-3px;
+          top: 100px;
+        }
+        #hangmanImages {
+          position:relative;
+          top:100px;
+        }
+        #hangmanImages img {
+          width:380px;
+          height:432px;
+          float:right;
+        }
+        #startMenuContainer {
+          z-index:0;
+        }
+        #beginningButtons button {
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+        }
+        #hangmanRules {
+          font-size:20px;
+        }
+        #playGameButton:hover {
+          background-color:#cccccc;
+        }
+        #howToPlayButton:hover {
+          background-color:#cccccc;
+        }
+        #guessLetterButton:hover {
+          background-color:#cccccc;
+        }
+        #guessFinalButton:hover {
+          background-color:#cccccc;
+        }
+        #backButton:hover {
+          background-color:#cccccc;
+        }
+        #quitToHomeButton:hover {
+          background-color:#cccccc;
+        }
+        #playAgainButton:hover {
+          background-color:#cccccc;
+        }
+      </style>
+      <script>
+      
+      //Pregame
+      
+      var hideElem = function () {
+        $("#centerLine").hide()
+        $("#startMenuContainer").hide()
+        $("#gameContainer").hide()
+        $("#hangmanZero").hide()
+        $("#hangmanOne").hide()
+        $("#hangmanTwo").hide()
+        $("#hangmanThree").hide()
+        $("#hangmanFour").hide()
+        $("#hangmanFive").hide()
+        $("#hangmanSix").hide()
+        $("#hangmanSeven").hide()
+        $("#hangmanEight").hide()
+        $("#hangmanNine").hide()
+        $("#hangmanTen").hide()
+        $("#hangmanRules").hide()
+        $("#playGameButton").hide()
+        $("#howToPlayButton").hide()
+        $("#hangmanTitle").hide()
+        $("#correctTeam").hide()
+        $("#incorrectTeam").hide()
+        $("#playerScores").hide()
+        $("#guessLetterInput").hide()
+        $("#guessLetterButton").hide()
+        $("#guessFinalInput").hide()
+        $("#guessFinalButton").hide()
+        $("#guessingWord").hide()
+        $("#guessingFields").hide()
+        $("#playAgainPage").hide()
+        $("#winnerPage").hide()
+        $("#loserPage").hide()
+        $("#gameContainerBackground").hide()
+        $("#computerSliderContainer").hide()
+      }
+      hideElem();
+      $("#startMenuContainer").show()
+      $("#beginningButtons").show()
+      $("#hangmanTitle").show()
+      $("#playGameButton").show()
+      $("#howToPlayButton").show()
+      $("#navContainer").show()
+      $("#computerSliderContainer").show()
+      var specialChars = "!@#$%^&*()-=_+[]{}|;':\",.<>/\?`~"
+      var names = [];
+      var wordString = "";
+      var wordStringForPrint = "";
+      var pregameModCheck = false;
+      var wordLength = 0;
+      var playerSelect = document.getElementById("playerSelect");
+      var valueAndId = 1;
+      var confirmLeave = false;
+      var infinite = 0
+      var winFinal = false;
+      var gameLost = false;
+      var sliderElement = document.getElementById("computerCheckBox");
+      
+      //from guessLetterFunction
+      var usedLetters = []
+      var letterAnswer = ""
+      //var modCheck = -1;
+      var placedLetter = false;
+      var currentChar = "";
+      var letterAnswerFromBox = "";
+      var lowercaseCurrentChar = "";
+      
+      //from guessFinalFunction
+      var usedFinalAnswers = []
+      var finalAnswerFromBox = "";
+      var finalAnswer = "";
+      var modCheckFinal = -1;
+      var modCheckFinalSecured = 0;
+      
+      //from score updates (~line 1000)
+      var playerIteration = 1;
+      var guessStatus = 0
+      var correctScore = 0
+      var incorrectScore = 0
+      
+      var backCancel = function () {
+        confirmLeave = false;
+        hideElem();
+        $("#startMenuContainer").show()
+        $("#beginningButtons").show()
+        $("#hangmanTitle").show()
+        $("#playGameButton").show()
+        $("#howToPlayButton").show()
+        $("#navContainer").show()
+        $("#computerSliderContainer").show()
+      }
+      var resetTextFields = function () {
+        $("#usedLettersBox").text("");
+        $("#usedLettersBox").text("Letters Used: ")
+        $("#guessingWord").text("");
+        $("#playerScores").text("");
+        $("#correctTeam").text("");
+        $("#incorrectTeam").text("");
+        $("#correctTeam").text("Correct: 0");
+        $("#incorrectTeam").text("Incorrect: 0");
+        $("#endStats").text("");
+        //$("#").empty();
+        document.getElementById("guessLetterInput").disabled = false;
+        document.getElementById("guessFinalInput").disabled = false;
+        confirmLeave = false;
+        valueAndId = 1
+        wordString = "";
+        wordStringForPrint = "";
+        names = []
+        gameLost = false;
+        sliderElement = document.getElementById("computerCheckBox");
+        playerSelect = document.getElementById("playerSelect");
+        $("#playerSelect").empty();
+        
+        usedLetters = []
+        letterAnswer = ""
+        //var modCheck = -1;
+        placedLetter = false;
+        currentChar = "";
+        letterAnswerFromBox = "";
+        lowercaseCurrentChar = "";
+        
+        usedFinalAnswers = []
+        finalAnswerFromBox = "";
+        finalAnswer = "";
+        modCheckFinal = -1;
+        modCheckFinalSecured = 0;
+        
+        playerIteration = 1;
+        guessStatus = 0
+        correctScore = 0
+        incorrectScore = 0
+      }
+      var chooseRandomWord = function () {
+        var words = [
+          "gatorade can be red",
+          "lipids include fats",
+          "photosynthesis",
+          "knives are sharp",
+          "coronavirus sucks",
+          "DNA and RNA are cool",
+          "electronegativity",
+          "Ribonucleic Acid",
+          "Adenine and Thymine",
+          "Cytosine and Guanine",
+          "hibernation",
+          "carcinogen",
+          "Appalachian Trail",
+          "Robbins Mill",
+          "Nara Park is awesome",
+          "Olympic Fanfare",
+          "hockey is intense",
+          "monosaccharide",
+          "polyunsaturated fat",
+          "trans fats are bad",
+          "heterozygous",
+          "polypeptide bonds",
+          "deoxyribose",
+          "stereoisomers",
+          "food is yummy",
+          "triglyceride",
+          "watermelon yum",
+          "triskaidekaphobia",
+          "Happy July Fourth",
+          "Hi means hello",
+          "robbie is handsome"
+        ]
+        wordString += words[Math.floor(Math.random() * words.length)]
+      }
+      var pregameSetup = function () {
+        
+        resetTextFields();
+        
+        if (sliderElement.checked) {
+          chooseRandomWord()
+        } else {
+          var word = prompt("What will your word be? DO NOT LET YOUR PARTNER(s) SEEEEEE \n (any punctuation or special characters aren't allowed. Do type numbers! Capitals are only for the aesthetic.")
+          wordString = word
+          if (wordString !== null) {
+            wordString = wordString.trim();
+          }
+          var isWordNoChar = function () {
+            for (var i = 0; i < wordString.length; i++) {
+              if (specialChars.indexOf(wordString.charAt(i)) != -1) {
+                return false;
+              }
+            }
+            return true;
+          }
+          while (wordString === null || wordString === "" || !isWordNoChar() || wordString.length > 20) {
+            if (wordString === null) {
+              confirmLeave = confirm("Are you sure you want to leave?")
+              if (confirmLeave) {
+                backCancel()
+                return;
+              }
+              wordString = prompt("What will your word be? DO NOT LET YOUR PARTNER(s) SEEEEEE \n (any punctuation or special characters aren't allowed. Do type numbers! Capitals are only for the aesthetic.")
+            }
+            if (wordString === "") {
+              alert("typing in nothing isn't how you play this game bud")
+              wordString = prompt("What will your word be? DO NOT LET YOUR PARTNER(s) SEEEEEE \n (any punctuation or special characters aren't allowed. Do type numbers! Capitals are only for the aesthetic.")
+            }
+            if (!isWordNoChar()) {
+              alert("no special characters please")
+              wordString = prompt("What will your word be? DO NOT LET YOUR PARTNER(s) SEEEEEE \n (any punctuation or special characters aren't allowed. Do type numbers! Capitals are only for the aesthetic.")
+            }
+            if (wordString.length > 20) {
+              alert("Your word has to be 20 characters or less. Sorry for the holdup :( \n (Your current word is " + wordString.length + " characters long.)")
+              wordString = prompt("What will your word be? DO NOT LET YOUR PARTNER(s) SEEEEEE \n (any punctuation or special characters aren't allowed. Do type numbers! Capitals are only for the aesthetic.")
+            }
+          }
+        }
+        wordStringForPrint = wordString
+        wordString = wordString.toLowerCase();
+        var playerCount = prompt("How many player(s) will be guessing?")
+        var checkForNum = function(str) {
+          return !isNaN(str);
+        }
+        if (playerCount !== null) {
+          playerCount = playerCount.trim();
+        }
+        
+        infiniteLoop: while (infinite < Infinity) {
+          while (playerCount === null || playerCount === "" || playerCount === " " || playerCount === "0" || !checkForNum(playerCount)) {
+            if (playerCount === null) {
+              confirmLeave = confirm("Are you sure you want to leave?")
+              if (confirmLeave) {
+                backCancel()
+                break infiniteLoop;
+              }
+            }
+            if (playerCount === "") {
+              alert("The amount of guessers cannot be nothing. Wow can't believe u just typed that in.")
+            }
+            if (playerCount === " ") {
+              alert("The space bar isn't a place to type in how guessers there are.")
+            }
+            if (!checkForNum(playerCount)) {
+              alert("You typed in something that isn't a value. Please try again poopy 💩")
+            }
+            if (playerCount === "0") {
+              alert("The amount of guessers cannot be zeRO, genius.")
+            }
+            playerCount = prompt("How many player(s) will be guessing?")
+          }
+          var confirmPlayerCount = confirm("Are you sure? The entered amount of players: " + playerCount)
+          if (!confirmPlayerCount) {
+            playerCount = prompt("How many player(s) will be guessing?")
+            continue;
+          } else {
+            console.log("GOOD!")
+            break infiniteLoop;
+          }
+        }
+        
+        for (var i = 0; i < playerCount; i++ ) {
+          var iterationUser = i + 1
+          var playerNameCycle = prompt("What is Player" + iterationUser + "'s name?")
+          if (playerNameCycle !== null) {
+            playerNameCycle = playerNameCycle.trim();
+          }
+          while (playerNameCycle === null || playerNameCycle === "") {
+            if (playerNameCycle === null) {
+              confirmLeave = confirm("Are you sure you want to leave?")
+              if (confirmLeave) {
+                backCancel()
+                names = [];
+                return;
+              }
+              playerNameCycle = prompt("What is Player" + iterationUser + "'s name?")
+            }
+            if (playerNameCycle === "") {
+              alert("EMPTY. BOXES. ARE. NOT. NAMES. AAAAAAAAAAAAAAAAAAAAHHHHHH imgoingcrazybecauseofyou")
+              playerNameCycle = prompt("What is Player" + iterationUser + "'s name?")
+            }
+          }
+          names.push(["correct" + playerNameCycle, 0])
+          names.push(["incorrect" + playerNameCycle, 0])
+        }
+        wordLength = wordString.length;
+        document.getElementById("guessingWord").innerHTML = "";
+        for (var i = 0; i < wordString.length; i++) {
+          if (wordString.charAt(i) === " ") {
+            $("#guessingWord").append("&nbsp;")
+            $("#guessingWord").append("&nbsp;")
+            continue;
+          }
+          $("#guessingWord").append("_")
+          $("#guessingWord").append("&nbsp;")
+        }
+      }
+      
+      //End of Container
+      
+      var pregameNamePrint = function () {
+        for (var i = 0; i < names.length; i++) {
+          var nameReadyForPrint = names[i][0].replace("correct", "")
+          $("#playerScores").append(nameReadyForPrint + ": 0, 0")
+          for (var j = 1; j <= 15; j++) {
+            $("#playerScores").append("&nbsp;")
+          }
+          playerSelect = document.getElementById("playerSelect");
+          var option = document.createElement("OPTION");
+          option.innerHTML = nameReadyForPrint;
+          option.value = valueAndId;
+          option.id = "player-" + valueAndId;
+          playerSelect.options.add(option);
+          valueAndId++
+          i++
+        }
+      }
+      var checkRulesShown = function () {
+        return $("#hangmanRules").is(":hidden")
+      }
+      $("#howToPlayButton").click(function () {
+        if (checkRulesShown()) {
+          $("#hangmanRules").show()
+        } else {
+          $("#hangmanRules").hide()
+        }
+      })
+      
+      //Active Game
+      
+      
+      var getImageIndex = function () {
+        if ($("#hangmanZero").is(":visible")) {
+          return 0;
+        }
+        if ($("#hangmanOne").is(":visible")) {
+          return 1;
+        }
+        if ($("#hangmanTwo").is(":visible")) {
+          return 2;
+        }
+        if ($("#hangmanThree").is(":visible")) {
+          return 3;
+        }
+        if ($("#hangmanFour").is(":visible")) {
+          return 4;
+        }
+        if ($("#hangmanFive").is(":visible")) {
+          return 5;
+        }
+        if ($("#hangmanSix").is(":visible")) {
+          return 6;
+        }
+        if ($("#hangmanSeven").is(":visible")) {
+          return 7;
+        }
+        if ($("#hangmanEight").is(":visible")) {
+          return 8;
+        }
+        if ($("#hangmanNine").is(":visible")) {
+          return 9;
+        }
+        if ($("#hangmanTen").is(":visible")) {
+          return 10;
+        }
+      }
+      var nextHangman = function () {
+        switch(getImageIndex()) {
+          case 0:
+            $("#hangmanZero").hide()
+            $("#hangmanOne").show()
+            break;
+          case 1:
+            $("#hangmanOne").hide()
+            $("#hangmanTwo").show()
+            break;
+          case 2:
+            $("#hangmanTwo").hide()
+            $("#hangmanThree").show()
+            break;
+          case 3:
+            $("#hangmanThree").hide()
+            $("#hangmanFour").show()
+            break;
+          case 4:
+            $("#hangmanFour").hide()
+            $("#hangmanFive").show()
+            break;
+          case 5:
+            $("#hangmanFive").hide()
+            $("#hangmanSix").show()
+            break;
+          case 6:
+            $("#hangmanSix").hide()
+            $("#hangmanSeven").show()
+            break;
+          case 7:
+            $("#hangmanSeven").hide()
+            $("#hangmanEight").show()
+            break;
+          case 8:
+            $("#hangmanEight").hide()
+            $("#hangmanNine").show()
+            break;
+          case 9:
+            $("#hangmanNine").hide()
+            $("#hangmanTen").show()
+            break;
+          default:
+            console.log("nextHangman() came back with default for some reason.")
+            break;
+        }
+      }
+      
+      //Check if character is in wordString. Returns t/f
+      var checkCharInWord = function (letter) {
+        for (var i = 0; i < wordString.length; i++) {
+          if (wordString.charAt(i) === letter) {
+            return true;
+          }
+        }
+        return false;
+      }
+      //Check if if letter has been used before; if letter has been entered before. Returns t/f
+      var checkAlreadyUsedLetter = function (letter) {
+        for (var i = 0; i < usedLetters.length; i++) {
+          if (letter === usedLetters[i]) {
+            return true;
+          }
+        }
+        return false;
+      }
+      var checkUnderscorePlacement = function () {
+        for (var iter = 0; iter < usedLetters.length; iter++) {
+          if (currentChar === usedLetters[iter]) {
+            return false;
+          }
+        }
+        return true;
+      }
+      //Checks if current letter is lowercase. Returns t/f
+      var checkLowerCase = function (letter) {
+        if (letter === lowercaseCurrentChar) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      
+      var checkIfGameOverWinConditionButton = function () {
+        var matchingChars = 0;
+        var checkWithUsedLetters = []
+        for (var i = 0; i < usedLetters.length; i++) {
+          checkWithUsedLetters.push(usedLetters[i])
+        }
+        checkWithUsedLetters.push(" ");
+        mainLoop: for (var i = 0; i < wordString.length; i++) {
+          for (var j = 0; j < checkWithUsedLetters.length; j++) {
+            if (checkWithUsedLetters[j] === wordString.charAt(i)) {
+              matchingChars++
+              continue mainLoop;
+            }
+          }
+        }
+        if (matchingChars === wordString.length) {
+          return true;
+        }
+        return false;
+      }
+      var checkIfGameOverLossCondition = function () {
+        if (getImageIndex() === 10) {
+          gameLost = true;
+        }
+      }
+      var checkIfGameOverWinConditionFinal = function () {
+        return winFinal;
+      }
+      var updateScores = function () {
+        //for players
+        document.getElementById("playerScores").innerHTML = "";
+        for (var i = 0; i < names.length; i++) {
+          var y = i + 1;
+          var nameReadyForPrint = names[i][0].replace("correct", "")
+          $("#playerScores").append(nameReadyForPrint + ": " + names[i][1] + ", " + names[y][1])
+          for (var j = 1; j <= 15; j++) {
+            $("#playerScores").append("&nbsp;")
+          }
+          i++
+        }
+        
+        //for team
+        document.getElementById("correctTeam").innerHTML = "";
+        document.getElementById("correctTeam").innerHTML = "Correct: " + correctScore;
+        document.getElementById("incorrectTeam").innerHTML = "";
+        document.getElementById("incorrectTeam").innerHTML = "Incorrect: " + incorrectScore;
+      }
+      var correctGuessUpdate = function (player) {
+        //for players
+        player *= 2
+        player -= 2
+        names[player][1] += 1
+        
+        //for team
+        correctScore++
+      }
+      var incorrectGuessUpdate = function (player) {
+        //for players
+        player *= 2
+        player -= 1
+        names[player][1] += 1
+        
+        //for team
+        incorrectScore++
+      }
+      var playerTeamUpdate = function () {
+        var x = playerSelect.options[playerSelect.selectedIndex].value;
+        if (guessStatus === 1) {
+          //Here, letterAnswer was wrong
+          incorrectGuessUpdate(x)
+          updateScores()
+          guessStatus = 0;
+        } else if (guessStatus === 2) {
+          //Here, letterAnswer was correct
+          correctGuessUpdate(x)
+          updateScores()
+          guessStatus = 0;
+        } else if (guessStatus === 3) {
+          //Here, finalAnswer was wrong
+          incorrectGuessUpdate(x)
+          updateScores()
+          guessStatus = 0;
+        } else if (guessStatus === 4) {
+          //Here, finalAnswer was right
+          correctGuessUpdate(x)
+          updateScores()
+          guessStatus = 0;
+        } else {
+          console.log("guessStatus from playerTeamUpdate came back without going thru correctly. Idk what happened there...")
+          console.log("comes incorrectly one reason: repeated letter input")
+        }
+      }
+      //player name
+      var mostCorrect = [];
+      var correctPlayerValues = [];
+      var highestValueCorrect = 0;
+      //player name
+      var mostIncorrect = [];
+      var incorrectPlayerValues = [];
+      var highestValueIncorrect = 0;
+      //player name
+      var bestRate = [];
+      var rates = []
+      var highestValueRate = -1000000;
+      //correct tries derived from 'correctScore'
+      //incorrect tries derived from 'incorrectScore'
+      var numberOfTotalTries = 0
+      var endStatsNameReadyForPrint = "";
+      
+      var checkIfSinglePlayer = function () {
+        if (names.length > 2) {
+          return false;
+        }
+        return true;
+      }
+      var playEndStats = function () {
+        mostCorrect = []
+        mostIncorrect = []
+        correctPlayerValues = []
+        incorrectPlayerValues = []
+        highestValueCorrect = 0
+        highestValueIncorrect = 0
+        bestRate = []
+        rates = []
+        highestValueRate = -1000000
+        numberOfTotalTries = 0
+        //this is for mostCorrect player(s)
+        for (var i = 0; i < names.length; i++) {
+          correctPlayerValues.push(names[i][1]);
+          i++
+        }
+        for (var i = 0; i < correctPlayerValues.length; i++) {
+          if (correctPlayerValues[i] > highestValueCorrect) {
+            highestValueCorrect = correctPlayerValues[i]
+          } else if (correctPlayerValues[i] === highestValueCorrect) {
+            console.log("two or more players are neck-and-neck in correct answers")
+            continue;
+          }
+        }
+        for (var i = 0; i < names.length; i++) {
+          if (names[i][1] === highestValueCorrect) {
+            endStatsNameReadyForPrint = names[i][0].replace("correct", "")
+            mostCorrect.push(endStatsNameReadyForPrint)
+          }
+          i++
+        }
+        //this is for the mostIncorrect player(s)
+        for (var i = 1; i < names.length; i++) {
+          incorrectPlayerValues.push(names[i][1]);
+          i++
+        }
+        for (var i = 0; i < incorrectPlayerValues.length; i++) {
+          if (incorrectPlayerValues[i] > highestValueIncorrect) {
+            highestValueIncorrect = incorrectPlayerValues[i]
+          } else if (incorrectPlayerValues[i] === highestValueIncorrect) {
+            console.log("two or more players are neck-and-neck in incorrect answers")
+            continue;
+          }
+        }
+        for (var i = 1; i < names.length; i++) {
+          if (names[i][1] === highestValueIncorrect) {
+            endStatsNameReadyForPrint = names[i][0].replace("incorrect", "")
+            mostIncorrect.push(endStatsNameReadyForPrint)
+          }
+          i++
+        }
+        //this is for rates
+        for (var i = 0; i < names.length; i++) {
+          var x = 0
+          var y = i + 1
+          x = names[i][1] - names[y][1]
+          rates.push(x)
+          i++
+        }
+        for (var i = 0; i < rates.length; i++) {
+          if (rates[i] > highestValueRate) {
+            highestValueRate = rates[i]
+          } else if (rates[i] === highestValueRate) {
+            console.log("two or more players are neck-and-neck in rates")
+            continue;
+          }
+        }
+        for (var i = 0; i < names.length; i++) {
+          var x = 0
+          var y = i + 1
+          x = names[i][1] - names[y][1]
+          if (x === highestValueRate) {
+            endStatsNameReadyForPrint = names[i][0].replace("correct", "")
+            bestRate.push(endStatsNameReadyForPrint)
+          }
+          i++
+        }
+        numberOfTotalTries = correctScore + incorrectScore
+        
+        //appending endStats
+        
+        if (!checkIfSinglePlayer()) {
+          if (mostCorrect.length === names.length / 2) {
+            if (highestValueCorrect !== 0) {
+              $("#endStats").append("Everyone got " + highestValueCorrect + " guess")
+              if (highestValueCorrect !== 1) {
+                $("#endStats").append("es")
+              }
+              $("#endStats").append("&nbsp;" + "right!")
+            } else {
+              if (gameLost) {
+                $("#endStats").append("No one was able to guess correctly. I'm genuinly puzzled at how this happened.")
+              }
+            }
+          } else {
+            for (var i = 0; i < mostCorrect.length; i++) {
+              $("#endStats").append(mostCorrect[i])
+              if (mostCorrect.length > 1 && i !== mostCorrect.length - 1) {
+                $("#endStats").append(", ")
+              }
+            }
+            //appending dialogue
+            $("#endStats").append("&nbsp;" + "had the most correct answer at " + highestValueCorrect + "!")
+          }
+          $("#endStats").append("<br>")
+          
+          
+          if (mostIncorrect.length === names.length / 2) {
+            if (highestValueIncorrect !== 0) {
+              $("#endStats").append("Somehow everyone got " + highestValueIncorrect + " guess")
+              if (highestValueIncorrect !== 1) {
+                $("#endStats").append("es")
+              }
+              $("#endStats").append("&nbsp;" + "wrong. Wowwwwwwwwww")
+            } else {
+              if (checkIfGameOverWinConditionButton() || checkIfGameOverWinConditionFinal()) {
+                $("#endStats").append("AMAZING JOB!! No one got anything wrong!!!")
+              }
+            }
+          } else {
+            //appending mostIncorrect score(s)
+            //appending names and commas
+            for (var i = 0; i < mostIncorrect.length; i++) {
+              $("#endStats").append(mostIncorrect[i])
+              if (mostIncorrect.length > 1 && i !== mostIncorrect.length - 1) {
+                $("#endStats").append(", ")
+              }
+            }
+            //appending dialogue
+            $("#endStats").append("&nbsp;" + "had the most incorrect answers at " + highestValueIncorrect + "!")
+            $("#endStats").append("<br>")
+          }
+          $("#endStats").append("<br>")
+          
+          
+          if (bestRate.length === names.length / 2) {
+            if (highestValueRate > 0) {
+              $("#endStats").append("Everyone has a rate of " + highestValueRate + "!")
+            } else {
+              $("#endStats").append("I'm very shocked that everyone here has a rate of " + highestValueRate + ". I have no idea at how this is possible.")
+            }
+          } else {
+            //appending names and commas
+            for (var i = 0; i < bestRate.length; i++) {
+              $("#endStats").append(bestRate[i])
+              if (bestRate.length > 1 && i !== bestRate.length - 1) {
+                $("#endStats").append(", ")
+              }
+            }
+            //appending dialogue
+            $("#endStats").append("&nbsp;" + "had the best rate with " + highestValueRate + "!")
+            $("#endStats").append("<br>")
+          }
+          $("#endStats").append("<br>")
+          //correct and incorrect scores
+          $("#endStats").append("Your team got " + correctScore + " guess")
+          if (correctScore !== 1) {
+            $("#endStats").append("es")
+          }
+          $("#endStats").append("&nbsp;" + "right!")
+          $("#endStats").append("<br>")
+          
+          $("#endStats").append("On the other hand, your team got " + incorrectScore + " guess")
+          if (incorrectScore !== 1) {
+            $("#endStats").append("es")
+          }
+          $("#endStats").append("&nbsp;" + "wrong.")
+          $("#endStats").append("<br>")
+          
+          //total tries
+          if (checkIfGameOverWinConditionButton() || checkIfGameOverWinConditionFinal()) {
+            $("#endStats").append("Your team took " + numberOfTotalTries + " tr")
+            if (numberOfTotalTries !== 1) {
+              $("#endStats").append("ies")
+            } else {
+              $("#endStats").append("y")
+            }
+            $("#endStats").append("&nbsp;" + "before winning!")
+          } else if (gameLost) {
+            $("#endStats").append("Your team took " + numberOfTotalTries + " tr")
+            if (numberOfTotalTries !== 1) {
+              $("#endStats").append("ies")
+            } else {
+              $("#endStats").append("y")
+            }
+            $("#endStats").append("&nbsp;" + "before ultimately losing.")
+          }
+          $("#endStats").append("<br>")
+          if (gameLost) {
+            $("#endStats").append("The word/phrase was: " + wordString)
+            $("#endStats").append("<br>")
+          }
+          $("#endStats").append("(Rates are calculated by subtracting a player's correct score by their incorrect score).")
+          
+          //this is for single-player or not
+        } else {
+          $("#endStats").append("You had " + highestValueCorrect + " correct guess")
+          if (correctScore !== 1) {
+            $("#endStats").append("es")
+          }
+          $("#endStats").append("!")
+          $("#endStats").append("<br>")
+          $("#endStats").append("On the other hand, your had " + highestValueIncorrect + " incorrect guess")
+          if (incorrectScore !== 1) {
+            $("#endStats").append("es")
+          }
+          $("#endStats").append(".")
+          $("#endStats").append("<br>")
+          $("#endStats").append("You had a rate of " + highestValueRate + "!")
+          $("#endStats").append("<br>")
+          if (checkIfGameOverWinConditionButton() || checkIfGameOverWinConditionFinal()) {
+            $("#endStats").append("You took " + numberOfTotalTries + " tr")
+            if (numberOfTotalTries !== 1) {
+              $("#endStats").append("ies")
+            } else {
+              $("#endStats").append("y")
+            }
+            $("#endStats").append("&nbsp;" + "before winning!")
+          } else if (gameLost) {
+            $("#endStats").append("Your team took " + numberOfTotalTries + " tr")
+            if (numberOfTotalTries !== 1) {
+              $("#endStats").append("ies")
+            } else {
+              $("#endStats").append("y")
+            }
+            $("#endStats").append("&nbsp;" + "before ultimately losing.")
+          }
+          $("#endStats").append("<br>")
+          if (gameLost) {
+            $("#endStats").append("The word/phrase was: " + wordString)
+            $("#endStats").append("<br>")
+          }
+          $("#endStats").append("(Rates are calculated by subtracting a player's correct score by their incorrect score).")
+        }
+      }
+      
+      var gameTurnOff = function () {
+        document.getElementById("guessLetterInput").disabled = true;
+        document.getElementById("guessFinalInput").disabled = true;
+        if (checkIfGameOverWinConditionButton() || checkIfGameOverWinConditionFinal()) {
+          //Team won. Alert team with dub message; Play cheering sound; Confetti, emoji, all dat jazz; Fade in stats; Show team stats; Show who guessed best.
+          console.log("WIN awesome job")
+          winFinal = false;
+          
+          setTimeout(function() {
+            $("#gameContainer").hide()
+            $("#gameContainerBackground").hide()
+            setTimeout(function() {
+              alert("Congrats! You got the word before the Hangman could get you!")
+              setTimeout(function() {
+                $("#winnerPage").show()
+              }, 750);
+              setTimeout(function() {
+                $("#winnerPage").hide()
+                playEndStats()
+                $("#playAgainPage, #computerSliderContainer").fadeIn(1750)
+              }, 3000);
+            }, 1000)
+          }, 1000)
+          
+        } else if (gameLost) {
+          //Team lost. Maybe play hangman off-the-hook animation; Alert team with loss msg; Fade in stats; Show team stats; Show who guessed best.
+          console.log("Loss.")
+          
+          setTimeout(function () {
+            $("#gameContainer").hide()
+            $("#gameContainerBackground").hide()
+          }, 1000)
+          $("#loserPage").show()
+          //setTimeout for the length of the animation (for below setTimeout)
+          setTimeout(function() {
+            $("#loserPage").hide()
+            playEndStats()
+            $("#playAgainPage, #computerSliderContainer").fadeIn(1750)
+          }, 5000); //⏪this number is just a placeholder; replace for actual time it takes
+          
+        } else {
+          console.log("didn't win or lose for some reason... (from gameTurnOff)")
+        }
+      }
+      
+      var guessLetterFunction = function () {
+        letterAnswerFromBox = document.getElementById("guessLetterInput").value
+        if (letterAnswerFromBox !== "") {
+          letterAnswer = letterAnswerFromBox.trim();
+          letterAnswer = letterAnswer.toLowerCase();
+          if (letterAnswer !== "") {
+            if (letterAnswer.length === 1) {
+              if (!checkAlreadyUsedLetter(letterAnswer)) {
+                if (!checkCharInWord(letterAnswer)) {
+                  //There isn't the character in the word
+                  //If you make it here, it means that letterAnswer is a single letter that is in the word that also hasn't been used before.
+                  
+                  alert("WRONG. Sorry, but that character isn't in the word. :(")
+                  guessStatus = 1
+                  nextHangman()
+                  $("#usedLettersBox").append("&nbsp;" + letterAnswer + ",")
+                  usedLetters.push(letterAnswer)
+                } else {
+                  //There is the character in the word
+                  //If you make it here, it means that letterAnswer is a single letter that is in the word that also hasn't been used before.
+                  
+                  $("#usedLettersBox").append("&nbsp;" + letterAnswer + ",")
+                  usedLetters.push(letterAnswer)
+                  document.getElementById("guessingWord").innerHTML = "";
+                  guessStatus = 2
+                  loopLetterMain: for (var i = 0; i < wordString.length; i++) {
+                    
+                    //dump the current letter into the usedArray thing FIRST
+                    //then check if current index is in the usedArray
+                    //if yes than find which used one and print
+                    //if no then print an underscore
+                    
+                    //check if current index in wordString === any in array
+                    //print letters from array in word
+                    currentChar = wordString.charAt(i)
+                    lowercaseCurrentChar = currentChar.toLowerCase();
+                    
+                    //place letter; send back to top
+                    for (var j = 0; j < usedLetters.length; j++) {
+                      if (wordString.charAt(i) === usedLetters[j]) {
+                        if (checkLowerCase(wordStringForPrint.charAt(i))) {
+                          //current char is lowercase
+                          $("#guessingWord").append(usedLetters[j])
+                        } else {
+                          //current char is uppercase
+                          var currentCharUppercase = usedLetters[j].toUpperCase();
+                          $("#guessingWord").append(currentCharUppercase)
+                        }
+                        $("#guessingWord").append("&nbsp;")
+                        continue loopLetterMain;
+                      }
+                    }
+                    
+                    /*
+                    //skip lines
+                    modCheck = -1
+                    modCheckSecured = i + 1
+                    modCheck = modCheckSecured % 15
+                    if (modCheck === 0) {
+                      $("#guessingWord").append("<br>")
+                      modCheck = -1
+                    }
+                    */
+                    
+                    //place space; send back to top;
+                    if (wordString.charAt(i) === " ") {
+                      $("#guessingWord").append("&nbsp;")
+                      $("#guessingWord").append("&nbsp;")
+                      $("#guessingWord").append("&nbsp;")
+                      continue loopLetterMain;
+                    }
+                    
+                    //check for underscore; place?
+                    if (checkUnderscorePlacement()) {
+                      $("#guessingWord").append("_")
+                      $("#guessingWord").append("&nbsp;")
+                      continue loopLetterMain;
+                    }
+                  }
+                }
+              } else {
+                alert("Why would you input the same exact thing? geezers")
+              }
+            } else {
+              alert("Put words and final answers in the other box, please. We only take one-letter answers here.")
+            }
+          } else {
+            alert("Spaces aren't letters. Just sayin'")
+          }
+        } else {
+          alert ("I'm so sorry to tell you that YOU TYPED NOTHING IN THE BOX BUD. sorry can't accept those kinds of answers.")
+        }
+      };
+      
+      var checkAlreadyUsedFinal = function (final) {
+        for (var i = 0; i < usedFinalAnswers.length; i++) {
+          if (finalAnswer === usedFinalAnswers[i]) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      var guessFinalFunction = function () {
+        finalAnswerFromBox = document.getElementById("guessFinalInput").value
+        if (finalAnswerFromBox !== "") {
+          finalAnswer = finalAnswerFromBox.trim();
+          finalAnswer = finalAnswer.toLowerCase();
+          if (finalAnswer !== "") {
+            
+            if (!checkAlreadyUsedFinal(finalAnswer)) {
+              usedFinalAnswers.push(finalAnswer)
+              if (finalAnswer === wordString) {
+                document.getElementById("guessingWord").innerHTML = "";
+                guessStatus = 4
+                winFinal = true;
+                loopFinalMain: for (var i = 0; i < wordString.length; i++) {
+                  /*
+                  modCheckFinal = -1
+                  if (modCheckFinal === 0) {
+                    $("#guessingWord").append("<br>")
+                    modCheckFinal = -1
+                  }
+                  */
+                  if (wordString.charAt(i) === " ") {
+                    $("#guessingWord").append("&nbsp;")
+                    $("#guessingWord").append("&nbsp;")
+                    $("#guessingWord").append("&nbsp;")
+                    continue loopFinalMain;
+                  }
+                  $("#guessingWord").append(wordStringForPrint.charAt(i))
+                  $("#guessingWord").append("&nbsp;")
+                }
+              } else {
+                guessStatus = 3
+                nextHangman()
+                alert("Wrong. I'm sorry, but you didn't enter the correct phrase. Maybe you got it but your capitals were wrong...? idk but 🎵 just keep tryin', just keep tryin'🎵")
+              }
+            } else {
+              alert("I think you already used that phrase. Sorry buddy, but you can't reuse phrases!")
+            }
+          }
+        } else {
+          alert("FOR THE MILLIONTH TIME. EMPTY BOXES ARE NOT OK 😤😤😱😱😱😱😱😱😱😱😱😱😱😱😱😱")
+        }
+      };
+      
+      var playGame = function () {
+        hideElem();
+        $("#navContainer").hide()
+        $("#beginningButtons").hide()
+        $("#gameContainer").show()
+        $("#centerLine").show()
+        $("#hangmanZero").show()
+        $("#correctTeam").show()
+        $("#incorrectTeam").show()
+        $("#playerScores").show()
+        $("#guessLetterInput").show()
+        $("#guessLetterButton").show()
+        $("#guessFinalInput").show()
+        $("#guessFinalButton").show()
+        resetTextFields();
+        $("#guessingWord").show()
+        $("#gameContainerBackground").show()
+        setTimeout(function() {
+          pregameSetup();
+        }, 250);
+        
+        setTimeout(function () {
+          pregameNamePrint();
+          $("#guessingFields").show()
+        }, 250);
+      }
+      
+      $("#playGameButton").click(function () {
+        setTimeout(function () {
+          playGame();
+        }, 150)
+      })
+      $("#quitToHomeButton").click(function () {
+        backCancel()
+      })
+      $("#guessLetterButton").click(function () {
+        guessLetterFunction();
+        document.getElementById("guessLetterInput").value = "";
+        letterAnswer = "";
+        letterAnswerFromBox = "";
+        playerTeamUpdate()
+        checkIfGameOverLossCondition()
+        if (checkIfGameOverWinConditionButton() || gameLost) {
+          gameTurnOff()
+        }
+      })
+      $("#guessLetterInput").keydown(function (event) {
+        if (event.which === 13) {
+          guessLetterFunction();
+          document.getElementById("guessLetterInput").value = "";
+          letterAnswer = "";
+          letterAnswerFromBox = "";
+          playerTeamUpdate()
+          checkIfGameOverLossCondition()
+          if (checkIfGameOverWinConditionButton() || gameLost) {
+            gameTurnOff()
+          }
+        }
+      })
+      $("#guessFinalButton").click(function () {
+        guessFinalFunction();
+        document.getElementById("guessFinalInput").value = "";
+        finalAnswer = "";
+        finalAnswerFromBox = "";
+        playerTeamUpdate()
+        checkIfGameOverLossCondition()
+        if (checkIfGameOverWinConditionButton() || gameLost) {
+          gameTurnOff()
+        }
+      })
+      $("#guessFinalInput").keydown(function (event) {
+        if (event.which === 13) {
+          guessFinalFunction();
+          document.getElementById("guessFinalInput").value = "";
+          finalAnswer = "";
+          finalAnswerFromBox = "";
+          playerTeamUpdate()
+          checkIfGameOverLossCondition()
+          if (checkIfGameOverWinConditionFinal() || gameLost) {
+            gameTurnOff()
+          }
+        }
+      })
+      $("#playAgainButton").click(function () {
+        setTimeout(function () {
+          playGame();
+        }, 150)
+      })
+      $("#backButton").click(function () {
+        backCancel();
+      })
+      </script>
+    </font>
+  </body>
+</html>

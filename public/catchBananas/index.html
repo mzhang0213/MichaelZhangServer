@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html>
+  
+  <!-- THIS IS CATCH THE BANANAS, an original game -->
+  
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <script src="ipAddress.js"></script>
+    <script>
+      const icon = document.createElement("link");
+      icon.rel = "icon";
+      icon.type = "image/jpeg";
+      icon.href = IP_ADDRESS + "favicon.jpg";
+      document.head.appendChild(icon);
+    </script>
+    <title>
+      Catch the Bananas 🍌 on Michael Zhang's Website
+    </title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = IP_ADDRESS + "navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = IP_ADDRESS + "navBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <div id="beginningElements">
+        <div id="homeMenu">
+          <center>
+            <br clear="all">
+            <h2 id="title">
+              Catch The Bananas!
+            </h2>
+            <p id="byMichaelZhang">
+              An original game by Michael Zhang
+            </p>
+            <br clear="all">
+            <!--
+            <div id="arrowsSliderContainer">
+              <p style="margin:0; padding:0; font-size:14px; height:5px">Toggle On-Screen Arrow Keys (for Mobile)</p>
+              <div id="sliderContainer">
+                <label id="arrowsSwitch">
+                  <input type="checkbox" id="arrowsCheckBox">
+                  <span id="arrowsSlider"></span>
+                </label>
+              </div>
+            </div>
+            -->
+            <button id="startButton">Start</button>
+            <br clear="all"><br><br>
+            <button id="tutorialButton">How to Play</button>
+          </center>
+        </div>
+        <div id="tutorialMenu">
+          <center>
+            <video id="tutorialVideo" controls>
+              <source src="http://71.184.230.97:8080/catchBananas/tutorial.mp4">
+              <font style="color:white;">
+                Your browser sadly cannot play the video. I'm incredibly sorry 🥺
+              </font>
+            </video>
+          </center>
+          <button id="backTutorialButton">Back 🔙</button>
+        </div>
+      </div>
+      <div id="gameElements">
+        <img id="pauseButton" src="http://71.184.230.97:8080/catchBananas/pauseButton.jpg"></img>
+        <div id="monkeyContainer"></div>
+        <div id="bananaContainer"></div>
+        <div id="testContainer"></div>
+        <!--
+        <div id="movementArrowsContainer">
+          <img id="arrowKeyLeft" src="http://71.184.230.97:8080/catchBananas/arrowKeyLeft.png">
+          <img id="arrowKeyRight" src="http://71.184.230.97:8080/catchBananas/arrowKeyRight.png">
+        </div>
+        -->
+        <hr id="loseLife">
+      </div>
+      <div id="counters">
+        <div id="hearts">
+          <img id="heartOne" src="http://71.184.230.97:8080/catchBananas/heart1.png">
+          <img id="heartTwo" src="http://71.184.230.97:8080/catchBananas/heart2.png">
+          <img id="heartThree" src="http://71.184.230.97:8080/catchBananas/heart3.png">
+          <img id="heartFour" src="http://71.184.230.97:8080/catchBananas/heart4.png">
+          <img id="heartFive" src="http://71.184.230.97:8080/catchBananas/heart5.png">
+          <img id="heartSix" src="http://71.184.230.97:8080/catchBananas/heart6.png">
+          <img id="heartSeven" src="http://71.184.230.97:8080/catchBananas/heart7.png">
+          <img id="heartEight" src="http://71.184.230.97:8080/catchBananas/heart8.png">
+          <img id="heartNine" src="http://71.184.230.97:8080/catchBananas/heart9.png">
+          <img id="heartTen" src="http://71.184.230.97:8080/catchBananas/heart10.png">
+        </div>
+        <img id="bananaEmoji" src="http://71.184.230.97:8080/catchBananas/bananaSmall.png">
+        <p id="bananasCaughtCounter">
+          :  0
+        </p>
+        <p id="roundsCounter">
+          Round  1
+        </p>
+      </div>
+      <div id="pauseScreen">
+        <div id="shadedScreen"></div>
+        <div id="pauseScreenContainer">
+          <center>
+            <button id="resumeButton">Resume ▶</button>
+            <br clear="all">
+            <button id="quitButton">Quit 🔙</button>
+          </center>
+        </div>
+      </div>
+      <div id="resumeScreen">
+        <div id="resumeShadedScreen"></div>
+        <center>
+          <p id="countdown">
+            3
+          </p>
+        </center>
+      </div>
+      <div id="gameOverScreen">
+        <center>
+          <p id="gameOverMessage">
+            The monkey dropped too many bananas.
+          </p>
+        </center>
+        <div id="endStatsContainer">
+          <center>
+            <button id="playAgainButton">Play Again!</button>
+            <br clear="all">
+            <button id="backButton">Back</button>
+            <br clear="all">
+            <p id="endStatsMessage"></p>
+            <br clear="all">
+            <p id="endStats"></p>
+          </center>
+        </div>
+      </div>
+      <style>
+        #arrowKeyLeft {
+          position:relative;
+          user-drag: none; 
+          user-select: none;
+          -moz-user-select: none;
+          -webkit-user-drag: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+        }
+        #arrowKeyRight {
+          position:relative;
+          float:right;
+          user-drag: none; 
+          user-select: none;
+          -moz-user-select: none;
+          -webkit-user-drag: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+        }
+        #arrowsSliderContainer {
+          position:relative;
+          z-index:1;
+          top:75px;
+        }
+        #sliderContainer {
+          position:relative;
+          top:20px;
+        }
+        #arrowsSwitch {
+          position:relative;
+          display:inline-block;
+          width:60px;
+          height:34px;
+        }
+        #arrowsSwitch input {
+          opacity:0;
+          width:0;
+          height:0;
+        }
+        #arrowsSlider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 34px;
+        }
+        #arrowsSlider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+          border-radius: 50%;
+        }
+        #arrowsCheckBox:checked + #arrowsSlider {
+          background-color: #2196F3;
+        }
+        #arrowsCheckBox:checked + #arrowsSlider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+        #gameElements {
+          user-select: none;
+          -moz-user-select: none;
+          -khtml-user-select: none;
+          -webkit-user-select: none;
+          -o-user-select: none;
+        }
+        #backTutorialButton {
+          font-size:20px;
+          position:absolute;
+          border-radius:8px;
+          border:2px solid #000000;
+          background-color:white;
+          height:40px;
+          outline:none;
+        }
+        #tutorialButton {
+          font-size:20px;
+          position:relative;
+          border-radius:8px;
+          border:2px solid #000000;
+          background-color:white;
+          height:40px;
+          top:300px;
+          outline:none;
+          left:-5px;
+        }
+        #playAgainButton {
+          position:relative;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          font-size:15px;
+          font-family:"Cabin";
+          font-size:20px;
+          margin:0;
+          outline:none;
+        }
+        #backButton {
+          position:relative;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          font-size:15px;
+          font-family:"Cabin";
+          font-size:20px;
+          margin:0;
+          outline:none;
+        }
+        #gameOverMessage {
+          position:relative;
+          font-size:27px;
+          font-family:"Cabin";
+          padding:0;
+          margin:0;
+        }
+        #endStatsMessage {
+          position:relative;
+          font-size:36px;
+          font-family:"Cabin";
+          padding:0;
+          margin:0;
+        }
+        #endStats {
+          position:relative;
+          font-size:20px;
+          font-family:"Cabin";
+          padding:0;
+          margin:0;
+        }
+        #hearts img {
+          position:relative;
+          display:inline-block;
+          vertical-align:top;
+        }
+        #bananaEmoji {
+          position:absolute;
+          display:inline-block;
+          vertical-align:top;
+        }
+        #resumeScreen {
+          position:absolute;
+          z-index:2;
+        }
+        #countdown {
+          position:relative;
+          color:white;
+          font-size:120px;
+          margin:0;
+          padding:0;
+        }
+        #pauseButton {
+          position:relative;
+          left:97%;
+          margin:0;
+          padding:0;
+          z-index:3;
+        }
+        #pauseScreen {
+          position:absolute;
+          z-index:2;
+        }
+        #resumeScreen {
+          position:absolute;
+          z-index:2;
+        }
+        #pauseScreenContainer button {
+          position:relative;
+          background-color:white;
+          color:black;
+          border-radius:8px;
+          border:2px solid #000000;
+          outline:none;
+          font-family:"Cabin";
+          font-size:20px;
+          height:45px;
+          outline:none;
+        }
+        #counters {
+          position:absolute;
+          z-index:3;
+        }
+        #bananasCaughtCounter {
+          position:absolute;
+          font-family:'Cabin';
+          font-size:30px;
+          color:black;
+          margin:0;
+          padding:0;
+          display:inline-block;
+          vertical-align:top;
+        }
+        #roundsCounter {
+          position:absolute;
+          font-family:'Cabin';
+          font-size:30px;
+          margin:0;
+          padding:0;
+          display:inline-block;
+          vertical-align:top;
+        }
+        #pauseScreenContainer {
+          position:absolute;
+          z-index:2;
+        }
+        #shadedScreen {
+          position:absolute;
+          background-color:#262626;
+          opacity:75%;
+        }
+        #resumeShadedScreen {
+          position:absolute;
+          background-color:#262626;
+          opacity:75%;
+        }
+        #startButton {
+          position:relative;
+          left:-5px;
+          top:150px;
+          width:100px;
+          height:50px;
+          background-color:#33adff;
+          border-radius:8px;
+          border:2px solid #000000;
+          font-size:20px;
+          font-family:'Cabin';
+          outline:none;
+        }
+        #loseLife {
+          position:relative;
+          height:2px;
+          background:black;
+        }
+        #title {
+          font-size:32px;
+          font-family:'Cabin';
+        }
+        #byMichaelZhang {
+          font-size:17px;
+          font-family:'Cabin';
+        }
+        #monkeyContainer {
+          position:absolute;
+          z-index:-1;
+        }
+        #bananaContainer {
+          position:absolute;
+          z-index:-1;
+        }
+        #testContainer {
+          position:absolute;
+          z-index:-1;
+        }
+        /*
+        #movementArrowsContainer {
+          position:absolute;
+          z-index:-1;
+        }
+        */
+        #pauseScreenContainer button:hover {
+          background-color:#cccccc;
+        }
+        #endStatsContainer button:hover {
+          background-color:#cccccc;
+        }
+        #backTutorialButton:hover {
+          background-color:#cccccc;
+        }
+        #tutorialButton:hover {
+          background-color:#cccccc;
+        }
+        #startButton:hover {
+          background-color:#008ae6;
+          /*
+          40%: #007acc
+          45%: #008ae6
+          */
+        }
+      </style>
+    </font>
+    <script>
+      
+      var keyCodeDirection = {};
+      var windowWidth = 0
+      var windowHeight = 0
+      var loseLifeHeightNum = 0
+      var health = 10
+      var bananasCaught = 0
+      var detectInterval = setInterval(function(){}, 1000)
+      clearInterval(detectInterval);
+      var bananaPosXLeft = 0
+      var bananaPosXRight = 0
+      var bananaPosYBottom = 0
+      var bananaPosYTop = 0
+      var monkeyPosXLeft = 0
+      var monkeyPosXRight = 0
+      var monkeyPosYBottom = 0
+      var monkeyPosYTop = 0
+      var monkeyIncreaseX = 1
+      var bananaIncreaseY = 1
+      var monkeyIncreaseOne = 0
+      var bananaIncreaseOne = 0
+      var gameOver = false;
+      
+      var setNumbersZero = function () {
+        keyCodeDirection = {};
+        windowWidth = 0
+        windowHeight = 0
+        loseLifeHeightNum = 0
+        health = 10
+        bananasCaught = 0
+        bananaPosXLeft = 0
+        bananaPosXRight = 0
+        bananaPosYBottom = 0
+        bananaPosYTop = 0
+        monkeyPosXLeft = 0
+        monkeyPosXRight = 0
+        monkeyPosYBottom = 0
+        monkeyPosYTop = 0
+        monkeyIncreaseX = 1
+        bananaIncreaseY = 1
+        monkeyIncreaseOne = 0
+        bananaIncreaseOne = 0
+        gameOver = false;
+      }
+      
+      //show elements, hide them thru div hide
+      $("#title").show()
+      $("#byMichaelZhang").show()
+      $("#startButton").show()
+      $("#loseLife").show()
+      $("#navBar").show()
+      $("#loseLife").show()
+      
+      var toHomeScreen = function () {
+        $("#beginningElements").show()
+        $("#gameElements").hide()
+        $("#navBar").show()
+        $("#pauseScreen").hide()
+        $("#counters").hide()
+        $("#resumeScreen").hide()
+        $("#gameOverScreen").hide()
+        document.body.style.backgroundColor = "#f2f2f2";
+      }
+      
+      var TestCursor = function (x, y) {
+        this.x = x
+        this.y = y
+      }
+      TestCursor.prototype.draw = function () {
+        var tHTML = '<img src="http://71.184.230.97:8080/testCursor.png">'
+        this.tElem = $(tHTML);
+        this.tElem.css({
+          position:"absolute",
+          left: this.x,
+          top: this.y
+        })
+        $("#testContainer").empty()
+        $("#testContainer").append(this.tElem)
+      }
+      TestCursor.prototype.setCoordinates = function (x, y) {
+        this.x = x
+        this.y = y
+        this.tElem.css({
+          left: this.x,
+          top: this.y
+        })
+      }
+      TestCursor.prototype.moveX = function (change) {
+        this.x += change
+        this.tElem.css({
+          left: this.x
+        })
+      }
+      TestCursor.prototype.moveY = function (change) {
+        this.y += change
+        this.tElem.css({
+          top: this.y
+        })
+      }
+      TestCursor.prototype.setX = function (coordinate) {
+        this.x = coordinate
+        this.tElem.css({
+          left: this.x
+        })
+      }
+      TestCursor.prototype.setY = function (coordinate) {
+        this.y = coordinate;
+        this.tElem.css({
+          top: this.y
+        })
+      }
+      var testCursor = new TestCursor(0, 0);
+      
+      var Monkey = function () {};
+      Monkey.prototype.draw = function (x, y, width, height) {
+        this.x = x
+        this.y = y - screen.height * 243 / 1980
+        this.width = width
+        this.height = height
+        var mHTML = '<img src="http://71.184.230.97:8080/catchBananas/monkey1.png">'
+        this.monkeyElem = $(mHTML)
+        this.monkeyElem.css({
+          position: "relative",
+          left: this.x,
+          top: this.y,
+          width: this.width,
+          height: this.height
+        })
+        $("#monkeyContainer").empty()
+        $("#monkeyContainer").append(this.monkeyElem)
+      }
+      
+      //width: 243px,
+      //height: 293px
+      
+      Monkey.prototype.moveLeft = function (change) {
+        this.x -= change
+        this.monkeyElem.css({
+          left: this.x
+        })
+      }
+      Monkey.prototype.moveRight = function (change) {
+        this.x += change
+        this.monkeyElem.css({
+          left: this.x
+        })
+      }
+      Monkey.prototype.setX = function (coordinate) {
+        this.x = coordinate
+        this.monkeyElem.css({
+          left: this.x
+        })
+      }
+      
+      var monkey = new Monkey()
+      
+      //add rest of ramp-ups
+      
+      var Banana = function () {};
+      Banana.prototype.draw = function (x, y, width, height) {
+        //FIND THE RIGHT IMAGE
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+        var bHTML = '<img src="http://71.184.230.97:8080/catchBananas/banana1.png">'
+        this.bananaElem = $(bHTML)
+        this.bananaElem.css({
+          position: "relative",
+          left: this.x,
+          top: this.y,
+          width: this.width,
+          height: this.height
+        })
+        $("#bananaContainer").empty()
+        $("#bananaContainer").append(this.bananaElem)
+      }
+      Banana.prototype.down = function (change) {
+        this.y += change
+        this.bananaElem.css({
+          top: this.y
+        })
+      }
+      Banana.prototype.random = function () {
+        var randomX = Math.floor(Math.random() * window.innerWidth)
+        while (randomX < banana.width || randomX > (window.innerWidth - banana.width)) {
+          randomX = Math.floor(Math.random() * window.innerWidth)
+        }
+        return randomX;
+      }
+      Banana.prototype.respawn = function () {
+        if (screen.width > screen.height) {
+          //landscape view
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, 75 * screen.width / 1920, 60.875 * screen.height / 1080);
+          } else {
+            banana.draw(banana.random, window.innerHeight * 0.05, 75 * screen.width / 1920, 60.875 * screen.height / 1080);
+          }
+        } else if (screen.width < screen.height) {
+          //portrait view
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, screen.width * 150 / 1080, screen.height * 121.75 / 1920);
+          } else {
+            banana.draw(banana.random, window.innerHeight * 0.05, screen.width * 150 / 1080, screen.height * 121.75 / 1920);
+          }
+        } else if (screen.width === screen.height) {
+          //where the fuk did you get a square screen
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, 75, 60.875);
+          } else {
+            banana.draw(banana.random, window.innerHeight * 0.05, 75, 60.875);
+          }
+        }
+      }
+      
+      var banana = new Banana()
+      
+      var detectBananaMonkey = function () {
+        //prob no y val; y = inf
+        bananaPosXLeft = banana.bananaElem.position().left - (window.innerWidth * 27 / 1920);
+        bananaPosXRight = banana.bananaElem.position().left + (window.innerWidth * 26 / 1920);
+        bananaPosYTop = banana.bananaElem.position().top - (window.innerHeight * 26 / 937);
+        bananaPosYBottom = banana.bananaElem.position().top + (window.innerHeight * 26 / 937);
+        monkeyPosXLeft = monkey.monkeyElem.position().left + (window.innerWidth * 20.5 / 1920);
+        monkeyPosXRight = monkey.monkeyElem.position().left + monkey.width - (window.innerWidth * 80 / 1920);
+        monkeyPosYBottom = monkey.monkeyElem.position().top + monkey.height - (window.innerHeight * 33 / 937);
+        monkeyPosYTop = monkey.monkeyElem.position().top - (window.innerHeight * 8 / 937);
+        if (
+          ((monkeyPosXLeft <= bananaPosXLeft && bananaPosXLeft <= monkeyPosXRight) || (monkeyPosXLeft <= bananaPosXRight && bananaPosXRight <= monkeyPosXRight))
+          &&
+          ((bananaPosYBottom <= monkeyPosYBottom && monkeyPosYTop <= bananaPosYBottom) || (bananaPosYTop <= monkeyPosYBottom && monkeyPosYTop <= bananaPosYTop))
+          //this way ^ because the y-axis goes from top-bot, not bot-top (ITS FLIPPED)
+          ) {
+          return true;
+        }
+        return false;
+      }
+      
+      var detectBananaLife = function () {
+        var bananaPosYLife = banana.bananaElem.position().top;
+        var loseLifePosY = parseFloat(document.getElementById("loseLife").style.top);
+        if (bananaPosYLife > loseLifePosY - 10) {
+          return true;
+        }
+        return false;
+      }
+      
+      var monkeyIncreaseSpeed = function () {
+        //change the number mod'ing the bananasCaught to make rounds longer
+        if ((bananasCaught % 14 === 0) && (bananasCaught !== 0)) {
+          monkeyIncreaseOne = (bananasCaught / 14) + 1
+          //this increments by 1 starting on 2
+          //if change bananasCaught mod val, change the divisor above
+          monkeyIncreaseX = ((Math.pow(1.1075, monkeyIncreaseOne + 17)) / 6);
+        }
+      }
+      
+      var bananaIncreaseSpeed = function () {
+        //change the number mod'ing the bananasCaught to make rounds longer
+        if ((bananasCaught % 14 === 0) && (bananasCaught !== 0)) {
+          bananaIncreaseOne = (bananasCaught / 14) + 1
+          //if change bananasCaught mod val, change the divisor above
+          //divided by 7 gives us a "2" on the Round1 instead of "1"
+          bananaIncreaseY = ((Math.pow(1.225, bananaIncreaseOne + 7)) / 6 * 1.0675);
+        }
+      }
+      
+      var increaseBananasCaught = function () {
+        document.getElementById("bananasCaughtCounter").innerHTML = "";
+        document.getElementById("bananasCaughtCounter").innerHTML = ":" + "&nbsp;" + "&nbsp;" + bananasCaught;
+      }
+      
+      var increaseRounds = function () {
+        if ((bananasCaught % 14 === 0) && (bananasCaught !== 0)) {
+          var currentRound = (bananasCaught / 14) + 1
+          document.getElementById("roundsCounter").innerHTML = "";
+          document.getElementById("roundsCounter").innerHTML = "Round  " + currentRound;
+        }
+      }
+      
+      var decreaseHealth = function () {
+        //insert animations instead of .hide()
+        switch(health) {
+          case 9:
+            setTimeout(function () { $("#heartTen").hide()
+            setTimeout(function () { $("#heartTen").show()
+            setTimeout(function () { $("#heartTen").hide()
+            setTimeout(function () { $("#heartTen").show()
+            setTimeout(function () { $("#heartTen").hide()
+            setTimeout(function () { $("#heartTen").show()
+            setTimeout(function () { $("#heartTen").hide()
+            setTimeout(function () { $("#heartTen").show()
+            setTimeout(function () { $("#heartTen").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 8:
+            setTimeout(function () { $("#heartNine").hide()
+            setTimeout(function () { $("#heartNine").show()
+            setTimeout(function () { $("#heartNine").hide()
+            setTimeout(function () { $("#heartNine").show()
+            setTimeout(function () { $("#heartNine").hide()
+            setTimeout(function () { $("#heartNine").show()
+            setTimeout(function () { $("#heartNine").hide()
+            setTimeout(function () { $("#heartNine").show()
+            setTimeout(function () { $("#heartNine").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 7:
+            setTimeout(function () { $("#heartEight").hide()
+            setTimeout(function () { $("#heartEight").show()
+            setTimeout(function () { $("#heartEight").hide()
+            setTimeout(function () { $("#heartEight").show()
+            setTimeout(function () { $("#heartEight").hide()
+            setTimeout(function () { $("#heartEight").show()
+            setTimeout(function () { $("#heartEight").hide()
+            setTimeout(function () { $("#heartEight").show()
+            setTimeout(function () { $("#heartEight").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 6:
+            setTimeout(function () { $("#heartSeven").hide()
+            setTimeout(function () { $("#heartSeven").show()
+            setTimeout(function () { $("#heartSeven").hide()
+            setTimeout(function () { $("#heartSeven").show()
+            setTimeout(function () { $("#heartSeven").hide()
+            setTimeout(function () { $("#heartSeven").show()
+            setTimeout(function () { $("#heartSeven").hide()
+            setTimeout(function () { $("#heartSeven").show()
+            setTimeout(function () { $("#heartSeven").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 5:
+            setTimeout(function () { $("#heartSix").hide()
+            setTimeout(function () { $("#heartSix").show()
+            setTimeout(function () { $("#heartSix").hide()
+            setTimeout(function () { $("#heartSix").show()
+            setTimeout(function () { $("#heartSix").hide()
+            setTimeout(function () { $("#heartSix").show()
+            setTimeout(function () { $("#heartSix").hide()
+            setTimeout(function () { $("#heartSix").show()
+            setTimeout(function () { $("#heartSix").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 4:
+            setTimeout(function () { $("#heartFive").hide()
+            setTimeout(function () { $("#heartFive").show()
+            setTimeout(function () { $("#heartFive").hide()
+            setTimeout(function () { $("#heartFive").show()
+            setTimeout(function () { $("#heartFive").hide()
+            setTimeout(function () { $("#heartFive").show()
+            setTimeout(function () { $("#heartFive").hide()
+            setTimeout(function () { $("#heartFive").show()
+            setTimeout(function () { $("#heartFive").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 3:
+            setTimeout(function () { $("#heartFour").hide()
+            setTimeout(function () { $("#heartFour").show()
+            setTimeout(function () { $("#heartFour").hide()
+            setTimeout(function () { $("#heartFour").show()
+            setTimeout(function () { $("#heartFour").hide()
+            setTimeout(function () { $("#heartFour").show()
+            setTimeout(function () { $("#heartFour").hide()
+            setTimeout(function () { $("#heartFour").show()
+            setTimeout(function () { $("#heartFour").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 2:
+            setTimeout(function () { $("#heartThree").hide()
+            setTimeout(function () { $("#heartThree").show()
+            setTimeout(function () { $("#heartThree").hide()
+            setTimeout(function () { $("#heartThree").show()
+            setTimeout(function () { $("#heartThree").hide()
+            setTimeout(function () { $("#heartThree").show()
+            setTimeout(function () { $("#heartThree").hide()
+            setTimeout(function () { $("#heartThree").show()
+            setTimeout(function () { $("#heartThree").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 1:
+            setTimeout(function () { $("#heartTwo").hide()
+            setTimeout(function () { $("#heartTwo").show()
+            setTimeout(function () { $("#heartTwo").hide()
+            setTimeout(function () { $("#heartTwo").show()
+            setTimeout(function () { $("#heartTwo").hide()
+            setTimeout(function () { $("#heartTwo").show()
+            setTimeout(function () { $("#heartTwo").hide()
+            setTimeout(function () { $("#heartTwo").show()
+            setTimeout(function () { $("#heartTwo").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            break;
+          case 0:
+            setTimeout(function () { $("#heartOne").hide()
+            setTimeout(function () { $("#heartOne").show()
+            setTimeout(function () { $("#heartOne").hide()
+            setTimeout(function () { $("#heartOne").show()
+            setTimeout(function () { $("#heartOne").hide()
+            setTimeout(function () { $("#heartOne").show()
+            setTimeout(function () { $("#heartOne").hide()
+            setTimeout(function () { $("#heartOne").show()
+            setTimeout(function () { $("#heartOne").hide() }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+            gameOver = true;
+            break;
+          default:
+            console.log("decreaseHealth() came back with default for some reason.")
+            break;
+        }
+      }
+      
+      var gameLoss = function () {
+        document.getElementById("endStats").innerHTML = "";
+        document.getElementById("endStatsMessage").innerHTML = "";
+        $("#endStats").append("You caught " + bananasCaught + " banana")
+        if (bananasCaught !== 1) {
+          $("#endStats").append("s")
+        }
+        $("#endStats").append(" while being on round " + (Math.floor(bananasCaught / 14) + 1) + "!");
+        $("#endStats").append("<br>")
+        if (localStorage.getItem("highscore") === null) {
+          localStorage.setItem("highscore", bananasCaught)
+          $("#endStats").append("First time playing? Cool because your new highscore is " + parseInt(localStorage.getItem("highscore")) + " banana")
+          if (bananasCaught !== 1) {
+          $("#endStats").append("s")
+          }
+          $("#endStats").append(" caught!")
+        } else if (localStorage.getItem("highscore") === 0) {
+          $("#endStats").append("HOW DID U MISS 10 BANANAS IN A ROW WAT")
+        } else {
+          if (bananasCaught > localStorage.getItem("highscore")) {
+            localStorage.setItem("highscore", bananasCaught);
+            $("#endStats").append("Your new highscore is " + parseInt(localStorage.getItem("highscore")) + " banana")
+            if (bananasCaught !== 1) {
+            $("#endStats").append("s")
+            }
+            $("#endStats").append(" caught!")
+          } else {
+            $("#endStats").append("Dang. You didn't set a new highscore. Good effort nevertheless!")
+          }
+        }
+        $("#endStats").append("<br>")
+        $("#endStats").append("(Your current highscore is " + localStorage.getItem("highscore") + " banana")
+        if (bananasCaught !== 1) {
+          $("#endStats").append("s")
+        }
+        $("#endStats").append(" caught)")
+        if (bananasCaught < 50) {
+          $("#endStatsMessage").append("Cmon bro I know you can catch more than 50 bananas. KEEP GOING HARDO AT IT")
+        } else if (bananasCaught === 50) {
+          $("#endStatsMessage").append("50 bananas is pretty good! Just keep going at it")
+        } else if (bananasCaught < 100 && bananasCaught > 50) {
+          $("#endStatsMessage").append("Good Job! Bet you can catch more than 100 bananas...")
+        } else if (bananasCaught === 100) {
+          $("#endStatsMessage").append("Very good job, not gonna lie. Great job with the effort you put in to get to this point!")
+        } else if (bananasCaught > 100) {
+          $("#endStatsMessage").append("Awesome Job! You are a legendary player and you caught more than 100 bananas!!!")
+        }
+        
+        banana.bananaElem.hide();
+        setTimeout(function () {
+          $("#counters").hide()
+          $("#gameElements").hide()
+          $("#gameOverScreen").show()
+          $("#gameOverMessage").hide()
+          $("#endStatsContainer").hide()
+          banana.bananaElem.show();
+          setTimeout(function () {
+            $("#gameOverMessage").fadeIn(1750)
+            setTimeout(function () {
+              $("#gameOverMessage").fadeOut(1750)
+              setTimeout(function () {
+                $("#endStatsContainer").fadeIn(2000)
+              }, 2000)
+            }, 1500)
+          }, 1000)
+        }, 1000)
+      }
+      
+      var detectCharacterMovement = function () {
+        if ((keyCodeDirection[37]) || (keyCodeDirection[65])) {
+          var monkeyPosXLeftBoundary = monkey.monkeyElem.position().left
+          if (monkeyPosXLeftBoundary < 0) {
+            monkey.setX(0)
+          } else {
+            monkey.moveLeft(20 * monkeyIncreaseX + 0.5)
+          }
+        }
+        if ((keyCodeDirection[39]) || (keyCodeDirection[68])) {
+          var monkeyPosXRightBoundary = monkey.monkeyElem.position().left + monkey.width
+          if (window.innerWidth - 30 < monkeyPosXRightBoundary) {
+            monkey.setX(window.innerWidth - monkey.width - 30)
+          }
+          monkey.moveRight(20 * monkeyIncreaseX + 0.5)
+        }
+      }
+      
+      $("#beginningElements").show()
+      $("#gameElements").hide()
+      $("#navBar").show()
+      $("#pauseScreen").hide()
+      $("#counters").hide()
+      $("#resumeScreen").hide()
+      $("#gameOverScreen").hide()
+      $("#tutorialMenu").hide()
+      
+      var playGame = function() {
+        /*
+        if (document.getElementById("arrowsCheckBox").checked) {
+          $("#movementArrowsContainer").show();
+        } else {
+          $("#movementArrowsContainer").hide();
+        }
+        */
+        setNumbersZero();
+        $("#hearts").show()
+        $("#heartTen").show()
+        $("#heartNine").show()
+        $("#heartEight").show()
+        $("#heartSeven").show()
+        $("#heartSix").show()
+        $("#heartFive").show()
+        $("#heartFour").show()
+        $("#heartThree").show()
+        $("#heartTwo").show()
+        $("#heartOne").show()
+        document.getElementById("bananasCaughtCounter").innerHTML = ":" + "&nbsp;" + "&nbsp;" + 0;
+        document.getElementById("roundsCounter").innerHTML = "Round  " + 1;
+        
+        $("#beginningElements").hide()
+        $("#gameElements").show()
+        $("#navBar").hide()
+        $("#counters").show()
+        $("#resumeScreen").hide()
+        document.body.style.backgroundColor = "white";
+        document.getElementById("pauseButton").style.zIndex = 4;
+        
+        document.body.onkeyup = function (event) {
+          if (event.keyCode === 37 || event.keyCode === 39) {
+            if (event.preventDefault) {
+              event.preventDefault();
+            } else {
+              event.returnValue = false;
+            }
+          }
+          var eventKeyCode = event.keyCode || event.which;
+          keyCodeDirection[eventKeyCode] = event.type == 'keydown';
+        }
+        document.body.onkeydown = function (event) {
+          if (event.keyCode === 37 || event.keyCode === 39) {
+            if (event.preventDefault) {
+              event.preventDefault();
+            } else {
+              event.returnValue = false;
+            }
+          }
+          var eventKeyCode = event.keyCode || event.which;
+          keyCodeDirection[eventKeyCode] = event.type == 'keydown';
+        }
+        $("body").keydown(function (event) {
+          if (event.keyCode === 27) {
+            if ($("#pauseScreen").is(":visible")) {
+              document.getElementById("resumeButton").click();
+              event.Handled = true;
+            } else if ($("#resumeScreen").is(":hidden") && $("#gameElements").is(":visible")) {
+              clearInterval(detectInterval)
+              $("#pauseScreen").show()
+              $("#counters").show()
+              document.getElementById("pauseButton").style.zIndex = 1;
+              document.getElementById("roundsCounter").style.color = "white";
+              document.getElementById("bananasCaughtCounter").style.color = "yellow";
+              event.Handled = true;
+            }
+          }
+        })
+        
+        windowResize();
+        window.addEventListener("resize", function () {
+          windowResize()
+        })
+        
+        clearInterval(detectInterval)
+        detectInterval = setInterval(function () {
+          detectCharacterMovement();
+          if (detectBananaMonkey()) {
+            bananasCaught++;
+            increaseBananasCaught();
+            increaseRounds();
+            banana.respawn();
+            monkeyIncreaseSpeed();
+            bananaIncreaseSpeed();
+          }
+          if (detectBananaLife() && !(detectBananaMonkey())) {
+            health--;
+            decreaseHealth()
+            banana.respawn();
+            monkeyIncreaseSpeed();
+            bananaIncreaseSpeed();
+          }
+          if (!(detectBananaLife()) && !(detectBananaMonkey())) {
+            banana.down(windowHeight * 0.875 * 1 / 90 * bananaIncreaseY)
+          }
+          if (gameOver) {
+            gameLoss()
+            clearInterval(detectInterval)
+          }
+        }, 25)
+      }
+      var windowResize = function () {
+        windowWidth = window.innerWidth; //1920 big monitor
+        windowHeight = window.innerHeight; //937 big monitor
+        document.getElementById("loseLife").style.top = windowHeight * 0.875 + "px";
+        //document.getElementById("arrowKeyLeft").style.top = (windowHeight * 0.875) + 100 + "px";
+        //document.getElementById("arrowKeyRight").style.top = (windowHeight * 0.875) + 100 + "px";
+        //document.getElementById("arrowKeyLeft").style.width = (windowHeight - ((windowHeight * 0.875) + 100)) + "px";
+        //document.getElementById("arrowKeyLeft").style.height = (windowHeight * (document.getElementById("arrowKeyLeft").style.width / 501)) + "px";
+        //document.getElementById("arrowKeyRight").style.width = (windowHeight - ((windowHeight * 0.875) + 100)) + "px";
+        //document.getElementById("arrowKeyRight").style.height = (windowHeight * (document.getElementById("arrowKeyRight").style.width / 501)) + "px";
+        document.getElementById("monkeyContainer").style.top = 0;
+        document.getElementById("monkeyContainer").style.left = 0;
+        document.getElementById("monkeyContainer").style.width = windowWidth + "px";
+        document.getElementById("monkeyContainer").style.height = windowHeight + "px";
+        document.getElementById("bananaContainer").style.top = 0;
+        document.getElementById("bananaContainer").style.left = 0;
+        document.getElementById("bananaContainer").style.width = windowWidth + "px";
+        document.getElementById("bananaContainer").style.height = windowHeight + "px";
+        //document.getElementById("movementArrowsContainer").style.top = 0;
+        //document.getElementById("movementArrowsContainer").style.left = 0;
+        //document.getElementById("movementArrowsContainer").style.width = windowWidth + "px";
+        //document.getElementById("movementArrowsContainer").style.height = windowHeight + "px";
+        document.getElementById("testContainer").style.top = 0;
+        document.getElementById("testContainer").style.left = 0;
+        document.getElementById("testContainer").style.width = windowWidth + "px";
+        document.getElementById("testContainer").style.height = windowHeight + "px";
+        document.getElementById("pauseScreenContainer").style.top = 0;
+        document.getElementById("pauseScreenContainer").style.left = 0;
+        document.getElementById("pauseScreenContainer").style.width = windowWidth + "px";
+        document.getElementById("pauseScreenContainer").style.height = windowHeight + "px";
+        document.getElementById("shadedScreen").style.top = 0;
+        document.getElementById("shadedScreen").style.left = 0;
+        document.getElementById("shadedScreen").style.width = windowWidth + "px";
+        document.getElementById("shadedScreen").style.height = windowHeight + "px";
+        document.getElementById("resumeShadedScreen").style.top = 0;
+        document.getElementById("resumeShadedScreen").style.left = 0;
+        document.getElementById("resumeShadedScreen").style.width = windowWidth + "px";
+        document.getElementById("resumeShadedScreen").style.height = windowHeight + "px";
+        document.getElementById("counters").style.top = 0;
+        document.getElementById("counters").style.left = 0;
+        document.getElementById("counters").style.width = windowWidth + "px";
+        document.getElementById("counters").style.height = windowHeight * 200 / 937 + "px";
+        document.getElementById("resumeButton").style.top = windowHeight * 0.25 + "px";
+        document.getElementById("quitButton").style.top = windowHeight * 0.475 + "px";
+        document.getElementById("bananasCaughtCounter").style.left = windowWidth * 0.305 + "px";
+        document.getElementById("bananaEmoji").style.left = windowWidth * 0.275 + "px";
+        document.getElementById("roundsCounter").style.left = windowWidth * 0.7 + "px";
+        var tempCounterHeight = parseFloat(document.getElementById("counters").style.height) * 0.4;
+        document.getElementById("bananasCaughtCounter").style.top = tempCounterHeight + "px";
+        document.getElementById("bananaEmoji").style.top = (tempCounterHeight - (windowHeight * 10 / 1920)) + "px";
+        document.getElementById("roundsCounter").style.top = tempCounterHeight + "px";
+        document.getElementById("pauseButton").style.width = 40 + "px";
+        document.getElementById("pauseButton").style.height = 40 + "px";
+        document.getElementById("resumeScreen").style.top = 0;
+        document.getElementById("resumeScreen").style.left = 0;
+        document.getElementById("resumeScreen").style.width = windowWidth + "px";
+        document.getElementById("resumeScreen").style.height = windowHeight + "px";
+        document.getElementById("pauseScreen").style.top = 0;
+        document.getElementById("pauseScreen").style.left = 0;
+        document.getElementById("pauseScreen").style.width = windowWidth + "px";
+        document.getElementById("pauseScreen").style.height = windowHeight + "px";
+        document.getElementById("playAgainButton").style.top = windowHeight * 0.15 + "px";
+        document.getElementById("playAgainButton").style.height = screen.height * 50 / 1080 + "px";
+        document.getElementById("backButton").style.top = windowHeight * 0.275 + "px";
+        document.getElementById("backButton").style.height = screen.height * 50 / 1080 + "px";
+        document.getElementById("endStats").style.top = windowHeight * 0.555 + "px";
+        document.getElementById("endStatsMessage").style.top = windowHeight * 0.475 + "px";
+        document.getElementById("gameOverMessage").style.top = windowHeight * 0.4 + "px";
+        document.getElementById("countdown").style.top = windowHeight * 0.4 + "px";
+        
+        loseLifeHeightNum = parseFloat(document.getElementById("loseLife").style.top)
+        loseLifeHeightNum -= 35 * 1.1 * (screen.height / 1080)
+        //make it a percentage, not a fixed location
+        // -= 20 (used to be -= 50)
+        if (screen.width > screen.height) {
+          //landscape view
+          if (monkey.x === undefined) {
+            monkey.draw(0, loseLifeHeightNum, 193 * screen.width / 1920, 243 * screen.height / 1080);
+          } else {
+            monkey.draw(monkey.x, loseLifeHeightNum, 193 * screen.width / 1920, 243 * screen.height / 1080);
+          }
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, 75 * screen.width / 1920, 60.875 * screen.height / 1080);
+          } else {
+            banana.draw(banana.x, window.innerHeight * 0.05, 75 * screen.width / 1920, 60.875 * screen.height / 1080);
+          }
+        } else if (screen.width < screen.height) {
+          //portrait view
+          if (monkey.x === undefined) {
+            monkey.draw(0, loseLifeHeightNum, screen.width * 386 / 1080, screen.height * 486 / 1920);
+          } else {
+            monkey.draw(monkey.x, loseLifeHeightNum, screen.width * 386 / 1080, screen.height * 486 / 1920);
+          }
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, screen.width * 150 / 1080, screen.height * 121.75 / 1920);
+          } else {
+            banana.draw(banana.random, window.innerHeight * 0.05, screen.width * 150 / 1080, screen.height * 121.75 / 1920);
+          }
+        } else if (screen.width === screen.height) {
+          //where the fuk did you get a square screen
+          if (monkey.x === undefined) {
+            monkey.draw(0, loseLifeHeightNum, 193, 243);
+          } else {
+            monkey.draw(monkey.x, loseLifeHeightNum, 193, 243);
+          }
+          if (banana.x === undefined) {
+            banana.draw(0, window.innerHeight * 0.05, 75, 60.875);
+          } else {
+            banana.draw(banana.x, window.innerHeight * 0.05, 75, 60.875);
+          }
+        }
+      }
+      
+      $("#startButton").click(function () {
+        playGame()
+      });
+      
+      $("#resumeButton").click(function () {
+        $("#pauseScreen").hide()
+        $("#countdown").show()
+        $("#resumeScreenShaded").show()
+        $("#resumeScreen").show()
+        document.getElementById("countdown").innerHTML = "";
+        document.getElementById("countdown").innerHTML = "3";
+        setTimeout(function () {
+          document.getElementById("countdown").innerHTML = "";
+          document.getElementById("countdown").innerHTML = "2";
+          setTimeout(function () {
+            document.getElementById("countdown").innerHTML = "";
+            document.getElementById("countdown").innerHTML = "1";
+            setTimeout(function () {
+              $("#resumeScreen").hide();
+              document.getElementById("pauseButton").style.zIndex = 4;
+              document.getElementById("roundsCounter").style.color = "black";
+              document.getElementById("bananasCaughtCounter").style.color = "black";
+              detectInterval = setInterval(function () {
+                detectCharacterMovement();
+                if (detectBananaMonkey()) {
+                  increaseRounds();
+                  bananasCaught++;
+                  banana.respawn();
+                  increaseBananasCaught();
+                  monkeyIncreaseSpeed();
+                  bananaIncreaseSpeed();
+                }
+                if (detectBananaLife() && !(detectBananaMonkey())) {
+                  health--;
+                  decreaseHealth()
+                  banana.respawn();
+                  monkeyIncreaseSpeed();
+                  bananaIncreaseSpeed();
+                }
+                if (!(detectBananaLife()) && !(detectBananaMonkey())) {
+                  banana.down(windowHeight * 0.875 * 1 / 90 * bananaIncreaseY)
+                }
+                if (gameOver) {
+                  gameLoss()
+                  clearInterval(detectInterval)
+                }
+              }, 25)
+            }, 1000)
+          }, 1000)
+        }, 1000) //resume
+      })
+      
+      $("#quitButton").click(function () {
+        var areYouSure = confirm("Are you sure you want to quit?")
+        if (areYouSure) {
+          toHomeScreen()
+          $("body").off();
+          $("#monkeyContainer").empty()
+          $("#bananaContainer").empty()
+          clearInterval(detectInterval)
+          document.getElementById("roundsCounter").style.color = "black";
+          document.getElementById("bananasCaughtCounter").style.color = "black";
+        }
+      })
+      
+      document.getElementById("pauseButton").addEventListener("click", function () {
+        clearInterval(detectInterval)
+        $("#pauseScreen").show()
+        $("#counters").show()
+        $("body").off();
+        document.getElementById("pauseButton").style.zIndex = 1;
+        document.getElementById("roundsCounter").style.color = "white";
+        document.getElementById("bananasCaughtCounter").style.color = "yellow";
+      })
+      
+      $("#playAgainButton").click(function () {
+        $("#gameOverScreen").hide()
+        $("body").off();
+        playGame()
+      })
+      
+      $("#backButton").click(function () {
+        $("#gameOverScreen").hide()
+        $("body").off();
+        toHomeScreen()
+      })
+      
+      var windowTutorialResize = function () {
+        var videoWidth = 0.925 * 1536
+        var videoHeight = 0.925 * 864
+        document.getElementById("backTutorialButton").style.top = "94%";
+        document.getElementById("backTutorialButton").style.left = "0%";
+        document.getElementById("tutorialVideo").width = window.innerWidth * 0.95;
+        document.getElementById("tutorialVideo").height = window.innerHeight * 0.95;
+      }
+      
+      document.getElementById("tutorialVideo").style.outline = "none";
+      $("#tutorialButton").click(function () {
+        document.body.style.backgroundColor = "black";
+        $("#tutorialMenu").show();
+        $("#homeMenu").hide();
+        $("#navBar").hide();
+        windowTutorialResize()
+        window.addEventListener("resize", windowTutorialResize)
+      })
+      
+      $("#backTutorialButton").click(function () {
+        document.body.style.backgroundColor = "rgb(242, 242, 242)";
+        $("#tutorialMenu").hide();
+        $("#homeMenu").show();
+        $("#navBar").show();
+        document.getElementById("tutorialVideo").pause()
+        document.getElementById("tutorialVideo").currentTime = 0;
+        window.removeEventListener("resize", windowTutorialResize)
+      })
+      $("#arrowKeyLeft").mousedown(function () {
+        var e = $.Event('keydown');
+        e.which = 37;
+        $("body").trigger(e);
+      })
+      $("#arrowKeyRight").mousedown(function () {
+        var e = $.Event('keydown');
+        e.which = 39;
+        $("body").trigger(e);
+      })
+    </script>
+  </body>
+</html>
