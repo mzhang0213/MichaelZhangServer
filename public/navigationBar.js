@@ -36,6 +36,9 @@ addElement(ipAddress + "/coinFlip/", "Flip a Coin!", gameDropdownContent);
 addElement(ipAddress + "/clicker/", "Clicker Game", gameDropdownContent);
 addElement(ipAddress + "/hangman/", "Hangman!", gameDropdownContent);
 addElement(ipAddress + "/admin/", "Log In", gameDropdownContent);
-$("#HomeButton").click(() => window.location = ipAddress);
-//$("#InfoDropdownButton").click(() => window.location = ipAddress + "info/");
-$("#GameDropdownButton").click(() => window.location = ipAddress + "/games/");
+document.getElementById("HomeButton").addEventListener("click", () => {
+    window.location = ipAddress
+});
+document.getElementById("GameDropdownButton").addEventListener("click", ()=>{
+    window.location = ipAddress + "/games/";
+})
