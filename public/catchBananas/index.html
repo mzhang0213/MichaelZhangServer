@@ -5,12 +5,11 @@
   
   <head>
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
-    <script src="ipAddress.js"></script>
     <script>
       const icon = document.createElement("link");
       icon.rel = "icon";
       icon.type = "image/jpeg";
-      icon.href = IP_ADDRESS + "favicon.jpg";
+      icon.href = "michaelzhangserver.herokuapp.com/favicon.jpg";
       document.head.appendChild(icon);
     </script>
     <title>
@@ -32,11 +31,11 @@
       <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
       <script>
         const navBar = document.createElement("script");
-        navBar.src = IP_ADDRESS + "navigationBar.js";
+        navBar.src = "michaelzhangserver.herokuapp.com/navigationBar.js";
         document.body.appendChild(navBar);
         const navBarStyle = document.createElement("link");
         navBarStyle.rel="stylesheet";
-        navBarStyle.href = IP_ADDRESS + "navBarStyle.css";
+        navBarStyle.href = "michaelzhangserver.herokuapp.com/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
       <div id="beginningElements">
@@ -69,7 +68,7 @@
         <div id="tutorialMenu">
           <center>
             <video id="tutorialVideo" controls>
-              <source src="http://71.184.230.97:8080/catchBananas/tutorial.mp4">
+              <source src="tutorial.mp4">
               <font style="color:white;">
                 Your browser sadly cannot play the video. I'm incredibly sorry 🥺
               </font>
@@ -79,32 +78,26 @@
         </div>
       </div>
       <div id="gameElements">
-        <img id="pauseButton" src="http://71.184.230.97:8080/catchBananas/pauseButton.jpg"></img>
+        <img id="pauseButton" src="pauseButton.jpg">
         <div id="monkeyContainer"></div>
         <div id="bananaContainer"></div>
         <div id="testContainer"></div>
-        <!--
-        <div id="movementArrowsContainer">
-          <img id="arrowKeyLeft" src="http://71.184.230.97:8080/catchBananas/arrowKeyLeft.png">
-          <img id="arrowKeyRight" src="http://71.184.230.97:8080/catchBananas/arrowKeyRight.png">
-        </div>
-        -->
         <hr id="loseLife">
       </div>
       <div id="counters">
         <div id="hearts">
-          <img id="heartOne" src="http://71.184.230.97:8080/catchBananas/heart1.png">
-          <img id="heartTwo" src="http://71.184.230.97:8080/catchBananas/heart2.png">
-          <img id="heartThree" src="http://71.184.230.97:8080/catchBananas/heart3.png">
-          <img id="heartFour" src="http://71.184.230.97:8080/catchBananas/heart4.png">
-          <img id="heartFive" src="http://71.184.230.97:8080/catchBananas/heart5.png">
-          <img id="heartSix" src="http://71.184.230.97:8080/catchBananas/heart6.png">
-          <img id="heartSeven" src="http://71.184.230.97:8080/catchBananas/heart7.png">
-          <img id="heartEight" src="http://71.184.230.97:8080/catchBananas/heart8.png">
-          <img id="heartNine" src="http://71.184.230.97:8080/catchBananas/heart9.png">
-          <img id="heartTen" src="http://71.184.230.97:8080/catchBananas/heart10.png">
+          <img id="heartOne" src="heart1.png">
+          <img id="heartTwo" src="heart2.png">
+          <img id="heartThree" src="heart3.png">
+          <img id="heartFour" src="heart4.png">
+          <img id="heartFive" src="heart5.png">
+          <img id="heartSix" src="heart6.png">
+          <img id="heartSeven" src="heart7.png">
+          <img id="heartEight" src="heart8.png">
+          <img id="heartNine" src="heart9.png">
+          <img id="heartTen" src="heart10.png">
         </div>
-        <img id="bananaEmoji" src="http://71.184.230.97:8080/catchBananas/bananaSmall.png">
+        <img id="bananaEmoji" src="bananaSmall.png">
         <p id="bananasCaughtCounter">
           :  0
         </p>
@@ -151,7 +144,7 @@
       <style>
         #arrowKeyLeft {
           position:relative;
-          user-drag: none; 
+          user-drag: none;
           user-select: none;
           -moz-user-select: none;
           -webkit-user-drag: none;
@@ -161,7 +154,7 @@
         #arrowKeyRight {
           position:relative;
           float:right;
-          user-drag: none; 
+          user-drag: none;
           user-select: none;
           -moz-user-select: none;
           -webkit-user-drag: none;
@@ -445,7 +438,10 @@
       </style>
     </font>
     <script>
-      
+      var gebi = function(e){return document.getElementById(e)}
+      gebi("hangmanZero").src = "hangmanZero.png";gebi("hangmanOne").src = "hangmanOne.png";gebi("hangmanTwo").src = "hangmanTwo.png";gebi("hangmanThree").src = "hangmanThree.png";gebi("hangmanFour").src = "hangmanFour.png";gebi("hangmanFive").src = "hangmanFive.png";
+      gebi("hangmanSix").src = "hangmanSix.png";gebi("hangmanSeven").src = "hangmanSeven.png";gebi("hangmanEight").src = "hangmanEight.png";gebi("hangmanNine").src = "hangmanNine.png";gebi("hangmanTen").src = "hangmanTen.png";
+
       var keyCodeDirection = {};
       var windowWidth = 0
       var windowHeight = 0
@@ -564,7 +560,7 @@
         this.y = y - screen.height * 243 / 1980
         this.width = width
         this.height = height
-        var mHTML = '<img src="http://71.184.230.97:8080/catchBananas/monkey1.png">'
+        var mHTML = '<img src="monkey1.png">'
         this.monkeyElem = $(mHTML)
         this.monkeyElem.css({
           position: "relative",
@@ -610,7 +606,7 @@
         this.y = y
         this.width = width
         this.height = height
-        var bHTML = '<img src="http://71.184.230.97:8080/catchBananas/banana1.png">'
+        var bHTML = '<img src="banana1.png">'
         this.bananaElem = $(bHTML)
         this.bananaElem.css({
           position: "relative",

@@ -5,12 +5,11 @@
   
   <head>
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
-    <script src="ipAddress.js"></script>
     <script>
       const icon = document.createElement("link");
       icon.rel = "icon";
       icon.type = "image/jpeg";
-      icon.href = IP_ADDRESS + "favicon.jpg";
+      icon.href = "michaelzhangserver.herokuapp.com/favicon.jpg";
       document.head.appendChild(icon);
     </script>
     <title>
@@ -32,27 +31,27 @@
       <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
       <script>
         const navBar = document.createElement("script");
-        navBar.src = IP_ADDRESS + "navigationBar.js";
+        navBar.src = "michaelzhangserver.herokuapp.com/navigationBar.js";
         document.body.appendChild(navBar);
         const navBarStyle = document.createElement("link");
         navBarStyle.rel="stylesheet";
-        navBarStyle.href = IP_ADDRESS + "navBarStyle.css";
+        navBarStyle.href = "michaelzhangserver.herokuapp.com/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
       <div id="gameContainerBackground">
         <div id="centerLine"></div>
         <div id="hangmanImages">
-          <img id="hangmanZero" src="http://71.184.230.97:8080/hangman/hangmanZero.png">
-          <img id="hangmanOne" src="http://71.184.230.97:8080/hangman/hangmanOne.png">
-          <img id="hangmanTwo" src="http://71.184.230.97:8080/hangman/hangmanTwo.png">
-          <img id="hangmanThree" src="http://71.184.230.97:8080/hangman/hangmanThree.png">
-          <img id="hangmanFour" src="http://71.184.230.97:8080/hangman/hangmanFour.png">
-          <img id="hangmanFive" src="http://71.184.230.97:8080/hangman/hangmanFive.png">
-          <img id="hangmanSix" src="http://71.184.230.97:8080/hangman/hangmanSix.png">
-          <img id="hangmanSeven" src="http://71.184.230.97:8080/hangman/hangmanSeven.png">
-          <img id="hangmanEight" src="http://71.184.230.97:8080/hangman/hangmanEight.png">
-          <img id="hangmanNine" src="http://71.184.230.97:8080/hangman/hangmanNine.png">
-          <img id="hangmanTen" src="http://71.184.230.97:8080/hangman/hangmanTen.png">
+          <img id="hangmanZero">
+          <img id="hangmanOne">
+          <img id="hangmanTwo">
+          <img id="hangmanThree">
+          <img id="hangmanFour">
+          <img id="hangmanFive">
+          <img id="hangmanSix">
+          <img id="hangmanSeven">
+          <img id="hangmanEight">
+          <img id="hangmanNine">
+          <img id="hangmanTen">
         </div>
       </div>
       <center>
