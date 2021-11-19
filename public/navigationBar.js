@@ -32,12 +32,14 @@ gameDropdown.appendChild(gameDropdownContent);
 //add stuff to dropdown lists
 addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", gameDropdownContent);
 addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", gameDropdownContent);
+addElement(ipAddress + "/hangman/", "Hangman!", gameDropdownContent);
+/*
 addElement(ipAddress + "/coinFlip/", "Flip a Coin!", gameDropdownContent);
 addElement(ipAddress + "/clicker/", "Clicker Game", gameDropdownContent);
-addElement(ipAddress + "/hangman/", "Hangman!", gameDropdownContent);
 addElement(ipAddress + "/admin/", "Log In", gameDropdownContent);
+*/
 document.getElementById("HomeButton").addEventListener("click", () => {
-    window.location = ipAddress
+    window.location = ipAddress;
 });
 document.getElementById("GameDropdownButton").addEventListener("click", ()=>{
     window.location = ipAddress + "/games/";
