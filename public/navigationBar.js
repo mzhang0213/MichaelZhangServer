@@ -17,6 +17,7 @@ const home = document.createElement("div");
 const homeButton = document.createElement("button");
 homeButton.id = "HomeButton";
 homeButton.append("Home");
+home.style.display = "inline-block";
 
 home.appendChild(homeButton);
 navBarContainer.appendChild(home);
@@ -28,6 +29,7 @@ gameDropdownButton.id = "GameDropdownButton";
 gameDropdownButton.append("Games 🎮");
 const gameDropdownContent = document.createElement("div");
 gameDropdownContent.id = "GameDropdownContent";
+gameDropdown.style.display = "inline-block";
 
 document.getElementById("navContainer").appendChild(navBarContainer);
 navBarContainer.appendChild(gameDropdown);
