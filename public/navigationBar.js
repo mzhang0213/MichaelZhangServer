@@ -12,9 +12,14 @@ const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
 
 const navBarContainer = document.createElement("nav");
 navBarContainer.id = "navBar";
+
+const home = document.createElement("div");
 const homeButton = document.createElement("button");
 homeButton.id = "HomeButton";
 homeButton.append("Home");
+
+home.appendChild(homeButton);
+navBarContainer.appendChild(home);
 
 const gameDropdown = document.createElement("div");
 gameDropdown.id = "GameDropdown";
