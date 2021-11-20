@@ -8,7 +8,7 @@ function addElement(address, name, parent) {
     //function invocation goes after declarations and appending of parent elements
     parent.appendChild(linkHtmlElement);
 }
-const ipAddress = "https://michaelzhangserver.herokuapp.com";
+const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
 
 const navBarContainer = document.createElement("nav");
 navBarContainer.id = "navBar";
