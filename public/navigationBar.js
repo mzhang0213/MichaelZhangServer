@@ -48,6 +48,8 @@ addElement(ipAddress + "/admin/", "Log In", gameDropdownContent);
 document.getElementById("HomeButton").addEventListener("click", () => {
     window.location = ipAddress;
 });
+/*
 document.getElementById("GameDropdownButton").addEventListener("click", ()=>{
     window.location = ipAddress + "/games/";
 })
+*/
