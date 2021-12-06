@@ -95,7 +95,12 @@
                   song+=songsData.items[k].track.artists[l].name+" & ";
                 }
                 song=song.substring(0,song.length-3);
-                song+=" - " + songsData.items[k].track.name;
+                console.log(song)
+                if (song.trim().length!==0){
+                  //song has stuff rn
+                  song+=" - ";
+                }
+                song+=songsData.items[k].track.name;
                 //eg of final title: Drake & Rick Ross - Money In The Grave
                 p.append(song);
                 p.style.color = "lightgreen";
