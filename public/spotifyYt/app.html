@@ -80,14 +80,13 @@
       //get playlist's songs function
       var getSongs = function(index, playlistData){
         document.getElementById("playlist"+index).style.color = "#4287f5";
+        document.getElementById("songs").innerHTML="";
         for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
           getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+j, accessToken, (songsFetchErr, songsData)=>{
             if (songsFetchErr){
               console.log("tracksFetchErr: " + songsFetchErr);
             } else {
-              //set up for loop, multiple reqs i think cuz only can send 50 tracks at a time
               console.log(songsData);
-              document.getElementById("songs").innerHTML="";
               for (var k=0;k<songsData.items.length;k++){
                 var p = document.createElement("p");
                 document.getElementById("songs").appendChild(p);
@@ -100,8 +99,7 @@
                 //eg of final title: Drake & Rick Ross - Money In The Grave
                 p.append(song);
                 p.style.color = "lightgreen";
-                var songindex=k+j;
-                p.id="song"+songindex;
+                //fuck ids okay
                 p.className="songs";
                 p.addEventListener("click", function(){
                   var titles = document.getElementsByClassName("songs");
