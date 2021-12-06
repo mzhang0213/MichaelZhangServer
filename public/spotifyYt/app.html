@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
+      <div id="one" class="sideBySide">
+        <div id="playlists" class="sideBySide"></div>
+        <div id="songs" class="sideBySide"></div>
+      </div>
+      <div id="two" class="sideBySide">
+        
+      </div>
+      <p id="playlistList"></p>
+    </font>
+    <style>
+      .sideBySide{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+    </style>
+    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <script>
+      const gebi = function(e){return document.getElementById(e)};
+      gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
+      gebi("two").style.width=window.innerWidth*0.5+"px";gebi("two").style.height=window.innerHeight+"px";
+      gebi("two").style.left=window.innerWidth*0.5+"px";
+      gebi("playlists").style.width=window.innerWidth*0.25+"px";gebi("playlists").style.height=window.innerHeight+"px";
+      gebi("songs").style.width=window.innerWidth*0.25+"px";gebi("songs").style.height=window.innerHeight+"px";
+      gebi("songs").style.left=window.innerWidth*0.25+"px";
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      var accessToken = urlParams.get("access_token");
+      const refreshToken = urlParams.get("refresh_token");
+      console.log(accessToken)
+      var getRequest = (apiLink, access_token, callback) => {
+        var req = new XMLHttpRequest();
+        req.open("GET", apiLink);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var arr = JSON.parse(req.responseText);
+            var type = "";
+            callback(undefined, arr); //undefined is basically null which means nothing
+          } else if (req.readyState === 4){
+            console.log("REEEEEEEEEEe", undefined)
+            callback(req.responseText, undefined)
+          }
+        })
+      }
+
+      //get user playlists
+      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (playlistFetchErr, playlistData)=>{
+        if (playlistFetchErr){
+          console.log("playlistFetchErr: " + playlistFetchErr);
+        } else {
+          for (var i=0;i<playlistData.items.length;i++){
+            var p = document.createElement("p");
+            document.getElementById("playlists").appendChild(p);
+            p.append(playlistData.items[i].name)
+            p.style.color = "#94bdff";
+            p.id="playlist"+i;
+            p.className="playlists";
+            p.addEventListener("click", function(){
+              var lists = document.getElementsByClassName("playlists");
+              for(var a=0;a<lists.length;a++){
+                lists[a].style.color=this.style.color="#94bdff";
+              }
+              getSongs(this.id.substring(8),playlistData);
+            })
+          }
+        }
+      })
+      
+      //get playlist's songs function
+      var getSongs = function(index, playlistData){
+        document.getElementById("playlist"+index).style.color = "#4287f5";
+        for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
+          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+j, accessToken, (songsFetchErr, songsData)=>{
+            if (songsFetchErr){
+              console.log("tracksFetchErr: " + songsFetchErr);
+            } else {
+              //set up for loop, multiple reqs i think cuz only can send 50 tracks at a time
+              console.log(songsData);
+              document.getElementById("songs").innerHTML="";
+              for (var k=0;k<songsData.items.length;k++){
+                var p = document.createElement("p");
+                document.getElementById("songs").appendChild(p);
+                var song = "";
+                for (var l=0;l<songsData.items[k].track.artists.length;l++){
+                  song+=songsData.items[k].track.artists[l].name+" & ";
+                }
+                song=song.substring(0,song.length-3);
+                song+=" - " + songsData.items[k].track.name;
+                //eg of final title: Drake & Rick Ross - Money In The Grave
+                p.append(song);
+                p.style.color = "lightgreen";
+                var songindex=k+j;
+                p.id="song"+songindex;
+                p.className="songs";
+                p.addEventListener("click", function(){
+                  var titles = document.getElementsByClassName("songs");
+                  for(var b=0;b<titles.length;b++){
+                    titles[b].style.color=this.style.color="lightgreen";
+                  }
+                  this.style.color="green";
+                  //youtube load
+                  document.getElementById("two").innerHTML="";
+                  var iframe = document.createElement("iframe");
+                  iframe.frameBorder="0";
+                  iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"+"&q="+this.innerHTML,undefined,(getYtErr,searchData)=>{
+                    if (getYtErr){
+                      console.log("getYtErr: " + getYtErr);
+                    }else{
+                      console.log(searchData)
+                      iframe.src="https://youtube.com/embed/"+searchData.items[0].id.videoId+"?autoplay=1";
+                    }
+                  })
+                  document.getElementById("two").appendChild(iframe);
+                })
+              }
+            }
+          })
+        }
+      }
+      //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+    </script>
+  </body>
+</html>
