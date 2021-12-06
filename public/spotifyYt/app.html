@@ -12,7 +12,7 @@
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide">
-        
+        <div id="player"></div> <!--iframe will replace this div here :)-->
       </div>
       <p id="playlistList"></p>
     </font>
@@ -54,6 +54,31 @@
         })
       }
 
+      //load youtube iframe
+      
+      //This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      //This function creates an <iframe> (and YouTube player) after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          //videoId would go here
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady
+          }
+        });
+      }
+      
       //get user playlists
       getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (playlistFetchErr, playlistData)=>{
         if (playlistFetchErr){
@@ -113,16 +138,12 @@
                   }
                   this.style.color="green";
                   //youtube load
-                  document.getElementById("two").innerHTML="";
-                  var iframe = document.createElement("iframe");
-                  iframe.frameBorder="0";
-                  iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                   getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"+"&q="+this.innerHTML,undefined,(getYtErr,searchData)=>{
                     if (getYtErr){
                       console.log("getYtErr: " + getYtErr);
                     }else{
                       console.log(searchData)
-                      iframe.src="https://youtube.com/embed/"+searchData.items[0].id.videoId+"?autoplay=1";
+                      player.loadVideoById(searchData.items[0].videoId);
                     }
                   })
                   document.getElementById("two").appendChild(iframe);
