@@ -12,15 +12,117 @@
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide">
-        <div id="player"></div> <!--iframe will replace this div here :)-->
+        <center id="centered">
+          <div id="player"></div> <!--iframe will replace this div here :)-->
+          <br clear="all"><br><br>
+          <!-- ⏮  |  ▶|⏸  |  ⏭ -->
+          <!-- 🔉  |  🔊 -->
+          <button id="prev" class="mediaControls">⏮</button>
+          <button id="playPause" class="mediaControls">▶ / ⏸</button>
+          <button id="next" class="mediaControls">⏭</button>
+          <br clear="all"><br>
+          <button id="volumeUp" class="mediaControls">🔊</button>
+          <button id="volumeDown" class="mediaControls">🔉</button>
+        </center>
+          <br clear="all">
+          <div id="sliderContainer">
+            <div id="paragraphContainer" class="slider">
+              <p id="sliderDescription">🔀</p>
+            </div>
+            <div id="actualSliderContainer" class="slider">
+              <label id="sliderSwitch">
+                <input type="checkbox" id="sliderCheckBox">
+                <span id="sliderSlider"></span>
+              </label>
+            </div>
+          </div>
       </div>
       <p id="playlistList"></p>
     </font>
     <style>
+      #prev{
+        left:-20px;
+      }
+      #next{
+        left:20px;
+      }
+      #volumeUp{
+        left:-
+        15px;
+      }
+      #volumeDown{
+        left:15px;
+      }
+      .mediaControls{
+        font-size:20px;
+        position:relative;
+      }
       .sideBySide{
         position:absolute;
         top:0;
         left:0;
+      }
+    </style>
+    <style>
+      #sliderContainer{
+        position:relative;
+      }
+      .slider{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      #sliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      #sliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #sliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #sliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #sliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #sliderCheckBox:checked + #sliderSlider {
+        background-color: #2196F3;
+      }
+      #sliderCheckBox:checked + #sliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
       }
     </style>
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
@@ -32,7 +134,14 @@
       gebi("playlists").style.width=window.innerWidth*0.25+"px";gebi("playlists").style.height=window.innerHeight+"px";
       gebi("songs").style.width=window.innerWidth*0.25+"px";gebi("songs").style.height=window.innerHeight+"px";
       gebi("songs").style.left=window.innerWidth*0.25+"px";
-      
+
+      gebi("sliderContainer").style.width=window.innerWidth*0.5+"px";
+      gebi("paragraphContainer").style.width=window.innerWidth*0.25+"px";
+      gebi("actualSliderContainer").style.width=window.innerWidth*0.25+"px";
+      gebi("actualSliderContainer").style.left=window.innerWidth*0.25+"px";
+
+      gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
+
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
       const refreshToken = urlParams.get("refresh_token");
@@ -59,7 +168,7 @@
       //This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
 
-      tag.src = "https://www.youtube.com/iframe_api";
+      tag.src = "https://youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -74,7 +183,8 @@
             'playsinline': 1
           },
           events: {
-            'onReady': onPlayerReady
+            /*'onReady': onPlayerReady,*/
+            'onStateChange': onPlayerStateChange
           }
         });
       }
@@ -97,6 +207,7 @@
                 lists[a].style.color=this.style.color="#94bdff";
               }
               getSongs(this.id.substring(8),playlistData);
+              gebi("prev").disabled=false;gebi("next").disabled=false;gebi("playPause").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
             })
           }
         }
@@ -106,15 +217,60 @@
       var getSongs = function(index, playlistData){
         document.getElementById("playlist"+index).style.color = "#4287f5";
         document.getElementById("songs").innerHTML="";
-        for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
-          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+j, accessToken, (songsFetchErr, songsData)=>{
+        //has to be nested function cuz reading variable of outer for loop is not working
+        var stuff = function(ions){
+          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{
+            console.log(ions)
             if (songsFetchErr){
               console.log("tracksFetchErr: " + songsFetchErr);
             } else {
               console.log(songsData);
+              var allSongs = document.getElementsByClassName("songs");
+              //just jump by 50s until you get there
+              var appendBeforeThisElement = "";
+              var first=false;
+              if (allSongs.length===0){
+                first=true;
+              }else{
+                /*
+                @ song0 group0
+                DAKATI
+
+
+
+                @ song100 group2
+                Ariana Grande
+
+                insert here song150 group3 ions=150
+
+                @ song500 group10
+                Throttle Cities
+                */
+                var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
+                var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
+                for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
+                  if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
+                    appendBeforeThisElement=document.getElementById("song"+c*50);
+                    break;
+                  }
+                }
+              }
               for (var k=0;k<songsData.items.length;k++){
+                //plan: just create divs outside this loop and append them after
+                  //group is Math.floor(position/50)
+                
+                //certainElement.parentNode.insertBefore(thisElement,certainElement)
+                //firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
                 var p = document.createElement("p");
-                document.getElementById("songs").appendChild(p);
+                if (first){
+                  document.getElementById("songs").appendChild(p);
+                }else{
+                  if (appendBeforeThisElement.length===0){
+                    document.getElementById("songs").appendChild(p);
+                  } else {
+                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                  }
+                }
                 var song = "";
                 for (var l=0;l<songsData.items[k].track.artists.length;l++){
                   song+=songsData.items[k].track.artists[l].name+" & ";
@@ -129,7 +285,9 @@
                 //eg of final title: Drake & Rick Ross - Money In The Grave
                 p.append(song);
                 p.style.color = "lightgreen";
-                //fuck ids okay
+                var idVal=k+ions;
+                p.id="song"+idVal;
+                console.log(k)
                 p.className="songs";
                 p.addEventListener("click", function(){
                   var titles = document.getElementsByClassName("songs");
@@ -138,21 +296,83 @@
                   }
                   this.style.color="green";
                   //youtube load
-                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"+"&q="+this.innerHTML,undefined,(getYtErr,searchData)=>{
+                  //avaliable keys:
+                    //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                    //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true&key=AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"+"&q="+this.innerHTML,undefined,(getYtErr,searchData)=>{
                     if (getYtErr){
                       console.log("getYtErr: " + getYtErr);
                     }else{
-                      console.log(searchData)
-                      player.loadVideoById(searchData.items[0].videoId);
+                      player.loadVideoById({videoId:searchData.items[0].id.videoId});
                     }
                   })
-                  document.getElementById("two").appendChild(iframe);
                 })
               }
             }
           })
         }
+        for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
+          stuff(j)
+        }
       }
+
+
+      //FINISH
+      var currentPos = -1;
+      var playedSongs = [];
+      var queueAndPlay = function(){
+        var songs = document.getElementsByClassName("songs");
+        if (sliderCheckBox.checked){
+          //shuffle play
+          function getRandomPos(){
+            var randomPos = Math.floor(Math.random()*songs.length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
+            if (randomPos===currentPos){
+              return getRandomPos();
+            }
+            currentPos=randomPos;
+            return randomPos;
+          }
+          var r = getRandomPos();
+          playedSongs.push(songs[r].innerHTML);
+          songs[r].click();
+        } else {
+          //order play
+
+          document.getElementById("song"+currentPos).click();
+          currentPos++;
+        }
+      }
+
+      document.getElementById("playPause").addEventListener("click", function(){
+        //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
+        if (player.getPlayerState()===5){
+          queueAndPlay();
+        } else if (player.getPlayerState()===1){
+          //playing; pause the video
+          player.pauseVideo();
+        } else if (player.getPlayerState()===2){
+          //paused; play the video
+          player.playVideo();
+        }
+      })
+      function onPlayerStateChange(){
+        if (player.getPlayerState()===0){
+          //song ended, play next
+          queueAndPlay();
+        }
+      }
+      document.getElementById("prev").addEventListener("click", function(){
+        
+      })
+      document.getElementById("next").addEventListener("click", function(){
+        
+      })
+      document.getElementById("volumeUp").addEventListener("click", function(){
+        
+      })
+      document.getElementById("volumeDown").addEventListener("click", function(){
+        
+      })
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
   </body>
