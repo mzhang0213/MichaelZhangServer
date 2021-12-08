@@ -8,6 +8,8 @@
     <font style="font-family: 'Cabin';">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
       <div id="one" class="sideBySide">
+        <button id="logout" style="position:relative;top:10px;left:5px;">Logout</button>
+        <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
       </div>
@@ -207,7 +209,8 @@
       gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
       gebi("two").style.width=window.innerWidth*0.5+"px";gebi("two").style.height=window.innerHeight+"px";
       gebi("two").style.left=window.innerWidth*0.5+"px";
-      gebi("playlists").style.width=window.innerWidth*0.25+"px";gebi("playlists").style.height=window.innerHeight+"px";
+      gebi("playlists").style.width=window.innerWidth*0.25+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
+      gebi("playlists").style.top="20px";
       gebi("songs").style.width=window.innerWidth*0.25+"px";gebi("songs").style.height=window.innerHeight+"px";
       gebi("songs").style.left=window.innerWidth*0.25+"px";
 
@@ -507,6 +510,10 @@
         if (Math.floor(player.getVolume()/10)!==0){
           player.setVolume(player.getVolume()-10);
         }
+      })
+      document.getElementById("logout").addEventListener("click", function(){
+        alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
+        window.location = "https://spotify.com/logout/";
       })
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
