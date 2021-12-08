@@ -49,6 +49,18 @@
               </label>
             </div>
           </div>
+          <div id="lyricModeSliderContainer">
+            <div id="lyricModeParagraphContainer" class="slider">
+              <p id="lyricModeSliderDescription">Lyric Search Mode</p>
+            </div>
+            <div id="actualLyricModeSliderContainer" class="slider">
+              <label id="lyricModeSliderSwitch">
+              <input type="checkbox" id="lyricModeSliderCheckBox">
+              <span id="lyricModeSliderSlider"></span>
+              </label>
+            </div>
+            </div>
+          </div>
       </div>
       <p id="playlistList"></p>
     </font>
@@ -202,17 +214,72 @@
         -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
+
+      #lyricModeSliderContainer{
+        position:relative;
+      }
+      #lyricModeSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+      }
+      #lyricModeSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #lyricModeSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #lyricModeSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #lyricModeSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #lyricModeSliderCheckBox:checked + #lyricModeSliderSlider {
+        background-color: #2196F3;
+      }
+      #lyricModeSliderCheckBox:checked + #lyricModeSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
     </style>
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
       gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
-      gebi("two").style.width=window.innerWidth*0.5+"px";gebi("two").style.height=window.innerHeight+"px";
+      gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
       gebi("two").style.left=window.innerWidth*0.5+"px";
-      gebi("playlists").style.width=window.innerWidth*0.25+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
+      gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
       gebi("playlists").style.top="20px";
-      gebi("songs").style.width=window.innerWidth*0.25+"px";gebi("songs").style.height=window.innerHeight+"px";
-      gebi("songs").style.left=window.innerWidth*0.25+"px";
+      gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
+      gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
 
       gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+65)+"px"
       gebi("shuffleSliderContainer").style.width=0;
@@ -221,6 +288,14 @@
       gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
       gebi("repeatSliderContainer").style.width=0;
       gebi("actualRepeatSliderContainer").style.left="20px";
+
+      //gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
+      gebi("lyricModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+      gebi("lyricModeSliderContainer").style.top="75px";
+      gebi("lyricModeSliderContainer").style.width=0;
+      gebi("lyricModeParagraphContainer").style.left="-110px";
+      gebi("lyricModeSliderDescription").style.width="200px";
+      gebi("actualLyricModeSliderContainer").style.left="40px";
 
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
 
@@ -406,6 +481,11 @@
                   document.getElementById("songDesc").appendChild(sdItalics);
                   document.getElementById("songDesc").appendChild(sdBlue);
                   
+                  var searchQ=this.innerHTML;
+                  if (document.getElementById("lyricModeSliderCheckBox").checked){
+                    searchQ+=" Lyrics";
+                  }
+                  console.log(searchQ)
                   //youtube load
                   //avaliable keys:
                     //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
@@ -413,7 +493,7 @@
                     //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
                   getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
                              +"&key=AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
-                             +"&q="+this.innerHTML,
+                             +"&q="+searchQ,
                              undefined,
                              (getYtErr,searchData)=>{
                     if (getYtErr){
