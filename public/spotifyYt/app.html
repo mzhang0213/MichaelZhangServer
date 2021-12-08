@@ -11,12 +11,12 @@
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
       </div>
-      <div id="two" class="sideBySide">
+      <div id="two" class="sideBySide" style="border-left:3px black solid;">
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
+          <br clear="all"><br>
+          <p id="songDesc"></p>
           <br clear="all"><br><br>
-          <!-- ⏮  |  ▶|⏸  |  ⏭ -->
-          <!-- 🔉  |  🔊 -->
           <button id="prev" class="mediaControls">⏮</button>
           <button id="playPause" class="mediaControls">▶ / ⏸</button>
           <button id="next" class="mediaControls">⏭</button>
@@ -25,14 +25,25 @@
           <button id="volumeDown" class="mediaControls">🔉</button>
         </center>
           <br clear="all">
-          <div id="sliderContainer">
-            <div id="paragraphContainer" class="slider">
-              <p id="sliderDescription">🔀</p>
+          <div id="shuffleSliderContainer">
+            <div id="shuffleSliderParagraphContainer" class="slider">
+              <p id="shuffleSliderDescription">🔀</p>
             </div>
-            <div id="actualSliderContainer" class="slider">
-              <label id="sliderSwitch">
-                <input type="checkbox" id="sliderCheckBox">
-                <span id="sliderSlider"></span>
+            <div id="actualShuffleSliderContainer" class="slider">
+            <label id="shuffleSliderSwitch">
+              <input type="checkbox" id="shuffleSliderCheckBox">
+              <span id="shuffleSliderSlider"></span>
+            </label>
+            </div>
+          </div>
+          <div id="repeatSliderContainer">
+            <div id="repeatSliderParagraphContainer" class="slider">
+              <p id="repeatSliderDescription">🔁</p>
+            </div>
+            <div id="actualRepeatSliderContainer" class="slider">
+              <label id="repeatSliderSwitch">
+                <input type="checkbox" id="repeatSliderCheckBox">
+                <span id="repeatSliderSlider"></span>
               </label>
             </div>
           </div>
@@ -40,6 +51,10 @@
       <p id="playlistList"></p>
     </font>
     <style>
+      #songDesc{
+        position:relative;
+        font-size:17px;
+      }
       #prev{
         left:-20px;
       }
@@ -64,7 +79,7 @@
       }
     </style>
     <style>
-      #sliderContainer{
+      #shuffleSliderContainer{
         position:relative;
       }
       .slider{
@@ -72,7 +87,7 @@
         top:0;
         left:0;
       }
-      #sliderDescription{
+      #shuffleSliderDescription{
         font-size:20px;
         margin:0;
         padding:0;
@@ -80,19 +95,19 @@
         width:20px;
         float:right;
       }
-      #sliderSwitch {
+      #shuffleSliderSwitch {
         position:absolute;
         display:inline-block;
         width:60px;
         height:34px;
         left:10px;
       }
-      #sliderSwitch input {
+      #shuffleSliderSwitch input {
         opacity:0;
         width:0;
         height:0;
       }
-      #sliderSlider {
+      #shuffleSliderSlider {
         position: absolute;
         cursor: pointer;
         top: 0;
@@ -104,7 +119,7 @@
         transition: .4s;
         border-radius: 34px;
       }
-      #sliderSlider:before {
+      #shuffleSliderSlider:before {
         position: absolute;
         content: "";
         height: 26px;
@@ -116,10 +131,71 @@
         transition: .4s;
         border-radius: 50%;
       }
-      #sliderCheckBox:checked + #sliderSlider {
+      #shuffleSliderCheckBox:checked + #shuffleSliderSlider {
         background-color: #2196F3;
       }
-      #sliderCheckBox:checked + #sliderSlider:before {
+      #shuffleSliderCheckBox:checked + #shuffleSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+      
+      #repeatSliderContainer{
+        position:relative;
+      }
+      .slider{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      #repeatSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      #repeatSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #repeatSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #repeatSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #repeatSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #repeatSliderCheckBox:checked + #repeatSliderSlider {
+        background-color: #2196F3;
+      }
+      #repeatSliderCheckBox:checked + #repeatSliderSlider:before {
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
         transform: translateX(26px);
@@ -135,10 +211,13 @@
       gebi("songs").style.width=window.innerWidth*0.25+"px";gebi("songs").style.height=window.innerHeight+"px";
       gebi("songs").style.left=window.innerWidth*0.25+"px";
 
-      gebi("sliderContainer").style.width=window.innerWidth*0.5+"px";
-      gebi("paragraphContainer").style.width=window.innerWidth*0.25+"px";
-      gebi("actualSliderContainer").style.width=window.innerWidth*0.25+"px";
-      gebi("actualSliderContainer").style.left=window.innerWidth*0.25+"px";
+      gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+65)+"px"
+      gebi("shuffleSliderContainer").style.width=0;
+      gebi("actualShuffleSliderContainer").style.left="20px";
+
+      gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
+      gebi("repeatSliderContainer").style.width=0;
+      gebi("actualRepeatSliderContainer").style.left="20px";
 
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
 
@@ -189,30 +268,54 @@
         });
       }
       
-      //get user playlists
-      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (playlistFetchErr, playlistData)=>{
-        if (playlistFetchErr){
-          console.log("playlistFetchErr: " + playlistFetchErr);
-        } else {
-          for (var i=0;i<playlistData.items.length;i++){
-            var p = document.createElement("p");
-            document.getElementById("playlists").appendChild(p);
-            p.append(playlistData.items[i].name)
-            p.style.color = "#94bdff";
-            p.id="playlist"+i;
-            p.className="playlists";
-            p.addEventListener("click", function(){
-              var lists = document.getElementsByClassName("playlists");
-              for(var a=0;a<lists.length;a++){
-                lists[a].style.color=this.style.color="#94bdff";
+      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+      function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+      }
+
+      //get user's playlists
+      //find the playlist total
+      var playlistTotal = 0;
+      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ //dogs fetch
+        if (dogsErr){
+          console.log("playlistFetchErr first: " + dogsErr);
+        }else{
+          playlistTotal=theStuffData.total;
+          var things = function(atoms){
+            getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+              if (playlistFetchErr){
+                console.log("playlistFetchErr: " + playlistFetchErr);
+              } else {
+                for (var i=0;i<playlistData.items.length;i++){
+                  var p = document.createElement("p");
+                  document.getElementById("playlists").appendChild(p);
+                  p.append(playlistData.items[i].name)
+                  p.style.color = "#94bdff";
+                  p.id="playlist"+i;
+                  p.className="playlists";
+                  p.addEventListener("click", function(){
+                    var lists = document.getElementsByClassName("playlists");
+                    for(var a=0;a<lists.length;a++){
+                      lists[a].style.color=this.style.color="#94bdff";
+                    }
+                    getSongs(this.id.substring(8),playlistData);
+                    gebi("playPause").disabled=false;
+                  })
+                }
               }
-              getSongs(this.id.substring(8),playlistData);
-              gebi("prev").disabled=false;gebi("next").disabled=false;gebi("playPause").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
             })
+          }
+          for (var mz=0;mz<playlistTotal;mz+=50){
+            things(mz);
           }
         }
       })
-      
+      var currentPos = -1; //represents current position in the array
+      var playedSongs = []; //PUSH IDS
+      var fromQueueAndPlay = false;
+      var fromPrev = false;
+      var fromRepeat = false;
       //get playlist's songs function
       var getSongs = function(index, playlistData){
         document.getElementById("playlist"+index).style.color = "#4287f5";
@@ -220,7 +323,6 @@
         //has to be nested function cuz reading variable of outer for loop is not working
         var stuff = function(ions){
           getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{
-            console.log(ions)
             if (songsFetchErr){
               console.log("tracksFetchErr: " + songsFetchErr);
             } else {
@@ -232,20 +334,6 @@
               if (allSongs.length===0){
                 first=true;
               }else{
-                /*
-                @ song0 group0
-                DAKATI
-
-
-
-                @ song100 group2
-                Ariana Grande
-
-                insert here song150 group3 ions=150
-
-                @ song500 group10
-                Throttle Cities
-                */
                 var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
                 var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
                 for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
@@ -256,11 +344,6 @@
                 }
               }
               for (var k=0;k<songsData.items.length;k++){
-                //plan: just create divs outside this loop and append them after
-                  //group is Math.floor(position/50)
-                
-                //certainElement.parentNode.insertBefore(thisElement,certainElement)
-                //firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
                 var p = document.createElement("p");
                 if (first){
                   document.getElementById("songs").appendChild(p);
@@ -272,11 +355,13 @@
                   }
                 }
                 var song = "";
+                /*
                 for (var l=0;l<songsData.items[k].track.artists.length;l++){
                   song+=songsData.items[k].track.artists[l].name+" & ";
                 }
                 song=song.substring(0,song.length-3);
-                console.log(song)
+                */
+                song+=songsData.items[k].track.artists[0].name
                 if (song.trim().length!==0){
                   //song has stuff rn
                   song+=" - ";
@@ -287,19 +372,46 @@
                 p.style.color = "lightgreen";
                 var idVal=k+ions;
                 p.id="song"+idVal;
-                console.log(k)
                 p.className="songs";
                 p.addEventListener("click", function(){
+                  //make sure the rest of the song titles lightgreen
                   var titles = document.getElementsByClassName("songs");
                   for(var b=0;b<titles.length;b++){
                     titles[b].style.color=this.style.color="lightgreen";
                   }
-                  this.style.color="green";
+                  //free me saronite chain gang
+                  gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                  
+                  this.style.color="green"; //this elem dark green
+                  
+                  if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                    playedSongs.push(this.id);
+                    currentPos++;
+                  }
+                  fromQueueAndPlay=false;
+                  fromPrev=false;
+                  fromRepeat=false;
+
+                  //append songDesc
+                  document.getElementById("songDesc").innerHTML="";
+                  var sdItalics = document.createElement("i");
+                  var sdBlue = document.createElement("font");
+                  sdBlue.style.color="#1284ff";
+                  
+                  sdItalics.append("Playing:  ");
+                  sdBlue.append(htmlDecode(this.innerHTML));
+                  document.getElementById("songDesc").appendChild(sdItalics);
+                  document.getElementById("songDesc").appendChild(sdBlue);
+                  
                   //youtube load
                   //avaliable keys:
                     //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
                     //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
-                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true&key=AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"+"&q="+this.innerHTML,undefined,(getYtErr,searchData)=>{
+                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                             +"&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                             +"&q="+this.innerHTML,
+                             undefined,
+                             (getYtErr,searchData)=>{
                     if (getYtErr){
                       console.log("getYtErr: " + getYtErr);
                     }else{
@@ -316,30 +428,36 @@
         }
       }
 
-
-      //FINISH
-      var currentPos = -1;
-      var playedSongs = [];
       var queueAndPlay = function(){
-        var songs = document.getElementsByClassName("songs");
-        if (sliderCheckBox.checked){
+        fromQueueAndPlay=true;
+        if (document.getElementById("shuffleSliderCheckBox").checked){
           //shuffle play
           function getRandomPos(){
-            var randomPos = Math.floor(Math.random()*songs.length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
-            if (randomPos===currentPos){
+            var randomPos = Math.floor(Math.random()*document.getElementsByClassName("songs").length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
+            if ("song"+randomPos===playedSongs[currentPos]){
               return getRandomPos();
             }
-            currentPos=randomPos;
             return randomPos;
           }
-          var r = getRandomPos();
-          playedSongs.push(songs[r].innerHTML);
-          songs[r].click();
-        } else {
-          //order play
 
-          document.getElementById("song"+currentPos).click();
+          playedSongs.length=currentPos+1;
+          playedSongs.push("song"+getRandomPos());
           currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
+        } else {
+          //ordered play
+          console.log(document.getElementById("shuffleSliderCheckBox").checked)
+          if (playedSongs.length===0){
+            playedSongs.push("song0");
+          }else{
+            if (playedSongs[currentPos+1]===undefined){
+              playedSongs.push("song"+(parseInt(playedSongs[currentPos].substring(4))+1));
+            }
+          }
+          //if next pos is empty, add new song and move to that
+          //if next pos is full, only ++
+          currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
         }
       }
 
@@ -358,20 +476,36 @@
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
-          queueAndPlay();
+          document.getElementById("next").click(); // :EZ:
         }
       }
       document.getElementById("prev").addEventListener("click", function(){
-        
+        if (currentPos!==0){
+          fromPrev=true;
+          currentPos--;
+          document.getElementById(playedSongs[currentPos]).click();
+        }
       })
       document.getElementById("next").addEventListener("click", function(){
-        
+        if (playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1)){
+          queueAndPlay();
+        } else if (document.getElementById("repeatSliderCheckBox").checked){
+          //on the last song and want to repeat playlist
+          fromRepeat=true;
+          playedSongs.push("song0");
+          currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
+        }
       })
       document.getElementById("volumeUp").addEventListener("click", function(){
-        
+        if (Math.floor(player.getVolume()/10)!==10){
+          player.setVolume(player.getVolume()+10);
+        }
       })
       document.getElementById("volumeDown").addEventListener("click", function(){
-        
+        if (Math.floor(player.getVolume()/10)!==0){
+          player.setVolume(player.getVolume()-10);
+        }
       })
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
