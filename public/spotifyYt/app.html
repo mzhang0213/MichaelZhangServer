@@ -352,6 +352,12 @@
         return doc.documentElement.textContent;
       }
 
+      //see if access token expired
+      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
+        if (bonesErr){
+          alert("fetching for bones err: " + bonesErr+"\nGoing home...");
+          window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt";
+        }else{
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
@@ -595,6 +601,7 @@
         alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
         window.location = "https://spotify.com/logout/";
       })
+}})//this is the closing stuff for the check access token
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
   </body>
