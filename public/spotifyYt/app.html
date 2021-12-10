@@ -270,7 +270,7 @@
         transform: translateX(26px);
       }
     </style>
-    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
       gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
@@ -355,6 +355,7 @@
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
+          console.log(bonesErr)
           if (bonesErr.error.message === "The access token expired"){ //HEY CHANGE THIS
             alert("fetching for bones err: " + bonesErr+"\nLogin again :P\nGoing home...");
             window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
