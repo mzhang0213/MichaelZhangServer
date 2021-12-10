@@ -355,8 +355,12 @@
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
-          alert("fetching for bones err: " + bonesErr+"\nGoing home...");
-          window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt";
+          if (theStuffData.expired){ //HEY CHANGE THIS
+            alert("fetching for bones err: " + bonesErr+"\nLogin again :P\nGoing home...");
+            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt";
+          }else{
+            console.log("fetching for bones err: "+bonesErr);
+          }
         }else{
       //get user's playlists
       //find the playlist total
