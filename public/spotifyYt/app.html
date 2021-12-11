@@ -320,7 +320,18 @@
         })
       }
 
-      //load youtube iframe
+      //see if access token expired
+      var asdf = "";
+      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
+        if (bonesErr){
+          if (bonesErr.indexOf("The access token expired")!==-1){
+            alert("\nLogin again :P\nGoing home...");
+            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+          }else{
+            console.log("fetching for bones err: "+bonesErr);
+          }
+        }else{
+            //load youtube iframe
       
       //This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
@@ -351,18 +362,7 @@
         var doc = new DOMParser().parseFromString(input, "text/html");
         return doc.documentElement.textContent;
       }
-
-      //see if access token expired
-      var asdf = "";
-      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
-        if (bonesErr){
-          if (bonesErr.indexOf("The access token expired")!==-1){
-            alert("\nLogin again :P\nGoing home...");
-            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-          }else{
-            console.log("fetching for bones err: "+bonesErr);
-          }
-        }else{
+      
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
