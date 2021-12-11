@@ -362,7 +362,7 @@
         var doc = new DOMParser().parseFromString(input, "text/html");
         return doc.documentElement.textContent;
       }
-      
+
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
@@ -602,12 +602,12 @@
           player.setVolume(player.getVolume()-10);
         }
       })
-      document.getElementById("logout").addEventListener("click", function(){
-        alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
-        window.location = "https://spotify.com/logout/";
-      })
-}})//this is the closing stuff for the check access token
-      //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+    }})//this is the closing stuff for the check access token
+    document.getElementById("logout").addEventListener("click", function(){
+      alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
+      window.location = "https://spotify.com/logout/";
+    })
+    //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
   </body>
 </html>
