@@ -327,6 +327,12 @@
       tag.src = "https://youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+      function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+      }
 
       //see if access token expired
       var asdf = "";
@@ -341,7 +347,6 @@
         }else{
 
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
-      var player;
       function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
           height: '390',
@@ -355,12 +360,6 @@
             'onStateChange': onPlayerStateChange
           }
         });
-      }
-      
-      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
-      function htmlDecode(input) {
-        var doc = new DOMParser().parseFromString(input, "text/html");
-        return doc.documentElement.textContent;
       }
 
       //get user's playlists
