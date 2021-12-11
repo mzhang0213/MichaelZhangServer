@@ -130,6 +130,10 @@ app.get("/uploads/*", (req, res)=>{
     res.sendFile(__dirname+req.url.substring(req.url.indexOf("/uploads/")));
 });
 
+app.get("/favicon.png", (req,res)=>{
+	res.sendFile(__dirname+"/favicon.png")
+})
+
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
