@@ -353,10 +353,12 @@
       }
 
       //see if access token expired
+      var asdf = "";
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
           console.log(JSON.parse(bonesErr.error.message))
-          if (bonesErr.error.message === "The access token expired"){ //HEY CHANGE THIS
+          asdf = bonesErr;
+          if (JSON.parse(bonesErr.error.message) === "The access token expired"){ //HEY CHANGE THIS
             alert("fetching for bones err: " + bonesErr+"\nLogin again :P\nGoing home...");
             window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
           }else{
