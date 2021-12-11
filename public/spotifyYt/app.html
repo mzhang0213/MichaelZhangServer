@@ -334,20 +334,8 @@
         return doc.documentElement.textContent;
       }
 
-      //see if access token expired
-      var asdf = "";
-      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
-        if (bonesErr){
-          if (bonesErr.indexOf("The access token expired")!==-1){
-            alert("\nLogin again :P\nGoing home...");
-            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-          }else{
-            console.log("fetching for bones err: "+bonesErr);
-          }
-        }else{
-
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
-      function onYouTubeIframeAPIReady() {
+        function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
           height: '390',
           width: '640',
@@ -361,6 +349,23 @@
           }
         });
       }
+      
+      function onPlayerStateChange(){
+        if (player.getPlayerState()===0){
+          //song ended, play next
+          document.getElementById("next").click(); // :EZ:
+        }
+      }
+      //see if access token expired
+      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
+        if (bonesErr){
+          if (bonesErr.indexOf("The access token expired")!==-1){
+            alert("\nLogin again :P\nGoing home...");
+            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+          }else{
+            console.log("fetching for bones err: "+bonesErr);
+          }
+        }else{
 
       //get user's playlists
       //find the playlist total
@@ -567,12 +572,6 @@
           player.playVideo();
         }
       })
-      function onPlayerStateChange(){
-        if (player.getPlayerState()===0){
-          //song ended, play next
-          document.getElementById("next").click(); // :EZ:
-        }
-      }
       document.getElementById("prev").addEventListener("click", function(){
         if (currentPos!==0){
           fromPrev=true;
