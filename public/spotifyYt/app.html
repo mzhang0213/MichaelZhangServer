@@ -355,8 +355,8 @@
       //see if access token expired
       var asdf = "";
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
+        console.log(bonesErr, theStuffData)
         if (bonesErr){
-          console.log(JSON.parse(bonesErr.error.message))
           asdf = bonesErr;
           if (JSON.parse(bonesErr.error.message) === "The access token expired"){ //HEY CHANGE THIS
             alert("fetching for bones err: " + bonesErr+"\nLogin again :P\nGoing home...");
@@ -365,6 +365,7 @@
             console.log("fetching for bones err: "+bonesErr);
           }
         }else{
+          console.log('hi')
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
