@@ -319,6 +319,14 @@
           }
         })
       }
+      //load youtube iframe
+      
+      //This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       //see if access token expired
       var asdf = "";
@@ -331,14 +339,6 @@
             console.log("fetching for bones err: "+bonesErr);
           }
         }else{
-            //load youtube iframe
-      
-      //This code loads the IFrame Player API code asynchronously.
-      var tag = document.createElement('script');
-
-      tag.src = "https://youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
       var player;
