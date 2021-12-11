@@ -349,7 +349,7 @@
           }
         });
       }
-      
+
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
@@ -360,7 +360,7 @@
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
           if (bonesErr.indexOf("The access token expired")!==-1){
-            alert("\nLogin again :P\nGoing home...");
+            alert("Login again :P\nGoing home...");
             window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
           }else{
             console.log("fetching for bones err: "+bonesErr);
