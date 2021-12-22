@@ -29,7 +29,7 @@ function createDropdown(name, displayName){
     const dropdown = document.createElement("div");
     dropdown.className = "dropdown";
     const dropdownButton = document.createElement("button");
-    dropdownButton.className = "dropdownButton";
+    dropdownButton.className = "navButton";
     dropdownButton.append(displayName);
     const dropdownContent = document.createElement("div");
     dropdownContent.className = "dropdownContent";
