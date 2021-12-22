@@ -2,6 +2,7 @@ const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
 
 const navBarContainer = document.createElement("nav");
 navBarContainer.id = "navBar";
+document.getElementById("navContainer").appendChild(navBarContainer);
 
 function addElement(address, name, parent) {
     const linkHtmlElement = document.createElement("a");
@@ -35,7 +36,6 @@ function createDropdown(name, displayName){
     dropdownContent.id=name+"DropdownContent";
     dropdown.style.display = "inline-block";
     
-    document.getElementById("navContainer").appendChild(navBarContainer);
     navBarContainer.appendChild(dropdown);
     dropdown.appendChild(dropdownButton);
     dropdown.appendChild(dropdownContent);
@@ -43,7 +43,7 @@ function createDropdown(name, displayName){
 
 createButton("home", "Home");
 
-createDropdown("games");
+createDropdown("games", "Games 🎮");
 addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", "gamesDropdownContent");
 addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", "gamesDropdownContent");
 addElement(ipAddress + "/hangman/", "Hangman!", "gamesDropdownContent");
