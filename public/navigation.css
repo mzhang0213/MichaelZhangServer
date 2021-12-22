@@ -1,0 +1,11 @@
+.navigationLink{
+	font-size:19px;
+	font-family:"Cabin";
+}
+.navigationLink:link {
+	text-decoration:none;
+}
+.navigationLink:visited {
+	color:blue;
+	text-decoration:none;
+}
