@@ -1,3 +1,8 @@
+const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
+
+const navBarContainer = document.createElement("nav");
+navBarContainer.id = "navBar";
+
 function addElement(address, name, parent) {
     const linkHtmlElement = document.createElement("a");
     linkHtmlElement.href = address;
@@ -6,50 +11,53 @@ function addElement(address, name, parent) {
         linkHtmlElement.target = "_blank";
     }
     //function invocation goes after declarations and appending of parent elements
-    parent.appendChild(linkHtmlElement);
+    document.getElementById(parent).appendChild(linkHtmlElement);
 }
-const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
+function createButton(name, displayName){
+    const container = document.createElement("div");
+    const button = document.createElement("button");
+    button.id = name+"Button";
+    button.className="navButton";
+    button.append(displayName);
+    container.style.display = "inline-block";
 
-const navBarContainer = document.createElement("nav");
-navBarContainer.id = "navBar";
+    container.appendChild(button);
+    navBarContainer.appendChild(container);
+}
+function createDropdown(name, displayName){
+    const dropdown = document.createElement("div");
+    dropdown.className = "dropdown";
+    const dropdownButton = document.createElement("button");
+    dropdownButton.className = "dropdownButton";
+    dropdownButton.append(displayName);
+    const dropdownContent = document.createElement("div");
+    dropdownContent.className = "dropdownContent";
+    dropdownContent.id=name+"DropdownContent";
+    dropdown.style.display = "inline-block";
+    
+    document.getElementById("navContainer").appendChild(navBarContainer);
+    navBarContainer.appendChild(dropdown);
+    dropdown.appendChild(dropdownButton);
+    dropdown.appendChild(dropdownContent);
+}
 
-const home = document.createElement("div");
-const homeButton = document.createElement("button");
-homeButton.id = "HomeButton";
-homeButton.append("Home");
-home.style.display = "inline-block";
+createButton("home", "Home");
 
-home.appendChild(homeButton);
-navBarContainer.appendChild(home);
+createDropdown("games");
+addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", "gamesDropdownContent");
+addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", "gamesDropdownContent");
+addElement(ipAddress + "/hangman/", "Hangman!", "gamesDropdownContent");
 
-const gameDropdown = document.createElement("div");
-gameDropdown.id = "GameDropdown";
-const gameDropdownButton = document.createElement("button");
-gameDropdownButton.id = "GameDropdownButton";
-gameDropdownButton.append("Games 🎮");
-const gameDropdownContent = document.createElement("div");
-gameDropdownContent.id = "GameDropdownContent";
-gameDropdown.style.display = "inline-block";
+createButton("spotifyYt", "Cracked Spotify");
 
-document.getElementById("navContainer").appendChild(navBarContainer);
-navBarContainer.appendChild(gameDropdown);
-gameDropdown.appendChild(gameDropdownButton);
-gameDropdown.appendChild(gameDropdownContent);
+createButton("USH", "USH")
 
-//add stuff to dropdown lists
-addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", gameDropdownContent);
-addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", gameDropdownContent);
-addElement(ipAddress + "/hangman/", "Hangman!", gameDropdownContent);
-/*
-addElement(ipAddress + "/coinFlip/", "Flip a Coin!", gameDropdownContent);
-addElement(ipAddress + "/clicker/", "Clicker Game", gameDropdownContent);
-addElement(ipAddress + "/admin/", "Log In", gameDropdownContent);
-*/
-document.getElementById("HomeButton").addEventListener("click", () => {
+document.getElementById("homeButton").addEventListener("click", () => {
     window.location = ipAddress;
 });
-/*
-document.getElementById("GameDropdownButton").addEventListener("click", ()=>{
-    window.location = ipAddress + "/games/";
-})
-*/
+document.getElementById("spotifyYtButton").addEventListener("click", () => {
+    window.location = "https://"+window.location.host+"/spotifyYt";
+});
+document.getElementById("USHButton").addEventListener("click", () => {
+    window.location = "https://"+window.location.host+"/USH";
+});
