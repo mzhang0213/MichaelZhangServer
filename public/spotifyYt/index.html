@@ -29,34 +29,36 @@
         navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
-    <script>
-      document.getElementById("login").addEventListener("click",()=>{
-        window.location="./login"
-      })
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("exp")){
-        var message = document.createElement("p");
-        message.style.position = "relative";
-        message.style.top = window.innerHeight*0.2+"px";
-        message.style.fontSize = "45px";
-        message.id="expiredMessage";
-        message.append("Please relogin :)");
+      <button id="login">Login here</button>
+      <script>
+        document.getElementById("login").addEventListener("click",()=>{
+          window.location="./login"
+        })
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("exp")){
+          var message = document.createElement("p");
+          message.style.position = "relative";
+          message.style.top = window.innerHeight*0.2+"px";
+          message.style.fontSize = "45px";
+          message.id="expiredMessage";
+          message.append("Please relogin :)");
 
-        var center = document.createElement("center");
-        document.body.appendChild(center);
-        center.appendChild(message);
-        setTimeout(()=>{
-          var iter=0;
-          var interval = setInterval(()=>{
-            if (iter<=100){
-              document.getElementById("expiredMessage").style.opacity=100-1*iter+"%";
-              iter++;
-            } else {
-              clearInterval(interval);
-            }
-          },10)
-        },2000)
-      }
-    </script>
+          var center = document.createElement("center");
+          document.body.appendChild(center);
+          center.appendChild(message);
+          setTimeout(()=>{
+            var iter=0;
+            var interval = setInterval(()=>{
+              if (iter<=100){
+                document.getElementById("expiredMessage").style.opacity=100-1*iter+"%";
+                iter++;
+              } else {
+                clearInterval(interval);
+              }
+            },10)
+          },2000)
+        }
+      </script>
+    </font>
   </body>
 </html>
