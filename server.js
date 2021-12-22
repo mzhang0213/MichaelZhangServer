@@ -126,6 +126,14 @@ request.post(authOptions, function(error, response, body) {
 });
 });
 
+app.get("/getDecks", (req, res)=>{
+    var json = {
+        files:""
+    }
+    json.files = fs.readdirSync("./public/decks");
+    res.send(JSON.stringify(json));
+})
+
 app.get("/uploads/*", (req, res)=>{
     res.sendFile(__dirname+req.url.substring(req.url.indexOf("/uploads/")));
 });
