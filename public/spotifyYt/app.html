@@ -363,7 +363,6 @@
 
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
-        document.getElementsByClassName("ytp-volume-panel")[0].remove()//maybe bad; removes volume slider but not mute button
       }
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
@@ -582,7 +581,6 @@
         } else if (player.getPlayerState()===1){
           //playing; pause the video
           player.pauseVideo();
-          document.getElementsByClassName("ytp-pause-overlay ytp-scroll-min")[0].remove(); //maybe bad; delete the popup for recommended videos ez
         } else if (player.getPlayerState()===2){
           //paused; play the video
           player.playVideo();
