@@ -621,7 +621,7 @@
           player.setVolume((Math.floor(player.getVolume()/10)-1)*10);
         }else if(currentVolume===10){
           player.setVolume(player.getVolume()-5);
-        }else{
+        }else if (currentVolume!==1){
           player.setVolume(player.getVolume()-1);
         }
       })
