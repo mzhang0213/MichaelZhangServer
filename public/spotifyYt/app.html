@@ -312,9 +312,7 @@
         gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
       }
       resize();
-      window.addEventListener("resize", function(){
-        resize();
-      })
+      window.addEventListener("resize", resize)
 
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
