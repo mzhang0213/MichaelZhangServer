@@ -308,11 +308,10 @@
         gebi("lyricModeParagraphContainer").style.left="-110px";
         gebi("lyricModeSliderDescription").style.width="200px";
         gebi("actualLyricModeSliderContainer").style.left="40px";
-
-        gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
       }
       resize();
-      window.addEventListener("resize", resize)
+      window.addEventListener("resize", resize);
+      gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
 
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
