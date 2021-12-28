@@ -284,31 +284,37 @@
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
-      gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
-      gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
-      gebi("two").style.left=window.innerWidth*0.5+"px";
-      gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
-      gebi("playlists").style.top="20px";
-      gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
-      gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
+      var resize = function() {
+        gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
+        gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
+        gebi("two").style.left=window.innerWidth*0.5+"px";
+        gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
+        gebi("playlists").style.top="20px";
+        gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
+        gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
 
-      gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+65)+"px"
-      gebi("shuffleSliderContainer").style.width=0;
-      gebi("actualShuffleSliderContainer").style.left="20px";
+        gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+65)+"px"
+        gebi("shuffleSliderContainer").style.width=0;
+        gebi("actualShuffleSliderContainer").style.left="20px";
 
-      gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
-      gebi("repeatSliderContainer").style.width=0;
-      gebi("actualRepeatSliderContainer").style.left="20px";
+        gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
+        gebi("repeatSliderContainer").style.width=0;
+        gebi("actualRepeatSliderContainer").style.left="20px";
 
-      //gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
-      gebi("lyricModeSliderContainer").style.left=window.innerWidth*0.25+"px";
-      gebi("lyricModeSliderContainer").style.top="75px";
-      gebi("lyricModeSliderContainer").style.width=0;
-      gebi("lyricModeParagraphContainer").style.left="-110px";
-      gebi("lyricModeSliderDescription").style.width="200px";
-      gebi("actualLyricModeSliderContainer").style.left="40px";
+        //gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
+        gebi("lyricModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("lyricModeSliderContainer").style.top="75px";
+        gebi("lyricModeSliderContainer").style.width=0;
+        gebi("lyricModeParagraphContainer").style.left="-110px";
+        gebi("lyricModeSliderDescription").style.width="200px";
+        gebi("actualLyricModeSliderContainer").style.left="40px";
 
-      gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
+        gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
+      }
+      resize();
+      window.addEventListener("resize", function(){
+        resize();
+      })
 
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
