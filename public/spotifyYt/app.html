@@ -72,6 +72,18 @@
             </div>
             </div>
           </div>
+          <div id="ostModeSliderContainer">
+            <div id="ostModeParagraphContainer" class="slider">
+              <p id="ostModeSliderDescription">OST Search Mode</p>
+            </div>
+            <div id="actualOstModeSliderContainer" class="slider">
+              <label id="ostModeSliderSwitch">
+              <input type="checkbox" id="ostModeSliderCheckBox">
+              <span id="ostModeSliderSlider"></span>
+              </label>
+            </div>
+            </div>
+          </div>
       </div>
       <p id="playlistList"></p>
     </font>
@@ -280,6 +292,61 @@
         -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
+
+      #ostModeSliderContainer{
+        position:relative;
+      }
+      #ostModeSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+      }
+      #ostModeSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #ostModeSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #ostModeSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #ostModeSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #ostModeSliderCheckBox:checked + #ostModeSliderSlider {
+        background-color: #2196F3;
+      }
+      #ostModeSliderCheckBox:checked + #ostModeSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
@@ -308,6 +375,13 @@
         gebi("lyricModeParagraphContainer").style.left="-110px";
         gebi("lyricModeSliderDescription").style.width="200px";
         gebi("actualLyricModeSliderContainer").style.left="40px";
+        
+        gebi("ostModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("ostModeSliderContainer").style.top="150px";
+        gebi("ostModeSliderContainer").style.width=0;
+        gebi("ostModeParagraphContainer").style.left="-110px";
+        gebi("ostModeSliderDescription").style.width="200px";
+        gebi("actualOstModeSliderContainer").style.left="40px";
       }
       resize();
       window.addEventListener("resize", resize);
@@ -516,6 +590,9 @@
                   var searchQ=this.innerHTML;
                   if (document.getElementById("lyricModeSliderCheckBox").checked){
                     searchQ+=" Lyrics";
+                  }
+                  if (document.getElementById("ostModeSliderCheckBox").checked){
+                    searchQ+=" ost";
                   }
                   console.log(searchQ)
                   //youtube load
