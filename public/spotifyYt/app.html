@@ -38,47 +38,47 @@
           <button id="volumeDown" class="mediaControls">🔉</button>
         </center>
         <br clear="all">
-        <div id="shuffleSliderContainer" class="sliderContainer">
-          <div id="shuffleSliderParagraphContainer" class="sliderParagraph">
-            <p id="shuffleSliderDescription" class="sliderDescription">🔀</p>
+        <div id="shuffleSliderContainer">
+          <div id="shuffleSliderParagraphContainer" class="slider">
+            <p id="shuffleSliderDescription">🔀</p>
           </div>
-          <div id="actualShuffleSliderContainer" class="actualSliderContainer">
-          <label class="sliderSwitch">
-            <input type="checkbox" id="shuffleSliderCheckBox" class="sliderCheckBox">
-            <span class="sliderSlider"></span>
+          <div id="actualShuffleSliderContainer" class="slider">
+          <label id="shuffleSliderSwitch">
+            <input type="checkbox" id="shuffleSliderCheckBox">
+            <span id="shuffleSliderSlider"></span>
           </label>
           </div>
         </div>
-        <div id="repeatSliderContainer" class="sliderContainer">
-          <div id="repeatSliderParagraphContainer" class="sliderParagraph">
-            <p id="repeatSliderDescription" class="sliderDescription">🔁</p>
+        <div id="repeatSliderContainer">
+          <div id="repeatSliderParagraphContainer" class="slider">
+            <p id="repeatSliderDescription">🔁</p>
           </div>
-          <div id="actualRepeatSliderContainer" class="actualSliderContainer">
-            <label class="sliderSwitch">
-              <input type="checkbox" id="repeatSliderCheckBox" class="sliderCheckBox">
-              <span class="sliderSlider"></span>
+          <div id="actualRepeatSliderContainer" class="slider">
+            <label id="repeatSliderSwitch">
+              <input type="checkbox" id="repeatSliderCheckBox">
+              <span id="repeatSliderSlider"></span>
             </label>
           </div>
         </div>
-        <div id="lyricModeSliderContainer" class="sliderContainer">
-          <div id="lyricModeParagraphContainer" class="sliderParagraph">
-            <p id="lyricModeSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+        <div id="lyricModeSliderContainer">
+          <div id="lyricModeParagraphContainer" class="slider">
+            <p id="lyricModeSliderDescription">Lyric Search Mode</p>
           </div>
-          <div id="actualLyricModeSliderContainer" class="actualSliderContainer">
-            <label class="sliderSwitch">
-            <input type="checkbox" id="lyricModeSliderCheckBox" class="sliderCheckBox">
-            <span class="sliderSlider"></span>
+          <div id="actualLyricModeSliderContainer" class="slider">
+            <label id="lyricModeSliderSwitch">
+            <input type="checkbox" id="lyricModeSliderCheckBox">
+            <span id="lyricModeSliderSlider"></span>
             </label>
           </div>
         </div>
-        <div id="ostModeSliderContainer" class="sliderContainer">
-          <div id="ostModeParagraphContainer" class="sliderParagraph">
-            <p id="ostModeSliderDescription" class="sliderDescription">OST Search Mode</p>
+        <div id="ostModeSliderContainer">
+          <div id="ostModeParagraphContainer" class="slider">
+            <p id="ostModeSliderDescription">OST Search Mode</p>
           </div>
-          <div id="actualOstModeSliderContainer" class="actualSliderContainer">
-            <label class="sliderSwitch">
-            <input type="checkbox" id="ostModeSliderCheckBox" class="sliderCheckBox">
-            <span class="sliderSlider"></span>
+          <div id="actualOstModeSliderContainer" class="slider">
+            <label id="ostModeSliderSwitch">
+            <input type="checkbox" id="ostModeSliderCheckBox">
+            <span id="ostModeSliderSlider"></span>
             </label>
           </div>
         </div>
@@ -114,15 +114,15 @@
       }
     </style>
     <style>
-      .sliderContainer{
+      #shuffleSliderContainer{
         position:relative;
       }
-      .sliderParagraph + .actualSliderContainer{ /*special*/
+      .slider{
         position:absolute;
         top:0;
         left:0;
       }
-      .sliderDescription{
+      #shuffleSliderDescription{
         font-size:20px;
         margin:0;
         padding:0;
@@ -130,19 +130,19 @@
         width:20px;
         float:right;
       }
-      .sliderSwitch {
+      #shuffleSliderSwitch {
         position:absolute;
         display:inline-block;
         width:60px;
         height:34px;
         left:10px;
       }
-      .sliderSwitch input {
+      #shuffleSliderSwitch input {
         opacity:0;
         width:0;
         height:0;
       }
-      .sliderSlider {
+      #shuffleSliderSlider {
         position: absolute;
         cursor: pointer;
         top: 0;
@@ -154,7 +154,7 @@
         transition: .4s;
         border-radius: 34px;
       }
-      .sliderSlider:before {
+      #shuffleSliderSlider:before {
         position: absolute;
         content: "";
         height: 26px;
@@ -166,10 +166,181 @@
         transition: .4s;
         border-radius: 50%;
       }
-      .sliderCheckBox:checked + .sliderSlider {
+      #shuffleSliderCheckBox:checked + #shuffleSliderSlider {
         background-color: #2196F3;
       }
-      .sliderCheckBox:checked + .sliderSlider:before {
+      #shuffleSliderCheckBox:checked + #shuffleSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+      
+      #repeatSliderContainer{
+        position:relative;
+      }
+      .slider{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      #repeatSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      #repeatSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #repeatSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #repeatSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #repeatSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #repeatSliderCheckBox:checked + #repeatSliderSlider {
+        background-color: #2196F3;
+      }
+      #repeatSliderCheckBox:checked + #repeatSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      #lyricModeSliderContainer{
+        position:relative;
+      }
+      #lyricModeSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+      }
+      #lyricModeSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #lyricModeSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #lyricModeSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #lyricModeSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #lyricModeSliderCheckBox:checked + #lyricModeSliderSlider {
+        background-color: #2196F3;
+      }
+      #lyricModeSliderCheckBox:checked + #lyricModeSliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      #ostModeSliderContainer{
+        position:relative;
+      }
+      #ostModeSliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+      }
+      #ostModeSliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      #ostModeSliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      #ostModeSliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      #ostModeSliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      #ostModeSliderCheckBox:checked + #ostModeSliderSlider {
+        background-color: #2196F3;
+      }
+      #ostModeSliderCheckBox:checked + #ostModeSliderSlider:before {
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
         transform: translateX(26px);
