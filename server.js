@@ -4,8 +4,10 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var cp = require("child_process");
 const PORT = process.env.PORT || "12232";
 var fs = require("fs");
+const { cpuUsage } = require("process");
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
@@ -30,10 +32,119 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/public'))
-	.use(cors())
-	.use(cookieParser());
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
+app.get("/update", (req,res)=>{
+	// cd "C:/Users/Michael Zhang/Desktop/notecardCreator"
+
+	var source = "C:/Users/Michael Zhang/Desktop/notecardCreator/public/decks/";
+	var target = "D:/michaelServer/public/decks/";
+
+	function copyFileSync( source, target ) {
+
+		var targetFile = target;
+	
+		// If target is a directory, a new file with the same name will be created
+		if ( fs.existsSync( target ) ) {
+			if ( fs.lstatSync( target ).isDirectory() ) {
+				targetFile = path.join( target, path.basename( source ) );
+			}
+		}
+	
+		fs.writeFileSync(targetFile, fs.readFileSync(source));
+	}
+	
+	function copyFolderRecursiveSync( source, target ) {
+		var files = [];
+	
+		// Check if folder needs to be created or integrated
+		var targetFolder = path.join( target, path.basename( source ) );
+		if ( !fs.existsSync( targetFolder ) ) {
+			fs.mkdirSync( targetFolder );
+		}
+	
+		// Copy
+		if ( fs.lstatSync( source ).isDirectory() ) {
+			files = fs.readdirSync( source );
+			files.forEach( function ( file ) {
+				var curSource = path.join( source, file );
+				if ( fs.lstatSync( curSource ).isDirectory() ) {
+					copyFolderRecursiveSync( curSource, targetFolder );
+				} else {
+					copyFileSync( curSource, targetFolder );
+				}
+			} );
+		}
+	}
+
+	function deleteDirRecursive(path) {
+		if(fs.existsSync(path)) {
+			fs.readdirSync(path).forEach(function(file){
+				var curPath = path + "/" + file;
+				if(fs.lstatSync(curPath).isDirectory()) { // recurse
+					deleteDirRecursive(curPath);
+				} else { // delete file
+					try {
+						fs.unlinkSync(curPath);
+					} catch (e) {
+						console.log(e);
+					}
+				}
+			});
+			if(path!==target){
+				try{
+					fs.rmdirSync(path);
+				} catch (err){
+					console.log(err)
+				}
+			}
+		}
+	}
+
+	deleteDirRecursive(target);
+	copyFolderRecursiveSync(source, target);
+
+	//use cmd to update heroku
+	var execCmd = function (cmd, args){
+		var process = cp.spawn(cmd, args, {signal});
+		process.stdout.on('data', (data) => {
+			console.log(`stdout: ${data}`);
+		});
+		process.stderr.on('data', (data) => {
+			console.error(`stderr: ${data}`);
+		});
+		return process;
+	}
+	/*
+	.on('close', (code) => {
+		console.log(`child process exited with code ${code}`);
+	});
+	*/
+	execCmd("D:", ).on('close', (code) => {
+		console.log(`child process exited with code ${code}`);
+
+		execCmd("cd D:/michaelServer/").on('close', (code) => {
+			console.log(`child process exited with code ${code}`);
+
+			execCmd("git",["add","."]).on('close', (code) => {
+				console.log(`child process exited with code ${code}`);
+		
+				execCmd("git",["commit","-m","\"notecard update by cmd\""]).on('close', (code) => {
+					console.log(`child process exited with code ${code}`);
+		
+					execCmd("git",["push","herkou","master"]).on('close', (code) => {
+						console.log(`child process exited with code ${code}`);
+
+						execCmd("git",["push","github","master"]).on('close', (code) => {
+							console.log(`child process exited with code ${code}`);
+						});
+					});
+				});
+			});
+		});
+	});
+	res.redirect("/deckViewer?updated=true");
+})
 
 app.get('/spotifyYt/login', function(req, res) {
 

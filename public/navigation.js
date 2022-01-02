@@ -13,9 +13,9 @@
 	var cardCreator = document.createElement("a");
 	var deckCreator = document.createElement("a");
 	var deckViewer = document.createElement("a");
-	cardCreator.href="http://"+window.location.host+"/cardCreator";
-	deckCreator.href="http://"+window.location.host+"/deckCreator";
-	deckViewer.href="http://"+window.location.host+"/deckViewer";
+	cardCreator.href="https://"+window.location.host+"/cardCreator";
+	deckCreator.href="https://"+window.location.host+"/deckCreator";
+	deckViewer.href="https://"+window.location.host+"/deckViewer";
 	cardCreator.append("Card Creator");
 	deckCreator.append("Deck Creator");
 	deckViewer.append("View Created Decks!")
