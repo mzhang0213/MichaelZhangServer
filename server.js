@@ -5,9 +5,10 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var cp = require("child_process");
-const PORT = process.env.PORT || "12232";
 var fs = require("fs");
-const { cpuUsage } = require("process");
+var path = require('path');
+
+const PORT = process.env.PORT || "12232";
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
@@ -106,7 +107,7 @@ app.get("/update", (req,res)=>{
 
 	//use cmd to update heroku
 	var execCmd = function (cmd, args){
-		var process = cp.spawn(cmd, args, {signal});
+		var process = cp.spawn(cmd, args);
 		process.stdout.on('data', (data) => {
 			console.log(`stdout: ${data}`);
 		});
@@ -120,10 +121,10 @@ app.get("/update", (req,res)=>{
 		console.log(`child process exited with code ${code}`);
 	});
 	*/
-	execCmd("D:", ).on('close', (code) => {
-		console.log(`child process exited with code ${code}`);
+	//execCmd("D:").on('close', (code) => {
+		//console.log(`child process exited with code ${code}`);
 
-		execCmd("cd D:/michaelServer/").on('close', (code) => {
+		execCmd("cd", ["D:/michaelServer/"]).on('close', (code) => {
 			console.log(`child process exited with code ${code}`);
 
 			execCmd("git",["add","."]).on('close', (code) => {
@@ -142,7 +143,7 @@ app.get("/update", (req,res)=>{
 				});
 			});
 		});
-	});
+	//});
 	res.redirect("/deckViewer?updated=true");
 })
 

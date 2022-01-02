@@ -10,12 +10,14 @@
   "author": "michael-zhang",
   "license": "ISC",
   "dependencies": {
+    "child_process": "^1.0.2",
     "cookie-parser": "^1.4.6",
     "cookieparser": "^0.1.0",
     "cors": "^2.8.5",
     "debug": "^4.3.2",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
+    "path": "^0.12.7",
     "querystring": "^0.2.1",
     "request": "^2.88.2"
   }
