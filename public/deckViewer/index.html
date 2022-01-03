@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <div id="selectMenu" class="containers">
+        <h2>Which deck would you like to see?</h2>
+        <br>
+        <div id="appendSelect"></div>
+        <br><br>
+        <button id="go">Go</button>
+      </div>
+      <div id="viewer" class="containers" hidden>
+        <button id="left" class="navButton">⬅</button>
+        <button id="right" class="navButton">➡</button>
+        <button id="exit">Exit</button>
+        <div id="appendCards"></div>
+        <div id="appendCardChooser"></div>
+      </div>
+    </font>
+    <style>
+      .containers{
+        position:absolute;
+        left:0;
+        top:0;
+      }
+      .navButton{
+        position:absolute;
+        top:0;
+        left:0;
+        background-color:white;
+        border:none;
+        font-size:25px;
+        opacity:50%;
+        outline:none;
+      }
+      #exit{
+        position:absolute;
+        left:0;
+        top:0;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://michaelzhangwebsite.herokuapp.com/navigation.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://michaelzhangwebsite.herokuapp.com/navigation.css">
+    <script>
+      document.getElementById("left").style.width=(window.innerWidth*0.15)+"px";
+      document.getElementById("left").style.height=(window.innerHeight)+"px";
+      document.getElementById("left").style.textAlign="center";
+
+      document.getElementById("right").style.width=(window.innerWidth*0.15)+"px";
+      document.getElementById("right").style.height=(window.innerHeight)+"px";
+      document.getElementById("right").style.left=(window.innerWidth*0.85)+"px";
+      document.getElementById("right").style.textAlign="center";
+
+      document.getElementById("appendCardChooser").style.position="absolute";
+      document.getElementById("appendCardChooser").style.marginLeft=window.innerWidth*0.25+"px";
+      document.getElementById("appendCardChooser").style.marginRight=window.innerWidth*0.25+"px";
+      document.getElementById("appendCardChooser").style.width=window.innerWidth*0.5+"px";
+
+      var httpReq = function(method, url, cb){
+        var req = new XMLHttpRequest();
+        req.open(method, url);
+        req.send();
+        req.onload = function(){
+          if (req.readyState === 4){
+            cb(req.responseText, undefined);
+          } else {
+            cb(undefined, "not ready err")
+          }
+        }
+      }
+
+      var cards=[];
+      var cardPosition=0;
+      
+      var loadCard = function(){
+        document.getElementById("appendCards").innerHTML="";
+        var data = cards[cardPosition];
+
+        var cardContainer = document.createElement("div");
+        var term = document.createElement("textarea");
+        var content = document.createElement("textarea");
+        //base stats
+        cardContainer.style.position="absolute";
+        cardContainer.style.left=0;
+        cardContainer.style.top=0;
+        cardContainer.style.border="2px solid #000000";
+        cardContainer.style.padding=0;
+
+        cardContainer.style.width=(window.innerWidth*0.6)+"px";
+        cardContainer.style.height=(window.innerHeight*0.6)+"px";
+
+        cardContainer.style.marginLeft=(window.innerWidth*0.2)+"px";
+        cardContainer.style.marginRight=(window.innerWidth*0.2)+"px";
+        cardContainer.style.marginTop=(window.innerHeight*0.2)+"px";
+        cardContainer.style.marginBottom=(window.innerHeight*0.2)+"px";
+
+        document.getElementById("appendCards").appendChild(cardContainer);
+
+        term.style.width=(window.innerWidth*0.6)+"px";term.style.height=((window.innerHeight*0.6)*0.4)+"px";
+        term.style.marginTop=((window.innerHeight*0.6)*0.3)+"px";term.style.marginBottom=((window.innerHeight*0.6)*0.3)+"px";
+        term.style.padding=0;
+        term.style.textAlign="center";
+        term.style.fontSize="30px";
+        term.readOnly=true;
+        term.style.resize="none";
+        term.style.border="none";
+        term.style.fontFamily="Cabin";
+        term.style.outline="none";
+        term.id="term";
+
+        content.style.width=(window.innerWidth*0.6-7)+"px";content.style.height=(window.innerHeight*0.6-15)+"px";
+        content.style.marginTop="15px";
+        content.style.marginLeft="7px";
+        content.style.padding=0;
+        content.style.fontSize="17px";
+        content.readOnly=true;
+        content.style.resize="none";
+        content.style.border="none";
+        content.style.fontFamily="Cabin";
+        content.style.outline="none";
+        content.id="content";
+
+        content.hidden=true;
+        cardContainer.appendChild(term);
+        cardContainer.appendChild(content);
+
+        term.append(data.term);
+        content.append(data.content);
+
+        function rotate(){
+          var dist=0;
+          var iter=0;
+          var a = setInterval(function(){
+            dist+=1*iter;
+            cardContainer.style.marginTop=(window.innerHeight*0.2+dist)+"px";
+            cardContainer.style.marginBottom=(window.innerHeight*0.2-dist)+"px";
+            if(iter>=10){
+              clearInterval(a);
+            }
+            iter++
+          },15)
+
+          var bats=0;
+          setTimeout(function(){
+            var b = setInterval(function(){
+              dist-=1*bats;
+              cardContainer.style.marginTop=(window.innerHeight*0.2+dist)+"px";
+              cardContainer.style.marginBottom=(window.innerHeight*0.2-dist)+"px";
+              if(bats>=10){
+                clearInterval(b);
+              }
+              bats++
+            },25)
+            if (term.hidden){
+              term.hidden=false;
+              content.hidden=true;
+            }else{
+              term.hidden=true;
+              content.hidden=false;
+            }
+          },50+150);
+        }
+        term.addEventListener("click",rotate);
+        content.addEventListener("click",rotate);
+        updateButtons();
+      }
+      
+      const updateButtons = function(){
+        if (cardPosition === 0){
+          document.getElementById("left").disabled = true;
+        }else{
+          document.getElementById("left").disabled = false;
+        }
+        if (cardPosition === cards.length-1){
+          document.getElementById("right").disabled = true;
+        }else{
+          document.getElementById("right").disabled = false;
+        }
+      }
+
+      httpReq("GET", "https://"+window.location.host+"/getDecks", (theReq, err)=>{
+        if (err){
+          console.log(err);
+        }else{
+          var jsonRes = JSON.parse(theReq);
+          var decks = jsonRes.files;
+
+          //populate decks in a select element
+          var select = document.createElement("select");
+          select.id="deckSelect";
+          for (var i=0;i<decks.length;i++){
+            var option = document.createElement("option");
+            option.append(decks[i]);
+            select.appendChild(option);
+          }
+          document.getElementById("appendSelect").appendChild(select);
+        }
+      })
+      document.getElementById("go").addEventListener("click",function(){
+        //load deck
+        document.getElementById("navigationContainer").remove();
+        document.getElementById("selectMenu").hidden=true;
+        document.getElementById("viewer").hidden=false;
+        var configJson = {};
+        
+        httpReq("GET", "https://"+window.location.host+"/decks/"+document.getElementById("deckSelect").value+"/config.json", (data, err)=>{
+          if (err) console.log(err);
+          else {
+            configJson=JSON.parse(data);
+            
+            var loadedSelect = new Event("loadedselect");
+
+            //load cardNav
+            var center = document.createElement("center");
+            var select = document.createElement("select");
+            select.id="cardSelect";
+            var resJson = JSON.parse(data);
+            var tempCards = resJson.cards;
+            var defaultOption = document.createElement("option");
+            defaultOption.append("~~~~~~~")
+            defaultOption.style.opacity="50%";
+            select.appendChild(defaultOption);
+            for (var i=0;i<tempCards.length;i++){
+              const option = document.createElement("option");
+              httpReq("GET", "https://"+window.location.host+"/decks/"+document.getElementById("deckSelect").value+"/"+tempCards[i], (cardReq,cardErr)=>{
+                if (cardErr){
+                  console.log("card get err: " + cardErr);
+                }else{
+                  var cardData = JSON.parse(cardReq); cards.push(cardData);
+                  //console.log(cardData.term)
+                  option.append(cardData.term);
+                  select.appendChild(option);
+                  window.dispatchEvent(loadedSelect);
+                }
+              })
+            }
+            select.onchange = function(){
+              if (select.value!=="~~~~~~~"){
+                //move card position
+                for (var i=0;i<cards.length;i++){
+                  if (cards[i].term===select.value){
+                    cardPosition=i;
+                    loadCard();
+                  }
+                }
+              }
+            }
+
+            center.appendChild(select);
+            document.getElementById("appendCardChooser").appendChild(center);
+            window.addEventListener("loadedselect",function(){
+              loadCard();
+            })
+            window.addEventListener("keydown", function(event){
+              if (event.code==="Space"){
+                if(document.getElementById("content").hidden){
+                  document.getElementById("term").click();
+                }else{
+                  document.getElementById("content").click();
+                }
+              }
+            })
+          }
+        })
+      })
+      document.getElementById("left").addEventListener("click",function(){
+        if (cardPosition!==0){
+          cardPosition--;
+          loadCard();
+        }
+      })
+      document.getElementById("right").addEventListener("click",function(){
+        document.getElementById("")
+        if (cardPosition!==cards.length-1){
+          cardPosition++;
+          loadCard();
+        }
+      })
+      document.getElementById("exit").addEventListener("click",function(){
+        location.reload();
+      })
+      document.addEventListener("keydown", function(event){
+        if (!viewer.hidden){
+          if (event.key==="ArrowLeft"){
+            document.getElementById("left").click();
+          }else if(event.key==="ArrowRight"){
+            document.getElementById("right").click();
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

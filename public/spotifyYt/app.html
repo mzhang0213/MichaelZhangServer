@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+
+    <title>Spotify in Youtube by Michael Zhang</title>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
+      <div id="one" class="sideBySide">
+        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
+        <br clear="all"><br>
+        <div id="playlists" class="sideBySide"></div>
+        <div id="songs" class="sideBySide"></div>
+      </div>
+      <div id="two" class="sideBySide" style="border-left:3px black solid;">
+        <center id="centered">
+          <div id="player"></div> <!--iframe will replace this div here :)-->
+          <br clear="all"><br>
+          <p id="songDesc"></p>
+          <br clear="all">
+          <button id="prev" class="mediaControls">⏮</button>
+          <button id="playPause" class="mediaControls">▶ / ⏸</button>
+          <button id="next" class="mediaControls">⏭</button>
+          <br clear="all"><br>
+          <button id="volumeUp" class="mediaControls">🔊</button>
+          <button id="volumeDown" class="mediaControls">🔉</button>
+        </center>
+        <br clear="all">
+        <div id="shuffleSliderContainer" class="sliderContainer">
+          <div id="shuffleSliderParagraphContainer" class="sliderParagraph">
+            <p id="shuffleSliderDescription" class="sliderDescription">🔀</p>
+          </div>
+          <div id="actualShuffleSliderContainer" class="actualSliderContainer">
+          <label class="sliderSwitch">
+            <input type="checkbox" id="shuffleSliderCheckBox" class="sliderCheckBox">
+            <span class="sliderSlider"></span>
+          </label>
+          </div>
+        </div>
+        <div id="repeatSliderContainer" class="sliderContainer">
+          <div id="repeatSliderParagraphContainer" class="sliderParagraph">
+            <p id="repeatSliderDescription" class="sliderDescription">🔁</p>
+          </div>
+          <div id="actualRepeatSliderContainer" class="actualSliderContainer">
+            <label class="sliderSwitch">
+              <input type="checkbox" id="repeatSliderCheckBox" class="sliderCheckBox">
+              <span class="sliderSlider"></span>
+            </label>
+          </div>
+        </div>
+        <div id="lyricModeSliderContainer" class="sliderContainer">
+          <div id="lyricModeParagraphContainer" class="sliderParagraph">
+            <p id="lyricModeSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+          </div>
+          <div id="actualLyricModeSliderContainer" class="actualSliderContainer">
+            <label class="sliderSwitch">
+            <input type="checkbox" id="lyricModeSliderCheckBox" class="sliderCheckBox">
+            <span class="sliderSlider"></span>
+            </label>
+          </div>
+        </div>
+        <div id="ostModeSliderContainer" class="sliderContainer">
+          <div id="ostModeParagraphContainer" class="sliderParagraph">
+            <p id="ostModeSliderDescription" class="sliderDescription">OST Search Mode</p>
+          </div>
+          <div id="actualOstModeSliderContainer" class="actualSliderContainer">
+            <label class="sliderSwitch">
+            <input type="checkbox" id="ostModeSliderCheckBox" class="sliderCheckBox">
+            <span class="sliderSlider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <p id="playlistList"></p>
+    </font>
+    <style>
+      #songDesc{
+        position:relative;
+        font-size:17px;
+      }
+      #prev{
+        left:-20px;
+      }
+      #next{
+        left:20px;
+      }
+      #volumeUp{
+        left:-15px;
+      }
+      #volumeDown{
+        left:15px;
+      }
+      .mediaControls{
+        font-size:20px;
+        position:relative;
+      }
+      .sideBySide{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+    </style>
+    <style>
+      .sliderContainer{
+        position:relative;
+      }
+      .sliderParagraph{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .actualSliderContainer{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .sliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      .sliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      .sliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      .sliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      .sliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      .sliderCheckBox:checked + .sliderSlider {
+        background-color: #2196F3;
+      }
+      .sliderCheckBox:checked + .sliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+    <script>
+      const gebi = function(e){return document.getElementById(e)};
+      var resize = function() {
+        gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
+        gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
+        gebi("two").style.left=window.innerWidth*0.5+"px";
+        gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
+        gebi("playlists").style.top="20px";
+        gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
+        gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
+
+        gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+43)+"px"
+        gebi("shuffleSliderContainer").style.width=0;
+        gebi("actualShuffleSliderContainer").style.left="20px";
+
+        gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-159)+"px"
+        gebi("repeatSliderContainer").style.width=0;
+        gebi("actualRepeatSliderContainer").style.left="20px";
+
+        //gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
+        gebi("lyricModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("lyricModeSliderContainer").style.top="75px";
+        gebi("lyricModeSliderContainer").style.width=0;
+        gebi("lyricModeParagraphContainer").style.left="-110px";
+        gebi("lyricModeSliderDescription").style.width="200px";
+        gebi("actualLyricModeSliderContainer").style.left="40px";
+        
+        gebi("ostModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("ostModeSliderContainer").style.top="130px";
+        gebi("ostModeSliderContainer").style.width=0;
+        gebi("ostModeParagraphContainer").style.left="-110px";
+        gebi("ostModeSliderDescription").style.width="200px";
+        gebi("actualOstModeSliderContainer").style.left="40px";
+      }
+      resize();
+      window.addEventListener("resize", resize);
+      gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      var accessToken = urlParams.get("access_token");
+      const refreshToken = urlParams.get("refresh_token");
+      console.log(accessToken)
+      var getRequest = (apiLink, access_token, callback) => {
+        var req = new XMLHttpRequest();
+        req.open("GET", apiLink);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var arr = JSON.parse(req.responseText);
+            var type = "";
+            callback(undefined, arr); //undefined is basically null which means nothing
+          } else if (req.readyState === 4){
+            console.log("REEEEEEEEEEe", undefined)
+            callback(req.responseText, undefined)
+          }
+        })
+      }
+      //load youtube iframe
+      
+      //This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+      function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+      }
+
+      //This function creates an <iframe> (and YouTube player) after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          //videoId would go here
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      function onPlayerReady(){
+        player.setVolume(50);//not rip headphones users immediately
+      }
+      function onPlayerStateChange(){
+        if (player.getPlayerState()===0){
+          //song ended, play next
+          document.getElementById("next").click(); // :EZ:
+        }
+      }
+      //see if access token expired
+      getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
+        if (bonesErr){
+          if (bonesErr.indexOf("The access token expired")!==-1){
+            alert("Login again :P\nGoing home...");
+            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+          }else{
+            console.log("fetching for bones err: "+bonesErr);
+          }
+        }else{
+
+      //get user's playlists
+      //find the playlist total
+      var playlistTotal = 0;
+      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ //dogs fetch
+        if (dogsErr){
+          console.log("playlistFetchErr first: " + dogsErr);
+        }else{
+          playlistTotal=theStuffData.total;
+          var things = function(atoms){
+            getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+              if (playlistFetchErr){
+                console.log("playlistFetchErr: " + playlistFetchErr);
+              } else {
+                for (var i=0;i<playlistData.items.length;i++){
+                  var p = document.createElement("p");
+                  document.getElementById("playlists").appendChild(p);
+                  p.append(playlistData.items[i].name)
+                  p.style.color = "#94bdff";
+                  p.id="playlist"+i;
+                  p.className="playlists";
+                  p.addEventListener("click", function(){
+                    var lists = document.getElementsByClassName("playlists");
+                    for(var a=0;a<lists.length;a++){
+                      lists[a].style.color=this.style.color="#94bdff";
+                    }
+                    getSongs(this.id.substring(8),playlistData);
+                    gebi("playPause").disabled=false;
+                  })
+                }
+              }
+            })
+          }
+          for (var mz=0;mz<playlistTotal;mz+=50){
+            things(mz);
+          }
+        }
+      })
+      var currentPos = -1; //represents current position in the array
+      var playedSongs = []; //PUSH IDS
+      var fromQueueAndPlay = false;
+      var fromPrev = false;
+      var fromRepeat = false;
+      //get playlist's songs function
+      var getSongs = function(index, playlistData){
+        document.getElementById("playlist"+index).style.color = "#4287f5";
+        document.getElementById("songs").innerHTML="";
+        //has to be nested function cuz reading variable of outer for loop is not working
+        var stuff = function(ions){
+          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{
+            if (songsFetchErr){
+              console.log("tracksFetchErr: " + songsFetchErr);
+            } else {
+              console.log(songsData);
+              var allSongs = document.getElementsByClassName("songs");
+              //just jump by 50s until you get there
+              var appendBeforeThisElement = "";
+              var first=false;
+              if (allSongs.length===0){
+                first=true;
+              }else{
+                var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
+                var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
+                for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
+                  if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
+                    appendBeforeThisElement=document.getElementById("song"+c*50);
+                    break;
+                  }
+                }
+              }
+              for (var k=0;k<songsData.items.length;k++){
+                var p = document.createElement("p");
+                if (first){
+                  document.getElementById("songs").appendChild(p);
+                }else{
+                  if (appendBeforeThisElement.length===0){
+                    document.getElementById("songs").appendChild(p);
+                  } else {
+                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                  }
+                }
+                var song = "";
+                /*
+                for (var l=0;l<songsData.items[k].track.artists.length;l++){
+                  song+=songsData.items[k].track.artists[l].name+" & ";
+                }
+                song=song.substring(0,song.length-3);
+                */
+                song+=songsData.items[k].track.artists[0].name
+                if (song.trim().length!==0){
+                  //song has stuff rn
+                  song+=" - ";
+                }
+                song+=songsData.items[k].track.name;
+                //eg of final title: Drake & Rick Ross - Money In The Grave
+                p.append(song);
+                p.style.color = "lightgreen";
+                var idVal=k+ions;
+                p.id="song"+idVal;
+                p.className="songs";
+                p.addEventListener("click", function(){
+                  //make sure the rest of the song titles lightgreen
+                  var titles = document.getElementsByClassName("songs");
+                  for(var b=0;b<titles.length;b++){
+                    titles[b].style.color=this.style.color="lightgreen";
+                  }
+                  //free me saronite chain gang
+                  gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                  
+                  this.style.color="green"; //this elem dark green
+                  
+                  if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                    playedSongs.push(this.id);
+                    currentPos++;
+                  }
+                  fromQueueAndPlay=false;
+                  fromPrev=false;
+                  fromRepeat=false;
+
+                  //append songDesc
+                  document.getElementById("songDesc").innerHTML="";
+                  var sdItalics = document.createElement("i");
+                  var sdBlue = document.createElement("font");
+                  sdBlue.style.color="#1284ff";
+                  
+                  sdItalics.append("Playing:  ");
+                  sdBlue.append(htmlDecode(this.innerHTML));
+                  document.getElementById("songDesc").appendChild(sdItalics);
+                  document.getElementById("songDesc").appendChild(sdBlue);
+                  
+                  var searchQ=this.innerHTML;
+                  if (document.getElementById("lyricModeSliderCheckBox").checked){
+                    searchQ+=" Lyrics";
+                  }
+                  if (document.getElementById("ostModeSliderCheckBox").checked){
+                    searchQ+=" ost";
+                  }
+                  console.log(searchQ)
+                  //youtube load
+                  //avaliable keys:
+                    //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                    //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                    //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                             +"&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                             +"&q="+searchQ,
+                             undefined,
+                             (getYtErr,searchData)=>{
+                    if (getYtErr){
+                      console.log("getYtErr: " + getYtErr);
+                    }else{
+                      player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                    }
+                  })
+                })
+              }
+            }
+          })
+        }
+        for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
+          stuff(j)
+        }
+      }
+
+      var queueAndPlay = function(){
+        fromQueueAndPlay=true;
+        if (document.getElementById("shuffleSliderCheckBox").checked){
+          //shuffle play
+          function getRandomPos(){
+            var randomPos = Math.floor(Math.random()*document.getElementsByClassName("songs").length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
+            if ("song"+randomPos===playedSongs[currentPos]){
+              return getRandomPos();
+            }
+            return randomPos;
+          }
+
+          playedSongs.length=currentPos+1;
+          playedSongs.push("song"+getRandomPos());
+          currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
+        } else {
+          //ordered play
+          console.log(document.getElementById("shuffleSliderCheckBox").checked)
+          if (playedSongs.length===0){
+            playedSongs.push("song0");
+          }else{
+            if (playedSongs[currentPos+1]===undefined){
+              playedSongs.push("song"+(parseInt(playedSongs[currentPos].substring(4))+1));
+            }
+          }
+          //if next pos is empty, add new song and move to that
+          //if next pos is full, only ++
+          currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
+        }
+      }
+
+      document.getElementById("playPause").addEventListener("click", function(){
+        //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
+        if (player.getPlayerState()===5){
+          queueAndPlay();
+        } else if (player.getPlayerState()===1){
+          //playing; pause the video
+          player.pauseVideo();
+        } else if (player.getPlayerState()===2){
+          //paused; play the video
+          player.playVideo();
+        }
+      })
+      document.getElementById("prev").addEventListener("click", function(){
+        if (currentPos!==0){
+          fromPrev=true;
+          currentPos--;
+          document.getElementById(playedSongs[currentPos]).click();
+        }
+      })
+      document.getElementById("next").addEventListener("click", function(){
+        if (playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1)){
+          queueAndPlay();
+        } else if (document.getElementById("repeatSliderCheckBox").checked){
+          //on the last song and want to repeat playlist
+          fromRepeat=true;
+          playedSongs.push("song0");
+          currentPos++;
+          document.getElementById(playedSongs[currentPos]).click();
+        }
+      })
+      document.getElementById("volumeUp").addEventListener("click", function(){
+        var currentVolume = player.getVolume();
+        if (currentVolume<5){
+          player.setVolume(player.getVolume()+1);
+        }else if(currentVolume===5){
+          player.setVolume(player.getVolume()+5);
+        }else{
+          player.setVolume(player.getVolume()+10);
+        }
+      })
+      //1 2 3 4 5 10 20 30 ...
+      document.getElementById("volumeDown").addEventListener("click", function(){
+        var currentVolume = player.getVolume();
+        if (currentVolume>10){
+          player.setVolume((Math.floor(player.getVolume()/10)-1)*10);
+        }else if(currentVolume===10){
+          player.setVolume(player.getVolume()-5);
+        }else if (currentVolume!==1){
+          player.setVolume(player.getVolume()-1);
+        }
+      })
+    }})//this is the closing stuff for the check access token
+    document.getElementById("logout").addEventListener("click", function(){
+      alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
+      window.location = "https://spotify.com/logout/";
+    })
+    //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+    </script>
+  </body>
+</html>

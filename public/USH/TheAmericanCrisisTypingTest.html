@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+
+    <title>The American Crisis Typing Test by Michael Zhang</title>
+  </head>
+  <body>
+    <div id="testDiv">
+      <p id="outline" class="prompt"></p>
+      <p id="typed" class="prompt"></p>
+      <br clear="all">
+      <div id="left">
+        <p id="info">
+          Start typing out <i>The American Crisis</i> by Thomas Paine.<br>
+          FYI capitalization and punctuation matter. (THERE ARE SEMI COLONS AND ONE ALL CAPS WORD)
+        </p>
+      </div>
+      <div id="right">
+        <p id="timer">00:00:00:00</p>
+      </div>
+      <center>
+        <button id="reveal">Reveal Word</button>
+        <br clear="all">
+        <input id="answerBox">
+      </center>
+    </div>
+    <center><p id="results"></p></center>
+    <style>
+      div {
+        left:0;
+        top:0;
+        position:absolute;
+      }
+      p {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        padding:0;
+        margin:0;
+      }
+      .prompt {
+        position:absolute;
+        font-size:20px;
+        z-index:-10;
+      }
+      #info {
+        width:0;
+        position:relative;
+      }
+      #answerBox {
+        position:relative;
+        width:300px;
+        height:25px;
+        font-size:20px;
+      }
+      #reveal {
+        position:relative;
+      }
+      #timer {
+        position:relative;
+        font-size:20px;
+        width:0;
+      }
+      #outline {
+        background-color:black;
+      }
+      #results {
+        position:relative;
+        font-size:20px;
+      }
+      #typed {
+      color:white;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+      var gebi = function(e){return document.getElementById(e)};
+      gebi("outline").style.width=window.innerWidth+"px";
+      gebi("typed").style.width=window.innerWidth+"px";
+      gebi("testDiv").style.width=window.innerWidth+"px";gebi("testDiv").style.height=window.innerHeight+"px";
+      gebi("answerBox").style.top="400px";
+      gebi("reveal").style.top="350px";
+      gebi("info").style.width=window.innerWidth*0.5+"px";
+      gebi("info").style.left=10+"px";
+      gebi("timer").style.left=window.innerWidth/2-200+"px";
+      gebi("info").style.top="100px";
+      gebi("timer").style.top="100px";
+      gebi("left").style.width=window.innerWidth*0.5+"px";gebi("left").style.height=window.innerHeight+"px";
+      gebi("right").style.width=window.innerWidth*0.5+"px";gebi("right").style.height=window.innerHeight+"px";
+      gebi("right").style.left=window.innerWidth*0.5+"px";
+
+      $("#results").hide();
+      $("#testDiv").show();
+      $("#outline").append("These are the times that try men's souls. The summer soldier and the sunshine patriot will, in this crisis, shrink from the service of their country; but he that stands it now deserves the love and thanks of man and woman. Tyranny like hell is not easily conquered; yet we have this consolation with us, that the harder the conflict, the more glorious the triumph. What we obtain too cheap, we esteem too lightly; it is dearness only that gives every thing its value. Heaven knows how to put a proper price upon its goods; and it would be strange indeed if so celestial an article as FREEDOM should not be highly rated.")
+      var theTest = document.getElementById("outline").innerHTML.split(" ");
+      var started = false;
+      var wordPosition = 0;
+      var incorrectWords = [];
+      
+      var startTimer = function () {
+        var timeString = document.getElementById("timer").innerHTML;
+        var ms = parseInt(timeString.substring(0,2))*60*60*100+parseInt(timeString.substring(3,5))*60*100+parseInt(timeString.substring(6,8))*100+parseInt(timeString.substring(9,11));
+        ms++;
+        var display = "";
+        if(Math.floor(ms/360000)<10){display+="0";}display+=Math.floor(ms/360000);display+=":";ms%=360000;
+        if(Math.floor(ms/6000)<10){display+="0";}display+=Math.floor(ms/6000);display+=":";ms%=6000
+        if(Math.floor(ms/100)<10){display+="0";}display+=Math.floor(ms/100);display+=":";ms%=100
+        if(ms<10){display+="0";}display+=ms;
+        document.getElementById("timer").innerHTML = "";
+        document.getElementById("timer").innerHTML = display;
+        //01:01:01:01 => 421001ms => %36 000 =Remainder> %600 =R> %100 =R> # ms
+      }
+      var startId = "";
+      var incorrectAnswers = 0;
+      const checkIfCorrect = function(skip){
+        if (skip || document.getElementById("answerBox").value===theTest[wordPosition]){
+          if (wordPosition === theTest.length-1){
+            //stop the game
+            clearInterval(startId);
+            document.getElementById("answerBox").disabled = true;
+            $("#testDiv").fadeOut(500);
+            $("#results").fadeIn(500);
+            $("#results").append("Incorrect answers: <font style='color:red;'>" + incorrectAnswers + "</font><br>");
+            $("#results").append("Time: " + document.getElementById("timer").innerHTML + "<br>");
+            $("#results").append("<br><br><br><br>Mistakes:<br>")
+            for (var i=0;i<incorrectWords.length;i++){
+              $("#results").append("<font style='25px;'><i>" + incorrectWords[i].word + "</i></font> @ pos: " + incorrectWords[i].position);
+              if (incorrectWords[i].position<37){
+                $("#results").append(" (mistake in section 1)")
+              } else if ((37<=incorrectWords[i].position) && (incorrectWords[i].position<75)){
+                $("#results").append(" (mistake in section 2)")
+              } else if (75<=incorrectWords[i].position) {
+                $("#results").append(" (mistake in section 3)")
+                console.log(incorrectWords[i].position);
+               }else{
+                alert("ripriprip error in generating mistake position")
+                console.log("ripriprip error in generating mistake position")
+              }
+              $("#results").append("<br>")
+            }
+          }
+          $("#typed").append(theTest[wordPosition] + " ");
+          document.getElementById("answerBox").value = "";
+          wordPosition++;
+        } else {
+          //doesnt match; flash red and omit space and try again
+          if (incorrectWords.length===0||incorrectWords[incorrectWords.length-1].word!==theTest[wordPosition]){ //if the latest word added doesn't equal the wrong word,
+            incorrectWords.push({
+              word:theTest[wordPosition],
+              position:wordPosition
+            })
+          }
+          document.getElementById("answerBox").style.backgroundColor = "red";
+          setTimeout(()=>{document.getElementById("answerBox").style.backgroundColor = "white";},500)
+          incorrectAnswers++;
+        }
+      }
+      document.getElementById("answerBox").addEventListener("keydown", (event)=>{
+        if (!started){
+          started = true;
+          startId = setInterval(startTimer, 10);
+        }
+        if (event.code === "ControlLeft" || event.code === "ControlRight"){ //prevent control key here
+          event.preventDefault();
+          event.stopPropagation();
+          event.returnValue = false;
+          return false;
+        }
+        if (event.keyCode === 32){ //spacebar
+          if(event.preventDefault){
+            event.preventDefault();
+          } else {
+            event.returnValue = false;
+          }
+          checkIfCorrect(false);
+        }
+      })
+
+      document.getElementById("reveal").addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        document.getElementById("reveal").dispatchEvent(new Event("click"));
+      })
+      document.getElementById("reveal").addEventListener("click", function(event){
+        if (!started){
+          started = true;
+          startId = setInterval(startTimer, 10);
+        }
+        incorrectAnswers++;
+        incorrectWords.push({
+          word:theTest[wordPosition],
+          position:wordPosition
+        })
+        checkIfCorrect(true);
+      })
+    </script>
+  </body>
+</html>
