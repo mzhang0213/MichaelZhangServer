@@ -88,8 +88,10 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script>
-      if (window.location.origin.indexOf("http")===0){
-        window.location = "https://"+window.location.href.substring(7);
+      window.onload = function(){
+        if (window.location.origin.indexOf("http")===0){
+          window.location = "https://"+window.location.href.substring(7);
+        }
       }
       var gebi = function(e){return document.getElementById(e)};
       gebi("outline").style.width=window.innerWidth+"px";
