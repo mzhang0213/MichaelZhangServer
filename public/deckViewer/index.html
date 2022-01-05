@@ -48,7 +48,7 @@
     <link rel="stylesheet" type="text/css" href="https://michaelzhangwebsite.herokuapp.com/navigation.css">
     <script>
       window.onload = function(){
-        if (window.location.origin.substring(0,4)==="http"){
+        if (window.location.origin.substring(0,5)!=="https"){
           window.location = "https://"+window.location.href.substring(7);
         }
       }
