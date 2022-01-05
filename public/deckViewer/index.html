@@ -47,11 +47,11 @@
     <script src="https://michaelzhangwebsite.herokuapp.com/navigation.js"></script>
     <link rel="stylesheet" type="text/css" href="https://michaelzhangwebsite.herokuapp.com/navigation.css">
     <script>
-      window.onload = function(){
+      window.addEventListener("load",function(){
         if (window.location.origin.substring(0,5)!=="https"){
           window.location = "https://"+window.location.href.substring(7);
         }
-      }
+      });
       document.getElementById("left").style.width=(window.innerWidth*0.15)+"px";
       document.getElementById("left").style.height=(window.innerHeight)+"px";
       document.getElementById("left").style.textAlign="center";

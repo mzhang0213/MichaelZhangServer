@@ -21,12 +21,12 @@
 	deckViewer.append("View Created Decks!")
 	document.body.appendChild(div);
 	div.appendChild(cardCreator);br(div);div.appendChild(deckCreator);br(div);div.appendChild(deckViewer);
-	window.onload=function(){
+	window.addEventListener("load",function(){
 		div.style.left=(window.innerWidth-div.clientWidth)+"px";
 		cardCreator.className="navigationLink";
 		deckCreator.className="navigationLink";
 		deckViewer.className="navigationLink";
-	}
+	})
 	/*
 	cardCreator
 	deckCreator
