@@ -13,7 +13,7 @@
     </script>
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
 
-    <title>Spotify in Youtube by Michael Zhang</title>
+    <title id="documentTitle">Spotify in Youtube by Michael Zhang</title>
   </head>
   <body>
     <font style="font-family: 'Cabin';">
@@ -305,7 +305,7 @@
                 for (var i=0;i<playlistData.items.length;i++){
                   var p = document.createElement("p");
                   document.getElementById("playlists").appendChild(p);
-                  p.append(playlistData.items[i].name)
+                  p.append(playlistData.items[i].name);
                   p.style.color = "#94bdff";
                   p.id="playlist"+i;
                   p.className="playlists";
@@ -337,7 +337,7 @@
         document.getElementById("songs").innerHTML="";
         //has to be nested function cuz reading variable of outer for loop is not working
         var stuff = function(ions){
-          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{
+          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
             if (songsFetchErr){
               console.log("tracksFetchErr: " + songsFetchErr);
             } else {
@@ -382,7 +382,6 @@
                   song+=" - ";
                 }
                 song+=songsData.items[k].track.name;
-                //eg of final title: Drake & Rick Ross - Money In The Grave
                 p.append(song);
                 p.style.color = "lightgreen";
                 var idVal=k+ions;
@@ -398,6 +397,9 @@
                   gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
                   
                   this.style.color="green"; //this elem dark green
+
+                  document.getElementById("documentTitle").innerHTML="";
+                  document.getElementById("documentTitle").innerHTML=this.innerHTML;
                   
                   if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
                     playedSongs.push(this.id);
@@ -470,7 +472,6 @@
           document.getElementById(playedSongs[currentPos]).click();
         } else {
           //ordered play
-          console.log(document.getElementById("shuffleSliderCheckBox").checked)
           if (playedSongs.length===0){
             playedSongs.push("song0");
           }else{

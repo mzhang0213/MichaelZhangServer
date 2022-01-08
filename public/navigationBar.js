@@ -47,6 +47,7 @@ createDropdown("games", "Games 🎮");
 addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", "gamesDropdownContent");
 addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", "gamesDropdownContent");
 addElement(ipAddress + "/hangman/", "Hangman!", "gamesDropdownContent");
+addElement(ipAddress + "/speeedTypeDude/", "Typing Test", "gamesDropdownContent");
 
 createButton("spotifyYt", "Cracked Spotify");
 
