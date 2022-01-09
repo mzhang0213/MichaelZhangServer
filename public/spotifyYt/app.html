@@ -60,6 +60,17 @@
             </label>
           </div>
         </div>
+        <div id="oaSliderContainer" class="sliderContainer">
+          <div id="oaParagraphContainer" class="sliderParagraph">
+            <p id="oaSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+          </div>
+          <div id="actualoaSliderContainer" class="actualSliderContainer">
+            <label class="sliderSwitch">
+            <input type="checkbox" id="oaSliderCheckBox" class="sliderCheckBox">
+            <span class="sliderSlider"></span>
+            </label>
+          </div>
+        </div>
         <div id="lyricModeSliderContainer" class="sliderContainer">
           <div id="lyricModeParagraphContainer" class="sliderParagraph">
             <p id="lyricModeSliderDescription" class="sliderDescription">Lyric Search Mode</p>
@@ -115,6 +126,7 @@
     <style>
       .sliderContainer{
         position:relative;
+        width:0;
       }
       .sliderParagraph{
         position:absolute;
@@ -183,6 +195,7 @@
     <script>
       const gebi = function(e){return document.getElementById(e)};
       var resize = function() {
+        var heightCalc=function(x){return 55*x+75}
         gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
         gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
         gebi("two").style.left=window.innerWidth*0.5+"px";
@@ -192,27 +205,29 @@
         gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
 
         gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+43)+"px"
-        gebi("shuffleSliderContainer").style.width=0;
         gebi("actualShuffleSliderContainer").style.left="20px";
 
         gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-159)+"px"
-        gebi("repeatSliderContainer").style.width=0;
         gebi("actualRepeatSliderContainer").style.left="20px";
 
         //gebi("repeatSliderContainer").style.left=(window.innerWidth*0.25-135)+"px"
         gebi("lyricModeSliderContainer").style.left=window.innerWidth*0.25+"px";
-        gebi("lyricModeSliderContainer").style.top="75px";
-        gebi("lyricModeSliderContainer").style.width=0;
+        gebi("lyricModeSliderContainer").style.top=heightCalc(2)+"px";
         gebi("lyricModeParagraphContainer").style.left="-110px";
         gebi("lyricModeSliderDescription").style.width="200px";
         gebi("actualLyricModeSliderContainer").style.left="40px";
         
         gebi("ostModeSliderContainer").style.left=window.innerWidth*0.25+"px";
-        gebi("ostModeSliderContainer").style.top="130px";
-        gebi("ostModeSliderContainer").style.width=0;
+        gebi("ostModeSliderContainer").style.top=heightCalc(3)+"px";
         gebi("ostModeParagraphContainer").style.left="-110px";
         gebi("ostModeSliderDescription").style.width="200px";
         gebi("actualOstModeSliderContainer").style.left="40px";
+
+        gebi("oaSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("oaSliderContainer").style.top=heightCalc(1)+"px";
+        gebi("oaParagraphContainer").style.left="-110px";
+        gebi("oaSliderDescription").style.width="200px";
+        gebi("actualoaSliderContainer").style.left="40px";
       }
       resize();
       window.addEventListener("resize", resize);
@@ -421,6 +436,9 @@
                   document.getElementById("songDesc").appendChild(sdBlue);
                   
                   var searchQ=this.innerHTML;
+                  if (document.getElementById("oaSliderCheckBox").checked){
+                    searchQ+=" Official Audio";
+                  }
                   if (document.getElementById("lyricModeSliderCheckBox").checked){
                     searchQ+=" Lyrics";
                   }
