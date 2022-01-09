@@ -62,7 +62,7 @@
         </div>
         <div id="oaSliderContainer" class="sliderContainer">
           <div id="oaParagraphContainer" class="sliderParagraph">
-            <p id="oaSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+            <p id="oaSliderDescription" class="sliderDescription">Official Audio Search Mode</p>
           </div>
           <div id="actualoaSliderContainer" class="actualSliderContainer">
             <label class="sliderSwitch">
@@ -195,7 +195,7 @@
     <script>
       const gebi = function(e){return document.getElementById(e)};
       var resize = function() {
-        var heightCalc=function(x){return 55*x+75}
+        var heightCalc=function(x){return 55*x+20}
         gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
         gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
         gebi("two").style.left=window.innerWidth*0.5+"px";
@@ -225,8 +225,8 @@
 
         gebi("oaSliderContainer").style.left=window.innerWidth*0.25+"px";
         gebi("oaSliderContainer").style.top=heightCalc(1)+"px";
-        gebi("oaParagraphContainer").style.left="-110px";
-        gebi("oaSliderDescription").style.width="200px";
+        gebi("oaParagraphContainer").style.left="-185px";
+        gebi("oaSliderDescription").style.width="275px";
         gebi("actualoaSliderContainer").style.left="40px";
       }
       resize();
