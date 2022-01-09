@@ -142,6 +142,12 @@ app.get("/uploads/*", (req, res)=>{
 app.get("/favicon.png", (req,res)=>{
 	res.sendFile(__dirname+"/favicon.png")
 })
+app.get("/sFavicon.png", (req,res)=>{
+	res.sendFile(__dirname+"/sFavicon.png")
+})
+app.get("/sFavicon.jpg", (req,res)=>{
+	res.sendFile(__dirname+"/sFavicon.jpg")
+})
 
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
