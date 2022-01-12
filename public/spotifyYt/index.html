@@ -35,7 +35,7 @@
         document.getElementById("login").addEventListener("click",()=>{
           var redirect = "./login";
           if (urlParams.has("playlistInfo")){
-            redirect+="?playlistInfo=" + urlParams.get("playlistInfo")；
+            redirect+="?playlistInfo=" + urlParams.get("playlistInfo");
           }
           window.location=redirect;
         })
