@@ -31,10 +31,15 @@
       </script>
       <button id="login">Login here</button>
       <script>
-        document.getElementById("login").addEventListener("click",()=>{
-          window.location="./login"
-        })
         const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("login").addEventListener("click",()=>{
+          var redirect = "./login";
+          if (urlParams.has("albumInfo")){ //that means that songInfo will also be present too
+            redirect+="?albumInfo=" + urlParams.get("albumInfo")；
+            redirect+="&songInfo=" + urlParams.get("songInfo");
+          }
+          window.location=redirect;
+        })
         if (urlParams.has("exp")){
           var message = document.createElement("p");
           message.style.position = "relative";
