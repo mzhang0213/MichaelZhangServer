@@ -342,6 +342,8 @@
         }
       })
       var currentPos = -1; //represents current position in the array
+      var currentPlaylist = "";
+      //current song is playedSongs[currentPos]
       var playedSongs = []; //PUSH IDS
       var fromQueueAndPlay = false;
       var fromPrev = false;
@@ -349,6 +351,7 @@
       //get playlist's songs function
       var getSongs = function(index, playlistData){
         document.getElementById("playlist"+index).style.color = "#4287f5";
+        currentPlaylist = document.getElementById("playlist"+index).innerHTML;
         document.getElementById("songs").innerHTML="";
         //has to be nested function cuz reading variable of outer for loop is not working
         var stuff = function(ions){
