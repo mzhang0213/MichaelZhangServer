@@ -354,125 +354,134 @@
         currentPlaylist = document.getElementById("playlist"+index).innerHTML;
         document.getElementById("songs").innerHTML="";
         //has to be nested function cuz reading variable of outer for loop is not working
-        var stuff = function(ions){
-          getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
-            if (songsFetchErr){
-              console.log("tracksFetchErr: " + songsFetchErr);
-            } else {
-              console.log(songsData);
-              var allSongs = document.getElementsByClassName("songs");
-              //just jump by 50s until you get there
-              var appendBeforeThisElement = "";
-              var first=false;
-              if (allSongs.length===0){
-                first=true;
-              }else{
-                var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
-                var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
-                for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
-                  if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
-                    appendBeforeThisElement=document.getElementById("song"+c*50);
-                    break;
-                  }
-                }
+        (function(){
+            var index=0;
+            nextStep();
+            function nextStep(){
+              if (index<playlistData.items[index].tracks.total){
+                return;
               }
-              for (var k=0;k<songsData.items.length;k++){
-                var p = document.createElement("p");
-                if (first){
-                  document.getElementById("songs").appendChild(p);
-                }else{
-                  if (appendBeforeThisElement.length===0){
-                    document.getElementById("songs").appendChild(p);
-                  } else {
-                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
-                  }
-                }
-                var song = "";
-                /*
-                for (var l=0;l<songsData.items[k].track.artists.length;l++){
-                  song+=songsData.items[k].track.artists[l].name+" & ";
-                }
-                song=song.substring(0,song.length-3);
-                */
-                song+=songsData.items[k].track.artists[0].name
-                if (song.trim().length!==0){
-                  //song has stuff rn
-                  song+=" - ";
-                }
-                song+=songsData.items[k].track.name;
-                p.append(song);
-                p.style.color = "lightgreen";
-                var idVal=k+ions;
-                p.id="song"+idVal;
-                p.className="songs";
-                p.addEventListener("click", function(){
-                  //make sure the rest of the song titles lightgreen
-                  var titles = document.getElementsByClassName("songs");
-                  for(var b=0;b<titles.length;b++){
-                    titles[b].style.color=this.style.color="lightgreen";
-                  }
-                  //free me saronite chain gang
-                  gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
-                  
-                  this.style.color="green"; //this elem dark green
-
-                  document.getElementById("documentTitle").innerHTML="";
-                  document.getElementById("documentTitle").innerHTML=this.innerHTML;
-                  
-                  if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
-                    playedSongs.push(this.id);
-                    currentPos++;
-                  }
-                  fromQueueAndPlay=false;
-                  fromPrev=false;
-                  fromRepeat=false;
-
-                  //append songDesc
-                  document.getElementById("songDesc").innerHTML="";
-                  var sdItalics = document.createElement("i");
-                  var sdBlue = document.createElement("font");
-                  sdBlue.style.color="#1284ff";
-                  
-                  sdItalics.append("Playing:  ");
-                  sdBlue.append(htmlDecode(this.innerHTML));
-                  document.getElementById("songDesc").appendChild(sdItalics);
-                  document.getElementById("songDesc").appendChild(sdBlue);
-                  
-                  var searchQ=this.innerHTML;
-                  if (document.getElementById("oaSliderCheckBox").checked){
-                    searchQ+=" Official Audio";
-                  }
-                  if (document.getElementById("lyricModeSliderCheckBox").checked){
-                    searchQ+=" Lyrics";
-                  }
-                  if (document.getElementById("ostModeSliderCheckBox").checked){
-                    searchQ+=" ost";
-                  }
-                  console.log(searchQ)
-                  //youtube load
-                  //avaliable keys:
-                    //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
-                    //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
-                    //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
-                             +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
-                             +"&q="+searchQ,
-                             undefined,
-                             (getYtErr,searchData)=>{
-                    if (getYtErr){
-                      console.log("getYtErr: " + getYtErr);
-                    }else{
-                      player.loadVideoById({videoId:searchData.items[0].id.videoId});
+              var j=index;
+              
+              getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+j, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
+                if (songsFetchErr){
+                  console.log("tracksFetchErr: " + songsFetchErr);
+                } else {
+                  console.log(songsData);
+                  var allSongs = document.getElementsByClassName("songs");
+                  //just jump by 50s until you get there
+                  var appendBeforeThisElement = "";
+                  var first=false;
+                  if (allSongs.length===0){
+                    first=true;
+                  }else{
+                    var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
+                    var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
+                    for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
+                      if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
+                        appendBeforeThisElement=document.getElementById("song"+c*50);
+                        break;
+                      }
                     }
-                  })
-                })
-              }
+                  }
+                  for (var k=0;k<songsData.items.length;k++){
+                    var p = document.createElement("p");
+                    if (first){
+                      document.getElementById("songs").appendChild(p);
+                    }else{
+                      if (appendBeforeThisElement.length===0){
+                        document.getElementById("songs").appendChild(p);
+                      } else {
+                        appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                      }
+                    }
+                    var song = "";
+                    /*
+                    for (var l=0;l<songsData.items[k].track.artists.length;l++){
+                      song+=songsData.items[k].track.artists[l].name+" & ";
+                    }
+                    song=song.substring(0,song.length-3);
+                    */
+                    song+=songsData.items[k].track.artists[0].name
+                    if (song.trim().length!==0){
+                      //song has stuff rn
+                      song+=" - ";
+                    }
+                    song+=songsData.items[k].track.name;
+                    p.append(song);
+                    p.style.color = "lightgreen";
+                    var idVal=k+ions;
+                    p.id="song"+idVal;
+                    p.className="songs";
+                    p.addEventListener("click", function(){
+                      //make sure the rest of the song titles lightgreen
+                      var titles = document.getElementsByClassName("songs");
+                      for(var b=0;b<titles.length;b++){
+                        titles[b].style.color=this.style.color="lightgreen";
+                      }
+                      //free me saronite chain gang
+                      gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+
+                      this.style.color="green"; //this elem dark green
+
+                      document.getElementById("documentTitle").innerHTML="";
+                      document.getElementById("documentTitle").innerHTML=this.innerHTML;
+
+                      if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                        playedSongs.push(this.id);
+                        currentPos++;
+                      }
+                      fromQueueAndPlay=false;
+                      fromPrev=false;
+                      fromRepeat=false;
+
+                      //append songDesc
+                      document.getElementById("songDesc").innerHTML="";
+                      var sdItalics = document.createElement("i");
+                      var sdBlue = document.createElement("font");
+                      sdBlue.style.color="#1284ff";
+
+                      sdItalics.append("Playing:  ");
+                      sdBlue.append(htmlDecode(this.innerHTML));
+                      document.getElementById("songDesc").appendChild(sdItalics);
+                      document.getElementById("songDesc").appendChild(sdBlue);
+
+                      var searchQ=this.innerHTML;
+                      if (document.getElementById("oaSliderCheckBox").checked){
+                        searchQ+=" Official Audio";
+                      }
+                      if (document.getElementById("lyricModeSliderCheckBox").checked){
+                        searchQ+=" Lyrics";
+                      }
+                      if (document.getElementById("ostModeSliderCheckBox").checked){
+                        searchQ+=" ost";
+                      }
+                      console.log(searchQ)
+                      //youtube load
+                      //avaliable keys:
+                        //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                        //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                        //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+                      getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                 +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                                 +"&q="+searchQ,
+                                 undefined,
+                                 (getYtErr,searchData)=>{
+                        if (getYtErr){
+                          console.log("getYtErr: " + getYtErr);
+                        }else{
+                          player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                        }
+                      })
+                    })
+                  }
+                  index+=50;
+                  nextStep();
+                }
+              })
             }
-          })
-        }
-        for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
-          stuff(j)
-        }
+            }
+        })();
       }
 
       var queueAndPlay = function(){
@@ -565,7 +574,7 @@
     })
     //okay basically test if the urlparams have album and song info and if there is than select the corresponding albums and songs
     if (urlParams.has("albumInfo")){
-      for (var i=0;i<document.getElementById("
+      for (var i=0;i<document.getElementsByClassName("
     }
     //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
