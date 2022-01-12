@@ -297,7 +297,7 @@
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
           if (bonesErr.indexOf("The access token expired")!==-1){
-            alert("Login again :P\nGoing home...");
+            alert("Relogging you in :P\nGoing home...");
             window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
           }else{
             console.log("fetching for bones err: "+bonesErr);
@@ -313,6 +313,14 @@
         }else{
           playlistTotal=theStuffData.total;
           var things = function(atoms){
+          (function(){
+            var index=0;
+            nextStep();
+            function nextStep(){
+              if (index<playlistData.items[index].tracks.total){
+                return;
+              }
+              var i=index;
             getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
               if (playlistFetchErr){
                 console.log("playlistFetchErr: " + playlistFetchErr);
@@ -332,6 +340,9 @@
                     getSongs(this.id.substring(8),playlistData);
                     gebi("playPause").disabled=false;
                   })
+                  if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                    p.click();
+                  }
                 }
               }
             })
@@ -396,12 +407,6 @@
                       }
                     }
                     var song = "";
-                    /*
-                    for (var l=0;l<songsData.items[k].track.artists.length;l++){
-                      song+=songsData.items[k].track.artists[l].name+" & ";
-                    }
-                    song=song.substring(0,song.length-3);
-                    */
                     song+=songsData.items[k].track.artists[0].name
                     if (song.trim().length!==0){
                       //song has stuff rn
@@ -474,9 +479,10 @@
                         }
                       })
                     })
+                    if (urlParams.has("playlistInfo")&&song===urlParams.get("songInfo")){
+                      p.click();
+                    }
                   }
-                  index+=50;
-                  nextStep();
                 }
               })
             }
@@ -572,10 +578,6 @@
       alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
       window.location = "https://spotify.com/logout/";
     })
-    //okay basically test if the urlparams have album and song info and if there is than select the corresponding albums and songs
-    if (urlParams.has("albumInfo")){
-      for (var i=0;i<document.getElementsByClassName("
-    }
     //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
   </body>
