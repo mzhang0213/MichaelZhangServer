@@ -41,7 +41,7 @@
           message.style.top = window.innerHeight*0.2+"px";
           message.style.fontSize = "45px";
           message.id="expiredMessage";
-          message.append("Please relogin :)");
+          message.append("Relogging in for you :)");
 
           var center = document.createElement("center");
           document.body.appendChild(center);
@@ -54,9 +54,10 @@
                 iter++;
               } else {
                 clearInterval(interval);
+                document.getElementById("login").click();
               }
             },10)
-          },2000)
+          },1250)
         }
       </script>
     </font>
