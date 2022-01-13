@@ -37,9 +37,8 @@ app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
 var lastPlaylist = "";
 app.get('/spotifyYt/login', function(req, res) {
-	console.log(req.url);
-	lastPlaylist=querystring.parse(req.url.playlistInfo)
-
+	var shortUrl = req.url.substring(req.url.indexOf("?")+1);
+	lastPlaylist=querystring.parse(shortUrl).playlistInfo;
 	var state = generateRandomString(16);
 	res.cookie(stateKey, state);
 
