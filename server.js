@@ -35,7 +35,10 @@ var app = express();
 
 app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
+var lastPlaylist = "";
 app.get('/spotifyYt/login', function(req, res) {
+	console.log(req.url);
+	lastPlaylist=querystring.parse(req.url.playlistInfo)
 
 	var state = generateRandomString(16);
 	res.cookie(stateKey, state);
@@ -91,7 +94,8 @@ if (state === null || state !== storedState) {
 		res.redirect('/spotifyYt/app.html?' +
 		querystring.stringify({
 			access_token: access_token,
-			refresh_token: refresh_token
+			refresh_token: refresh_token,
+			playlistInfo: lastPlaylist
 		}));
 	} else {
 		res.redirect('/spotifyYt/?' +

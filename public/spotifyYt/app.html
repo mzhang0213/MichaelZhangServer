@@ -361,13 +361,10 @@
               console.log("tracksFetchErr: " + songsFetchErr);
               if (songsFetchErr.indexOf("The access token expired")!==-1){
                 alert("Relogging you in :P\nGoing home...");
-                window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+document.getElementById("playlist"+index).innerHTML;
-                console.log("https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+document.getElementById("playlist"+index).innerHTML);
-                console.log(playlistData.items[index].id);
+                window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
               }
             } else {
-              console.log("https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+document.getElementById("playlist"+index).innerHTML);
-                console.log(playlistData.items[index].id);
+              console.log("https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML));
               var allSongs = document.getElementsByClassName("songs");
               //just jump by 50s until you get there
               var appendBeforeThisElement = "";
