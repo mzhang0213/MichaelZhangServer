@@ -366,7 +366,8 @@
                 console.log(playlistData.items[index].id);
               }
             } else {
-              console.log(songsData);
+              console.log("https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+document.getElementById("playlist"+index).innerHTML);
+                console.log(playlistData.items[index].id);
               var allSongs = document.getElementsByClassName("songs");
               //just jump by 50s until you get there
               var appendBeforeThisElement = "";
