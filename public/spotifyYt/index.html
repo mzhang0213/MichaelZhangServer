@@ -53,15 +53,15 @@
           setTimeout(()=>{
             var iter=0;
             var interval = setInterval(()=>{
-              if (iter<=100){
-                document.getElementById("expiredMessage").style.opacity=100-1*iter+"%";
+              if (iter<=70){
+                document.getElementById("expiredMessage").style.opacity= 100-iter* 100/70 + "%";
                 iter++;
               } else {
                 clearInterval(interval);
                 document.getElementById("login").click();
               }
             },10)
-          },1250)
+          },800)
         }
       </script>
     </font>
