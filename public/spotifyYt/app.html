@@ -230,9 +230,9 @@
         gebi("actualoaSliderContainer").style.left="40px";
 
         gebi("player").width = window.innerWidth*0.40;
-        gebi("player").height = window.innerHeight*0.40;
+        gebi("player").height = window.innerHeight*0.50;
       }
-      resize();
+      //resize(); resize is actually below yt player instantiation
       window.addEventListener("resize", resize);
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
 
@@ -273,17 +273,18 @@
 
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
         function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-          //videoId would go here
-          playerVars: {
-            'playsinline': 1
-          },
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      }
+          player = new YT.Player('player', {
+            //videoId would go here
+            playerVars: {
+              'playsinline': 1
+            },
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+            }
+          });
+          resize();
+        }
 
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
