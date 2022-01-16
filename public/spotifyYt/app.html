@@ -228,6 +228,9 @@
         gebi("oaParagraphContainer").style.left="-185px";
         gebi("oaSliderDescription").style.width="275px";
         gebi("actualoaSliderContainer").style.left="40px";
+
+        gebi("player").width = window.innerWidth*0.40;
+        gebi("player").height = window.innerHeight*0.40;
       }
       resize();
       window.addEventListener("resize", resize);
@@ -271,8 +274,6 @@
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
         function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-          height: '390',
-          width: '640',
           //videoId would go here
           playerVars: {
             'playsinline': 1
