@@ -191,9 +191,9 @@ app.get("/classroom/getData", (req,res)=>{
 		const classroom = google.classroom({version: 'v1', auth});
 		classroom.courses.list({
 			pageSize: 10,
-		}, (err, res) => {
+		}, (err, result) => {
 			if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
-			const courses = res.data.courses;
+			const courses = result.data.courses;
 			if (courses && courses.length) {
 				var data = "Courses: ";
 				courses.forEach((course) => {
