@@ -161,7 +161,7 @@ const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',"ht
 app.get("/classroom/login", (req,res)=>{
 	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://michaelzhangwebsite.herokuapp.com/classroom/callback/"]};
 	oAuth2Client = new google.auth.OAuth2(
-		client_id, client_secret, redirect_uris[0]);console.log(oAuth2Client);
+		client_id, client_secret, redirect_uris[0]);
 
 	const authUrl = oAuth2Client.generateAuthUrl({
 		access_type: 'offline',
@@ -185,15 +185,16 @@ app.get("/classroom/getData", (req,res)=>{
 		token_type:decodeURI(req.query.token_type),
 		expiry_date:decodeURI(req.query.expiry_date)
 	}
-	console.log(oAuth2Client);
 	oAuth2Client.setCredentials(token);
 	function listCourses(auth) {
+		console.log("entered\n");
 		const classroom = google.classroom({version: 'v1', auth});
 		classroom.courses.list({
 			pageSize: 10,
 		}, (err, res) => {
 			if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
 			const courses = res.data.courses;
+			console.log(courses);
 			if (courses && courses.length) {
 				var data = "Courses: ";
 				courses.forEach((course) => {
