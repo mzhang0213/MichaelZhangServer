@@ -171,7 +171,7 @@ app.get("/classroom/login" , (req,res)=>{
 	res.redirect(authUrl);
 })
 app.get("/classroom/callback", (req,res)=>{
-	var code = req.query.code;
+	var code = decodeURI(req.query.code);
 	oAuth2Client.getToken(code, (err, token) => {
 		if (err) res.redirect("/classroom/app.html?err=Error%20retrieving%20access%20token%20",err);
 		//res.redirect("/classroom/app.html?"+querystring.stringify(token));
