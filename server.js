@@ -7,6 +7,9 @@ var cookieParser = require('cookie-parser');
 var cp = require("child_process");
 var fs = require("fs");
 var path = require('path');
+var readline = require('readline');
+var {google} = require('googleapis');
+const res = require("express/lib/response");
 
 const PORT = process.env.PORT || "12232";
 
@@ -46,11 +49,11 @@ app.get('/spotifyYt/login', function(req, res) {
 	var scope = 'playlist-read-private';
 	res.redirect('https://accounts.spotify.com/authorize?' +
 		querystring.stringify({
-		response_type: 'code',
-		client_id: client_id,
-		scope: scope,
-		redirect_uri: redirect_uri,
-		state: state
+			response_type: 'code',
+			client_id: client_id,
+			scope: scope,
+			redirect_uri: redirect_uri,
+			state: state
 		})
 	);
 });
@@ -153,97 +156,51 @@ app.get("/sFavicon.jpg", (req,res)=>{
 })
 
 
-const readline = require('readline');
-const {google} = require('googleapis');
+var oAuth2Client;
+const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',"https://www.googleapis.com/auth/classroom.coursework.me"];
 
-// If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly'];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = 'token.json';
+app.get("/classroom/login" , (req,res)=>{
+	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://michaelzhangwebsite.herokuapp.com/classroom/app.html"]};
+	oAuth2Client = new google.auth.OAuth2(
+		client_id, client_secret, redirect_uris[0]);
 
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Classroom API.
-  authorize(JSON.parse(content), listCourses);
+	const authUrl = oAuth2Client.generateAuthUrl({
+		access_type: 'offline',
+		scope: SCOPES,
+	});
+	res.redirect(authUrl);
+})
+app.get("/classroom/callback", (req,res)=>{
+	var code = req.query.code;
+	oAuth2Client.getToken(code, (err, token) => {
+		if (err) res.redirect("/classroom/app.html?err=Error%20retrieving%20access%20token%20",err);
+		res.redirect("/classroom/app.html?"+querystring.stringify(token));
+		oAuth2Client.setCredentials(token);
+
+		//perform what action you want now that you have the auth
+		(function listCourses(auth) {
+			const classroom = google.classroom({version: 'v1', auth});
+			classroom.courses.list({
+				pageSize: 10,
+			}, (err, res) => {
+				if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
+				const courses = res.data.courses;
+				if (courses && courses.length) {
+					console.log('Courses:');
+					courses.forEach((course) => {
+						console.log(`${course.name} (${course.id})`);
+					});
+				} else {
+					console.log('No courses found.');
+				}
+			});
+		})(oAuth2Client);
+	});
 });
+app.get("/classroom/getData", (req,res)=>{
 
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getNewToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
-
-/**
- * Lists the first 10 courses the user has access to.
- *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listCourses(auth) {
-  const classroom = google.classroom({version: 'v1', auth});
-  classroom.courses.list({
-    pageSize: 10,
-  }, (err, res) => {
-    if (err) return console.error('The API returned an error: ' + err);
-    const courses = res.data.courses;
-    if (courses && courses.length) {
-      console.log('Courses:');
-      courses.forEach((course) => {
-        console.log(`${course.name} (${course.id})`);
-      });
-    } else {
-      console.log('No courses found.');
-    }
-  });
-}
-
-
+	//if (req.query.f===)
+})
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
