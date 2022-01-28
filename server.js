@@ -155,7 +155,7 @@ app.get("/sFavicon.jpg", (req,res)=>{
 	res.sendFile(__dirname+"/sFavicon.jpg")
 })
 
-
+console.log("hi")
 var oAuth2Client;
 const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',"https://www.googleapis.com/auth/classroom.coursework.me"];
 
