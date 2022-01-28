@@ -193,6 +193,7 @@ app.get("/classroom/callback", (req,res)=>{
 					res.redirect("/classroom/app.html?data="+encodeURI(data)+"&"+querystring.stringify(token));
 				} else {
 					console.log('No courses found.');
+					res.redirect("/classroom/app.html?reeeeeeeeeeeeeee=")
 				}
 			});
 		})(oAuth2Client);
