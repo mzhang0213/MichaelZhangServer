@@ -194,12 +194,12 @@ app.get("/classroom/getData", (req,res)=>{
 		}, (err, res) => {
 			if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
 			const courses = res.data.courses;
-			console.log(courses);
 			if (courses && courses.length) {
 				var data = "Courses: ";
 				courses.forEach((course) => {
 					data+=`${course.name} (${course.id})`;
 				});
+				console.log(data);
 				res.redirect("/classroom/app.html?data="+encodeURI(data)+"&"+querystring.stringify(token));
 			} else {
 				console.log('No courses found.');
@@ -207,12 +207,10 @@ app.get("/classroom/getData", (req,res)=>{
 			}
 		});
 	}
-	console.log(req.query.f);
 	switch(req.query.f){
 		case "listCourses": listCourses(oAuth2Client);break;
-		default:break;
+		default:res.redirect("/");break;
 	}
-	res.redirect("/")
 })
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
