@@ -207,10 +207,12 @@ app.get("/classroom/getData", (req,res)=>{
 			}
 		});
 	}
+	console.log(req.query.f);
 	switch(req.query.f){
 		case "listCourses": listCourses(oAuth2Client);break;
 		default:break;
 	}
+	res.redirect("/")
 })
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
