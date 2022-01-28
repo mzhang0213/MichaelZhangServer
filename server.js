@@ -174,7 +174,7 @@ app.get("/classroom/callback", (req,res)=>{
 	var code = req.query.code;
 	oAuth2Client.getToken(code, (err, token) => {
 		if (err) res.redirect("/classroom/app.html?err=Error%20retrieving%20access%20token%20",err);
-		res.redirect("/classroom/app.html?"+querystring.stringify(token));
+		//res.redirect("/classroom/app.html?"+querystring.stringify(token));
 		oAuth2Client.setCredentials(token);
 
 		//perform what action you want now that you have the auth
@@ -190,6 +190,7 @@ app.get("/classroom/callback", (req,res)=>{
 					courses.forEach((course) => {
 						data+=`${course.name} (${course.id})`;
 					});
+					res.redirect("/classroom/app.html?data="+encodeURI(data)+"&"+querystring.stringify(token));
 				} else {
 					console.log('No courses found.');
 				}
