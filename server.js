@@ -186,9 +186,9 @@ app.get("/classroom/callback", (req,res)=>{
 				if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
 				const courses = res.data.courses;
 				if (courses && courses.length) {
-					console.log('Courses:');
+					var data = "Courses: ";
 					courses.forEach((course) => {
-						console.log(`${course.name} (${course.id})`);
+						data+=`${course.name} (${course.id})`;
 					});
 				} else {
 					console.log('No courses found.');
