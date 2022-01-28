@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <button id="b">Request</button>
+      <br>
+      <p id="p">hi test<br></p>
+    </font>
+    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      var httpReq = function(method, url, access_token, cb){
+        var req = new XMLHttpRequest();
+        req.open(method, url);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.onload = function(){
+          if (req.readyState === 4){
+            cb(req.responseText, undefined);
+          } else {
+            cb(undefined, "not ready err")
+          }
+        }
+      }
+
+      var accessToken = urlParams.has("access_token")?urlParams.get("access_token"):undefined;
+      document.getElementById("b").addEventListener("click", ()=>{
+        httpReq("GET", "https://classroom.googleapis.com/v1/courses/397235853269/courseWork", accessToken, (data, err)=>{
+          if (err){
+            console.log(err);
+          }else{
+            document.getElementById("p").innerHTML=data;
+            console.log(data);
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
