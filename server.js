@@ -154,10 +154,6 @@ app.get("/sFavicon.png", (req,res)=>{
 app.get("/sFavicon.jpg", (req,res)=>{
 	res.sendFile(__dirname+"/sFavicon.jpg")
 })
-app.get("/reee", (req,res)=>{
-	console.log("hi");
-	res.redirect("/")
-})
 
 var oAuth2Client;
 const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',"https://www.googleapis.com/auth/classroom.coursework.me"];
@@ -165,7 +161,7 @@ const SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',"ht
 app.get("/classroom/login", (req,res)=>{
 	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://michaelzhangwebsite.herokuapp.com/classroom/callback/"]};
 	oAuth2Client = new google.auth.OAuth2(
-		client_id, client_secret, redirect_uris[0]);
+		client_id, client_secret, redirect_uris[0]);console.log(oAuth2Client);
 
 	const authUrl = oAuth2Client.generateAuthUrl({
 		access_type: 'offline',
@@ -189,6 +185,7 @@ app.get("/classroom/getData", (req,res)=>{
 		token_type:decodeURI(req.query.token_type),
 		expiry_date:decodeURI(req.query.expiry_date)
 	}
+	console.log(oAuth2Client);
 	oAuth2Client.setCredentials(token);
 	function listCourses(auth) {
 		const classroom = google.classroom({version: 'v1', auth});
