@@ -476,6 +476,7 @@
         }
       }
 
+      var firstRandom = false;
       var queueAndPlay = function(){
         fromQueueAndPlay=true;
         if (document.getElementById("shuffleSliderCheckBox").checked){
@@ -488,12 +489,16 @@
             return randomPos;
           }
 
-          playedSongs.length=currentPos+1;
+          if (firstRandom) {playedSongs.length=currentPos+1;firstRandom = false;}
+
           playedSongs.push("song"+getRandomPos());
           currentPos++;
           document.getElementById(playedSongs[currentPos]).click();
         } else {
           //ordered play
+          
+          firstRandom=true;
+
           if (playedSongs.length===0){
             playedSongs.push("song0");
           }else{
