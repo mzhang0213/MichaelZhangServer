@@ -1,15 +1,41 @@
 <!DOCTYPE html>
 <html>
+  <!-- This is Classroom -->
+  
   <head>
-    <title></title>
-    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
-  </head>
-  <body>
-    <font style="font-family: 'Cabin';">
-    </font>
-    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
     <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
       
+      gtag('config', 'UA-167496422-1');
     </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Google Classroom Notifications</title>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <button id="login">Login here</button>
+      <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("login").addEventListener("click",()=>{
+          var redirect = "./login";
+        })
+      </script>
+    </font>
   </body>
 </html>
