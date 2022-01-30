@@ -71,6 +71,7 @@
                     for (var a=0;a<data.courseWork.length;a++){
                       totalItems.push(data.courseWork[i]);
                     }
+                    console.log(totalItems)
                   }else{
                     pushGreatestLeast(data.courseWork, totalItems);
                     httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
