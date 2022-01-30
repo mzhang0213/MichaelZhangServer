@@ -112,8 +112,8 @@
             })
           }
           for(var i=0;i<data.courses.length;i++){
-            console.log(data.courses[i].courseState);
-            thing(data.courses[i].id);
+            console.log(data.courses[i].courseState,data.courses[i].courseState==="ACTIVE");
+            if (data.courses[i].courseState==="ACTIVE") thing(data.courses[i].id);
           }
         })
       })
