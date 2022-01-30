@@ -67,44 +67,41 @@
                 if (Object.keys(data).length!==0){ //sometimes there is no data in object
                   //for loop and sort the push into the loop
                   if (totalItems.length===0){
-                    console.log("here");
                     for (var a=0;a<data.courseWork.length;a++){
-                      console.log(data.courseWork[i])
-                      totalItems.push(data.courseWork[i]);
+                      totalItems.push(data.courseWork[a]);
                     }
-                    console.log(totalItems)
                   }else{
                     pushGreatestLeast(data.courseWork, totalItems);
-                    httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
-                      if (err) console.log(err);
-                      else{
-                        if (Object.keys(data).length!==0){
-                          //for loop and sort the push into the loop
-                          if (totalItems.length===0){
-                            for (var a=0;a<data.courseWorkMaterial.length;a++){
-                              totalItems.push(data.courseWorkMaterial[i]);
-                            }
-                          }else{
-                            pushGreatestLeast(data.courseWorkMaterial, totalItems);
-                            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
-                              if (err) console.log(err);
-                              else{
-                                if (Object.keys(data).length!==0){
-                                  //for loop and sort the push into the loop
-                                  if (totalItems.length===0){
-                                    for (var a=0;a<data.announcements.length;a++){
-                                      totalItems.push(data.announcements[i]);
-                                    }
-                                  }else{
-                                    pushGreatestLeast(data.announcements, totalItems);
-                                  }
-                                }
-                              }
-                            })
-                          }
-                        }
-                      }
-                    })
+                  }
+                }
+              }
+            })
+            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
+              if (err) console.log(err);
+              else{
+                if (Object.keys(data).length!==0){
+                  //for loop and sort the push into the loop
+                  if (totalItems.length===0){
+                    for (var a=0;a<data.courseWorkMaterial.length;a++){
+                      totalItems.push(data.courseWorkMaterial[a]);
+                    }
+                  }else{
+                    pushGreatestLeast(data.courseWorkMaterial, totalItems);
+                  }
+                }
+              }
+            })
+            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
+              if (err) console.log(err);
+              else{
+                if (Object.keys(data).length!==0){
+                  //for loop and sort the push into the loop
+                  if (totalItems.length===0){
+                    for (var a=0;a<data.announcements.length;a++){
+                      totalItems.push(data.announcements[a]);
+                    }
+                  }else{
+                    pushGreatestLeast(data.announcements, totalItems);
                   }
                 }
               }
