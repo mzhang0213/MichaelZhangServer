@@ -70,8 +70,9 @@
                     for (var a=0;a<data.courseWork.length;a++){
                       totalItems.push(data.courseWork[i]);
                     }
+                  }else{
+                    pushGreatestLeast(data.courseWork, totalItems);
                   }
-                  pushGreatestLeast(data.courseWork, totalItems);
                 }
               }
             })
@@ -84,8 +85,9 @@
                     for (var a=0;a<data.courseWorkMaterial.length;a++){
                       totalItems.push(data.courseWorkMaterial[i]);
                     }
+                  }else{
+                    pushGreatestLeast(data.courseWorkMaterial, totalItems);
                   }
-                  pushGreatestLeast(data.courseWorkMaterial, totalItems);
                 }
               }
             })
@@ -98,8 +100,9 @@
                     for (var a=0;a<data.announcements.length;a++){
                       totalItems.push(data.announcements[i]);
                     }
+                  }else{
+                    pushGreatestLeast(data.announcements, totalItems);
                   }
-                  pushGreatestLeast(data.announcements, totalItems);
                 }
               }
             })
