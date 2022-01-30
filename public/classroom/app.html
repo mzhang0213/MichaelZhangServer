@@ -41,7 +41,7 @@
                   for (var k=0;k<dest.length;k++){ //order of greatest to least
                     if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
                       dest.splice(k,0,arr[j]);
-                    }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
+                    }/*else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
                       var pos=0;
                       (function greaterThan(indox){
                         if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
@@ -53,7 +53,7 @@
                           return greaterThan(pos);
                         }
                       })(pos);
-                    }else{
+                    }*/else{
                       if (k===dest.length-1){
                         dest.splice(k,0,arr[j]);
                       }
