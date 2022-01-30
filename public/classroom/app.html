@@ -62,6 +62,7 @@
             httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
               if (err) console.log(err);
               else{
+                console.log(data)
                 //for loop and sort the push into the loop
                 if (totalItems.length===0){
                   for (var a=0;a<data.courseWork.length;a++){
