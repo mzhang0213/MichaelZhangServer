@@ -20,7 +20,7 @@
         req.send();
         req.onload = function(){
           if (req.readyState === 4){
-            cb(req.responseText, undefined);
+            cb(JSON.parse(req.responseText), undefined);
           } else {
             cb(undefined, "not ready err")
           }
