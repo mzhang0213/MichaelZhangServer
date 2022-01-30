@@ -156,7 +156,7 @@ app.get("/sFavicon.jpg", (req,res)=>{
 })
 
 var oAuth2Client;
-const SCOPES = ["https://www.googleapis.com/auth/classroom.coursework.me.readonly", "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly", "https://www.googleapis.com/auth/classroom.announcements.readonly"];
+const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly", "https://www.googleapis.com/auth/classroom.coursework.me.readonly", "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly", "https://www.googleapis.com/auth/classroom.announcements.readonly"];
 
 app.get("/classroom/login", (req,res)=>{
 	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://michaelzhangwebsite.herokuapp.com/classroom/callback/"]};
@@ -174,47 +174,8 @@ app.get("/classroom/callback", (req,res)=>{
 	oAuth2Client.getToken(code, (err, token) => {
 		if (err) res.redirect("/classroom/app.html?err=Error%20retrieving%20access%20token%20",err);
 		res.redirect("/classroom/app.html?"+querystring.stringify(token));
-		oAuth2Client.setCredentials(token);
-		//perform what action you want now that you have the auth
 	});
 });
-app.get("/classroom/getData", (req,res)=>{
-	var token = {
-		access_token:decodeURI(req.query.access_token),
-		refresh_token:decodeURI(req.query.refresh_token),
-		token_type:decodeURI(req.query.token_type),
-		expiry_date:decodeURI(req.query.expiry_date)
-	}
-	oAuth2Client.setCredentials(token);
-	const classroom = google.classroom({version: 'v1', auth});
-	function listCourses(auth) {
-		classroom.courses.list({
-			pageSize: 10,
-		}, (err, result) => {
-			if (err) res.redirect("/classroom/app.html?err=The%20API%20returned%20an%20error%20", err);
-			const courses = result.data.courses;
-			if (courses && courses.length) {
-				var data = "Courses: ";
-				courses.forEach((course) => {
-					data+=`${course.name} (${course.id})`;
-				});
-				res.redirect("/classroom/app.html?data="+encodeURI(data)+"&"+querystring.stringify(token));
-			} else {
-				console.log('No courses found.');
-				res.redirect("/classroom/app.html?reeeeeeeeeeeeeee=")
-			}
-		});
-	}
-	function listWork(auth){
-		classroom.courses.courseWork.list({},(err, result)=>{
-			
-		})
-	}
-	switch(req.query.f){
-		case "listCourses": listCourses(oAuth2Client);break;
-		default:res.redirect("/");break;
-	}
-})
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
