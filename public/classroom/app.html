@@ -29,11 +29,13 @@
       var accessToken = urlParams.has("access_token")?urlParams.get("access_token"):undefined;
 
       var totalItems = [];
+      var thing;
+      var pushGreatestLeast;
       document.getElementById("b").addEventListener("click", ()=>{
         httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-          var thing = function(ind){
+          thing = function(ind){
 
-            var pushGreatestLeast = function(arr, dest){
+            pushGreatestLeast = function(arr, dest){
               console.log("totalItems: "+dest)
               for (var j=0;j<arr.length;j++){
                   for (var k=0;k<dest.length;k++){ //order of greatest to least
