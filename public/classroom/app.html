@@ -34,7 +34,6 @@
       document.getElementById("b").addEventListener("click", ()=>{
         httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
           thing = function(ind){
-
             pushGreatestLeast = function(arr, dest){
               console.log("totalItems: "+dest)
               for (var j=0;j<arr.length;j++){
@@ -58,7 +57,7 @@
                       })(pos);
                     }else{
                       if (k===dest.length-1){
-                        dest.splice(k,0,arr[j]);
+                        dest.splice(k+1,0,arr[j]);
                         break;
                       }
                     }
