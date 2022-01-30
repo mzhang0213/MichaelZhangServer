@@ -34,6 +34,7 @@
           var thing = function(ind){
 
             var pushGreatestLeast = function(arr, dest){
+              console.log("totalItems: "+dest)
               for (var j=0;j<arr.length;j++){
                   for (var k=0;k<dest.length;k++){ //order of greatest to least
                     if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
@@ -63,40 +64,43 @@
               if (err) console.log(err);
               else{
                 console.log(data)
-                //for loop and sort the push into the loop
-                if (totalItems.length===0){
-                  for (var a=0;a<data.courseWork.length;a++){
-                    totalItems.push(data.courseWork[i]);
+                if (Object.keys(data).length!==0){ //sometimes there is no data in object
+                  //for loop and sort the push into the loop
+                  if (totalItems.length===0){
+                    for (var a=0;a<data.courseWork.length;a++){
+                      totalItems.push(data.courseWork[i]);
+                    }
                   }
+                  pushGreatestLeast(data.courseWork, totalItems);
                 }
-                pushGreatestLeast(data.courseWork, totalItems);
-                
               }
             })
             httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
               if (err) console.log(err);
               else{
-                //for loop and sort the push into the loop
-                if (totalItems.length===0){
-                  for (var a=0;a<data.courseWorkMaterial.length;a++){
-                    totalItems.push(data.courseWorkMaterial[i]);
+                if (Object.keys(data).length!==0){
+                  //for loop and sort the push into the loop
+                  if (totalItems.length===0){
+                    for (var a=0;a<data.courseWorkMaterial.length;a++){
+                      totalItems.push(data.courseWorkMaterial[i]);
+                    }
                   }
+                  pushGreatestLeast(data.courseWorkMaterial, totalItems);
                 }
-                pushGreatestLeast(data.courseWorkMaterial, totalItems);
-                
               }
             })
             httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
               if (err) console.log(err);
               else{
-                //for loop and sort the push into the loop
-                if (totalItems.length===0){
-                  for (var a=0;a<data.announcements.length;a++){
-                    totalItems.push(data.announcements[i]);
+                if (Object.keys(data).length!==0){
+                  //for loop and sort the push into the loop
+                  if (totalItems.length===0){
+                    for (var a=0;a<data.announcements.length;a++){
+                      totalItems.push(data.announcements[i]);
+                    }
                   }
+                  pushGreatestLeast(data.announcements, totalItems);
                 }
-                pushGreatestLeast(data.announcements, totalItems);
-                
               }
             })
           }
