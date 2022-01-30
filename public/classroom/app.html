@@ -77,11 +77,11 @@
               else{
                 //for loop and sort the push into the loop
                 if (totalItems.length===0){
-                  for (var a=0;a<data.courseWork.length;a++){
-                    totalItems.push(data.courseWork[i]);
+                  for (var a=0;a<data.courseWorkMaterial.length;a++){
+                    totalItems.push(data.courseWorkMaterial[i]);
                   }
                 }
-                pushGreatestLeast(data.courseWork, totalItems);
+                pushGreatestLeast(data.courseWorkMaterial, totalItems);
                 
               }
             })
@@ -90,11 +90,11 @@
               else{
                 //for loop and sort the push into the loop
                 if (totalItems.length===0){
-                  for (var a=0;a<data.courseWork.length;a++){
-                    totalItems.push(data.courseWork[i]);
+                  for (var a=0;a<data.announcements.length;a++){
+                    totalItems.push(data.announcements[i]);
                   }
                 }
-                pushGreatestLeast(data.courseWork, totalItems);
+                pushGreatestLeast(data.announcements, totalItems);
                 
               }
             })
