@@ -8,7 +8,7 @@
     <font style="font-family: 'Cabin';">
       <button id="b">Request</button>
       <br>
-      <p id="p">hi test<br></p>
+      <p id="p" style="font-size:12px;">hi test<br></p>
     </font>
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
@@ -98,6 +98,11 @@
                                     }
                                   }else{
                                     pushGreatestLeast(data.announcements, totalItems);
+                                    document.getElementById("p").innerHTML = "";
+                                    for (var b=0;b<totalItems.length;b++){
+                                      document.getElementById("p").append(totalItems[b]);
+                                      document.getElementById("p").append("\n");
+                                    }
                                   }
                                 }
                               }
