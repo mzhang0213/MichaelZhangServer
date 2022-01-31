@@ -99,8 +99,8 @@
                                   }else{
                                     pushGreatestLeast(data.announcements, totalItems);
                                     document.getElementById("p").innerHTML = "";
-                                    for (var b=0;b<totalItems.length;b++){
-                                      document.getElementById("p").append(totalItems[b]);
+                                    for (var b=0;b<50;b++){
+                                      document.getElementById("p").append(JSON.stringify(totalItems[b]));
                                       document.getElementById("p").append("\n");
                                     }
                                   }
