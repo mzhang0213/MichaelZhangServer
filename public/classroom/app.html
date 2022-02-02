@@ -189,9 +189,12 @@
           var title = document.createElement("p");title.className="title";
           title.append(itemObj.title);
           description.append(itemObj.description);
+		  text.appendChild(title);
         }else{
           description.append(itemObj.text);
         }
+		text.appendChild(description);
+		itemContainer.appendChild(icon);itemContainer.appendChild(text);
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
       }
       
