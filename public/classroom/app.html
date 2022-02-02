@@ -220,7 +220,7 @@
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
-        stats.appendChild(blue+"  |  "+green);
+        stats.append(blue+"  |  "+green);
         icon.appendChild(iconImage);
         itemContainer.appendChild(icon);itemContainer.appendChild(text);itemContainer.appendChild(stats);
         document.getElementById("items").append(itemContainer);
