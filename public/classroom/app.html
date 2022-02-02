@@ -234,35 +234,7 @@
       
       httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
         var thing = function(ind){
-          var pushGreatestLeast = function(arr, dest){
-            for (var j=0;j<arr.length;j++){
-              for (var k=0;k<dest.length;k++){ //order of greatest to least
-                if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
-                  dest.splice(k,0,arr[j]);
-                  break;
-                }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
-                  var pos=0;
-                  (function greaterThan(indox){
-                    if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
-                      dest.splice(k,0,arr[j]);
-                      return;
-                    }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
-                      dest.splice(k+1,0,arr[j]);
-                      return;
-                    }else {
-                      pos++
-                      return greaterThan(pos);
-                    }
-                  })(pos);
-                }else{
-                  if (k===dest.length-1){
-                    dest.splice(k+1,0,arr[j]);
-                    break;
-                  }
-                }
-              }
-            }
-          }
+          var pushGreatestLeast = function(arr, dest){ for (var j=0;j<arr.length;j++){ for (var k=0;k<dest.length;k++){ if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()) { dest.splice(k,0,arr[j]);break; } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) { var pos=0;(function greaterThan(indox){ if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase) { dest.splice(k,0,arr[j]);return; } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) { dest.splice(k+1,0,arr[j]);return; } else { pos++;return greaterThan(pos); } })(pos); } else { if (k===dest.length-1){ dest.splice(k+1,0,arr[j]); break; } } } } }
 
           httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
             if (err) console.log(err);
@@ -275,46 +247,43 @@
                   }
                 }else{
                   pushGreatestLeast(data.courseWork, totalItems);
-                  httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
-                    if (err) console.log(err);
-                    else{
-                      if (Object.keys(data).length!==0){
-                        //for loop and sort the push into the loop
-                        if (totalItems.length===0){
-                          for (var a=0;a<data.courseWorkMaterial.length;a++){
-                            totalItems.push(data.courseWorkMaterial[a]);
-                          }
-                        }else{
-                          pushGreatestLeast(data.courseWorkMaterial, totalItems);
-                          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
-                            if (err) console.log(err);
-                            else{
-                              if (Object.keys(data).length!==0){
-                                //for loop and sort the push into the loop
-                                if (totalItems.length===0){
-                                  for (var a=0;a<data.announcements.length;a++){
-                                    totalItems.push(data.announcements[a]);
-                                  }
-                                }else{
-                                  pushGreatestLeast(data.announcements, totalItems);
-                                  for (var b=0;b<20;b++){
-                                    createItem(totalItems[b]);
-                                  }
-                                }
-                              }
-                            }
-                          })
-                        }
-                      }else{
-                        pushGreatestLeast(data.announcements, totalItems);
-                      }
-                    }
-                  })
+                  
                 }
               }
             }
           })
         }
+        httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
+          if (err) console.log(err);
+          else{
+            if (Object.keys(data).length!==0){
+              //for loop and sort the push into the loop
+              if (totalItems.length===0){
+                for (var a=0;a<data.courseWorkMaterial.length;a++){
+                  totalItems.push(data.courseWorkMaterial[a]);
+                }
+              }else{
+                pushGreatestLeast(data.courseWorkMaterial, totalItems);
+              }
+            }
+          }
+        })
+        httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
+          if (err) console.log(err);
+          else{
+            if (Object.keys(data).length!==0){
+              //for loop and sort the push into the loop
+              if (totalItems.length===0){
+                for (var a=0;a<data.announcements.length;a++){
+                  totalItems.push(data.announcements[a]);
+                }
+              }else{
+                pushGreatestLeast(data.announcements, totalItems);
+                
+              }
+            }
+          }
+        })
         cidTeachers = [];
         for(var i=0;i<data.courses.length;i++){
           if (data.courses[i].courseState==="ACTIVE"){
