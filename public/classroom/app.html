@@ -240,7 +240,7 @@
             nextStep();
             function nextStep(){
               if (index>=data.courses.length)return;
-            }
+            
             var i=index++;
               
             if (data.courses[i].courseState==="ACTIVE"){
@@ -291,12 +291,10 @@
                 }
               }
             }
+	  }
           })
         }
           })();
-        for(var i=0;i<data.courses.length;i++){
-          
-        }
       })
     </script>
   </body>
