@@ -228,11 +228,6 @@
       }
       
       httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-        cidTeachers = [];
-        for (var d=0;d<data.courses.length;d++){
-          console.log(data,data.courses[d]);
-          cidTeachers.push( [ data.courses[d].id , data.courses[d].name ] );
-        }
         var thing = function(ind){
           var pushGreatestLeast = function(arr, dest){
             for (var j=0;j<arr.length;j++){
@@ -315,9 +310,12 @@
             }
           })
         }
+        cidTeachers = [];
         for(var i=0;i<data.courses.length;i++){
-          console.log(data.courses[i].courseState,data.courses[i].courseState==="ACTIVE");
-          if (data.courses[i].courseState==="ACTIVE") thing(data.courses[i].id);
+          if (data.courses[i].courseState==="ACTIVE"){
+            cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
+            thing(data.courses[i].id);
+          }
         }
       })
     </script>
