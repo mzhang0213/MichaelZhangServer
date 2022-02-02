@@ -147,7 +147,7 @@
       gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
       gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
       gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
-      gebi("upIcon").style.left=(window.innerWidth*0.5-gebi("bottomZone").style.width+17)+"px";
+      gebi("upIcon").style.left=(window.innerWidth*0.45/2)+17+"px";
       
       gebi("popupDock").style.display="none";
       gebi("popupDock").style.backgroundColor="white";
@@ -208,12 +208,12 @@
           else iconImage.src="materialIcon.png";
           var title = document.createElement("p");title.className="title";
           title.append(itemObj.title);
-          if (!(itemObj.description===undefined)||!(itemObj.description.trim()==="")) description.append(itemObj.description);
+          if (!(itemObj.description===undefined)) description.append(itemObj.description);
 		      text.appendChild(title);
         }else{
           //announcement
           iconImage.src="announcementIcon.png";
-          if (!(itemObj.text===undefined)||!(itemObj.text.trim()==="")) description.append(itemObj.text);
+          if (!(itemObj.text===undefined)) description.append(itemObj.text);
         }
         text.appendChild(description);
         var thisDate = new Date(itemObj.creationTime);
