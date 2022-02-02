@@ -186,6 +186,7 @@
       
       var totalItems = [];
       var cidTeachers = [];
+      var notiPos = 0;
       var getTeacher = function(id){
         for (var i=0;i<cidTeachers.length;i++){
           if (cidTeachers[i][0]===id){
@@ -232,21 +233,63 @@
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
       }
       
+      var displayItems = function(di) {
+        document.getElementById("items").innerHTML = "";
+        if (di==="left"){
+          notiPos-=20; //@200 max l = 218
+          if (notiPos<0){
+            notiPos=0;
+            document.getElementById("prev").disabled=true;
+            document.getElementById("next").disabled=false;
+          }
+        }else if(di==="right"){
+          notiPos+=20;
+          if (notiPos>totalItems.length){
+            notiPos-=20;
+            document.getElementById("prev").disabled=false;
+            document.getElementById("next").disabled=true;
+            for (var i=notiPos;i<totalItems.length;i++){
+              createItem(totalItems[i]);
+            }
+            return;
+          }
+        }else{
+          console.log("wtf display items else")
+        }
+        for (var i=notiPos;i<20;i++){
+          createItem(totalItems[i]);
+        }
+        if(di===undefined)notiPos+=20;
+      }
+      
+      var doReq = function(){
+      
       httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
         var pushGreatestLeast = function(arr, dest){ for (var j=0;j<arr.length;j++){ for (var k=0;k<dest.length;k++){ if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()) { dest.splice(k,0,arr[j]);break; } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) { var pos=0;(function greaterThan(indox){ if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase) { dest.splice(k,0,arr[j]);return; } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) { dest.splice(k+1,0,arr[j]);return; } else { pos++;return greaterThan(pos); } })(pos); } else { if (k===dest.length-1){ dest.splice(k+1,0,arr[j]); break; } } } } }
         cidTeachers = [];
         
+        notiPos+=20;
         (function(){
           var index=0;
           nextStep();
           function nextStep(){
-            if (index>=data.courses.length)return;
-
+            if (index>=data.courses.length){
+              document.getElementById("refresh").addEventListener("click", function(){doReq()});
+              document.getElementById("prev").addEventListener("click", function(){
+                displayItems("left");
+                document.getElementById("prev").disabled=true;
+              })
+              document.getElementById("next").addEventListener("click", function(){
+                displayItems("right");
+              })
+              return;
+            }
             var i=index++;
-
+            var id = data.courses[i].id;
+            
             if (data.courses[i].courseState==="ACTIVE"){
               cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
-              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+data.courses[i].id+"/courseWork", accessToken, (dota, err)=>{
+              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWork", accessToken, (dota, err)=>{
                 if (err) console.log(err);
                 else{
                   if (Object.keys(dota).length!==0){ //sometimes there is no data in object
@@ -257,7 +300,7 @@
                       }
                     }else{
                       pushGreatestLeast(dota.courseWork, totalItems);
-                      httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+data.courses[i].id+"/courseWorkMaterials", accessToken, (deta, err)=>{
+                      httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
                         if (err) console.log(err);
                         else{
                           if (Object.keys(deta).length!==0){
@@ -268,7 +311,7 @@
                               }
                             }else{
                               pushGreatestLeast(deta.courseWorkMaterial, totalItems);
-                              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+data.courses[i].id+"/announcements", accessToken, (daeta, err)=>{
+                              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
                                 if (err) console.log(err);
                                 else{
                                   if (Object.keys(daeta).length!==0){
@@ -295,7 +338,10 @@
             })
           }
         })();
+        displayItems(undefined);
       })
+      
+      }
     </script>
   </body>
 </html>
