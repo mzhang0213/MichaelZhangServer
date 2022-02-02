@@ -6,12 +6,161 @@
   </head>
   <body>
     <font style="font-family: 'Cabin';">
-      <button id="b">Request</button>
-      <br>
-      <p id="p">hi test<br></p>
+      <center>
+        <p style="font-size:60px;margin:0;margin-top:20px;padding:0;">Notifications</p>
+      </center>
+      <br><br>
+      <div id="items"></div> <!--append here-->
+      <div class="itemContainer">
+        <div class="icon"></div>
+        <div class="text">
+          <p class="title" readonly>This is my title.</p><!--remember these p tags are display block-->
+          <p class="description" readonly>COMPLETE THE ASSIGNMENT DUMBASS</p>
+        </div>
+      </div>
+      <center>
+        <p id="upIcon">🔼</p>
+      </center>
+      <div id="bottomZone">
+        <div id="popupDock">
+          <button id="refresh" class="taskbarButton" title="Refresh">🔁</button>
+          <div id="skipControls">
+            <button id="prev" class="taskbarButton" title="Previous 50">◀</button>
+            <button id="next" class="taskbarButton" title="Next 50">▶</button>
+          </div>
+        </div>
+      </div>
     </font>
-    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <style>
+      .taskbarButton{
+        width:55px;
+        height:55px;
+        font-size:30px;
+      }
+      .itemContainer{
+        border: 1px solid #000000;
+        display:flex;
+        align-items:center;
+        width:500px;
+        height:100px;
+        position:relative;
+        border-radius: 15px;
+        margin:0 auto;
+      }
+      .icon, .text {
+        border: 1px solid #000000;
+        position:relative;
+      }
+      .icon{
+        width:50px;
+        height:50px;
+      }
+      .text{
+        width:500px;
+        height:100px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        border-radius:0 15px 15px 0;
+      }
+      .title,.description{
+        padding:0;
+        margin:0;
+        left:10px;
+        width:445px;
+        height:45px;
+        border:none;
+        resize:none;
+        position:relative;
+
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        display:block;
+      }
+      .title{
+        font-size:30px;
+        margin-top:20px;
+      }
+      .description{
+        opacity:50%;
+      }
+      #bottomZone{
+        position:absolute;
+        left:0;
+        top:0;
+        height:70px;
+      }
+      #skipControls{
+        display:flex;
+        align-items:center;
+        justify-content:space-evenly;
+      }
+      #popupDock{
+        position:absolute;
+        height:70px;
+        border: 4px black solid;
+        display:flex;
+        align-items:center;
+        justify-content:space-evenly;
+      }
+      #upIcon{
+        position:absolute;
+        left:0;
+        top:0;
+        margin:0;
+        padding:0;
+        width:25px;
+        height:25px;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
+    
+      /* ui plan: (assignment = courseWork)
+      items have icon, title, desc
+        ANNOUNCEMENTS IS JUST ONE TEXT SO NO TITLE AND DELETE THE TITLE BOX ON THESE ONES
+        make desc textarea and maybe title?
+          remember to turn off border, user box expansion, select on those
+      have .mouseover on each item reveal circle three dots button on the top right
+        three dots button alt/hover="Details" yellow text thing
+      click: expand description, pop out white, reveal grey screen size div w/ z index=1
+      have little bubbles floating over the top of that item that show:
+        pts value
+        date and time due (format: Due MM/DD/YY at HH:MM) IF assignment
+        date posted
+        materials (like yt videos) IF assignment or courseWorkMaterials
+      write a function that creates a text centered vertical horizontal in a small circle bubble
+        font-size:15px
+        eg var createBubble = function(text,fontSize,location) {} //location = append location
+      */
+    
+      var gebi = function(elem){return document.getElementById(elem)};
+      gebi("bottomZone").style.zIndex=10;
+      gebi("popupDock").style.bottom=0;
+      gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
+      gebi("bottomZone").style.width=(window.innerWidth*0.45)+"px";
+      gebi("bottomZone").style.left=(window.innerWidth*0.27)+"px";
+      gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
+      gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+      gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+      
+      gebi("popupDock").style.display="none";
+      gebi("upIcon").style.left=(window.innerWidth*0.5-17)+"px";
+      gebi("upIcon").style.top=(window.innerHeight-25)+"px";
+      document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
+        if (!$("#popupDock").is(':animated')){
+          $("#popupDock").slideToggle(350);
+          document.getElementById("upIcon").style.display="none"
+        }
+      })
+      document.getElementById("bottomZone").addEventListener("mouseleave", ()=>{
+        if (!$("#popupDock").is(':animated')){
+          $("#popupDock").slideToggle(350);
+          setTimeout(()=>document.getElementById("upIcon").style.display="",350)
+        }
+      })
+
       const urlParams = new URLSearchParams(window.location.search);
       var httpReq = function(method, url, access_token, cb){
         var req = new XMLHttpRequest();
@@ -27,103 +176,114 @@
         }
       }
       var accessToken = urlParams.has("access_token")?urlParams.get("access_token"):undefined;
-
+      
       var totalItems = [];
-      var thing;
-      var pushGreatestLeast;
-      document.getElementById("b").addEventListener("click", ()=>{
-        httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-          
-          thing = function(ind){
-            
-            pushGreatestLeast = function(arr, dest){
-              console.log("totalItems: "+dest)
-              for (var j=0;j<arr.length;j++){
-                  for (var k=0;k<dest.length;k++){ //order of greatest to least
-                    if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
-                      dest.splice(k,0,arr[j]);
-                      break;
-                    }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
-                      var pos=0;
-                      (function greaterThan(indox){
-                        if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
-                          dest.splice(k,0,arr[j]);
-                          return;
-                        }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
-                          dest.splice(k+1,0,arr[j]);
-                          return;
-                        }else {
-                          pos++
-                          return greaterThan(pos);
-                        }
-                      })(pos);
-                    }else{
-                      if (k===dest.length-1){
+      
+      var createItem = function(itemObj){ //if announcement make title=undefined
+        document.getElementById("items").innerHTML = "";
+        var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
+        var icon = document.createElement("div");icon.className="icon";//icons: assignmentIcon.png , materialIcon.png , turnedInIcon.png, announcementIcon.png
+        var text = document.createElement("div");text.className="text";
+        var description = document.createElement("p");description.className="description";
+        if(!itemObj.hasOwnProperty("text")){
+          var title = document.createElement("p");title.className="title";
+          title.append(itemObj.title);
+          description.append(itemObj.description);
+        }else{
+          description.append(itemObj.text);
+        }
+        document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
+      }
+      
+      httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
+        thing = function(ind){
+          pushGreatestLeast = function(arr, dest){
+            console.log("totalItems: "+dest)
+            for (var j=0;j<arr.length;j++){
+                for (var k=0;k<dest.length;k++){ //order of greatest to least
+                  if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
+                    dest.splice(k,0,arr[j]);
+                    break;
+                  }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
+                    var pos=0;
+                    (function greaterThan(indox){
+                      if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
+                        dest.splice(k,0,arr[j]);
+                        return;
+                      }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
                         dest.splice(k+1,0,arr[j]);
-                        break;
+                        return;
+                      }else {
+                        pos++
+                        return greaterThan(pos);
                       }
+                    })(pos);
+                  }else{
+                    if (k===dest.length-1){
+                      dest.splice(k+1,0,arr[j]);
+                      break;
                     }
                   }
                 }
-            }
+              }
+          }
 
-            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
-              if (err) console.log(err);
-              else{
-
+          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
+            if (err) console.log(err);
+            else{
               if (Object.keys(data).length!==0){ //sometimes there is no data in object
-                
-              //for loop and sort the push into the loop
-              if (totalItems.length===0){
-                for (var a=0;a<data.courseWork.length;a++){
-                  totalItems.push(data.courseWork[a]);
-                }
-
-              }else{
-                
-                pushGreatestLeast(data.courseWork, totalItems);
-
-              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
-                if (err) console.log(err);
-                else{
-
-                if (Object.keys(data).length!==0){
-
                 //for loop and sort the push into the loop
                 if (totalItems.length===0){
-                  for (var a=0;a<data.courseWorkMaterial.length;a++){
-                    totalItems.push(data.courseWorkMaterial[a]);
+                  for (var a=0;a<data.courseWork.length;a++){
+                    totalItems.push(data.courseWork[a]);
                   }
-
                 }else{
-
-                  pushGreatestLeast(data.courseWorkMaterial, totalItems);
-
-                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
-                  if (err) console.log(err);
-                  else{
-                    if (Object.keys(data).length!==0){
-                      //for loop and sort the push into the loop
-                      if (totalItems.length===0){
-                        for (var a=0;a<data.announcements.length;a++){
-                          totalItems.push(data.announcements[a]);
+                  pushGreatestLeast(data.courseWork, totalItems);
+                  httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
+                    if (err) console.log(err);
+                    else{
+                      if (Object.keys(data).length!==0){
+                        //for loop and sort the push into the loop
+                        if (totalItems.length===0){
+                          for (var a=0;a<data.courseWorkMaterial.length;a++){
+                            totalItems.push(data.courseWorkMaterial[a]);
+                          }
+                        }else{
+                          pushGreatestLeast(data.courseWorkMaterial, totalItems);
+                          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
+                            if (err) console.log(err);
+                            else{
+                              if (Object.keys(data).length!==0){
+                                //for loop and sort the push into the loop
+                                if (totalItems.length===0){
+                                  for (var a=0;a<data.announcements.length;a++){
+                                    totalItems.push(data.announcements[a]);
+                                  }
+                                }else{
+                                  pushGreatestLeast(data.announcements, totalItems);
+                                  document.getElementById("p").innerHTML = "";
+                                  for (var b=0;b<50;b++){
+                                    createItem(totalItems[b]);
+                                  }
+                                }
+                              }
+                            }
+                          })
                         }
                       }else{
                         pushGreatestLeast(data.announcements, totalItems);
                       }
                     }
-                  }
-
-                })
-                }  }  }
-              })
-              }  }  }
-            })
-          }
-          for(var i=0;i<data.courses.length;i++){
-            if (data.courses[i].courseState==="ACTIVE") thing(data.courses[i].id);
-          }
-        })
+                  })
+                }
+              }
+            }
+          })
+        }
+        for(var i=0;i<data.courses.length;i++){
+          console.log(data.courses[i].courseState,data.courses[i].courseState==="ACTIVE");
+          if (data.courses[i].courseState==="ACTIVE") thing(data.courses[i].id);
+        }
       })
     </script>
   </body>
