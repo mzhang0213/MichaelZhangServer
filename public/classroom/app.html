@@ -31,9 +31,7 @@
             <button id="next" class="taskbarButton" title="Next 50">▶</button>
           </div>
         </div>
-        <center>
-          <p id="upIcon">🔼</p>
-        </center>
+        <p id="upIcon">🔼</p>
       </div>
     </font>
     <style>
@@ -149,6 +147,7 @@
       gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
       gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
       gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+      gebi("upIcon").style.left=(window.innerWidth*0.5-gebi("bottomZone").style.width+17)+"px";
       
       gebi("popupDock").style.display="none";
       gebi("popupDock").style.backgroundColor="white";
