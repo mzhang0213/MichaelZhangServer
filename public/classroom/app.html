@@ -229,8 +229,9 @@
       
       httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
         cidTeachers = [];
-        for (var d=0;data.courses.length; d++){
-          cidTeachers.push([data.courses[d].id,data.courses[d].name]);
+        for (var d=0;data.courses.length;d++){
+          console.log(data,data.courses[d]);
+          cidTeachers.push( [ data.courses[d].id , data.courses[d].name ] );
         }
         var thing = function(ind){
           var pushGreatestLeast = function(arr, dest){
