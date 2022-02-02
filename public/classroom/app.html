@@ -125,19 +125,19 @@
     <script>
     
       /* ui plan: (assignment = courseWork)
-      items have icon, title, desc
+        items have icon, title, desc
         ANNOUNCEMENTS IS JUST ONE TEXT SO NO TITLE AND DELETE THE TITLE BOX ON THESE ONES
         make desc textarea and maybe title?
           remember to turn off border, user box expansion, select on those
-      have .mouseover on each item reveal circle three dots button on the top right
+            have .mouseover on each item reveal circle three dots button on the top right
         three dots button alt/hover="Details" yellow text thing
-      click: expand description, pop out white, reveal grey screen size div w/ z index=1
-      have little bubbles floating over the top of that item that show:
+            click: expand description, pop out white, reveal grey screen size div w/ z index=1
+            have little bubbles floating over the top of that item that show:
         pts value
         date and time due (format: Due MM/DD/YY at HH:MM) IF assignment
         date posted
         materials (like yt videos) IF assignment or courseWorkMaterials
-      write a function that creates a text centered vertical horizontal in a small circle bubble
+            write a function that creates a text centered vertical horizontal in a small circle bubble
         font-size:15px
         eg var createBubble = function(text,fontSize,location) {} //location = append location
       */
@@ -186,6 +186,7 @@
       
       var totalItems = [];
       var cidTeachers = [];
+      var notiPos = 0;
       var getTeacher = function(id){
         for (var i=0;i<cidTeachers.length;i++){
           if (cidTeachers[i][0]===id){
@@ -232,97 +233,116 @@
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
       }
       
-      httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-        var thing = function(ind){
-          var pushGreatestLeast = function(arr, dest){
-            for (var j=0;j<arr.length;j++){
-              for (var k=0;k<dest.length;k++){ //order of greatest to least
-                if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
-                  dest.splice(k,0,arr[j]);
-                  break;
-                }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
-                  var pos=0;
-                  (function greaterThan(indox){
-                    if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
-                      dest.splice(k,0,arr[j]);
-                      return;
-                    }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
-                      dest.splice(k+1,0,arr[j]);
-                      return;
-                    }else {
-                      pos++
-                      return greaterThan(pos);
-                    }
-                  })(pos);
-                }else{
-                  if (k===dest.length-1){
-                    dest.splice(k+1,0,arr[j]);
-                    break;
-                  }
-                }
-              }
-            }
+      var displayItems = function(di) {
+        document.getElementById("items").innerHTML = "";
+        if (di==="left"){
+          notiPos-=20; //@200 max l = 218
+          if (notiPos<0){
+            notiPos=0;
+            document.getElementById("prev").disabled=true;
+            document.getElementById("next").disabled=false;
           }
-
-          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
-            if (err) console.log(err);
-            else{
-              if (Object.keys(data).length!==0){ //sometimes there is no data in object
-                //for loop and sort the push into the loop
-                if (totalItems.length===0){
-                  for (var a=0;a<data.courseWork.length;a++){
-                    totalItems.push(data.courseWork[a]);
-                  }
-                }else{
-                  pushGreatestLeast(data.courseWork, totalItems);
-                  httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWorkMaterials", accessToken, (data, err)=>{
-                    if (err) console.log(err);
-                    else{
-                      if (Object.keys(data).length!==0){
-                        //for loop and sort the push into the loop
-                        if (totalItems.length===0){
-                          for (var a=0;a<data.courseWorkMaterial.length;a++){
-                            totalItems.push(data.courseWorkMaterial[a]);
+        }else if(di==="right"){
+          notiPos+=20;
+          if (notiPos>totalItems.length){
+            notiPos-=20;
+            document.getElementById("prev").disabled=false;
+            document.getElementById("next").disabled=true;
+            for (var i=notiPos;i<totalItems.length;i++){
+              createItem(totalItems[i]);
+            }
+            return;
+          }
+        }else{
+          console.log("if di is not undefined, wtf display items else: "+di);
+        }
+        for (var i=notiPos;i<20;i++){
+          createItem(totalItems[i]);
+        }
+        if(di===undefined)notiPos+=20;
+      }
+      
+      var doReq = function(){
+      
+      httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
+        var pushGreatestLeast = function(arr, dest){ for (var j=0;j<arr.length;j++){ for (var k=0;k<dest.length;k++){ if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()) { dest.splice(k,0,arr[j]);break; } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) { var pos=0;(function greaterThan(indox){ if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase) { dest.splice(k,0,arr[j]);return; } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) { dest.splice(k+1,0,arr[j]);return; } else { pos++;return greaterThan(pos); } })(pos); } else { if (k===dest.length-1){ dest.splice(k+1,0,arr[j]); break; } } } } }
+        cidTeachers = [];
+        
+        notiPos+=20;
+        (function(){
+          var index=0;
+          nextStep();
+          function nextStep(){
+            if (index>=data.courses.length){
+              document.getElementById("refresh").addEventListener("click", function(){doReq()});
+              document.getElementById("prev").addEventListener("click", function(){
+                displayItems("left");
+                document.getElementById("prev").disabled=true;
+              })
+              document.getElementById("next").addEventListener("click", function(){
+                displayItems("right");
+              })
+              return;
+            }
+            var i=index++;
+            var id = data.courses[i].id;
+            
+            if (data.courses[i].courseState==="ACTIVE"){
+              cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
+              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWork", accessToken, (dota, err)=>{
+                if (err) console.log(err);
+                else{
+                  if (Object.keys(dota).length!==0){ //sometimes there is no data in object
+                    //for loop and sort the push into the loop
+                    if (totalItems.length===0){
+                      for (var a=0;a<dota.courseWork.length;a++){
+                        totalItems.push(dota.courseWork[a]);
+                      }
+                    }else{
+                      pushGreatestLeast(dota.courseWork, totalItems);
+                    }
+                    httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
+                      if (err) console.log(err);
+                      else{
+                        if (Object.keys(deta).length!==0){
+                          //for loop and sort the push into the loop
+                          if (totalItems.length===0){
+                            for (var b=0;b<deta.courseWorkMaterial.length;b++){
+                              totalItems.push(deta.courseWorkMaterial[b]);
+                            }
+                          }else{
+                            pushGreatestLeast(deta.courseWorkMaterial, totalItems);
                           }
-                        }else{
-                          pushGreatestLeast(data.courseWorkMaterial, totalItems);
-                          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/announcements", accessToken, (data, err)=>{
+                          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
                             if (err) console.log(err);
                             else{
-                              if (Object.keys(data).length!==0){
+                              if (Object.keys(daeta).length!==0){
                                 //for loop and sort the push into the loop
                                 if (totalItems.length===0){
-                                  for (var a=0;a<data.announcements.length;a++){
-                                    totalItems.push(data.announcements[a]);
+                                  for (var c=0;c<daeta.announcements.length;c++){
+                                    totalItems.push(daeta.announcements[c]);
                                   }
                                 }else{
-                                  pushGreatestLeast(data.announcements, totalItems);
-                                  for (var b=0;b<20;b++){
-                                    createItem(totalItems[b]);
-                                  }
+                                  pushGreatestLeast(daeta.announcements, totalItems);
                                 }
+                                nextStep();
                               }
                             }
                           })
                         }
-                      }else{
-                        pushGreatestLeast(data.announcements, totalItems);
                       }
-                    }
-                  })
+                    })
+                  }
                 }
-              }
-            }
-          })
-        }
-        cidTeachers = [];
-        for(var i=0;i<data.courses.length;i++){
-          if (data.courses[i].courseState==="ACTIVE"){
-            cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
-            thing(data.courses[i].id);
+              })
+            } else nextStep();
           }
-        }
+        })();
+        displayItems(undefined);
       })
+      
+      }
+      doReq();
     </script>
   </body>
 </html>
