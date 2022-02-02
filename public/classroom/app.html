@@ -217,7 +217,7 @@
         }
         text.appendChild(description);
         var thisDate = new Date(itemObj.creationTime);
-        var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+this.getFullYear();
+        var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
         stats.appendChild(blue+"  |  "+green);
