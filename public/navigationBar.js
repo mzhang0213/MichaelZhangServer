@@ -51,6 +51,8 @@ addElement(ipAddress + "/speeedTypeDude/", "Typing Test", "gamesDropdownContent"
 
 createButton("spotifyYt", "Cracked Spotify");
 
+createButton("classroom", "GC Notis");
+
 createButton("USH", "USH")
 
 document.getElementById("homeButton").addEventListener("click", () => {
@@ -59,6 +61,10 @@ document.getElementById("homeButton").addEventListener("click", () => {
 document.getElementById("spotifyYtButton").addEventListener("click", () => {
     window.location = "https://"+window.location.host+"/spotifyYt";
 });
+document.getElementById("classroomButton").addEventListener("click", () => {
+    window.location = "https://"+window.location.host+"/classroom";
+});
+
 document.getElementById("USHButton").addEventListener("click", () => {
     window.location = "https://"+window.location.host+"/USH";
 });
