@@ -59,6 +59,9 @@
       .icon{
         width:50px;
         height:50px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
       }
       .text{
         width:500px;
@@ -150,6 +153,7 @@
       gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
       
       gebi("popupDock").style.display="none";
+      gebi("popupDock").style.backgroundColor="white";
       gebi("upIcon").style.left=(window.innerWidth*0.5-17)+"px";
       gebi("upIcon").style.top=(window.innerHeight-25)+"px";
       document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
@@ -214,7 +218,7 @@
         }else{
           //announcement
           iconImage.src="announcementIcon.png";
-          if (!itemObj.text===undefined||!itemObj.text.trim()==="") description.append(itemObj.text);
+          if ((!itemObj.text===undefined)||(!itemObj.text.trim()==="")) description.append(itemObj.text);
         }
         text.appendChild(description);
         var thisDate = new Date(itemObj.creationTime);
