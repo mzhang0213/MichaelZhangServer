@@ -68,12 +68,11 @@
         justify-content:center;
         border-radius:0 15px 15px 0;
       }
-      .title,.description{
+      .title,.description,.stats{
         padding:0;
         margin:0;
         left:10px;
         width:445px;
-        height:45px;
         border:none;
         resize:none;
         position:relative;
@@ -183,57 +182,78 @@
       var accessToken = urlParams.has("access_token")?urlParams.get("access_token"):undefined;
       
       var totalItems = [];
-      
+      var cidTeachers = [];
+      var getTeacher = function(id){
+        for (var i=0;i<cidTeachers.length;i++){
+          if (cidTeachers[i][0]===id){
+            return cidTeachers[i][1];
+          }
+        }
+        console.log("lonely world: couldn't find teacher")
+        return "fuck";
+      }
       var createItem = function(itemObj){ //if announcement make title=undefined
         var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
         var icon = document.createElement("div");icon.className="icon";//icons: assignmentIcon.png , materialIcon.png , turnedInIcon.png, announcementIcon.png
         var text = document.createElement("div");text.className="text";
         var description = document.createElement("p");description.className="description";
+        var stats = document.createElement("p");stats.className="stats";
+        var blue = document.createElement("font");blue.style.color="#4254f5";
+        var green = document.createElement("font");green.style.color="#2dc237";
+
         if(!itemObj.hasOwnProperty("text")){
           var title = document.createElement("p");title.className="title";
           title.append(itemObj.title);
           description.append(itemObj.description);
-		  text.appendChild(title);
+		      text.appendChild(title);
         }else{
-          description.append(itemObj.text);
+          if (!itemObj.text===undefined||!itemObj.text.trim()==="") description.append(itemObj.text);
         }
-		text.appendChild(description);
-		itemContainer.appendChild(icon);itemContainer.appendChild(text);
-		document.getElementById("items").append(itemContainer);
+        text.appendChild(description);
+        var thisDate = new Date(itemObj.creationTime);
+        var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+this.getFullYear();
+        blue.append(date);
+        green.append(getTeacher(itemObj.courseId));
+        stats.appendChild(blue+"  |  "+green);
+        itemContainer.appendChild(icon);itemContainer.appendChild(text);itemContainer.appendChild(stats);
+        document.getElementById("items").append(itemContainer);
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
       }
       
       httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-        thing = function(ind){
-          pushGreatestLeast = function(arr, dest){
-            console.log("totalItems: "+dest)
+        cidTeachers = [];
+        for (var d=0;data.courses.length; d++){
+          cidTeachers.push([data.courses[i].id,data.courses[i].name]);
+        }
+        var thing = function(ind){
+          var pushGreatestLeast = function(arr, dest){
             for (var j=0;j<arr.length;j++){
-                for (var k=0;k<dest.length;k++){ //order of greatest to least
-                  if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
-                    dest.splice(k,0,arr[j]);
-                    break;
-                  }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
-                    var pos=0;
-                    (function greaterThan(indox){
-                      if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
-                        dest.splice(k,0,arr[j]);
-                        return;
-                      }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
-                        dest.splice(k+1,0,arr[j]);
-                        return;
-                      }else {
-                        pos++
-                        return greaterThan(pos);
-                      }
-                    })(pos);
-                  }else{
-                    if (k===dest.length-1){
+              for (var k=0;k<dest.length;k++){ //order of greatest to least
+                if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){ //if the new item is lower than the current, then it needs to go lower and deeper into the array
+                  dest.splice(k,0,arr[j]);
+                  break;
+                }else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()){
+                  var pos=0;
+                  (function greaterThan(indox){
+                    if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
+                      dest.splice(k,0,arr[j]);
+                      return;
+                    }else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase){
                       dest.splice(k+1,0,arr[j]);
-                      break;
+                      return;
+                    }else {
+                      pos++
+                      return greaterThan(pos);
                     }
+                  })(pos);
+                }else{
+                  if (k===dest.length-1){
+                    dest.splice(k+1,0,arr[j]);
+                    break;
                   }
                 }
               }
+            }
           }
 
           httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+ind+"/courseWork", accessToken, (data, err)=>{
@@ -269,7 +289,7 @@
                                   }
                                 }else{
                                   pushGreatestLeast(data.announcements, totalItems);
-                                  for (var b=0;b<50;b++){
+                                  for (var b=0;b<20;b++){
                                     createItem(totalItems[b]);
                                   }
                                 }
