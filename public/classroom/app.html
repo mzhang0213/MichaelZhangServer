@@ -194,19 +194,25 @@
       }
       var createItem = function(itemObj){ //if announcement make title=undefined
         var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
-        var icon = document.createElement("div");icon.className="icon";//icons: assignmentIcon.png , materialIcon.png , turnedInIcon.png, announcementIcon.png
+        var icon = document.createElement("div");icon.className="icon";//icons: assignedIcon.png , materialIcon.png , submittedIcon.png, announcementIcon.png
         var text = document.createElement("div");text.className="text";
         var description = document.createElement("p");description.className="description";
         var stats = document.createElement("p");stats.className="stats";
         var blue = document.createElement("font");blue.style.color="#4254f5";
         var green = document.createElement("font");green.style.color="#2dc237";
+        var iconImage = document.createElement("img");
 
         if(!itemObj.hasOwnProperty("text")){
+          //assignment or material
+          if (itemObj.hasOwnProperty("dueDate"))iconImage.src="assignedIcon.png";
+          else iconImage.src="materialIcon.png";
           var title = document.createElement("p");title.className="title";
           title.append(itemObj.title);
           description.append(itemObj.description);
 		      text.appendChild(title);
         }else{
+          //announcement
+          iconImage.src="announcementIcon.png";
           if (!itemObj.text===undefined||!itemObj.text.trim()==="") description.append(itemObj.text);
         }
         text.appendChild(description);
@@ -215,6 +221,7 @@
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
         stats.appendChild(blue+"  |  "+green);
+        icon.appendChild(iconImage);
         itemContainer.appendChild(icon);itemContainer.appendChild(text);itemContainer.appendChild(stats);
         document.getElementById("items").append(itemContainer);
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
