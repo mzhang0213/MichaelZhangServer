@@ -23,9 +23,6 @@
       </div>
       -->
 
-      <center>
-        <p id="upIcon">🔼</p>
-      </center>
       <div id="bottomZone">
         <div id="popupDock">
           <button id="refresh" class="taskbarButton" title="Refresh">🔁</button>
@@ -34,6 +31,9 @@
             <button id="next" class="taskbarButton" title="Next 50">▶</button>
           </div>
         </div>
+        <center>
+          <p id="upIcon">🔼</p>
+        </center>
       </div>
     </font>
     <style>
@@ -53,7 +53,6 @@
         margin:0 auto;
       }
       .icon, .text {
-        border: 1px solid #000000;
         position:relative;
       }
       .icon{
@@ -112,9 +111,8 @@
         justify-content:space-evenly;
       }
       #upIcon{
-        position:absolute;
-        left:0;
-        top:0;
+        position:fixed;
+        bottom:0;
         margin:0;
         padding:0;
         width:25px;
@@ -154,8 +152,6 @@
       
       gebi("popupDock").style.display="none";
       gebi("popupDock").style.backgroundColor="white";
-      gebi("upIcon").style.left=(window.innerWidth*0.5-17)+"px";
-      gebi("upIcon").style.top=(window.innerHeight-25)+"px";
       document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
         if (!$("#popupDock").is(':animated')){
           $("#popupDock").slideToggle(350);
