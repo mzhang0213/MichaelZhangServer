@@ -201,6 +201,7 @@
         var blue = document.createElement("font");blue.style.color="#4254f5";
         var green = document.createElement("font");green.style.color="#2dc237";
         var iconImage = document.createElement("img");
+        iconImage.style.width=iconImage.style.height="40px";
 
         if(!itemObj.hasOwnProperty("text")){
           //assignment or material
@@ -220,9 +221,10 @@
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
-        stats.append(blue+"  |  "+green);
+        stats.appendChild(blue);stats.append("  |  ");stats.appendChild(green);
+        text.appendChild(stats);
         icon.appendChild(iconImage);
-        itemContainer.appendChild(icon);itemContainer.appendChild(text);itemContainer.appendChild(stats);
+        itemContainer.appendChild(icon);itemContainer.appendChild(text);
         document.getElementById("items").append(itemContainer);
         document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
       }
