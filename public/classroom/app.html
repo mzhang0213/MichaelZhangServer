@@ -254,7 +254,7 @@
             return;
           }
         }else{
-          console.log("wtf display items else")
+          console.log("if di is not undefined, wtf display items else: "+di);
         }
         for (var i=notiPos;i<20;i++){
           createItem(totalItems[i]);
@@ -300,38 +300,38 @@
                       }
                     }else{
                       pushGreatestLeast(dota.courseWork, totalItems);
-                      httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
-                        if (err) console.log(err);
-                        else{
-                          if (Object.keys(deta).length!==0){
-                            //for loop and sort the push into the loop
-                            if (totalItems.length===0){
-                              for (var b=0;b<deta.courseWorkMaterial.length;b++){
-                                totalItems.push(deta.courseWorkMaterial[b]);
-                              }
-                            }else{
-                              pushGreatestLeast(deta.courseWorkMaterial, totalItems);
-                              httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
-                                if (err) console.log(err);
-                                else{
-                                  if (Object.keys(daeta).length!==0){
-                                    //for loop and sort the push into the loop
-                                    if (totalItems.length===0){
-                                      for (var c=0;c<daeta.announcements.length;c++){
-                                        totalItems.push(daeta.announcements[c]);
-                                      }
-                                    }else{
-                                      pushGreatestLeast(daeta.announcements, totalItems);
-                                      nextStep();
-                                    }
-                                  }
-                                }
-                              })
-                            }
-                          }
-                        }
-                      })
                     }
+                    httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
+                      if (err) console.log(err);
+                      else{
+                        if (Object.keys(deta).length!==0){
+                          //for loop and sort the push into the loop
+                          if (totalItems.length===0){
+                            for (var b=0;b<deta.courseWorkMaterial.length;b++){
+                              totalItems.push(deta.courseWorkMaterial[b]);
+                            }
+                          }else{
+                            pushGreatestLeast(deta.courseWorkMaterial, totalItems);
+                          }
+                          httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
+                            if (err) console.log(err);
+                            else{
+                              if (Object.keys(daeta).length!==0){
+                                //for loop and sort the push into the loop
+                                if (totalItems.length===0){
+                                  for (var c=0;c<daeta.announcements.length;c++){
+                                    totalItems.push(daeta.announcements[c]);
+                                  }
+                                }else{
+                                  pushGreatestLeast(daeta.announcements, totalItems);
+                                }
+                                nextStep();
+                              }
+                            }
+                          })
+                        }
+                      }
+                    })
                   }
                 }
               })
