@@ -236,11 +236,8 @@
       
       var displayItems = function(di) {
         document.getElementById("items").innerHTML = "";
-
         if (di==="left"){
-
           notiPos-=20;
-
           if (notiPos<0){
             notiPos=0;
             for (var i=notiPos;i<notiPos+20;i++){
@@ -248,11 +245,8 @@
             }
             return;
           }
-
         }else if(di==="right"){
-
           notiPos+=20;
-
           if (notiPos+20>=totalItems.length){
             for (var i=notiPos;i<totalItems.length;i++){
               createItem(totalItems[i]);
