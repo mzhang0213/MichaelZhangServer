@@ -207,6 +207,7 @@
         var iconImage = document.createElement("img");
         iconImage.style.width=iconImage.style.height="40px";
 
+        console.log(itemObj)
         if(!itemObj.hasOwnProperty("text")){
           //assignment or material
           if (itemObj.hasOwnProperty("dueDate"))iconImage.src="assignedIcon.png";
@@ -288,7 +289,7 @@
               
               if (data.courses[i].courseState==="ACTIVE"){
                 cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
-                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWork", accessToken, (dota, err)=>{console.log(dota)
+                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWork", accessToken, (dota, err)=>{
                   if (err) console.log(err);
                   else{
                     if (Object.keys(dota).length!==0){ //sometimes there is no data in object
@@ -301,7 +302,7 @@
                         pushGreatestLeast(dota.courseWork, totalItems);
                       }
                     }else{
-                      httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{console.log(deta)
+                      httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
                         if (err) console.log(err);
                         else{
                           if (Object.keys(deta).length!==0){
@@ -314,7 +315,7 @@
                               pushGreatestLeast(deta.courseWorkMaterial, totalItems);
                             }
                           }else{
-                            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{console.log(daeta)
+                            httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
                               if (err) console.log(err);
                               else{
                                 if (Object.keys(daeta).length!==0){
