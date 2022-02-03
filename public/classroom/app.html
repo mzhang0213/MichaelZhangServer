@@ -271,6 +271,7 @@
         for (var i=notiPos;i<20;i++){
           createItem(totalItems[i]);
         }
+        if (di===undefined)notiPos+=20;
       }
 
       var pushGreatestLeast = function(arr, dest){
@@ -322,7 +323,7 @@
                 })
                 document.getElementById("prev").disabled=true;
                 document.getElementById("loadingBox").style.display="none";
-                displayItems("right");
+                displayItems(undefined);
                 
                 return;
               }
