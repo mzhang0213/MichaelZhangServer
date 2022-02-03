@@ -309,6 +309,7 @@
                 document.getElementById("next").addEventListener("click", function(){
                   displayItems("right");
                 })
+                displayItems(undefined);
                 return;
               }
               var i=index++;
@@ -365,7 +366,6 @@
               }else nextStep();
             }
           })();
-          displayItems(undefined);
         })
       }
       var b = document.createElement("button");
