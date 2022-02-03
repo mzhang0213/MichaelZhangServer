@@ -245,7 +245,7 @@
             notiPos=0;
             document.getElementById("prev").disabled=true;
             document.getElementById("next").disabled=false;
-            for (var i=notiPos;i<20;i++){
+            for (var i=notiPos;i<notiPos+20;i++){
               createItem(totalItems[i]);
             }
             return;
@@ -268,7 +268,7 @@
         }
         document.getElementById("prev").disabled=false;
         document.getElementById("next").disabled=false;
-        for (var i=notiPos;i<20;i++){
+        for (var i=notiPos;i<notiPos+20;i++){
           createItem(totalItems[i]);
         }
         if (di===undefined)notiPos+=20;
@@ -312,6 +312,8 @@
             function nextStep(){
               if (index>=data.courses.length){
                 document.getElementById("refresh").addEventListener("click", function(){
+                  totalItems=[];
+                  document.getElementById("items").innerHTML="";
                   doReq();
                   document.getElementById("loadingBox").style.display="";
                 });
