@@ -294,6 +294,11 @@
       
       var doReq = function(){
         httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
+          if (data.hasOwnProperty("error")){
+            //assume expired token, code 401
+            alert("Please relogin.\n\nYour login session expired :P");
+            window.location="./";
+          }
           cidTeachers = [];
           notiPos=0;
 
@@ -305,8 +310,9 @@
                 document.getElementById("refresh").addEventListener("click", function(){
                   totalItems=[];
                   document.getElementById("items").innerHTML="";
-                  document.getElementById("prev").disabled=false;
-                  document.getElementById("next").disabled=false;
+                  document.getElementById("prev").disabled=true;
+                  document.getElementById("next").disabled=true;
+                  document.getElementById("refresh").disabled=true;
                   doReq();
                   document.getElementById("loadingBox").style.display="";
                 });
@@ -328,7 +334,6 @@
                 })
                 document.getElementById("refresh").disabled=false;
                 document.getElementById("next").disabled=false;
-                document.getElementById("prev").disabled=true;
                 document.getElementById("loadingBox").style.display="none";
                 displayItems(undefined);
                 
