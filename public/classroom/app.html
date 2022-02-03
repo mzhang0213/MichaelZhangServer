@@ -156,6 +156,11 @@
       
       gebi("popupDock").style.display="none";
       gebi("popupDock").style.backgroundColor="white";
+
+      document.getElementById("refresh").disabled=true;
+      document.getElementById("next").disabled=true;
+      document.getElementById("prev").disabled=true;
+
       document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
         if (!$("#popupDock").is(':animated')){
           $("#popupDock").slideToggle(350);
@@ -321,6 +326,8 @@
                     document.getElementById("prev").disabled=false;
                   }
                 })
+                document.getElementById("refresh").disabled=false;
+                document.getElementById("next").disabled=false;
                 document.getElementById("prev").disabled=true;
                 document.getElementById("loadingBox").style.display="none";
                 displayItems(undefined);
