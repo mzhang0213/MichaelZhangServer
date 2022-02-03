@@ -265,7 +265,32 @@
       
       var doReq = function(){
         httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
-          var pushGreatestLeast = function(arr, dest){ for (var j=0;j<arr.length;j++){ for (var k=0;k<dest.length;k++){ if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()) { dest.splice(k,0,arr[j]);break; } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) { var pos=0;(function greaterThan(indox){ if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase) { dest.splice(k,0,arr[j]);return; } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) { dest.splice(k+1,0,arr[j]);return; } else { pos++;return greaterThan(pos); } })(pos); } else { if (k===dest.length-1){ dest.splice(k+1,0,arr[j]); break; } } } } }
+          var pushGreatestLeast = function(arr, dest){
+            for (var j=0;j<arr.length;j++){
+              for (var k=0;k<dest.length;k++){
+                if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){
+                  dest.splice(k,0,arr[j]);break;
+                } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) {
+                  var pos=0;
+                  (function greaterThan(indox){
+                    if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
+                      dest.splice(k,0,arr[j]);return;
+                    } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) {
+                      dest.splice(k+1,0,arr[j]);return;
+                    } else {
+                      pos++;
+                      return greaterThan(pos);
+                    }
+                  })(pos);
+                } else {
+                  if (k===dest.length-1){
+                    dest.splice(k+1,0,arr[j]);
+                    break;
+                  }
+                }
+              }
+            }
+          }
           cidTeachers = [];
           notiPos=0;
 
