@@ -300,6 +300,8 @@
                 document.getElementById("refresh").addEventListener("click", function(){
                   totalItems=[];
                   document.getElementById("items").innerHTML="";
+                  document.getElementById("prev").disabled=false;
+                  document.getElementById("next").disabled=false;
                   doReq();
                   document.getElementById("loadingBox").style.display="";
                 });
