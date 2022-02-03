@@ -243,8 +243,6 @@
 
           if (notiPos<0){
             notiPos=0;
-            document.getElementById("prev").disabled=true;
-            document.getElementById("next").disabled=false;
             for (var i=notiPos;i<notiPos+20;i++){
               createItem(totalItems[i]);
             }
@@ -255,19 +253,14 @@
 
           notiPos+=20;
 
-          if (notiPos>totalItems.length){
+          if (notiPos>=totalItems.length){
             notiPos-=20;
-            document.getElementById("prev").disabled=false;
-            document.getElementById("next").disabled=true;
             for (var i=notiPos;i<totalItems.length;i++){
-              console.log(totalItems[i],totalItems)
               createItem(totalItems[i]);
             }
             return;
           }
         }
-        document.getElementById("prev").disabled=false;
-        document.getElementById("next").disabled=false;
         for (var i=notiPos;i<notiPos+20;i++){
           createItem(totalItems[i]);
         }
@@ -319,9 +312,19 @@
                 });
                 document.getElementById("prev").addEventListener("click", function(){
                   displayItems("left");
+                  if (notiPos===0){ //remember: this is after notiPos has been mutated, so after the user clicks left on notiPos=20, 20-20=0 which is here
+                    document.getElementById("prev").disabled=true;
+                  }else{
+                    document.getElementById("next").disabled=false;
+                  }
                 })
                 document.getElementById("next").addEventListener("click", function(){
                   displayItems("right");
+                  if (notiPos>=totalItems.length){
+                    document.getElementById("next").disabled=true;
+                  }else{
+                    document.getElementById("prev").disabled=false;
+                  }
                 })
                 document.getElementById("prev").disabled=true;
                 document.getElementById("loadingBox").style.display="none";
