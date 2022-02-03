@@ -236,15 +236,25 @@
       
       var displayItems = function(di) {
         document.getElementById("items").innerHTML = "";
+
         if (di==="left"){
-          notiPos-=20; //@200 max l = 218
+
+          notiPos-=20;
+
           if (notiPos<0){
             notiPos=0;
             document.getElementById("prev").disabled=true;
             document.getElementById("next").disabled=false;
+            for (var i=notiPos;i<20;i++){
+              createItem(totalItems[i]);
+            }
+            return;
           }
+
         }else if(di==="right"){
+
           notiPos+=20;
+
           if (notiPos>totalItems.length){
             notiPos-=20;
             document.getElementById("prev").disabled=false;
@@ -255,13 +265,12 @@
             }
             return;
           }
-        }else{
-          console.log("if di is not undefined, wtf display items else: "+di);
         }
+        document.getElementById("prev").disabled=false;
+        document.getElementById("next").disabled=false;
         for (var i=notiPos;i<20;i++){
           createItem(totalItems[i]);
         }
-        if(di===undefined)notiPos+=20;
       }
 
       var pushGreatestLeast = function(arr, dest){
@@ -313,7 +322,7 @@
                 })
                 document.getElementById("prev").disabled=true;
                 document.getElementById("loadingBox").style.display="none";
-                displayItems(undefined);
+                displayItems("right");
                 
                 return;
               }
@@ -373,6 +382,7 @@
           })();
         })
       }
+      doReq();
     </script>
   </body>
 </html>
