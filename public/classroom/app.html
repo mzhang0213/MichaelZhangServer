@@ -253,8 +253,7 @@
 
           notiPos+=20;
 
-          if (notiPos>=totalItems.length){
-            notiPos-=20;
+          if (notiPos+20>=totalItems.length){
             for (var i=notiPos;i<totalItems.length;i++){
               createItem(totalItems[i]);
             }
@@ -320,7 +319,7 @@
                 })
                 document.getElementById("next").addEventListener("click", function(){
                   displayItems("right");
-                  if (notiPos>=totalItems.length){
+                  if (notiPos+20>=totalItems.length){
                     document.getElementById("next").disabled=true;
                   }else{
                     document.getElementById("prev").disabled=false;
