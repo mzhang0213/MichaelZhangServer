@@ -187,7 +187,7 @@
         gebi("details").style.width=(window.innerWidth*0.98)+"px";
         gebi("details").style.height=(document.documentElement.scrollHeight)+"px";
         
-        if (selectedItem===""){
+        if (selectedItem!==""){
           gebi("details").innerHTML="";
           displayDetails(selectedItem,undefined,totalItems[document.getElementsByClassName("itemContainer").indexOf(selectedItem)+notiPos]); //this is the worst index reference i have written in my entire life
         }
