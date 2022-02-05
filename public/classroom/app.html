@@ -56,7 +56,7 @@
       #greyBg{
         background:black;
         opacity:50%;
-        z-index:1;
+        z-index:2;
         position:absolute;
         left:0;
         top:0;
@@ -65,6 +65,7 @@
         position:absolute;
         left:0;
         top:0;
+        z-index:0;
       }
       .taskbarButton{
         width:55px;
@@ -80,6 +81,7 @@
         position:relative;
         border-radius:15px;
         margin:0 auto;
+        z-index:1;
       }
       .icon, .text {
         position:relative;
@@ -181,10 +183,10 @@
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
-        gebi("greyBg").style.width=window.innerWidth+"px";
-        gebi("greyBg").style.height=window.innerHeight+"px";
-        gebi("details").style.width=window.innerWidth+"px";
-        gebi("details").style.height=window.innerHeight+"px";
+        gebi("greyBg").style.width=(window.innerWidth*0.99)+"px";
+        gebi("greyBg").style.height=(document.documentElement.scrollHeight)+"px";
+        gebi("details").style.width=(window.innerWidth*0.99)+"px";
+        gebi("details").style.height=(document.documentElement.scrollHeight)+"px";
       }
       resize();
       window.addEventListener("resize", resize);
@@ -295,7 +297,6 @@
         for (var i=notiPos;i<notiPos+20;i++){
           createItem(totalItems[i]);
         }
-        if (di===undefined)notiPos+=20;
       }
 
       var pushGreatestLeast = function(arr, dest){
@@ -371,7 +372,7 @@
 
                 displayItems(undefined);
 
-                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=2;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
                 for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
                   listen(y);
                 }
@@ -447,7 +448,7 @@
 
         var bubble = document.createElement("div");
         bubble.style.position="absolute";
-        bubble.style.zIndex=3;
+        bubble.style.zIndex=3
         bubble.style.top=xy[1]+"px";
         bubble.style.background=bgColor;
         bubble.style.display="flex";
