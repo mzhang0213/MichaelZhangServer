@@ -182,12 +182,17 @@
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
-        gebi("greyBg").style.width=(window.innerWidth*0.99)+"px";
+        gebi("greyBg").style.width=(window.innerWidth*0.98)+"px";
         gebi("greyBg").style.height=(document.documentElement.scrollHeight)+"px";
-        gebi("details").style.width=(window.innerWidth*0.99)+"px";
+        gebi("details").style.width=(window.innerWidth*0.98)+"px";
         gebi("details").style.height=(document.documentElement.scrollHeight)+"px";
+        
+        if (selectedItem===""){
+          gebi("details").innerHTML="";
+          displayDetails(selectedItem,undefined,totalItems[document.getElementsByClassName("itemContainer").indexOf(selectedItem)+notiPos]); //this is the worst index reference i have written in my entire life
+        }
       }
-      resize();
+      window.addEventListener("load", resize);
       window.addEventListener("resize", resize);
       
       gebi("popupDock").style.display="none";
@@ -496,7 +501,7 @@
         return res;
       }
 
-      var getMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
+      var getTheMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
 
       var selectedItem = "";
 
@@ -513,8 +518,8 @@
           document.getElementById("details").innerHTML="";
           selectedItem.style.backgroundColor="white";
           var thisDate = new Date(itemObj.creationTime);
-          var creationDate = getMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
-          var creationTime = (thisDate.getHours()>12?thisDate.getHours()-12:thisDate.getHours())+thisDate.getMinutes()+thisDate.getSeconds()+(thisDate.getHours()>12?"pm":"am");
+          var creationDate = getTheMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
+          var creationTime = (thisDate.getHours()>12?thisDate.getHours()-12:thisDate.getHours())+":"+thisDate.getMinutes()+":"+thisDate.getSeconds()+(thisDate.getHours()>12?"pm":"am");
 
           if (elem.id!=="greyBg"){
 
@@ -528,7 +533,7 @@
                 addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
                 addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
                 addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
-                          getMonths(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                          getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
                           +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+thisDueDate.getMinutes()+":"+thisDueDate.getSeconds(),false)+(thisDueDate.getHours()>12?"pm":"am"
                 );//date due
               }else {
@@ -542,9 +547,11 @@
             addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,itemObj.alternateLink);
           }
         }
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        event.preventDefault();
+        if (event!==undefined){
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          event.preventDefault();
+        }
       }
       document.getElementById("greyBg").style.display="none";
     </script>
