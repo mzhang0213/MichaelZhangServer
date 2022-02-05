@@ -65,7 +65,6 @@
         position:absolute;
         left:0;
         top:0;
-        z-index:0;
       }
       .taskbarButton{
         width:55px;
@@ -173,7 +172,7 @@
       */
     
       var gebi = function(elem){return document.getElementById(elem)};
-      gebi("bottomZone").style.zIndex=3;
+      gebi("bottomZone").style.zIndex=4;
       gebi("popupDock").style.bottom=0;
       var resize = function(){
         gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
@@ -448,7 +447,7 @@
 
         var bubble = document.createElement("div");
         bubble.style.position="absolute";
-        bubble.style.zIndex=3
+        bubble.style.zIndex=3;
         bubble.style.top=xy[1]+"px";
         bubble.style.background=bgColor;
         bubble.style.display="flex";
