@@ -12,7 +12,10 @@
       <br><br>
       <p id="loadingBox">Fetching...</p>
       
-      <div id="items"></div> <!--append here-->
+      <div id="greyBg"></div>
+      
+      <div id="items"></div>s
+      <div id="details"></div>
 
       <!-- sample poggers
       <div class="itemContainer">
@@ -38,6 +41,23 @@
       </div>
     </font>
     <style>
+      #greyBg{
+        width:100%;
+        height:100%;
+        background:black;
+        opacity:50%;
+        z-index:1;
+        position:absolute;
+        left:0;
+        top:0;
+      }
+      #details{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+      }
       .taskbarButton{
         width:55px;
         height:55px;
@@ -52,6 +72,7 @@
         position:relative;
         border-radius:15px;
         margin:0 auto;
+        z-index:2;
       }
       .icon, .text {
         position:relative;
@@ -65,7 +86,6 @@
       }
       .text{
         width:500px;
-        height:100px;
         display:flex;
         flex-direction:column;
         justify-content:center;
@@ -144,7 +164,7 @@
       */
     
       var gebi = function(elem){return document.getElementById(elem)};
-      gebi("bottomZone").style.zIndex=10;
+      gebi("bottomZone").style.zIndex=3;
       gebi("popupDock").style.bottom=0;
       gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
       gebi("bottomZone").style.width=(window.innerWidth*0.45)+"px";
@@ -168,10 +188,8 @@
         }
       })
       document.getElementById("bottomZone").addEventListener("mouseleave", ()=>{
-        if (!$("#popupDock").is(':animated')){
-          $("#popupDock").slideToggle(350);
-          setTimeout(()=>document.getElementById("upIcon").style.display="",350)
-        }
+        $("#popupDock").slideToggle(350);
+        setTimeout(()=>document.getElementById("upIcon").style.display="",350)
       })
 
       const urlParams = new URLSearchParams(window.location.search);
@@ -335,7 +353,15 @@
                 document.getElementById("refresh").disabled=false;
                 document.getElementById("next").disabled=false;
                 document.getElementById("loadingBox").style.display="none";
+
                 displayItems(undefined);
+
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[y].addEventListener("click",function(e){console.log(totalItems[y+notiPos]);displayDetails(this,e,totalItems[y+notiPos])});}
+                for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                  listen(y);
+                }
+                
+                document.getElementById("greyBg").addEventListener("click",function(e){displayDetails(this,e)});
                 
                 return;
               }
@@ -395,7 +421,97 @@
           })();
         })
       }
+
       doReq();
+
+      var addBubble = function(xy,bgColor,color,fSize,text,c,url){ //only for text; thats all we are using anyway :P
+        //create a circle div inside of <div>details with scalable/undefined width and a p textboxs
+        bgColor=bgColor===undefined?"white":bgColor;
+        color=color===undefined?"black":color;
+        fSize=fSize===undefined?15:fSize;
+
+        var bubble = document.createElement("div");
+        bubble.style.position="absolute";
+        bubble.style.zIndex=3;
+        bubble.style.top=xy[1]+"px";
+        bubble.style.background=bgColor;
+        bubble.style.display="flex";
+        bubble.style.alignItems="center";
+        bubble.style.justifyContent="center";
+
+        var p = url?document.createElement("a"):document.createElement("p");
+        p.href=url?url:"";
+        p.target=url?"_blank":"";
+        p.style.fontSize=fSize+"px";
+        p.style.margin=0;
+        p.style.paddingLeft="15px";p.style.paddingRight="15px";
+        p.style.color=color;
+        p.style.whiteSpace="pre-line";
+
+        p.append(text);
+        bubble.appendChild(p);
+        document.getElementById("details").appendChild(bubble);
+        if (c) {
+          bubble.style.borderRadius="50%";
+          bubble.style.height=(p.offsetWidth)+"px";
+        }else bubble.style.borderRadius="20px";
+        bubble.style.left=(xy[0]-p.offsetWidth/2)+"px";
+        //ALSO TO GET THE LEFT AND TOP FOR THESE BUBBLES, USE item.offsetLeft & item.offsetTop (and +- accordingly to adjust position)
+      }
+
+      var degToRad = function (deg){
+        return deg*(Math.PI/180);
+      }
+
+      var getPoint = function(r,h,k,deg,lr,ud){ //r=radius, h,k is the coordinates of the origin, deg is degrees of angle from straigt diameter, lr is point on left or right of circle, ud is up or down circle
+        var pointX = Math.sin(degToRad(deg))*r;
+        var pointY = Math.cos(degToRad(deg))*r;
+        var res = [];
+        if (lr==="l")res.push(h-pointX)
+        else if(lr==="r")res.push(h+pointX)
+        else return -1
+        if (ud==="u")res.push(k-pointY)
+        else if(ud==="d")res.push(k+pointY)
+        else return -1;
+        return res;
+      }
+
+      var selectedItem = "";
+
+      var displayDetails = function(elem,event,itemObj){
+        if(!itemObj.hasOwnProperty("text")){
+          //material
+          if (itemObj.hasOwnProperty("maxPoints")){
+            //assignment
+          }
+        }else{
+          //announcement
+        }
+
+        if (elem.id!=="greyBg")selectedItem = elem.closest(".itemContainer");
+
+        if (document.getElementById("greyBg").style.display===""){
+          document.getElementById("greyBg").style.display="none";
+          document.getElementById("details").innerHTML="";
+          selectedItem.style.backgroundColor="";
+        }else{ //document.getElementById("greyBg").style.display==="none"
+          document.getElementById("greyBg").style.display="";
+          document.getElementById("details").innerHTML="";
+          selectedItem.style.backgroundColor="white";
+          if (elem.id!=="greyBg"){
+            var ow=selectedItem.offsetWidth;var oh=selectedItem.offsetHeight;var ol=selectedItem.offsetLeft;var ot=selectedItem.offsetTop;
+            addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false);
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"l","d"),"white","black",17,"Date Posted: ",false);//date posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"r","d"),"white","black",17,"Time Posted: ",false);//time posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,"70",true);
+            addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false, "https://michaelzhangwebsite.herokuapp.com");
+          }
+        }
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        event.preventDefault();
+      }
+      document.getElementById("greyBg").style.display="none";
     </script>
   </body>
 </html>
