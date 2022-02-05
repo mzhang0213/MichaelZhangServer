@@ -340,6 +340,7 @@
             nextStep();
             function nextStep(){
               if (index>=data.courses.length){
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
                 document.getElementById("refresh").addEventListener("click", function(){
                   totalItems=[];
                   document.getElementById("items").innerHTML="";
@@ -351,6 +352,9 @@
                 });
                 document.getElementById("prev").addEventListener("click", function(){
                   displayItems("left");
+                  for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                    listen(y);
+                  }
                   if (notiPos===0){ //remember: this is after notiPos has been mutated, so after the user clicks left on notiPos=20, 20-20=0 which is here
                     document.getElementById("prev").disabled=true;
                   }else{
@@ -359,6 +363,9 @@
                 })
                 document.getElementById("next").addEventListener("click", function(){
                   displayItems("right");
+                  for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                    listen(y);
+                  }
                   if (notiPos+20>=totalItems.length){
                     document.getElementById("next").disabled=true;
                   }else{
@@ -370,8 +377,6 @@
                 document.getElementById("loadingBox").style.display="none";
 
                 displayItems(undefined);
-
-                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
                 for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
                   listen(y);
                 }
@@ -491,35 +496,50 @@
         return res;
       }
 
+      var getMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
+
       var selectedItem = "";
 
       var displayDetails = function(elem,event,itemObj){
-        if(!itemObj.hasOwnProperty("text")){
-          //material
-          if (itemObj.hasOwnProperty("maxPoints")){
-            //assignment
-          }
-        }else{
-          //announcement
-        }
-
         if (elem.id!=="greyBg")selectedItem = elem.closest(".itemContainer");
 
         if (document.getElementById("greyBg").style.display===""){
           document.getElementById("greyBg").style.display="none";
           document.getElementById("details").innerHTML="";
           selectedItem.style.backgroundColor="";
+          selectedItem.style.zIndex=1;
         }else{ //document.getElementById("greyBg").style.display==="none"
           document.getElementById("greyBg").style.display="";
           document.getElementById("details").innerHTML="";
           selectedItem.style.backgroundColor="white";
+          var thisDate = new Date(itemObj.creationTime);
+          var creationDate = getMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
+          var creationTime = (thisDate.getHours()>12?thisDate.getHours()-12:thisDate.getHours())+thisDate.getMinutes()+thisDate.getSeconds()+(thisDate.getHours()>12?"pm":"am");
+
           if (elem.id!=="greyBg"){
+
             var ow=selectedItem.offsetWidth;var oh=selectedItem.offsetHeight;var ol=selectedItem.offsetLeft;var ot=selectedItem.offsetTop;
-            addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false);
-            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"l","d"),"white","black",17,"Date Posted: ",false);//date posted
-            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"r","d"),"white","black",17,"Time Posted: ",false);//time posted
-            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,"70",true);
-            addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false, "https://michaelzhangwebsite.herokuapp.com");
+            
+            if(!itemObj.hasOwnProperty("text")){
+              if (itemObj.hasOwnProperty("maxPoints")){
+                //assignment
+                var thisDueDate = new Date(itemObj.dueDate.year+"-"+itemObj.dueDate.month+"-"+itemObj.dueDate.day+" "+itemObj.dueTime.hours+":"+itemObj.dueTime.hasOwnProperty("minutes")?itemObj.dueTime.minutes:"00"+":"+itemObj.dueTime.hasOwnProperty("seconds")?itemObj.dueTime.seconds:"00"+" GMT+00:00")
+                addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
+                addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
+                addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
+                addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
+                          getMonths(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                          +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+thisDueDate.getMinutes()+":"+thisDueDate.getSeconds(),false)+(thisDueDate.getHours()>12?"pm":"am"
+                );//date due
+              }else {
+                //material
+              }
+            }else{
+              //announcement
+            }
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"l","d"),"white","black",17,"Date Posted: "+creationDate,false);//date posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"r","d"),"white","black",17,"Time Posted: "+creationTime,false);//time posted
+            addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,itemObj.alternateLink);
           }
         }
         event.stopPropagation();
