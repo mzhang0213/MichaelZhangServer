@@ -345,7 +345,7 @@
             nextStep();
             function nextStep(){
               if (index>=data.courses.length){
-                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;displayDetails(this,e,totalItems[xanax+notiPos])});}
                 document.getElementById("refresh").addEventListener("click", function(){
                   totalItems=[];
                   document.getElementById("items").innerHTML="";
@@ -389,7 +389,7 @@
                 document.getElementById("greyBg").addEventListener("click",function(e){displayDetails(this,e,{})});
                 
                 resize();
-                
+
                 return;
               }
               var i=index++;
