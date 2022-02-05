@@ -182,9 +182,9 @@
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
         gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
-        gebi("greyBg").style.width=(window.innerWidth)+"px";
+        gebi("greyBg").style.width=(window.innerWidth-10)+"px";
         gebi("greyBg").style.height=(document.documentElement.scrollHeight)+"px";
-        gebi("details").style.width=(window.innerWidth)+"px";
+        gebi("details").style.width=(window.innerWidth-10)+"px";
         gebi("details").style.height=(document.documentElement.scrollHeight)+"px";
         
         if (selectedItem!==""){
@@ -528,16 +528,23 @@
             var ow=selectedItem.offsetWidth;var oh=selectedItem.offsetHeight;var ol=selectedItem.offsetLeft;var ot=selectedItem.offsetTop;
             
             if(!itemObj.hasOwnProperty("text")){
-              if (itemObj.hasOwnProperty("maxPoints")){
-                //assignment
+              if (itemObj.hasOwnProperty("dueDate")){
+                //assignment w/o pt val
                 var thisDueDate = new Date(itemObj.dueDate.year+"-"+itemObj.dueDate.month+"-"+itemObj.dueDate.day+" "+itemObj.dueTime.hours+":"+(itemObj.dueTime.hasOwnProperty("minutes")?itemObj.dueTime.minutes:"00")+":"+(itemObj.dueTime.hasOwnProperty("seconds")?itemObj.dueTime.seconds:"00"+" GMT+00:00"));
-                addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
-                addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
-                addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
-                addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
-                          getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                          +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
-                );//date due
+                if (itemObj.hasOwnProperty("maxPoints")){
+                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
+                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
+                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
+                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
+                            getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                            +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
+                }else{
+                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false);//date due
+                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
+                            getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                            +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
+
+                }
               }else {
                 //material
               }
