@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html>
+  <!-- This is Classroom -->
+  
   <head>
-    <title></title>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/amongClassIcon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Google Classroom Notifications</title>
   </head>
   <body>
     <font style="font-family: 'Cabin';">
@@ -14,7 +26,7 @@
       
       <div id="greyBg"></div>
       
-      <div id="items"></div>s
+      <div id="items"></div>
       <div id="details"></div>
 
       <!-- sample poggers
@@ -42,8 +54,6 @@
     </font>
     <style>
       #greyBg{
-        width:100%;
-        height:100%;
         background:black;
         opacity:50%;
         z-index:1;
@@ -55,8 +65,6 @@
         position:absolute;
         left:0;
         top:0;
-        width:100%;
-        height:100%;
       }
       .taskbarButton{
         width:55px;
@@ -72,7 +80,6 @@
         position:relative;
         border-radius:15px;
         margin:0 auto;
-        z-index:2;
       }
       .icon, .text {
         position:relative;
@@ -166,13 +173,21 @@
       var gebi = function(elem){return document.getElementById(elem)};
       gebi("bottomZone").style.zIndex=3;
       gebi("popupDock").style.bottom=0;
-      gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
-      gebi("bottomZone").style.width=(window.innerWidth*0.45)+"px";
-      gebi("bottomZone").style.left=(window.innerWidth*0.27)+"px";
-      gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
-      gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
-      gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
-      gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
+      var resize = function(){
+        gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
+        gebi("bottomZone").style.width=(window.innerWidth*0.45)+"px";
+        gebi("bottomZone").style.left=(window.innerWidth*0.27)+"px";
+        gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
+        gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+        gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+        gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
+        gebi("greyBg").style.width=window.innerWidth+"px";
+        gebi("greyBg").style.height=window.innerHeight+"px";
+        ebi("details").style.width=window.innerWidth+"px";
+        gebi("details").style.height=window.innerHeight+"px";
+      }
+      resize();
+      window.addEventListener("resize", resize);
       
       gebi("popupDock").style.display="none";
       gebi("popupDock").style.backgroundColor="white";
@@ -356,12 +371,12 @@
 
                 displayItems(undefined);
 
-                var listen=function(xanax){document.getElementsByClassName("itemContainer")[y].addEventListener("click",function(e){console.log(totalItems[y+notiPos]);displayDetails(this,e,totalItems[y+notiPos])});}
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=2;console.log(totalItems[xanax+notiPos]);displayDetails(this,e,totalItems[xanax+notiPos])});}
                 for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
                   listen(y);
                 }
-                
-                document.getElementById("greyBg").addEventListener("click",function(e){displayDetails(this,e)});
+
+                document.getElementById("greyBg").addEventListener("click",function(e){displayDetails(this,e,{})});
                 
                 return;
               }

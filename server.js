@@ -154,6 +154,9 @@ app.get("/sFavicon.png", (req,res)=>{
 app.get("/sFavicon.jpg", (req,res)=>{
 	res.sendFile(__dirname+"/sFavicon.jpg")
 })
+app.get("/amongClassIcon.png", (req,res)=>{
+	res.sendFile(__dirname+"/amongClassIcon.png")
+})
 
 var oAuth2Client;
 const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly", "https://www.googleapis.com/auth/classroom.coursework.me.readonly", "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly", "https://www.googleapis.com/auth/classroom.announcements.readonly"];
