@@ -220,8 +220,6 @@
           if (err) console.log(err);
           else {
             configJson=JSON.parse(data);
-            
-            var loadedSelect = new Event("loadedselect");
 
             //load cardNav
             var center = document.createElement("center");
@@ -233,46 +231,54 @@
             defaultOption.append("~~~~~~~")
             defaultOption.style.opacity="50%";
             select.appendChild(defaultOption);
-            for (var i=0;i<tempCards.length;i++){
-              const option = document.createElement("option");
-              httpReq("GET", "https://"+window.location.host+"/decks/"+document.getElementById("deckSelect").value+"/"+tempCards[i], (cardReq,cardErr)=>{
-                if (cardErr){
-                  console.log("card get err: " + cardErr);
-                }else{
-                  var cardData = JSON.parse(cardReq); cards.push(cardData);
-                  //console.log(cardData.term)
-                  option.append(cardData.term);
-                  select.appendChild(option);
-                  window.dispatchEvent(loadedSelect);
-                }
-              })
-            }
-            select.onchange = function(){
-              if (select.value!=="~~~~~~~"){
-                //move card position
-                for (var i=0;i<cards.length;i++){
-                  if (cards[i].term===select.value){
-                    cardPosition=i;
-                    loadCard();
-                  }
-                }
-              }
-            }
 
-            center.appendChild(select);
-            document.getElementById("appendCardChooser").appendChild(center);
-            window.addEventListener("loadedselect",function(){
-              loadCard();
-            })
-            window.addEventListener("keydown", function(event){
-              if (event.code==="Space"){
-                if(document.getElementById("content").hidden){
-                  document.getElementById("term").click();
-                }else{
-                  document.getElementById("content").click();
+            (function(){
+              var index=0;
+              nextStep();
+
+              function nextStep(){
+                if (index>=tempCards.length){
+                  select.onchange = function(){
+                    if (select.value!=="~~~~~~~"){
+                      //move card position
+                      for (var a=0;a<cards.length;a++){
+                        if (cards[a].term===select.value){
+                          cardPosition=a;
+                          loadCard();
+                        }
+                      }
+                    }
+                  }
+
+                  center.appendChild(select);
+                  document.getElementById("appendCardChooser").appendChild(center);
+                  window.addEventListener("keydown", function(event){
+                    if (event.code==="Space"){
+                      if(document.getElementById("content").hidden){
+                        document.getElementById("term").click();
+                      }else{
+                        document.getElementById("content").click();
+                      }
+                    }
+                  })
+                  return;
                 }
+                var i=index++;
+                const option = document.createElement("option");
+                httpReq("GET", "https://"+window.location.host+"/decks/"+document.getElementById("deckSelect").value+"/"+tempCards[i], (cardReq,cardErr)=>{
+                  if (cardErr){
+                    console.log("card get err: " + cardErr);
+                  }else{
+                    var cardData = JSON.parse(cardReq); cards.push(cardData);
+                    //console.log(cardData.term)
+                    option.append(cardData.term);
+                    select.appendChild(option);
+                    loadCard();
+                    nextStep();
+                  }
+                })
               }
-            })
+            })();
           }
         })
       })
