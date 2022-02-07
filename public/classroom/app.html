@@ -504,7 +504,7 @@
       }
 
       var getTheMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
-
+      var getTheDayOfWeek = function(d){const days=["Sunday","Monday","Tueday","Wednesday","Thursday","Friday","Saturday"];return days[d];};
       var selectedItem = "";
 
       var displayDetails = function(elem,event,itemObj){
@@ -520,7 +520,7 @@
           document.getElementById("details").innerHTML="";
           selectedItem.style.backgroundColor="white";
           var thisDate = new Date(itemObj.creationTime);
-          var creationDate = getTheMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
+          var creationDate = getTheDayOfWeek(thisDate.getDay())+", "+getTheMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
           var creationTime = (thisDate.getHours()>12?thisDate.getHours()-12:thisDate.getHours())+":"+(thisDate.getMinutes()<10?"0"+thisDate.getMinutes():thisDate.getMinutes())+":"+(thisDate.getSeconds()<10?"0"+thisDate.getSeconds():thisDate.getSeconds())+(thisDate.getHours()>12?"pm":"am");
 
           if (elem.id!=="greyBg"){
@@ -536,12 +536,12 @@
                   addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
                   addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
                   addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
-                            getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                            getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
                             +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
                 }else{
                   addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false);//date due
                   addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
-                            getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                            getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
                             +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
 
                 }
