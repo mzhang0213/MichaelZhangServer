@@ -532,6 +532,12 @@
                 //assignment w/o pt val
                 var thisDueDate = new Date(itemObj.dueDate.year+"-"+itemObj.dueDate.month+"-"+itemObj.dueDate.day+" "+itemObj.dueTime.hours+":"+(itemObj.dueTime.hasOwnProperty("minutes")?itemObj.dueTime.minutes:"00")+":"+(itemObj.dueTime.hasOwnProperty("seconds")?itemObj.dueTime.seconds:"00"+" GMT+00:00"));
                 if (itemObj.hasOwnProperty("maxPoints")){
+                  httpReq("GET", https://classroom.googleapis.com/v1/courses/"+itemObj.courseId+"/courseWork/"+itemObj.id+"/studentSubmissions, accessToken, (data, err)=>{
+                    if (err) console.log(err);
+                    else{
+                      //stuff
+                    }
+                  })
                   addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
                   addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
                   addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
