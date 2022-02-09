@@ -480,7 +480,8 @@
         document.getElementById("details").appendChild(bubble);
         if (c) {
           bubble.style.borderRadius="50%";
-          bubble.style.height=(p.offsetWidth)+"px";
+          if (p.offsetWidth>p.offsetHeight)bubble.style.height=(p.offsetWidth)+"px";
+          else bubble.style.width=(p.offsetHeight)+"px";
         }else bubble.style.borderRadius="20px";
         bubble.style.left=(xy[0]-p.offsetWidth/2)+"px";
         //ALSO TO GET THE LEFT AND TOP FOR THESE BUBBLES, USE item.offsetLeft & item.offsetTop (and +- accordingly to adjust position)
@@ -531,32 +532,34 @@
               if (itemObj.hasOwnProperty("dueDate")){
                 //assignment w/o pt val
                 var thisDueDate = new Date(itemObj.dueDate.year+"-"+itemObj.dueDate.month+"-"+itemObj.dueDate.day+" "+itemObj.dueTime.hours+":"+(itemObj.dueTime.hasOwnProperty("minutes")?itemObj.dueTime.minutes:"00")+":"+(itemObj.dueTime.hasOwnProperty("seconds")?itemObj.dueTime.seconds:"00"+" GMT+00:00"));
-                if (itemObj.hasOwnProperty("maxPoints")){
-                  httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+itemObj.courseId+"/courseWork/"+itemObj.id+"/studentSubmissions", accessToken, (data, err)=>{
-                    if (err) console.log(err);
-                    else{
-                      //stuff
+                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+itemObj.courseId+"/courseWork/"+itemObj.id+"/studentSubmissions", accessToken, (data, err)=>{
+                  if (err) console.log(err);
+                  else{
+                    //data.studentSubmissions[0] is the actual object
+                    if (data.studentSubmissions[0].late){
+                      addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false);
                     }
-                  })
-                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
-                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
-                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
-                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
-                            getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                            +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
-                }else{
-                  addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false);//date due
-                  addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
-                            getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                            +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
-
-                }
-              }else {
-                //material
-              }
-            }else{
-              //announcement
-            }
+                    if (itemObj.hasOwnProperty("maxPoints")){
+                      if (data.studentSubmissions[0].hasOwnProperty("assignedGrade")){
+                        //make grade bubble, find it in classroomApp.html
+                      }else{
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false);//grade
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true);//grade
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",17,"Date Due:",false);//date due
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
+                                  getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                  +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
+                      }
+                    }else{
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false);//date due
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
+                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am"));//date due
+                    }
+                  }
+                })
+              ) //else: material
+            } //else: announcement
             addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"l","d"),"white","black",17,"Date Posted: "+creationDate,false);//date posted
             addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"r","d"),"white","black",17,"Time Posted: "+creationTime,false);//time posted
             addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,itemObj.alternateLink);
