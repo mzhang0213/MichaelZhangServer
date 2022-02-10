@@ -577,7 +577,7 @@
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
                                 ,false,false);
-                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg);//grade
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
                       addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
                       addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Returned",false,false);
                       if (data.studentSubmissions[0].late){
