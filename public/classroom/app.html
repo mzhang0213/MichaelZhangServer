@@ -278,6 +278,7 @@
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
             localStorage.setItem("lastDate",thisDate);
+            createdNew = true;
           }else if(storedDate.getTime()===thisDate.getTime()){
             alert("hi")
             if (itemObj===totalItems[0]){
@@ -300,10 +301,10 @@
               docuemnt.body.append(lc);
               localStorage.setItem("lastDate",thisDate);
             }
+            createdNew = true;
           }else{
             console.log (storedDate,thisDate)
           }
-          createdNew = true;
         }
         
         blue.append(date);
