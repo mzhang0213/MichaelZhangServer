@@ -545,55 +545,70 @@
                   if (err) console.log(err);
                   else{
                     //data.studentSubmissions[0] is the actual object
+                    //turned in needs turned in date, late bubble, turned in bubble, ?points:possible points > "p"
+                    //returned needs turned in date, late bubble, returned bubble, ?points:graded points > "g, lg"
+                    console.log(data.studentSubmissions[0]);
                     if(data.studentSubmissions[0].state==="TURNED_IN"){
                       var submitDate = new Date(data.studentSubmissions[0].creationDate);
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Date Due:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"#7092ff","white",30,
-                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
-                                ,false,false
-                              );//date due
+
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
+                        addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+                      }
+
+                      if (data.studentSubmissions[0].late){
+                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
+                      }
+
                       addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",17,"Turned in on:",false,false);
                       addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
-                                ,false,false);
-                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
-                      addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+                                ,false,false
+                              );
+
                       addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Turned in",false,false);
-                      if (data.studentSubmissions[0].late){
-                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
-                      }
+
                     }else if(data.studentSubmissions[0].state==="RETURNED"){
                       var submitDate = new Date(data.studentSubmissions[0].creationDate);
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Date Due:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"#7092ff","white",30,
-                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
-                                ,false,false
-                              );//date due
+                      
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
+                        addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
+                      }
+
+                      if (data.studentSubmissions[0].late){
+                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
+                      }
+
                       addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",17,"Turned in on:",false,false);
                       addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
-                                ,false,false);
-                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
-                      addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
-                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Returned",false,false);
-                      if (data.studentSubmissions[0].late){
-                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
-                      }
-                    }else{
-                      console.log(data.studentSubmissions[0].state);
-                      var submitDate = new Date(data.studentSubmissions[0].creationDate);
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Date Due:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"#7092ff","white",30,
-                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
-                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
                                 ,false,false
-                              );//date due
-                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
-                      addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+                              );
+
+                    }else{
+                      console.log(data.studentSubmissions[0].state) //expecting it to be not turned in or returned at all
+                      //old ui
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false,false);//grade
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",25,"Date Due:",false,false);
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
+                                  getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                  +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                  ,false,false
+                                );//date due
+                      }else{
+                        addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false,false);
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
+                                  getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                  +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                  ,false,false
+                                );//date due
+                      }
                     }
                   }
                 })
