@@ -241,6 +241,8 @@
         console.log("lonely world: couldn't find teacher")
         return "fuck";
       }
+      
+      var createdNew = false;
       var createItem = function(itemObj){ //if announcement make title=undefined
         var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
         var icon = document.createElement("div");icon.className="icon";//icons: assignedIcon.png , materialIcon.png , submittedIcon.png, announcementIcon.png
@@ -265,9 +267,41 @@
           iconImage.src="announcementIcon.png";
           if (!(itemObj.text===undefined)) description.append(itemObj.text);
         }
+        
         text.appendChild(description);
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
+        
+        if (!createdNew){
+          if (localStorage.getItem("lastDate")===null){
+            //first time
+            alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
+            localStorage.setItem("lastDate",thisDate);
+          }else if(localStorage.getItem("lastDate").getMilliseconds()===thisDate.getMilliseconds()){
+            if (itemObj===totalItems[0]){
+              //its first, dont create
+              alert("No new posts");
+            }else{
+              var lc = document.createElement("div"); //lc = line contanier
+              var hr = document.createElement("hr");
+              var p = document.createElement("p");
+              hr.style.border="1px blue solid";
+              hr.style.margin=0;
+              hr.style.padding=0;
+              hr.style.marginBotton="10px";
+              p.style.color="blue";
+              p.style.padding=0;
+              p.style.margin=0;
+
+              p.append("New Posts ⬆");
+              lc.append(p);lc.append(hr);
+              docuemnt.body.append(lc);
+              createdNew = true;
+              localStorage.setItem("lastDate",thisDate);
+            }
+          }
+        }
+        
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
         stats.appendChild(blue);stats.append("  |  ");stats.appendChild(green);
@@ -301,7 +335,6 @@
         for (var i=notiPos;i<notiPos+20;i++){
           createItem(totalItems[i]);
         }
-        //put hr creation and local storage add here
       }
 
       var pushGreatestLeast = function(arr, dest){
