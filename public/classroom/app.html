@@ -272,7 +272,7 @@
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         
-        var storedDate = localStorage.getItem("lastDate")===null?null:localStorage.getItem("lastDate");
+        var storedDate = localStorage.getItem("lastDate")===null?null:parseInt(localStorage.getItem("lastDate"));
         if (!createdNew){
           if (storedDate===null){
             //first time
