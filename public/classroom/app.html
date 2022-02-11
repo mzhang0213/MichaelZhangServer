@@ -276,13 +276,13 @@
         if (!createdNew){
           if (storedDate===null){
             //first time
-            setTimeout(function(){alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");},500);
+            alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
             localStorage.setItem("lastDate",thisDate.getTime());
             createdNew = true;
           }else if(storedDate===thisDate.getTime()){
             if (itemObj===totalItems[0]){
               //its first, dont create
-              setTimeout(function(){alert("No new posts");},500);
+              alert("No new posts");
             }else{
               document.getElementById("items").getElementsByTagName("br")[document.getElementById("items").getElementsByTagName("br").length-1].remove();document.getElementById("items").getElementsByTagName("br")[document.getElementById("items").getElementsByTagName("br").length-1].remove();
               var lc = document.createElement("div"); //lc = line contanier
