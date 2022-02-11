@@ -459,7 +459,7 @@
 
         var bubble = document.createElement("div");
         bubble.style.position="absolute";
-        bubble.style.zIndex=4;
+        bubble.style.zIndex=5;
         bubble.style.top=xy[1]+"px";
         bubble.style.background=bgColor;
         bubble.style.display="flex";
@@ -493,7 +493,8 @@
           if (p.offsetWidth>p.offsetHeight)bubble.style.height=(p.offsetWidth)+"px";
           else bubble.style.width=(p.offsetHeight)+"px";
         }else bubble.style.borderRadius="20px";
-        bubble.style.left=(xy[0]-p.offsetWidth/2)+"px";
+        if(grade==="g")bubble.style.left=(xy[0]-p.offsetWidth/1.5)+"px";
+        else bubble.style.left=(xy[0]-p.offsetWidth/2)+"px";
         //ALSO TO GET THE LEFT AND TOP FOR THESE BUBBLES, USE item.offsetLeft & item.offsetTop (and +- accordingly to adjust position)
       }
 
@@ -553,7 +554,7 @@
                       var submitDate = new Date(data.studentSubmissions[0].updateTime);
 
                       if (itemObj.hasOwnProperty("maxPoints")){
-                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
+                        addBubble(getPoint(ow-40,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
                         addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
                       }
 
@@ -561,8 +562,8 @@
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
 
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Turned in on:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",30,
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",25,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
                                 ,false,false
@@ -581,7 +582,7 @@
                       var submitDate = new Date(data.studentSubmissions[0].updateTime);
                       
                       if (itemObj.hasOwnProperty("maxPoints")){
-                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
+                        addBubble(getPoint(ow-40,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
                         addBubble(getPoint(ow-90,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
                       }
 
@@ -589,8 +590,8 @@
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
 
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Turned in on:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",30,
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",25,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
                                 ,false,false
@@ -629,8 +630,8 @@
                 })
               } //else: material
             } //else: announcement
-            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"l","d"),"white","black",17,"Date Posted: "+creationDate,false,false);//date posted
-            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,45,"r","d"),"white","black",17,"Time Posted: "+creationTime,false,false);//time posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"l","d"),"white","black",17,"Date Posted: "+creationDate,false,false);//date posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"r","d"),"white","black",17,"Time Posted: "+creationTime,false,false);//time posted
             addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,false,itemObj.alternateLink);
           }
         }
