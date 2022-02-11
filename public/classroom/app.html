@@ -298,7 +298,7 @@
 
               p.append("New Posts ⬆");
               lc.append(p);lc.append(hr);
-              document.body.append(lc);
+              document.getElementById("items").append(lc);
               localStorage.setItem("lastDate",thisDate.getTime());
             }
             createdNew = true;
