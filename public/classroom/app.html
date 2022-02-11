@@ -474,6 +474,7 @@
         p.style.paddingLeft="15px";p.style.paddingRight="15px";
         p.style.color=color;
         p.style.whiteSpace="pre-line";
+        p.style.textAlign="center";
         if(grade==="p")p.style.opacity="50%";
         else if(grade==="g"){
           bubble.style.opacity="50%";
@@ -488,7 +489,7 @@
         bubble.appendChild(p);
         document.getElementById("details").appendChild(bubble);
         if (c) {
-          bubble.style.borderRadius="25%";
+          bubble.style.borderRadius="50%";
           if (p.offsetWidth>p.offsetHeight)bubble.style.height=(p.offsetWidth)+"px";
           else bubble.style.width=(p.offsetHeight)+"px";
         }else bubble.style.borderRadius="20px";
@@ -549,7 +550,7 @@
                     //returned needs turned in date, late bubble, returned bubble, ?points:graded points > "g, lg"
                     console.log(data.studentSubmissions[0]);
                     if(data.studentSubmissions[0].state==="TURNED_IN"){
-                      var submitDate = new Date(data.studentSubmissions[0].creationDate);
+                      var submitDate = new Date(data.studentSubmissions[0].updateTime);
 
                       if (itemObj.hasOwnProperty("maxPoints")){
                         addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
@@ -560,8 +561,8 @@
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
 
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",17,"Turned in on:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"yellow","black",30,
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
                                 ,false,false
@@ -569,8 +570,15 @@
 
                       addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Turned in",false,false);
 
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Date Due:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"#7092ff","white",30,
+                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );//date due
+
                     }else if(data.studentSubmissions[0].state==="RETURNED"){
-                      var submitDate = new Date(data.studentSubmissions[0].creationDate);
+                      var submitDate = new Date(data.studentSubmissions[0].updateTime);
                       
                       if (itemObj.hasOwnProperty("maxPoints")){
                         addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
@@ -581,12 +589,19 @@
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
 
-                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",17,"Turned in on:",false,false);
-                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"yellow","black",30,
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",17,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",30,
                                 getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
                                   +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
                                 ,false,false
                               );
+
+                      addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Date Due:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"#7092ff","white",30,
+                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );//date due
 
                     }else{
                       console.log(data.studentSubmissions[0].state) //expecting it to be not turned in or returned at all
