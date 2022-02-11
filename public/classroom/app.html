@@ -299,7 +299,7 @@
               p.append("New Posts ⬆");
               lc.append(p);lc.append(hr);
               document.getElementById("items").append(lc);
-              localStorage.setItem("lastDate",thisDate.getTime());
+              localStorage.setItem("lastDate",new Date(totalItems[0].creationTime).getTime());
             }
             createdNew = true;
           }else{
