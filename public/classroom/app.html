@@ -558,6 +558,7 @@
                         addBubble(getPoint(ow-150,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
                       }
 
+                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Turned in",false,false);
                       if (data.studentSubmissions[0].late){
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
@@ -569,7 +570,6 @@
                                 ,false,false
                               );
 
-                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Turned in",false,false);
 
                       addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",22,"Date Due:",false,false);
                       addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"#7092ff","white",27,
@@ -586,6 +586,7 @@
                         addBubble(getPoint(ow-150,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
                       }
 
+                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Returned",false,false);
                       if (data.studentSubmissions[0].late){
                         addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
                       }
