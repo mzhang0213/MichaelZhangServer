@@ -272,7 +272,7 @@
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         
-        if (!createdNew){alert(localStorage.getItem("lastDate"));
+        if (!createdNew){alert(localStorage.getItem("lastDate")+"\n"+localStorage.getItem("lastDate").getMilliseconds()===thisDate.getMilliseconds());
           if (localStorage.getItem("lastDate")===null){
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
