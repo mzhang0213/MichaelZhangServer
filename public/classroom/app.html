@@ -273,13 +273,12 @@
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         
         var storedDate = new Date(localStorage.getItem("lastDate"));
-	      //CHAHNGEC HANGE
         if (!createdNew){
-          if (localStorage.getItem("lastDate")===null){
+          if (storedDate===null){
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
             localStorage.setItem("lastDate",thisDate);
-          }else if(localStorage.getItem("lastDate").getTime()===thisDate.getTime()){
+          }else if(storedDate.getTime()===thisDate.getTime()){
             alert("hi")
             if (itemObj===totalItems[0]){
               //its first, dont create
@@ -303,7 +302,7 @@
             }
           }
           createdNew = true;
-        }*/
+        }
         
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
