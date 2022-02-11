@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <!-- This is SpotifyYt -->
+  
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/sFavicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Cracked Spotify, By: Michael Zhang</title>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <button id="login">Login here</button>
+      <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("login").addEventListener("click",()=>{
+          var redirect = "./login";
+          if (urlParams.has("playlistInfo")){
+            redirect+="?playlistInfo=" + urlParams.get("playlistInfo");
+          }
+          window.location=redirect;
+        })
+        if (urlParams.has("exp")){
+          var message = document.createElement("p");
+          message.style.position = "relative";
+          message.style.top = window.innerHeight*0.2+"px";
+          message.style.fontSize = "45px";
+          message.id="expiredMessage";
+          message.append("Relogging in for you :)");
+
+          var center = document.createElement("center");
+          document.body.appendChild(center);
+          center.appendChild(message);
+          setTimeout(()=>{
+            var iter=0;
+            var interval = setInterval(()=>{
+              if (iter<=70){
+                document.getElementById("expiredMessage").style.opacity= 100-iter* 100/70 + "%";
+                iter++;
+              } else {
+                clearInterval(interval);
+                document.getElementById("login").click();
+              }
+            },10)
+          },800)
+        }
+      </script>
+    </font>
+  </body>
+</html>

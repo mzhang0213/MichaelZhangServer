@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+  <!-- This is Classroom -->
+  
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/amongClassIcon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Google Classroom Notifications</title>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <center>
+        <p style="font-size:60px;margin:0;margin-top:20px;padding:0;">Notifications</p>
+      </center>
+      <br><br>
+      <p id="loadingBox">Fetching...</p>
+      
+      <div id="greyBg"></div>
+      
+      <div id="items"></div>
+      <div id="details"></div>
+
+      <!-- sample poggers
+      <div class="itemContainer">
+        <div class="icon"></div>
+        <div class="text">
+          <p class="title" readonly>This is my title.</p>  remember these p tags are display block
+          <p class="description" readonly>COMPLETE THE ASSIGNMENT DUMBASS</p>
+        </div>
+      </div>
+      -->
+
+      <div id="bottomZone">
+        <div id="popupDock">
+          <button id="refresh" class="taskbarButton" title="Refresh">🔁</button>
+          <div id="skipControls">
+            <button id="prev" class="taskbarButton" title="Previous 50">◀</button>
+            <button id="next" class="taskbarButton" title="Next 50">▶</button>
+          </div>
+        </div>
+        <div id="upIconContainer">
+          <p id="upIcon">🔼</p>
+        </div>
+      </div>
+    </font>
+    <style>
+      #greyBg{
+        background:black;
+        opacity:50%;
+        z-index:2;
+        position:absolute;
+        left:0;
+        top:0;
+      }
+      #details{
+        position:absolute;
+        left:0;
+        top:0;
+      }
+      .taskbarButton{
+        width:55px;
+        height:55px;
+        font-size:30px;
+      }
+      .itemContainer{
+        border: 1px solid #000000;
+        display:flex;
+        align-items:center;
+        width:500px;
+        height:100px;
+        position:relative;
+        border-radius:15px;
+        margin:0 auto;
+        z-index:1;
+      }
+      .icon, .text {
+        position:relative;
+      }
+      .icon{
+        width:50px;
+        height:50px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .text{
+        width:500px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+      }
+      .title,.description,.stats{
+        padding:0;
+        margin:0;
+        left:10px;
+        width:445px;
+        border:none;
+        resize:none;
+        position:relative;
+
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        display:block;
+      }
+      .title{
+        font-size:30px;
+        margin-top:20px;
+      }
+      .description{
+        opacity:50%;
+      }
+      #bottomZone{
+        position:fixed;
+        left:0;
+        top:0;
+        height:70px;
+      }
+      #skipControls{
+        display:flex;
+        align-items:center;
+        justify-content:space-evenly;
+      }
+      #popupDock{
+        position:absolute;
+        height:70px;
+        border: 4px black solid;
+        display:flex;
+        align-items:center;
+        justify-content:space-evenly;
+      }
+      #upIcon{
+        position:fixed;
+        bottom:0;
+        margin:0;
+        padding:0;
+        width:25px;
+        height:25px;
+      }
+      #upIconContainer{
+        position:relative;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+    <script>
+    
+      /* ui plan: (assignment = courseWork)
+        items have icon, title, desc
+        ANNOUNCEMENTS IS JUST ONE TEXT SO NO TITLE AND DELETE THE TITLE BOX ON THESE ONES
+        make desc textarea and maybe title?
+          remember to turn off border, user box expansion, select on those
+            have .mouseover on each item reveal circle three dots button on the top right
+        three dots button alt/hover="Details" yellow text thing
+            click: expand description, pop out white, reveal grey screen size div w/ z index=1
+            have little bubbles floating over the top of that item that show:
+        pts value
+        date and time due (format: Due MM/DD/YY at HH:MM) IF assignment
+        date posted
+        materials (like yt videos) IF assignment or courseWorkMaterials
+            write a function that creates a text centered vertical horizontal in a small circle bubble
+        font-size:15px
+        eg var createBubble = function(text,fontSize,location) {} //location = append location
+      */
+    
+      var gebi = function(elem){return document.getElementById(elem)};
+      gebi("bottomZone").style.zIndex=4;
+      gebi("popupDock").style.bottom=0;
+      var resize = function(){
+        gebi("bottomZone").style.top=(window.innerHeight-70)+"px";
+        gebi("bottomZone").style.width=(window.innerWidth*0.45)+"px";
+        gebi("bottomZone").style.left=(window.innerWidth*0.27)+"px";
+        gebi("popupDock").style.width=(window.innerWidth*0.45)+"px";
+        gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+        gebi("skipControls").style.width=(window.innerWidth*0.45/2)+"px";
+        gebi("upIconContainer").style.left=(window.innerWidth*0.45/2)+17+"px";
+        gebi("greyBg").style.width=(window.innerWidth-10)+"px";
+        gebi("greyBg").style.height=(document.documentElement.scrollHeight)+"px";
+        gebi("details").style.width=(window.innerWidth-10)+"px";
+        gebi("details").style.height=(document.documentElement.scrollHeight)+"px";
+        
+        if (selectedItem!==""){
+          gebi("details").innerHTML="";
+          displayDetails(selectedItem,undefined,totalItems[document.getElementsByClassName("itemContainer").indexOf(selectedItem)+notiPos]); //this is the worst index reference i have written in my entire life
+        }
+      }
+      window.addEventListener("load", resize);
+      window.addEventListener("resize", resize);
+      
+      gebi("popupDock").style.display="none";
+      gebi("popupDock").style.backgroundColor="white";
+
+      document.getElementById("refresh").disabled=true;
+      document.getElementById("next").disabled=true;
+      document.getElementById("prev").disabled=true;
+
+      document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
+        if (!$("#popupDock").is(':animated')){
+          $("#popupDock").slideToggle(350);
+          document.getElementById("upIcon").style.display="none"
+        }
+      })
+      document.getElementById("bottomZone").addEventListener("mouseleave", ()=>{
+        $("#popupDock").slideToggle(350);
+        setTimeout(()=>document.getElementById("upIcon").style.display="",350)
+      })
+
+      const urlParams = new URLSearchParams(window.location.search);
+      var httpReq = function(method, url, access_token, cb){
+        var req = new XMLHttpRequest();
+        req.open(method, url);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.onload = function(){
+          if (req.readyState === 4){
+            cb(JSON.parse(req.responseText), undefined);
+          } else {
+            cb(undefined, "not ready err")
+          }
+        }
+      }
+      var accessToken = urlParams.has("access_token")?urlParams.get("access_token"):undefined;
+      
+      var totalItems = [];
+      var cidTeachers = [];
+      var notiPos = 0;
+      var getTeacher = function(id){
+        for (var i=0;i<cidTeachers.length;i++){
+          if (cidTeachers[i][0]===id){
+            return cidTeachers[i][1];
+          }
+        }
+        console.log("lonely world: couldn't find teacher")
+        return "fuck";
+      }
+      
+      var createdNew = false;
+      var createItem = function(itemObj){ //if announcement make title=undefined
+        var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
+        var icon = document.createElement("div");icon.className="icon";//icons: assignedIcon.png , materialIcon.png , submittedIcon.png, announcementIcon.png
+        var text = document.createElement("div");text.className="text";
+        var description = document.createElement("p");description.className="description";
+        var stats = document.createElement("p");stats.className="stats";
+        var blue = document.createElement("font");blue.style.color="#4254f5";
+        var green = document.createElement("font");green.style.color="#2dc237";
+        var iconImage = document.createElement("img");
+        iconImage.style.width=iconImage.style.height="40px";
+        
+        if(!itemObj.hasOwnProperty("text")){
+          //assignment or material
+          if (itemObj.hasOwnProperty("dueDate"))iconImage.src="assignedIcon.png";
+          else iconImage.src="materialIcon.png";
+          var title = document.createElement("p");title.className="title";
+          title.append(itemObj.title);
+          if (!(itemObj.description===undefined)) description.append(itemObj.description);
+		      text.appendChild(title);
+        }else{
+          //announcement
+          iconImage.src="announcementIcon.png";
+          if (!(itemObj.text===undefined)) description.append(itemObj.text);
+        }
+        text.appendChild(description);
+        
+        var thisDate = new Date(itemObj.creationTime);
+        var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
+        
+        var storedDate = new Date(localStorage.getItem("lastDate"));
+        if (!createdNew){
+          if (storedDate===null){
+            //first time
+            alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
+            localStorage.setItem("lastDate",thisDate);
+          }else if(storedDate.getTime()===thisDate.getTime()){
+            alert("hi")
+            if (itemObj===totalItems[0]){
+              //its first, dont create
+              alert("No new posts");
+            }else{
+              var lc = document.createElement("div"); //lc = line contanier
+              var hr = document.createElement("hr");
+              var p = document.createElement("p");
+              hr.style.border="1px blue solid";
+              hr.style.margin=0;
+              hr.style.padding=0;
+              hr.style.marginBotton="10px";
+              p.style.color="blue";
+              p.style.padding=0;
+              p.style.margin=0;
+
+              p.append("New Posts ⬆");
+              lc.append(p);lc.append(hr);
+              docuemnt.body.append(lc);
+              localStorage.setItem("lastDate",thisDate);
+            }
+          }
+          createdNew = true;
+        }
+        
+        blue.append(date);
+        green.append(getTeacher(itemObj.courseId));
+        stats.appendChild(blue);stats.append("  |  ");stats.appendChild(green);
+        text.appendChild(stats);
+        icon.appendChild(iconImage);
+        itemContainer.appendChild(icon);itemContainer.appendChild(text);
+        document.getElementById("items").append(itemContainer);
+        document.getElementById("items").appendChild(document.createElement("br"));document.getElementById("items").appendChild(document.createElement("br"));
+      }
+      
+      var displayItems = function(di) {
+        document.getElementById("items").innerHTML = "";
+        if (di==="left"){
+          notiPos-=20;
+          if (notiPos<0){
+            notiPos=0;
+            for (var i=notiPos;i<notiPos+20;i++){
+              createItem(totalItems[i]);
+            }
+            return;
+          }
+        }else if(di==="right"){
+          notiPos+=20;
+          if (notiPos+20>=totalItems.length){
+            for (var i=notiPos;i<totalItems.length;i++){
+              createItem(totalItems[i]);
+            }
+            return;
+          }
+        }
+        for (var i=notiPos;i<notiPos+20;i++){
+          createItem(totalItems[i]);
+        }
+      }
+
+      var pushGreatestLeast = function(arr, dest){
+        for (var j=0;j<arr.length;j++){
+          for (var k=0;k<dest.length;k++){
+            if (new Date(arr[j].creationTime).getTime()>new Date(dest[k].creationTime).getTime()){
+              dest.splice(k,0,arr[j]);break;
+            } else if (new Date(arr[j].creationTime).getTime()===new Date(dest[k].creationTime).getTime()) {
+              var pos=0;
+              (function greaterThan(indox){
+                if (arr[j].title.charAt(indox).toUpperCase()>dest[k].title.charAt(indox).toUpperCase){
+                  dest.splice(k,0,arr[j]);return;
+                } else if(arr[j].title.charAt(indox).toUpperCase()<dest[k].title.charAt(indox).toUpperCase) {
+                  dest.splice(k+1,0,arr[j]);return;
+                } else {
+                  pos++;
+                  return greaterThan(pos);
+                }
+              })(pos);
+            } else {
+              if (k===dest.length-1){
+                dest.splice(k+1,0,arr[j]);
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+      var doReq = function(){
+        httpReq("GET", "https://classroom.googleapis.com/v1/courses", accessToken, (data, err)=>{
+          if (data.hasOwnProperty("error")){
+            //assume expired token, code 401
+            alert("Please relogin.\n\nYour login session expired :P");
+            window.location="./";
+          }
+          cidTeachers = [];
+          notiPos=0;
+
+          (function(){
+            var index=0;
+            nextStep();
+            function nextStep(){
+              if (index>=data.courses.length){
+                var listen=function(xanax){document.getElementsByClassName("itemContainer")[xanax].addEventListener("click",function(e){this.style.zIndex=4;displayDetails(this,e,totalItems[xanax+notiPos])});}
+                document.getElementById("refresh").addEventListener("click", function(){
+                  totalItems=[];
+                  document.getElementById("items").innerHTML="";
+                  document.getElementById("prev").disabled=true;
+                  document.getElementById("next").disabled=true;
+                  document.getElementById("refresh").disabled=true;
+                  doReq();
+                  document.getElementById("loadingBox").style.display="";
+                });
+                document.getElementById("prev").addEventListener("click", function(){
+                  displayItems("left");
+                  for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                    listen(y);
+                  }
+                  if (notiPos===0){ //remember: this is after notiPos has been mutated, so after the user clicks left on notiPos=20, 20-20=0 which is here
+                    document.getElementById("prev").disabled=true;
+                  }else{
+                    document.getElementById("next").disabled=false;
+                  }
+                })
+                document.getElementById("next").addEventListener("click", function(){
+                  displayItems("right");
+                  for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                    listen(y);
+                  }
+                  if (notiPos+20>=totalItems.length){
+                    document.getElementById("next").disabled=true;
+                  }else{
+                    document.getElementById("prev").disabled=false;
+                  }
+                })
+                document.getElementById("refresh").disabled=false;
+                document.getElementById("next").disabled=false;
+                document.getElementById("loadingBox").style.display="none";
+
+                displayItems(undefined);
+                for (var y=0;y<document.getElementsByClassName("itemContainer").length;y++){
+                  listen(y);
+                }
+
+                document.getElementById("greyBg").addEventListener("click",function(e){displayDetails(this,e,{})});
+                
+                resize();
+
+                return;
+              }
+              var i=index++;
+              var id = data.courses[i].id;
+              
+              if (data.courses[i].courseState==="ACTIVE"){
+                cidTeachers.push( [ data.courses[i].id , data.courses[i].name ] );
+                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWork", accessToken, (dota, err)=>{
+                  if (err) console.log(err);
+                  else{
+                    if (Object.keys(dota).length!==0){ //sometimes there is no data in object
+                      //for loop and sort the push into the loop
+                      if (totalItems.length===0){
+                        for (var a=0;a<dota.courseWork.length;a++){
+                          totalItems.push(dota.courseWork[a]);
+                        }
+                      }else{
+                        pushGreatestLeast(dota.courseWork, totalItems);
+                      }
+                    }
+                    httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/courseWorkMaterials", accessToken, (deta, err)=>{
+                      if (err) console.log(err);
+                      else{
+                        if (Object.keys(deta).length!==0){
+                          //for loop and sort the push into the loop
+                          if (totalItems.length===0){
+                            for (var b=0;b<deta.courseWorkMaterial.length;b++){
+                              totalItems.push(deta.courseWorkMaterial[b]);
+                            }
+                          }else{
+                            pushGreatestLeast(deta.courseWorkMaterial, totalItems);
+                          }
+                        }
+                        httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+id+"/announcements", accessToken, (daeta, err)=>{
+                          if (err) console.log(err);
+                          else{
+                            if (Object.keys(daeta).length!==0){
+                              //for loop and sort the push into the loop
+                              if (totalItems.length===0){
+                                for (var c=0;c<daeta.announcements.length;c++){
+                                  totalItems.push(daeta.announcements[c]);
+                                }
+                              }else{
+                                pushGreatestLeast(daeta.announcements, totalItems);
+                              }
+                            }
+                            nextStep();
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }else nextStep();
+            }
+          })();
+        })
+      }
+
+      doReq();
+
+      var addBubble = function(xy,bgColor,color,fSize,text,c,grade,url){ //only for text; thats all we are using anyway :P
+        //create a circle div inside of <div>details with scalable/undefined width and a p textboxs
+        bgColor=bgColor===undefined?"white":bgColor;
+        color=color===undefined?"black":color;
+        fSize=fSize===undefined?15:fSize;
+
+        var bubble = document.createElement("div");
+        bubble.style.position="absolute";
+        bubble.style.zIndex=5;
+        bubble.style.top=xy[1]+"px";
+        bubble.style.background=bgColor;
+        bubble.style.display="flex";
+        bubble.style.alignItems="center";
+        bubble.style.justifyContent="center";
+
+        var p = url?document.createElement("a"):document.createElement("p");
+        p.href=url?url:"";
+        p.target=url?"_blank":"";
+        p.style.fontSize=fSize+"px";
+        p.style.margin=0;
+        p.style.paddingLeft="15px";p.style.paddingRight="15px";
+        p.style.color=color;
+        p.style.whiteSpace="pre-line";
+        p.style.textAlign="center";
+
+        if(grade==="p")p.style.opacity="50%";
+        else if(grade==="g"){
+          bubble.style.backgroundColor="rgba(0,0,0,0.5)";
+          p.style.opacity="100%";
+          p.style.color="yellow";
+        }else if(grade==="lg"){//label grade
+          bubble.style.backgroundColor="lightgreen";
+        }
+        
+        p.append(text);
+        bubble.appendChild(p);
+        document.getElementById("details").appendChild(bubble);
+        if (c) {
+          bubble.style.borderRadius="50%";
+          if (p.offsetWidth>p.offsetHeight)bubble.style.height=(p.offsetWidth)+"px";
+          else bubble.style.width=(p.offsetHeight)+"px";
+        }else bubble.style.borderRadius="20px";
+        if(grade==="g")bubble.style.left=(xy[0]-p.offsetWidth/1.5)+"px";
+        else bubble.style.left=(xy[0]-p.offsetWidth/2)+"px";
+        //ALSO TO GET THE LEFT AND TOP FOR THESE BUBBLES, USE item.offsetLeft & item.offsetTop (and +- accordingly to adjust position)
+      }
+
+      var degToRad = function (deg){
+        return deg*(Math.PI/180);
+      }
+
+      var getPoint = function(r,h,k,deg,lr,ud){ //r=radius, h,k is the coordinates of the origin, deg is degrees of angle from straigt diameter, lr is point on left or right of circle, ud is up or down circle
+        var pointX = Math.sin(degToRad(deg))*r;
+        var pointY = Math.cos(degToRad(deg))*r;
+        var res = [];
+        if (lr==="l")res.push(h-pointX)
+        else if(lr==="r")res.push(h+pointX)
+        else return -1
+        if (ud==="u")res.push(k-pointY)
+        else if(ud==="d")res.push(k+pointY)
+        else return -1;
+        return res;
+      }
+
+      var getTheMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
+      var getTheDayOfWeek = function(d){const days=["Sunday","Monday","Tueday","Wednesday","Thursday","Friday","Saturday"];return days[d];};
+      var selectedItem = "";
+
+      var displayDetails = function(elem,event,itemObj){
+        if (elem.id!=="greyBg")selectedItem = elem.closest(".itemContainer");
+
+        if (document.getElementById("greyBg").style.display===""){
+          document.getElementById("greyBg").style.display="none";
+          document.getElementById("details").innerHTML="";
+          selectedItem.style.backgroundColor="";
+          selectedItem.style.zIndex=1;
+        }else{ //document.getElementById("greyBg").style.display==="none"
+          document.getElementById("greyBg").style.display="";
+          document.getElementById("details").innerHTML="";
+          selectedItem.style.backgroundColor="white";
+          var thisDate = new Date(itemObj.creationTime);
+          var creationDate = getTheDayOfWeek(thisDate.getDay())+", "+getTheMonth(thisDate.getMonth())+" "+thisDate.getDate()+", "+thisDate.getFullYear();
+          var creationTime = (thisDate.getHours()>12?thisDate.getHours()-12:thisDate.getHours())+":"+(thisDate.getMinutes()<10?"0"+thisDate.getMinutes():thisDate.getMinutes())+":"+(thisDate.getSeconds()<10?"0"+thisDate.getSeconds():thisDate.getSeconds())+(thisDate.getHours()>12?"pm":"am");
+
+          if (elem.id!=="greyBg"){
+
+            var ow=selectedItem.offsetWidth;var oh=selectedItem.offsetHeight;var ol=selectedItem.offsetLeft;var ot=selectedItem.offsetTop;
+            
+            if(!itemObj.hasOwnProperty("text")){
+              if (itemObj.hasOwnProperty("dueDate")){
+                //assignment w/o pt val
+                var thisDueDate = new Date(itemObj.dueDate.year+"-"+itemObj.dueDate.month+"-"+itemObj.dueDate.day+" "+itemObj.dueTime.hours+":"+(itemObj.dueTime.hasOwnProperty("minutes")?itemObj.dueTime.minutes:"00")+":"+(itemObj.dueTime.hasOwnProperty("seconds")?itemObj.dueTime.seconds:"00"+" GMT+00:00"));
+                httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+itemObj.courseId+"/courseWork/"+itemObj.id+"/studentSubmissions", accessToken, (data, err)=>{
+                  if (err) console.log(err);
+                  else{
+                    //data.studentSubmissions[0] is the actual object
+                    //turned in needs turned in date, late bubble, turned in bubble, ?points:possible points > "p"
+                    //returned needs turned in date, late bubble, returned bubble, ?points:graded points > "g, lg"
+                    console.log(data.studentSubmissions[0]);
+                    if(data.studentSubmissions[0].state==="TURNED_IN"){
+                      var submitDate = new Date(data.studentSubmissions[0].updateTime);
+
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-200,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Points:",false,false);//grade
+                        addBubble(getPoint(ow-150,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+                      }
+
+                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Turned in",false,false);
+                      if (data.studentSubmissions[0].late){
+                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
+                      }
+
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",22,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",27,
+                                getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
+                                  +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );
+
+
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",22,"Date Due:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"#7092ff","white",27,
+                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );//date due
+
+                    }else if(data.studentSubmissions[0].state==="RETURNED"){
+                      var submitDate = new Date(data.studentSubmissions[0].updateTime);
+                      
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-200,ol+ow/2,(ot+oh)-200,0,"l","d"),"white","black",25,"Grade:",false,"lg");//grade
+                        addBubble(getPoint(ow-150,ol+ow/2,(ot+oh)-200,0,"l","d"),"lightGreen","black",30,data.studentSubmissions[0].assignedGrade+"\n----\n"+itemObj.maxPoints,true,"g");//grade
+                      }
+
+                      addBubble(getPoint(ow-300,ol+ow/2,(ot+oh)-200,0,"r","d"),"yellow","black",20,"Returned",false,false);
+                      if (data.studentSubmissions[0].late){
+                        addBubble(getPoint(ow-275,ol+ow/2,(ot+oh)-200,0,"r","d"),"orange","black",20,"Turned in late",false,false);
+                      }
+
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"r","d"),"white","black",22,"Turned in on:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"r","d"),"yellow","black",27,
+                                getTheDayOfWeek(submitDate.getDay())+", "+getTheMonth(submitDate.getMonth())+" "+submitDate.getDate()+", "+submitDate.getFullYear()+"\n@  "
+                                  +(submitDate.getHours()>12?submitDate.getHours()-12:submitDate.getHours())+":"+(submitDate.getMinutes()<10?"0"+submitDate.getMinutes():submitDate.getMinutes())+":"+(submitDate.getSeconds()<10?"0"+submitDate.getSeconds():submitDate.getSeconds())+(submitDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );
+
+                      addBubble(getPoint(ow-130,ol+ow/2,(ot+oh)-200,38,"l","d"),"white","black",22,"Date Due:",false,false);
+                      addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,35,"l","d"),"#7092ff","white",27,
+                                getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                ,false,false
+                              );//date due
+
+                    }else{
+                      console.log(data.studentSubmissions[0].state) //expecting it to be not turned in or returned at all
+                      //old ui
+                      if (itemObj.hasOwnProperty("maxPoints")){
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"l","d"),"white","black",25,"Points:",false,false);//grade
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"l","d"),"lightGreen","black",30,itemObj.maxPoints,true,"p");//grade
+
+                        addBubble(getPoint(ow-140,ol+ow/2,(ot+oh)-200,22,"r","d"),"white","black",25,"Date Due:",false,false);
+                        addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,20,"r","d"),"#7092ff","white",30,
+                                  getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                  +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                  ,false,false
+                                );//date due
+                      }else{
+                        addBubble(getPoint(ow-150,ol+ow/2,(ot+oh)-200,0,"r","d"),"white","black",17,"Date Due:",false,false);
+                        addBubble(getPoint(ow-120,ol+ow/2,(ot+oh)-200,0,"r","d"),"#7092ff","white",30,
+                                  getTheDayOfWeek(thisDueDate.getDay())+", "+getTheMonth(thisDueDate.getMonth())+" "+thisDueDate.getDate()+", "+thisDueDate.getFullYear()+"\n@  "
+                                  +(thisDueDate.getHours()>12?thisDueDate.getHours()-12:thisDueDate.getHours())+":"+(thisDueDate.getMinutes()<10?"0"+thisDueDate.getMinutes():thisDueDate.getMinutes())+":"+(thisDueDate.getSeconds()<10?"0"+thisDueDate.getSeconds():thisDueDate.getSeconds())+(thisDueDate.getHours()>12?"pm":"am")
+                                  ,false,false
+                                );//date due
+                      }
+                    }
+                  }
+                })
+              } //else: material
+            } //else: announcement
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"l","d"),"white","black",17,"Date Posted: "+creationDate,false,false);//date posted
+            addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"r","d"),"white","black",17,"Time Posted: "+creationTime,false,false);//time posted
+            addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,false,itemObj.alternateLink);
+          }
+        }
+        if (event!==undefined){
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          event.preventDefault();
+        }
+      }
+      document.getElementById("greyBg").style.display="none";
+    </script>
+  </body>
+</html>

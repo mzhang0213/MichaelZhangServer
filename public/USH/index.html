@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <!-- This is USH -->
+  
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Michael Zhang's Website</title>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <a class="llink" href="preambleTypingTest.html">Preamble (US Constitutiton) Typing Test</a>
+      <br>
+      <a class="llink" href="TheAmericanCrisisTypingTest.html">The American Crisis (by Thomas Paine) Typing Test</a>
+      <style>
+        .llink{
+          font-size:19px;
+          font-family:"Cabin";
+        }
+        .llink:link {
+          text-decoration:none;
+        }
+        .llink:visited {
+          color:blue;
+          text-decoration:none;
+        }
+      </style>
+    </font>
+  </body>
+</html>
