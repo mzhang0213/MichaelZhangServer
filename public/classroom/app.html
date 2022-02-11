@@ -285,13 +285,14 @@
               //its first, dont create
               alert("No new posts");
             }else{
+              document.getElementById("items").getElementsByTagName("br")[document.getElementById("items").getElementsByTagName("br").length-1].remove();document.getElementById("items").getElementsByTagName("br")[document.getElementById("items").getElementsByTagName("br").length-1].remove();
               var lc = document.createElement("div"); //lc = line contanier
               var hr = document.createElement("hr");
               var p = document.createElement("p");
               hr.style.border="1px blue solid";
               hr.style.margin=0;
               hr.style.padding=0;
-              hr.style.marginBotton="10px";
+              hr.style.marginBottom="10px";
               p.style.color="blue";
               p.style.padding=0;
               p.style.margin=0;
