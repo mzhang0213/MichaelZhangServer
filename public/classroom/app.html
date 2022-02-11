@@ -267,16 +267,20 @@
           iconImage.src="announcementIcon.png";
           if (!(itemObj.text===undefined)) description.append(itemObj.text);
         }
-        
         text.appendChild(description);
+        
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
+        
+        alert(localStorage.getItem("lastDate").getTime())
+        /*
         if (!createdNew){
           if (localStorage.getItem("lastDate")===null){
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
             localStorage.setItem("lastDate",thisDate);
           }else if(localStorage.getItem("lastDate").getTime()===thisDate.getTime()){
+            alert("hi")
             if (itemObj===totalItems[0]){
               //its first, dont create
               alert("No new posts");
@@ -299,7 +303,7 @@
             }
           }
           createdNew = true;
-        }
+        }*/
         
         blue.append(date);
         green.append(getTeacher(itemObj.courseId));
