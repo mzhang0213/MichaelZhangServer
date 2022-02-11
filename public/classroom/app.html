@@ -272,14 +272,14 @@
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         
-        var storedDate = localStorage.getItem("lastDate")===null?null:new Date(localStorage.getItem("lastDate"));
+        var storedDate = localStorage.getItem("lastDate")===null?null:localStorage.getItem("lastDate");
         if (!createdNew){
           if (storedDate===null){
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
-            localStorage.setItem("lastDate",thisDate);
+            localStorage.setItem("lastDate",thisDate.getTime());
             createdNew = true;
-          }else if(storedDate.getTime()===thisDate.getTime()){
+          }else if(storedDate===thisDate.getTime()){
             alert("hi")
             if (itemObj===totalItems[0]){
               //its first, dont create
@@ -299,11 +299,11 @@
               p.append("New Posts ⬆");
               lc.append(p);lc.append(hr);
               docuemnt.body.append(lc);
-              localStorage.setItem("lastDate",thisDate);
+              localStorage.setItem("lastDate",thisDate.getTime());
             }
             createdNew = true;
           }else{
-            console.log (storedDate.getTime(),thisDate.getTime(),(storedDate.getTime()===thisDate.getTime()))
+            console.log (storedDate,thisDate.getTime(),(storedDate===thisDate.getTime()))
           }
         }
         
