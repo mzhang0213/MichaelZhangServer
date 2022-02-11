@@ -272,7 +272,7 @@
         var thisDate = new Date(itemObj.creationTime);
         var date = (thisDate.getMonth()+1)+"/"+thisDate.getDate()+"/"+thisDate.getFullYear();
         
-        if (!createdNew){
+        if (!createdNew){alert(localStorage.getItem("lastDate"));
           if (localStorage.getItem("lastDate")===null){
             //first time
             alert("Hey, first time! I don't have any previous history of what you have seen.\nIn the future, I can show you new posts :)");
@@ -296,10 +296,10 @@
               p.append("New Posts ⬆");
               lc.append(p);lc.append(hr);
               docuemnt.body.append(lc);
-              createdNew = true;
               localStorage.setItem("lastDate",thisDate);
             }
           }
+          createdNew = true;
         }
         
         blue.append(date);
