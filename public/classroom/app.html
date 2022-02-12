@@ -583,7 +583,8 @@
         txt.style.padding=0;
         txt.readOnly=true;
         txt.style.resize="none";
-        txt.style.border="none";
+        txt.style.border="1px solid black";
+        txt.style.backgroundColor="white";
         txt.style.fontFamily="Cabin";
         txt.style.outline="none";
         txt.style.top=(t+30)+"px";
@@ -729,7 +730,7 @@
             img.style.height="40px";
             div.append(img);
             document.body.append(div);
-            var hidden=false;
+            var hidden=true;
             div.addEventListener("click",function(){
               if (hidden){
                 displayDetails(elem,{},"ddm");//ddm = display details menu
