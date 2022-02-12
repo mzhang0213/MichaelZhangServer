@@ -597,6 +597,44 @@
         document.getElementById("details").append(txt);
       }
 
+      var hidden=true;
+      var ddMenuIconCreate = function(){
+        if (document.getElementsByClassName("ddMenuIcon").length===0){
+          var div = document.createElement("div");
+          var img = document.createElement("img");
+          div.style.position="absolute";
+          div.style.width="40px";
+          div.style.height="40px";
+          div.style.left=(ow+ol-20)+"px";
+          div.style.top=(ot-20)+"px";
+          div.style.border="1px black solid";
+          div.style.zIndex=5;
+          div.className="ddMenuIcon";
+          img.style.width="40px";
+          img.style.height="40px";
+          div.append(img);
+          document.body.append(div);
+          div.addEventListener("click",function(){
+            if (hidden){
+              document.getElementById("details").innerHTML="";
+              ddMenuIconCreate();
+              hidden=false;
+              if (!itemObj.hasOwnProperty("text")){
+                expandText("Title:",itemObj.title,30,((window.innerWidth-ow)/2),50,10,10);
+              }
+              if (itemObj.description){
+                expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10);
+              }
+            } 
+            else {
+              document.getElementById("details").innerHTML="";
+              displayDetails(elem,itemObj,"ddm");//ddm = display details menu
+              hidden=true;
+            }
+          })
+        }
+      }
+
       var getTheMonth=function(n){const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return months[n];};
       var getTheDayOfWeek = function(d){const days=["Sunday","Monday","Tueday","Wednesday","Thursday","Friday","Saturday"];return days[d];};
       var selectedItem = "";
@@ -715,39 +753,8 @@
           addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"l","d"),"white","black",17,"Date Posted: "+creationDate,false,false);//date posted
           addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"r","d"),"white","black",17,"Time Posted: "+creationTime,false,false);//time posted
           addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,false,itemObj.alternateLink);
-          if (document.getElementsByClassName("ddMenuIcon").length===0){
-            var div = document.createElement("div");
-            var img = document.createElement("img");
-            div.style.position="absolute";
-            div.style.width="40px";
-            div.style.height="40px";
-            div.style.left=(ow+ol-20)+"px";
-            div.style.top=(ot-20)+"px";
-            div.style.border="1px black solid";
-            div.style.zIndex=5;
-            div.className="ddMenuIcon";
-            img.style.width="40px";
-            img.style.height="40px";
-            div.append(img);
-            document.body.append(div);
-            var hidden=true;
-            div.addEventListener("click",function(){
-              if (hidden){
-                displayDetails(elem,itemObj,"ddm");//ddm = display details menu
-                hidden=false;
-                if (!itemObj.hasOwnProperty("text")){
-                  expandText("Title:",itemObj.title,30,((window.innerWidth-ow)/2),50,10,10);
-                }
-                if (itemObj.description){
-                  expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10);
-                }
-              } 
-              else {
-                document.getElementById("details").innerHTML="";
-                hidden=true;
-              }
-            })
-          }
+          hidden=true;
+          ddMenuIconCreate();
         }
       }
       document.getElementById("greyBg").style.display="none";
