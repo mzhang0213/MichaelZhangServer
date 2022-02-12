@@ -733,12 +733,14 @@
             var hidden=true;
             div.addEventListener("click",function(){
               if (hidden){
-                displayDetails(elem,{},"ddm");//ddm = display details menu
+                displayDetails(elem,itemObj,"ddm");//ddm = display details menu
                 hidden=false;
                 if (!itemObj.hasOwnProperty("text")){
                   expandText("Title:",itemObj.title,30,((window.innerWidth-ow)/2),50,10,10);
                 }
-                expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10);
+                if (itemObj.description){
+                  expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10);
+                }
               } 
               else {
                 document.getElementById("details").innerHTML="";
