@@ -149,9 +149,6 @@
       #upIconContainer{
         position:relative;
       }
-      .ddMenuIcon{
-        background-color:white;
-      }
       .ddMenuIcon:hover{
         opacity:90%;
       }
@@ -575,7 +572,9 @@
         p.style.padding=0;p.style.margin=0;
         p.style.top=t+"px";
         p.style.left=l+"px";
+        p.style.color="white";
         p.append(title);
+        p.style.zIndex=5;
         txt.style.position="absolute";
         txt.style.fontSize=fSize===undefined?"35px":fSize+"px";
         txt.style.marginTop="15px";
@@ -591,6 +590,7 @@
         txt.style.left=l+"px";
         txt.style.width=w+"px";
         txt.style.height=h+"px";
+        txt.style.zIndex=5;
         txt.append(desc);
         document.getElementById("details").append(p);
         document.getElementById("details").append(document.createElement("br"))
@@ -607,11 +607,11 @@
           div.style.height="40px";
           div.style.left=(ow+ol-20)+"px";
           div.style.top=(ot-20)+"px";
-          div.style.border="1px black solid";
           div.style.zIndex=5;
           div.className="ddMenuIcon";
           img.style.width="40px";
           img.style.height="40px";
+          img.src="ddmenuIcon.png";
           div.append(img);
           document.body.append(div);
           div.addEventListener("click",function(){
@@ -620,10 +620,10 @@
               ddMenuIconCreate(ow,oh,ol,ot,itemObj,elem);
               hidden=false;
               if (!itemObj.hasOwnProperty("text")){
-                expandText("Title:",itemObj.title,30,((window.innerWidth-ow)/2),50,10,10);
+                expandText("Title:",itemObj.title,30,((window.innerWidth-ow)/2),50,10,10+Math.floor(window.pageYOffset));
               }
               if (itemObj.description){
-                expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10);
+                expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
               }
             } 
             else {
