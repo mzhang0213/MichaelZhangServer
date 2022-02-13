@@ -550,6 +550,47 @@
         return deg*(Math.PI/180);
       }
 
+      var addMats = function(bgColor,color,fSize,text,url,elem){ //@ xy top corner, create a item in a list of materials
+        bgColor=bgColor===undefined?"white":bgColor;
+        color=color===undefined?"black":color;
+        fSize=fSize===undefined?15:fSize;
+
+        var bubble = document.createElement("div");
+        bubble.style.position="absolute";
+        bubble.style.zIndex=4;
+        bubble.style.background=bgColor;
+        bubble.style.display="flex";
+        bubble.style.alignItems="center";
+        bubble.style.justifyContent="center";
+        bubble.style.borderRadius="20px";
+
+        var p = url?document.createElement("a"):document.createElement("p");
+        p.href=url?url:"";
+        p.target=url?"_blank":"";
+        p.style.fontSize=fSize+"px";
+        p.style.margin=0;
+        p.style.paddingLeft="15px";p.style.paddingRight="15px";
+        p.style.color=color;
+        p.style.whiteSpace="pre-line";
+        p.style.textAlign="center";
+
+        p.append(text);
+        bubble.appendChild(p);
+        elem.appendChild(bubble);
+      }
+
+      var addLabel = function(color,fSize,text,elem){
+        color=color===undefined?"black":color;
+        fSize=fSize===undefined?20:fSize;
+
+        p.style.fontSize=fSize+"px";
+        p.style.margin=0;
+        p.style.padding=0;
+        p.style.color=color;
+
+        elem.appendChild(p);
+      }
+
       var getPoint = function(r,h,k,deg,lr,ud){ //r=radius, h,k is the coordinates of the origin, deg is degrees of angle from straigt diameter, lr is point on left or right of circle, ud is up or down circle
         var pointX = Math.sin(degToRad(deg))*r;
         var pointY = Math.cos(degToRad(deg))*r;
@@ -598,7 +639,7 @@
       }
 
       var hidden=true;
-      var ddMenuIconCreate = function(ow,oh,ol,ot,itemObj,elem){
+      var ddMenuIconCreate = function(ow,oh,ol,ot,itemObj,elem,submission){
         if (document.getElementsByClassName("ddMenuIcon").length===0){
           var div = document.createElement("div");
           var img = document.createElement("img");
@@ -617,11 +658,34 @@
           div.addEventListener("click",function(){
             if (hidden){
               document.getElementById("details").innerHTML="";
-              ddMenuIconCreate(ow,oh,ol,ot,itemObj,elem);
+              ddMenuIconCreate(ow,oh,ol,ot,itemObj,elem,submission);
               hidden=false;
+
+              var matsContain = document.createElement("div");
+              matsContain.position="absolute";
               if (!itemObj.hasOwnProperty("text")){
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
+                matsContain.top="175px";
+                if (submission.assignmentSubmission.attachments.length>0){
+                  addLabel("white",29,"Submissions",matsContain);
+                  for (var i=0;i<submission.assignmentSubmission.attachments.length;i++){
+                    var title = submission.assignmentSubmission.attachments[i].driveFile.title||submission.assignmentSubmission.attachments[i].youTubeVideo.title||submission.assignmentSubmission.attachments[i].link.title||submission.assignmentSubmission.attachments[i].form.title;
+                    var link = submission.assignmentSubmission.attachments[i].driveFile.alternateLink||submission.assignmentSubmission.attachments[i].youTubeVideo.alternateLink||submission.assignmentSubmission.attachments[i].link.url||submission.assignmentSubmission.attachments[i].form.formUrl;
+                    addMats("white","blue",25,title,link,matsContain);
+                  }
+                }
+                matsContain.append(document.createElement("br"));
               }
+              if (itemObj.materials.length>0){
+                addLabel("white",29,"Submissions",matsContain);
+                for (var i=0;i<itemObj.materials.length;i++){
+                  var title = itemObj.materials[i].driveFile.driveFile.title||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
+                  var link = itemObj.materials[i].driveFile.driveFile.alternateLink||itemObj.materials[i].youTubeVideo.alternateLink||itemObj.materials[i].link.url||itemObj.materials[i].form.formUrl;
+                  addMats("white","blue",25,title,link,matsContain);
+                }
+              }
+              document.getElementById("details").appendChild(matsContain);
+
               if (itemObj.description||itemObj.text){
                 expandText("Description:",itemObj.description||itemObj.text,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
               }
@@ -665,10 +729,11 @@
               httpReq("GET", "https://classroom.googleapis.com/v1/courses/"+itemObj.courseId+"/courseWork/"+itemObj.id+"/studentSubmissions", accessToken, (data, err)=>{
                 if (err) console.log(err);
                 else{
+                  hidden=true;
+                  ddMenuIconCreate(ow,oh,ol,ot,itemObj,elem,data);
                   //data.studentSubmissions[0] is the actual object
                   //turned in needs turned in date, late bubble, turned in bubble, ?points:possible points > "p"
                   //returned needs turned in date, late bubble, returned bubble, ?points:graded points > "g, lg"
-                  console.log(data.studentSubmissions[0]);
                   if(data.studentSubmissions[0].state==="TURNED_IN"){
                     var submitDate = new Date(data.studentSubmissions[0].updateTime);
 
@@ -753,8 +818,6 @@
           addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"l","d"),"white","black",17,"Date Posted: "+creationDate,false,false);//date posted
           addBubble(getPoint(ow-100,ol+ow/2,(ot+oh)-200,55,"r","d"),"white","black",17,"Time Posted: "+creationTime,false,false);//time posted
           addBubble(getPoint(50,ol+ow/2,(ot+oh)-100,0,"l","u"),"white","blue",20,"Link to Google Classroom",false,false,itemObj.alternateLink);
-          hidden=true;
-          ddMenuIconCreate(ow,oh,ol,ot,itemObj,elem);
         }
       }
       document.getElementById("greyBg").style.display="none";
