@@ -690,8 +690,8 @@
                 addLabel("white",29,"Materials",matsContain);
                 brM();
                 for (var i=0;i<itemObj.materials.length;i++){
-                  var title = itemObj.materials[i].driveFile.hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.title:undefined||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
-                  var link = itemObj.materials[i].driveFile.hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.alternateLink:undefined||itemObj.materials[i].youTubeVideo.alternateLink||itemObj.materials[i].link.url||itemObj.materials[i].form.formUrl;
+                  var title = itemObj.materials[i].hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.title:undefined||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
+                  var link = itemObj.materials[i].hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.alternateLink:undefined||itemObj.materials[i].youTubeVideo.alternateLink||itemObj.materials[i].link.url||itemObj.materials[i].form.formUrl;
                   addMats("white","blue",25,title,link,matsContain);
                   brM();brM();brM();
                 }
