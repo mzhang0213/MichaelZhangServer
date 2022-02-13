@@ -668,9 +668,11 @@
               matsContain.style.position="absolute";
               matsContain.style.left="10px";
               matsContain.style.zIndex=5;
+              matsContain.style.width=((window.innerWidth-ow)/2)+"px";
               function brM(){matsContain.append(document.createElement("br"));};
               if (!itemObj.hasOwnProperty("text")){
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
+                brM();brM();brM();
                 matsContain.style.top=(175+window.pageYOffset)+"px";
                 if (submission.studentSubmissions[0].assignmentSubmission.hasOwnProperty("attachments")){
                   addLabel("white",29,"Submissions",matsContain);
@@ -682,7 +684,7 @@
                     brM();brM();brM();
                   }
                 }
-                brM();brM();brM();brM();brM();
+                brM();brM();brM();brM();
               }else matsContain.style.top=(window.pageYOffset)+"px";
               if (itemObj.hasOwnProperty("materials")){
                 addLabel("white",29,"Materials",matsContain);
