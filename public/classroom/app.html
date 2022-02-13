@@ -622,8 +622,8 @@
               if (!itemObj.hasOwnProperty("text")){
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
               }
-              if (itemObj.description){
-                expandText("Description:",itemObj.description,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
+              if (itemObj.description||itemObj.text){
+                expandText("Description:",itemObj.description||itemObj.text,17,((window.innerWidth-ow)/2),window.innerHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
               }
             } 
             else {
