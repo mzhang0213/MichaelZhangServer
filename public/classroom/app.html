@@ -206,7 +206,7 @@
       document.getElementById("prev").disabled=true;
 
       document.getElementById("bottomZone").addEventListener("mouseenter", ()=>{
-        if (!$("#popupDock").is(':animated')){
+        if (!$("#popupDock").is(':animated')&&document.getElementById("popupDock").style.display==="none"){
           $("#popupDock").slideToggle(350);
           document.getElementById("upIcon").style.display="none"
         }
