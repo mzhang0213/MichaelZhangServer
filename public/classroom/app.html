@@ -212,10 +212,10 @@
         }
       })
       document.body.addEventListener("mouseover",function(e){
-          if (e.target.id!=="popupDock"&&e.target.id!=="bottomZone"&&e.target.id!=="refresh"&&e.target.id!=="skipControls"){
+          if (e.target.id!=="popupDock"&&e.target.id!=="bottomZone"&&e.target.id!=="refresh"&&e.target.id!=="skipControls"&&e.target.id!=="prev"&&e.target.id!=="next"){
             if (!$("#popupDock").is(':animated')&&document.getElementById("popupDock").style.display==="flex"){
               $("#popupDock").slideToggle(350);
-              setTimeout(()=>document.getElementById("upIcon").style.display="",350)
+              document.getElementById("upIcon").style.display="";
             }
           }
       })
