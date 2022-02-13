@@ -674,28 +674,30 @@
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
                 brM();brM();brM();
                 matsContain.style.top=(175+window.pageYOffset)+"px";
-                if (submission.studentSubmissions[0].assignmentSubmission.hasOwnProperty("attachments")){
-                  addLabel("white",29,"Submissions",matsContain);
-                  brM();
-                  for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
-                    var title="";
-                    var link="";
-                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
-                      case "driveFile":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title;break;
-                      case "youTubeVideo":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title;break;
-                      case "link":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title;break;
-                      case "form":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;break;
-                      default:console.log("switch err");break;
+                if (submission!==undefined){
+                  if (submission.studentSubmissions[0].assignmentSubmission.hasOwnProperty("attachments")){
+                    addLabel("white",29,"Submissions",matsContain);
+                    brM();
+                    for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
+                      var title="";
+                      var link="";
+                      switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
+                        case "driveFile":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title;break;
+                        case "youTubeVideo":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title;break;
+                        case "link":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title;break;
+                        case "form":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;break;
+                        default:console.log("switch err");break;
+                      }
+                      switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
+                        case "driveFile":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink;break;
+                        case "youTubeVideo":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink;break;
+                        case "link":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url;break;
+                        case "form":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.formUrl;break;
+                        default:console.log("switch err");break;
+                      }
+                      addMats("white","blue",25,title,link,matsContain);
+                      brM();brM();brM();
                     }
-                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
-                      case "driveFile":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink;break;
-                      case "youTubeVideo":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink;break;
-                      case "link":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url;break;
-                      case "form":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.formUrl;break;
-                      default:console.log("switch err");break;
-                    }
-                    addMats("white","blue",25,title,link,matsContain);
-                    brM();brM();brM();
                   }
                 }
                 brM();brM();brM();brM();
