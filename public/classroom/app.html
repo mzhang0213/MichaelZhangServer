@@ -588,6 +588,7 @@
         p.style.margin=0;
         p.style.padding=0;
         p.style.color=color;
+        p.style.zIndex=5;
 
         elem.appendChild(p);
       }
@@ -664,25 +665,32 @@
 
               var matsContain = document.createElement("div");
               matsContain.position="absolute";
+              matsContain.style.left="10px";
+              matsContain.style.zIndex=5;
+              function brM(){matsContain.append(document.createElement("br"));};
               if (!itemObj.hasOwnProperty("text")){
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
-                matsContain.top="175px";
+                matsContain.style.top=(175+window.pageYOffset)+"px";
                 if (submission.studentSubmissions[0].assignmentSubmission.hasOwnProperty("attachments")){
                   addLabel("white",29,"Submissions",matsContain);
+                  brM();
                   for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
                     var title = submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;
                     var link = submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink||submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink||submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url||submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.formUrl;
                     addMats("white","blue",25,title,link,matsContain);
+                    brM();brM();brM();
                   }
                 }
-                matsContain.append(document.createElement("br"));
-              }
+                brM();brM();brM();brM();brM();
+              }else matsContain.style.top=(window.pageYOffset)+"px";
               if (itemObj.hasOwnProperty("materials")){
-                addLabel("white",29,"Submissions",matsContain);
+                addLabel("white",29,"Materials",matsContain);
+                brM();
                 for (var i=0;i<itemObj.materials.length;i++){
                   var title = itemObj.materials[i].driveFile.driveFile.title||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
                   var link = itemObj.materials[i].driveFile.driveFile.alternateLink||itemObj.materials[i].youTubeVideo.alternateLink||itemObj.materials[i].link.url||itemObj.materials[i].form.formUrl;
                   addMats("white","blue",25,title,link,matsContain);
+                  brM();brM();brM();
                 }
               }
               document.getElementById("details").appendChild(matsContain);
