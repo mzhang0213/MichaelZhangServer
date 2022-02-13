@@ -680,7 +680,7 @@
                   for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
                     var title="";
                     var link="";
-                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])) {
+                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
                       case "driveFile":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title;break;
                       case "youTubeVideo":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title;break;
                       case "link":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title;break;
@@ -706,7 +706,7 @@
                 for (var i=0;i<itemObj.materials.length;i++){
                   var title="";
                   var link="";
-                  switch (Object.keys(itemObj.materials[i])) {
+                  switch (Object.keys(itemObj.materials[i])[0]) {
                     case "driveFile":title=itemObj.materials[i].driveFile.driveFile.title;break;
                     case "youTubeVideo":title=itemObj.materials[i].youTubeVideo.title;break;
                     case "link":title=itemObj.materials[i].link.title;break;
