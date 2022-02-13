@@ -678,8 +678,22 @@
                   addLabel("white",29,"Submissions",matsContain);
                   brM();
                   for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
-                    var title = submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;
-                    var link = submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink||submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink||submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url||submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.formUrl;
+                    var title="";
+                    var link="";
+                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])) {
+                      case "driveFile":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title;break;
+                      case "youTubeVideo":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title;break;
+                      case "link":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title;break;
+                      case "form":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;break;
+                      default:console.log("switch err");break;
+                    }
+                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])) {
+                      case "driveFile":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink;break;
+                      case "youTubeVideo":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink;break;
+                      case "link":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url;break;
+                      case "form":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.formUrl;break;
+                      default:console.log("switch err");break;
+                    }
                     addMats("white","blue",25,title,link,matsContain);
                     brM();brM();brM();
                   }
@@ -690,8 +704,22 @@
                 addLabel("white",29,"Materials",matsContain);
                 brM();
                 for (var i=0;i<itemObj.materials.length;i++){
-                  var title = itemObj.materials[i].hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.title:undefined||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
-                  var link = itemObj.materials[i].hasOwnProperty("driveFile")?itemObj.materials[i].driveFile.driveFile.alternateLink:undefined||itemObj.materials[i].youTubeVideo.alternateLink||itemObj.materials[i].link.url||itemObj.materials[i].form.formUrl;
+                  var title="";
+                  var link="";
+                  switch (Object.keys(itemObj.materials[i])) {
+                    case "driveFile":title=itemObj.materials[i].driveFile.driveFile.title;break;
+                    case "youTubeVideo":title=itemObj.materials[i].youTubeVideo.title;break;
+                    case "link":title=itemObj.materials[i].link.title;break;
+                    case "form":title=itemObj.materials[i].form.title;break;
+                    default:console.log("switch err");break;
+                  }
+                  switch (Object.keys(itemObj.materials[i])) {
+                    case "driveFile":link=itemObj.materials[i].driveFile.driveFile.alternateLink;break;
+                    case "youTubeVideo":link=itemObj.materials[i].youTubeVideo.alternateLink;break;
+                    case "link":link=itemObj.materials[i].link.url;break;
+                    case "form":link=itemObj.materials[i].form.formUrl;break;
+                    default:console.log("switch err");break;
+                  }
                   addMats("white","blue",25,title,link,matsContain);
                   brM();brM();brM();
                 }
