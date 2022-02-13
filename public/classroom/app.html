@@ -211,9 +211,13 @@
           document.getElementById("upIcon").style.display="none"
         }
       })
-      document.getElementById("bottomZone").addEventListener("mouseleave", ()=>{
-        $("#popupDock").slideToggle(350);
-        setTimeout(()=>document.getElementById("upIcon").style.display="",350)
+      document.body.addEventListener("mouseover",function(e){
+          if (e.target.id!=="popupDock"&&e.target.id!=="bottomZone"&&e.target.id!=="refresh"&&e.target.id!=="skipControls"){
+            if (!$("#popupDock").is(':animated')&&document.getElementById("popupDock").style.display==="flex"){
+              $("#popupDock").slideToggle(350);
+              setTimeout(()=>document.getElementById("upIcon").style.display="",350)
+            }
+          }
       })
 
       const urlParams = new URLSearchParams(window.location.search);
