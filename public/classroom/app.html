@@ -590,6 +590,7 @@
         p.style.color=color;
         p.style.zIndex=5;
 
+        p.append(text);
         elem.appendChild(p);
       }
 
@@ -664,7 +665,7 @@
               hidden=false;
 
               var matsContain = document.createElement("div");
-              matsContain.position="absolute";
+              matsContain.style.position="absolute";
               matsContain.style.left="10px";
               matsContain.style.zIndex=5;
               function brM(){matsContain.append(document.createElement("br"));};
