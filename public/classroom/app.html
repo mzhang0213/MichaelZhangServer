@@ -687,7 +687,7 @@
                       case "form":title=submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;break;
                       default:console.log("switch err");break;
                     }
-                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])) {
+                    switch (Object.keys(submission.studentSubmissions[0].assignmentSubmission.attachments[i])[0]) {
                       case "driveFile":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.alternateLink;break;
                       case "youTubeVideo":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.alternateLink;break;
                       case "link":link=submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.url;break;
@@ -713,7 +713,7 @@
                     case "form":title=itemObj.materials[i].form.title;break;
                     default:console.log("switch err");break;
                   }
-                  switch (Object.keys(itemObj.materials[i])) {
+                  switch (Object.keys(itemObj.materials[i])[0]) {
                     case "driveFile":link=itemObj.materials[i].driveFile.driveFile.alternateLink;break;
                     case "youTubeVideo":link=itemObj.materials[i].youTubeVideo.alternateLink;break;
                     case "link":link=itemObj.materials[i].link.url;break;
