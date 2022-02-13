@@ -666,7 +666,7 @@
               if (!itemObj.hasOwnProperty("text")){
                 expandText("Title:",itemObj.title,29,((window.innerWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
                 matsContain.top="175px";
-                if (submission.studentSubmissions[0].assignmentSubmission.attachments.length>0){
+                if (submission.studentSubmissions[0].assignmentSubmission.hasOwnProperty(attachments)){
                   addLabel("white",29,"Submissions",matsContain);
                   for (var i=0;i<submission.studentSubmissions[0].assignmentSubmission.attachments.length;i++){
                     var title = submission.studentSubmissions[0].assignmentSubmission.attachments[i].driveFile.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].youTubeVideo.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].link.title||submission.studentSubmissions[0].assignmentSubmission.attachments[i].form.title;
