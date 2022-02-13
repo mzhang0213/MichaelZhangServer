@@ -676,7 +676,7 @@
                 }
                 matsContain.append(document.createElement("br"));
               }
-              if (itemObj.materials.length>0){
+              if (itemObj.hasOwnProperty("materials")){
                 addLabel("white",29,"Submissions",matsContain);
                 for (var i=0;i<itemObj.materials.length;i++){
                   var title = itemObj.materials[i].driveFile.driveFile.title||itemObj.materials[i].youTubeVideo.title||itemObj.materials[i].link.title||itemObj.materials[i].form.title;
