@@ -177,8 +177,8 @@
       var gebi = function(elem){return document.getElementById(elem)};
       gebi("bottomZone").style.zIndex=4;
       gebi("popupDock").style.bottom=0;
+      var html=document.documentElement;
       var resize = function(){
-        var html=document.documentElement
         gebi("bottomZone").style.top=(html.clientHeight-70)+"px";
         gebi("bottomZone").style.width=(html.clientWidth*0.45)+"px";
         gebi("bottomZone").style.left=(html.clientWidth*0.27)+"px";
