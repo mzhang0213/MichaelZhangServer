@@ -676,7 +676,7 @@
               matsContain.style.width=((html.clientWidth-ow)/2)+"px";
               function brM(){matsContain.append(document.createElement("br"));};
               if (!itemObj.hasOwnProperty("text")){
-                expandText("Title:",itemObj.title,29,((html.clientWidth-ow)/2),125,10,10+Math.floor(window.pageYOffset));
+                expandText("Title:",itemObj.title,29,((html.clientWidth-ow)/2)-40,125,20,10+Math.floor(window.pageYOffset));
                 brM();brM();brM();
                 matsContain.style.top=(175+window.pageYOffset)+"px";
                 if (submission!==undefined){
@@ -734,7 +734,7 @@
               document.getElementById("details").appendChild(matsContain);
 
               if (itemObj.description||itemObj.text){
-                expandText("Description:",itemObj.description||itemObj.text,17,((html.clientWidth-ow)/2),html.clientHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
+                expandText("Description:",itemObj.description||itemObj.text,17,((html.clientWidth-ow)/2)-40,html.clientHeight*0.75,ow+ol,10+Math.floor(window.pageYOffset));
               }
             } 
             else {
