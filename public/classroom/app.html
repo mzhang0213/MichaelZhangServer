@@ -250,6 +250,7 @@
         return "fuck";
       }
       
+      var newItems = 0;
       var createdNew = false;
       var createItem = function(itemObj){ //if announcement make title=undefined
         var itemContainer = document.createElement("div");itemContainer.className="itemContainer";
@@ -296,7 +297,7 @@
               var lc = document.createElement("div"); //lc = line contanier
               var hr = document.createElement("hr");
               var p = document.createElement("p");
-              hr.style.border="1px blue solid";
+              hr.style.border="2px blue solid";
               hr.style.margin=0;
               hr.style.padding=0;
               hr.style.marginBottom="10px";
@@ -308,10 +309,12 @@
               lc.append(p);lc.append(hr);
               document.getElementById("items").append(lc);
               localStorage.setItem("lastDate",new Date(totalItems[0].creationTime).getTime());
+              alert(newItems+" new posts!");
+              newItems=0;
             }
             createdNew = true;
           }else{
-            console.log (storedDate,thisDate.getTime(),(storedDate===thisDate.getTime()))
+            newItems++;
           }
         }
         
