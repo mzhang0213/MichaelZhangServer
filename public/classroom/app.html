@@ -316,6 +316,10 @@
             createdNew = true;
           }else{
             newItems++;
+            if (newItems===totalItems.length&&!createdNew){
+              localStorage.setItem("lastDate",new Date(totalItems[0].creationTime).getTime());
+              console.log("time mismatch error")
+            }
           }
         }
         
