@@ -349,8 +349,16 @@
             return;
           }
         }
-        for (var i=notiPos;i<notiPos+20;i++){
-          createItem(totalItems[i]);
+        if (totalItems.length<20){
+          for (var i=0;i<totalItems;i++){//notiPos doesn't matter since totalItems<20
+            createItem(totalItems[i]);
+          }
+          document.getElementById("prev").disabled=true;
+          document.getElementById("next").disabled=true;
+        }else{
+          for (var i=notiPos;i<notiPos+20;i++){
+            createItem(totalItems[i]);
+          }
         }
       }
 
