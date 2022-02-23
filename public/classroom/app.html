@@ -350,7 +350,7 @@
           }
         }
         if (totalItems.length<20){
-          for (var i=0;i<totalItems;i++){//notiPos doesn't matter since totalItems<20
+          for (var i=0;i<totalItems.length;i++){//notiPos doesn't matter since totalItems<20
             createItem(totalItems[i]);
           }
           document.getElementById("prev").disabled=true;
