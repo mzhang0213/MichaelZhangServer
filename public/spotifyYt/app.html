@@ -491,7 +491,8 @@
 
           if (firstRandom) {playedSongs.length=currentPos+1;firstRandom = false;}
 
-          playedSongs.push("song"+getRandomPos());
+          if (currentPos===playedSongs.length-1)playedSongs.push("song"+getRandomPos());
+          
           currentPos++;
           document.getElementById(playedSongs[currentPos]).click();
         } else {
@@ -533,7 +534,7 @@
         }
       })
       document.getElementById("next").addEventListener("click", function(){
-        if (playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1)){
+        if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
           queueAndPlay();
         } else if (document.getElementById("repeatSliderCheckBox").checked){
           //on the last song and want to repeat playlist
