@@ -309,6 +309,7 @@
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
           clearInterval(intervalId);
           intervalId="";
+          tracking=0;
         }else{
           console.log("wtf start is less than end","start: "+start,"end: "+end);
         }
@@ -324,11 +325,11 @@
           document.getElementById("next").click(); // :EZ:
         } else if (player.getPlayerState()===1){
           //changed and is playing
-          console.log("adding time from yt event listen")
+          console.log("tracking time from yt event listen")
           if (intervalId=="") trackTime();
         } else if (player.getPlayerState()===2){
           //changed and is paused
-          console.log("tracking time from yt event listen")
+          console.log("adding time from yt event listen")
           addTime();
         }
       }
