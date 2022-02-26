@@ -297,7 +297,9 @@
           if (localStorage.getItem("totalTime")===null){
             localStorage.setItem("totalTime",0);
           }
+          console.log(localStorage.getItem("totalTime"))
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))+2000);
+          console.log(localStorage.getItem("totalTime"))
           tracking+=2000;
         },2000);
       }
@@ -399,7 +401,6 @@
                 window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
               }
             } else {
-              console.log("https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML));
               var allSongs = document.getElementsByClassName("songs");
               //just jump by 50s until you get there
               var appendBeforeThisElement = "";
