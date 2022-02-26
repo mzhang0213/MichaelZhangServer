@@ -318,17 +318,19 @@
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
       }
+      var firstPlay=true;
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
           document.getElementById("next").click(); // :EZ:
-        } else if (player.getPlayerState()===1){
+        } else if (player.getPlayerState()===1&&!firstPlay){
           //playing; pause the video
           addTime();
-        } else if (player.getPlayerState()===2){
+        } else if (player.getPlayerState()===2&&!firstPlay){
           //paused; play the video
           trackTime();
         }
+        firstPlay=false;
       }
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
