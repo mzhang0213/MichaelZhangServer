@@ -6,13 +6,23 @@
   </head>
   <body>
     <font style="font-family: 'Cabin';">
-		<button id="r">Reset localstorage</button>
+		<button id="r">Reset all localstorage</button>
+    <br>
+    <button id="rC">Reset lastDate classroom</button>
+    <br>
+    <button id="rS">Reset localstorage spotify</button>
     </font>
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
       document.getElementById("r").addEventListener("click",()=>{
-		  localStorage.clear();
-	  })
+        localStorage.clear();
+      })
+      document.getElementById("rC").addEventListener("click",()=>{
+        localStorage.removeItem("lastDate");
+      })
+      document.getElementById("rS").addEventListener("click",()=>{
+        localStorage.removeItem("totalTime");
+      })
     </script>
   </body>
 </html>

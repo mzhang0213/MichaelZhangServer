@@ -272,19 +272,46 @@
       }
 
       //This function creates an <iframe> (and YouTube player) after the API code downloads.
-        function onYouTubeIframeAPIReady() {
-          player = new YT.Player('player', {
-            //videoId would go here
-            playerVars: {
-              'playsinline': 1
-            },
-            events: {
-              'onReady': onPlayerReady,
-              'onStateChange': onPlayerStateChange
-            }
-          });
-          resize();
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          //videoId would go here
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+        resize();
+      }
+
+      var start = "";
+      var end = "";
+      var tracking = 0;
+      var intervalId = "";
+      var trackTime = function() {
+        start = Date.now();
+        intervalId=setInterval(function(){
+          //doesnt exec upon initalization
+          if (localStorage.getItem("totalTime")===null){
+            localStorage.setItem("totalTime",0);
+          }
+          localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))+2000);
+          tracking+=2000;
+        },2000);
+      }
+      var addTime = function(){
+        end = Date.now();
+        if (end-start>=0){
+          localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
+          clearInterval(intervalId);
+          intervalId="";
+        }else{
+          console.log("wtf start is less than end","start: "+start,"end: "+end);
         }
+        start = "";
+      }
 
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
@@ -293,6 +320,12 @@
         if (player.getPlayerState()===0){
           //song ended, play next
           document.getElementById("next").click(); // :EZ:
+        } else if (player.getPlayerState()===1){
+          //playing; pause the video
+          addTime();
+        } else if (player.getPlayerState()===2){
+          //paused; play the video
+          trackTime();
         }
       }
       //see if access token expired
@@ -407,6 +440,10 @@
                 p.id="song"+idVal;
                 p.className="songs";
                 p.addEventListener("click", function(){
+                  //time tracking
+                  if (start!==""){
+                    addTime();
+                  }
                   //make sure the rest of the song titles lightgreen
                   var titles = document.getElementsByClassName("songs");
                   for(var b=0;b<titles.length;b++){
@@ -464,6 +501,7 @@
                       console.log("getYtErr: " + getYtErr);
                     }else{
                       player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                      trackTime();
                     }
                   })
                 })
@@ -528,12 +566,14 @@
       })
       document.getElementById("prev").addEventListener("click", function(){
         if (currentPos!==0){
+          if (start!=="") addTime(); //make sure initialized
           fromPrev=true;
           currentPos--;
           document.getElementById(playedSongs[currentPos]).click();
         }
       })
       document.getElementById("next").addEventListener("click", function(){
+        if (start!=="") addTime(); //make sure initialized
         if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
           queueAndPlay();
         } else if (document.getElementById("repeatSliderCheckBox").checked){
