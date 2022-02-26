@@ -325,9 +325,11 @@
           document.getElementById("next").click(); // :EZ:
         } else if (player.getPlayerState()===1&&!firstPlay){
           //playing; pause the video
+          console.log("adding time from yt event listen")
           addTime();
         } else if (player.getPlayerState()===2&&!firstPlay){
           //paused; play the video
+          console.log("tracking time from yt event listen")
           trackTime();
         }
         firstPlay=false;
@@ -445,6 +447,7 @@
                 p.addEventListener("click", function(){
                   //time tracking
                   if (start!==""){
+                    console.log("adding time from onclick paragraph")
                     addTime();
                   }
                   //make sure the rest of the song titles lightgreen
