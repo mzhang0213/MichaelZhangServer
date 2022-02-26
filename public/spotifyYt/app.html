@@ -318,22 +318,21 @@
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
       }
-      var firstPlay=true;
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
           document.getElementById("next").click(); // :EZ:
-        } else if (player.getPlayerState()===1&&!firstPlay){
-          //playing; pause the video
+        } else if (player.getPlayerState()===1){
+          //changed and is playing
           console.log("adding time from yt event listen")
-          addTime();
-        } else if (player.getPlayerState()===2&&!firstPlay){
-          //paused; play the video
+          if (intervalId=="") trackTime();
+        } else if (player.getPlayerState()===2){
+          //changed and is paused
           console.log("tracking time from yt event listen")
-          trackTime();
+          addTime();
         }
-        firstPlay=false;
       }
+
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
