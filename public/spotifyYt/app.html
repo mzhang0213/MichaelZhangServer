@@ -297,9 +297,8 @@
           if (localStorage.getItem("totalTime")===null){
             localStorage.setItem("totalTime",0);
           }
-          console.log(localStorage.getItem("totalTime"))
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))+2000);
-          console.log(localStorage.getItem("totalTime"))
+          console.log("after: "+localStorage.getItem("totalTime"),tracking)
           tracking+=2000;
         },2000);
       }
