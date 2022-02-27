@@ -31,10 +31,10 @@
         var br = function(){timeE.appendChild(document.createElement("br"))};
         var ms = parseInt(localStorage.getItem("totalTime"));
         timeE.append("You've listened for ");
-        if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour,");else timeE.append(" hours,");ms%=3600000;
-        if(Math.floor(ms/60000)!==0)timeE.append(Math.floor(ms/60000));if(Math.floor(ms/60000)==1)timeE.append(" minute,");else timeE.append(" minutes,");ms%=60000;
-        if(Math.floor(ms/1000)!==0)timeE.append(Math.floor(ms/1000));if(Math.floor(ms/1000)==1)timeE.append(" second,");else timeE.append(" seconds,");ms%=1000;
-        timeE.append(ms);if(ms==1)timeE.append(" millisecond!");else timeE.append(" milliseconds!");
+        if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour, ");else if(Math.floor(ms/3600000)!==0)timeE.append(" hours, ");ms%=3600000;
+        if(Math.floor(ms/60000)!==0)timeE.append(Math.floor(ms/60000));if(Math.floor(ms/60000)==1)timeE.append(" minute, ");else if(Math.floor(ms/60000)!==0)timeE.append(" minutes, ");ms%=60000;
+        if(Math.floor(ms/1000)!==0)timeE.append(Math.floor(ms/1000));if(Math.floor(ms/1000)==1)timeE.append(" second, ");else if(Math.floor(ms/1000)!==0)timeE.append(" seconds, ");ms%=1000;
+        timeE.append(" and "+ms);if(ms==1)timeE.append(" millisecond!");else if(ms!==0)timeE.append(" milliseconds!");
       }
     </script>
   </body>
