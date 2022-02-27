@@ -7,7 +7,7 @@
   <body>
     <font style="font-family: 'Cabin';">
       <center>
-        <h1>Total time listened:</h1>
+        <h1>Total Time</h1>
         <br>
         <p id="time"></p>
       </center>
@@ -27,12 +27,14 @@
         alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
         window.location=window.location.origin+"/spotifyYt";
       }else{
-        var br = function(){document.getElementById("time").appendChild(document.createElement("br"))};
+        var timeE = document.getElementById("time");
+        var br = function(){timeE.appendChild(document.createElement("br"))};
         var ms = parseInt(localStorage.getItem("totalTime"));
-        document.getElementById("time").append(Math.floor(ms/3600000));ms%=3600000; br();
-        document.getElementById("time").append(Math.floor(ms/60000));ms%=60000; br();
-        document.getElementById("time").append(Math.floor(ms/1000));ms%=1000; br();
-        document.getElementById("time").append(ms);
+        timeE.append("You've listened for ");
+        if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour,");else timeE.append(" hours,");ms%=3600000;
+        if(Math.floor(ms/60000)!==0)timeE.append(Math.floor(ms/60000));if(Math.floor(ms/60000)==1)timeE.append(" minute,");else timeE.append(" minutes,");ms%=60000;
+        if(Math.floor(ms/1000)!==0)timeE.append(Math.floor(ms/1000));if(Math.floor(ms/1000)==1)timeE.append(" second,");else timeE.append(" seconds,");ms%=1000;
+        timeE.append(ms);if(ms==1)timeE.append(" millisecond!");else timeE.append(" milliseconds!");
       }
     </script>
   </body>
