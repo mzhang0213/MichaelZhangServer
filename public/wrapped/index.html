@@ -21,13 +21,16 @@
         <h1>Total Time</h1>
         <br>
         <p id="time"></p>
+        <br>
+        <br>
+        <p id="disc">As of this feature's release date, Saturday, February 26, 2022<br>at 8:41:26pm EST (or 01:46:26 UTC)</p>
       </center>
     </font>
     <style>
       #time{
         font-size:22px;
       }
-      #desc{
+      #disc{
         font-size:14px;
         opacity:50%;
       }
@@ -39,7 +42,6 @@
         window.location=window.location.origin+"/spotifyYt";
       }else{
         var timeE = document.getElementById("time");
-        var br = function(){timeE.appendChild(document.createElement("br"))};
         var ms = parseInt(localStorage.getItem("totalTime"));
         timeE.append("You've listened for ");
         if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour, ");else if(Math.floor(ms/3600000)!==0)timeE.append(" hours, ");ms%=3600000;
