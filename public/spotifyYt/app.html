@@ -321,16 +321,15 @@
         player.setVolume(50);//not rip headphones users immediately
       }
       function onPlayerStateChange(){
+        console.log(player.getPlayerState());
         if (player.getPlayerState()===0){
           //song ended, play next
           document.getElementById("next").click(); // :EZ:
         } else if (player.getPlayerState()===1){
           //changed and is playing
-          console.log("tracking time from yt event listen")
           if (intervalId=="") trackTime();
         } else if (player.getPlayerState()===2){
           //changed and is paused
-          console.log("adding time from yt event listen")
           addTime();
         }
       }
