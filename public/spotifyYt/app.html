@@ -305,14 +305,15 @@
       var addTime = function(){
         end = Date.now();
         if (end-start>=0){
+          console.log(end-start);
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
-          clearInterval(intervalId);
-          intervalId="";
           tracking=0;
         }else{
           console.log("wtf start is less than end","start: "+start,"end: "+end);
         }
         start = "";
+        clearInterval(intervalId);
+        intervalId="";
       }
 
       function onPlayerReady(){
