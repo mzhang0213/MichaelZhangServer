@@ -291,6 +291,7 @@
       var tracking = 0;
       var intervalId = "";
       var trackTime = function() {
+        console.log("starting to track");
         start = Date.now();
         intervalId=setInterval(function(){
           //doesnt exec upon initalization
@@ -298,11 +299,11 @@
             localStorage.setItem("totalTime",0);
           }
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))+2000);
-          console.log("after: "+localStorage.getItem("totalTime"),tracking)
           tracking+=2000;
         },2000);
       }
       var addTime = function(){
+        console.log("ending track");
         end = Date.now();
         if (end-start>=0){
           console.log(end-start);
@@ -507,7 +508,7 @@
                       console.log("getYtErr: " + getYtErr);
                     }else{
                       player.loadVideoById({videoId:searchData.items[0].id.videoId});
-                      trackTime();
+                      //trackTime();
                     }
                   })
                 })
