@@ -573,14 +573,12 @@
       })
       document.getElementById("prev").addEventListener("click", function(){
         if (currentPos!==0){
-          if (start!=="") addTime(); //make sure initialized
           fromPrev=true;
           currentPos--;
           document.getElementById(playedSongs[currentPos]).click();
         }
       })
       document.getElementById("next").addEventListener("click", function(){
-        if (start!=="") addTime(); //make sure initialized
         if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
           queueAndPlay();
         } else if (document.getElementById("repeatSliderCheckBox").checked){
