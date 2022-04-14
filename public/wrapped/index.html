@@ -47,7 +47,11 @@
         if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour, ");else if(Math.floor(ms/3600000)!==0)timeE.append(" hours, ");ms%=3600000;
         if(Math.floor(ms/60000)!==0)timeE.append(Math.floor(ms/60000));if(Math.floor(ms/60000)==1)timeE.append(" minute, ");else if(Math.floor(ms/60000)!==0)timeE.append(" minutes, ");ms%=60000;
         if(Math.floor(ms/1000)!==0)timeE.append(Math.floor(ms/1000));if(Math.floor(ms/1000)==1)timeE.append(" second, ");else if(Math.floor(ms/1000)!==0)timeE.append(" seconds, ");ms%=1000;
-        timeE.append(" and "+ms);if(ms==1)timeE.append(" millisecond!");else if(ms!==0)timeE.append(" milliseconds!");
+        timeE.append(" and "+ms);if(ms==1)timeE.append(" millisecond!");else timeE.append(" milliseconds!");
+        //mins only
+        var mins = parseInt(parseInt(localStorage.getItem("totalTime"))/60000);
+        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+        timeE.append("You've listened for " + mins + " total minutes!");
       }
     </script>
   </body>
