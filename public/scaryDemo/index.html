@@ -43,6 +43,11 @@
     <script>
       const gebi = function(e){return document.getElementById(e);}
       gebi("content").style.display="none";
+      gebi("confirmPassword").addEventListener("keydown", function(e){
+        if (e.key==="Enter"){
+          gebi("createButton").click;
+        }
+      })
       gebi("createButton").addEventListener("click", function(){
         if (gebi("username").value==="")alert("Please enter a username broOOOoOoOooooarrrggragoiwoweifaowf");
         else if (gebi("password").value==="")alert("dude password? hello?")
