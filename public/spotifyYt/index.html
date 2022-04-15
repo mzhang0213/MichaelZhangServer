@@ -29,7 +29,33 @@
         navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
-      <button id="login">Login here</button>
+      <center>
+        <br><br>
+        <button id="login" class="main">Login</button>
+        <br><br><br>
+        <button id="wrapped" class="main">View Your Wrapped!</button>
+      </center>
+      <style>
+        .main{
+          border-radius:8px;
+          border:2px solid #000000;
+          font-size:20px;
+          font-family:'Cabin';
+          outline:none;
+        }
+        #login{
+          background-color:rgb(54, 219, 54);
+        }
+        #login:hover{
+          background-color:rgb(48, 194, 48);
+        }
+        #wrapped{
+          background-color:#4eb8ff;
+        }
+        #wrapped:hover{
+          background-color:#489ed8;
+        }
+      </style>
       <script>
         const urlParams = new URLSearchParams(window.location.search);
         document.getElementById("login").addEventListener("click",()=>{
@@ -38,6 +64,9 @@
             redirect+="?playlistInfo=" + urlParams.get("playlistInfo");
           }
           window.location=redirect;
+        })
+        document.getElementById("wrapped").addEventListener("click",()=>{
+          window.location=location.host+"wrapped/";
         })
         if (urlParams.has("exp")){
           var message = document.createElement("p");
