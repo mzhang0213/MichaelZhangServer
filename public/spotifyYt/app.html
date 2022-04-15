@@ -398,6 +398,26 @@
       var getSongs = function(index, playlistData){
         document.getElementById("playlist"+index).style.color = "#4287f5";
         document.getElementById("songs").innerHTML="";
+
+        var searchBox = document.createElement("input");
+        searchBox.placeholder="🔎 Search";
+        document.getElementById("songs").appendChild(searchBox);
+        searchBox.addEventListener("input", function(){
+          for (var i=0;i<document.getElementsByClassName("songs").length;i++)document.getElementsByClassName("songs")[i].remove();
+          for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
+          for (var i=1;i<document.getElementById("songs").children.length;i++){ //i=1 since omit the input element itself (very unelegant idgaf)
+            var good = false;
+            for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
+              if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length)===searchBox.value) { //and yes non case sensitive
+                good = true;
+                break;
+              }
+            }
+            if (!good){
+              document.getElementById("songs").children[i].remove();
+            }
+          }
+        })
         //has to be nested function cuz reading variable of outer for loop is not working
         var stuff = function(ions){
           getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
