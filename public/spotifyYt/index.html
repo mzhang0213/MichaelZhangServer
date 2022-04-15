@@ -66,7 +66,7 @@
           window.location=redirect;
         })
         document.getElementById("wrapped").addEventListener("click",()=>{
-          window.location=window.location.href+"wrapped/";
+          window.location=window.location.origin+"/wrapped/";
         })
         if (urlParams.has("exp")){
           var message = document.createElement("p");
