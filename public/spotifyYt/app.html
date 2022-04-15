@@ -351,11 +351,7 @@
           var resetSongColor = function() {
             var titles = document.getElementsByClassName("songs");
             for(var b=0;b<titles.length;b++){
-              if (titles[b].innerHTML===document.getElementById(playedSongs[currentPos]).innerHTML){
-                titles[b].style.color="green";
-              }else{
-                titles[b].style.color="lightgreen";
-              }
+              titles[b].style.color="lightgreen";
             }
           }
           //get user's playlists
@@ -496,7 +492,7 @@
 
                       //make sure the rest of the song titles lightgreen
                       resetSongColor();
-                      //this.style.color="green"; //this elem dark green
+                      this.style.color="green"; //this elem dark green
                       
                       //free me saronite chain gang
                       gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
