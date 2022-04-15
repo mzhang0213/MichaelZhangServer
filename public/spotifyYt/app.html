@@ -408,7 +408,7 @@
           for (var i=1;i<document.getElementById("songs").children.length;i++){ //i=1 since omit the input element itself (very unelegant idgaf)
             var good = false;
             for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
-              if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length)===searchBox.value) { //and yes non case sensitive
+              if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
                 good = true;
                 break;
               }
