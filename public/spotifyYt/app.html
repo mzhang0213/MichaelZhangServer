@@ -22,9 +22,11 @@
         <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
-        <div id="songs" class="sideBySide"></div>
+        <div id="songs" class="sideBySide">
+          <input id="searchBar">
+        </div>
       </div>
-      <div id="two" class="sideBySide" style="border-left:3px black solid;">
+      <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;">
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
@@ -334,6 +336,7 @@
         }
       }
 
+      var totalSongs = [];
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
@@ -404,19 +407,21 @@
                 alert("Relogging you in :P\nGoing home...");
                 window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
               }
-            } else {
+            }else{
               var allSongs = document.getElementsByClassName("songs");
               //just jump by 50s until you get there
               var appendBeforeThisElement = "";
+              var appendBeforeIndex = 0;
               var first=false;
               if (allSongs.length===0){
                 first=true;
               }else{
                 var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
                 var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
-                for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not 0
+                for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not always the end-resulting "0th" group
                   if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
-                    appendBeforeThisElement=document.getElementById("song"+c*50);
+                    appendBeforeIndex=c*50;
+                    appendBeforeThisElement=document.getElementById("song"+appendBeforeIndex);
                     break;
                   }
                 }
@@ -425,11 +430,16 @@
                 var p = document.createElement("p");
                 if (first){
                   document.getElementById("songs").appendChild(p);
+                  console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
+                  totalSongs.push(p);
                 }else{
                   if (appendBeforeThisElement.length===0){
                     document.getElementById("songs").appendChild(p);
+                    totalSongs.push(p);
+                    console.log("it should never come here");
                   } else {
                     appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                    totalSongs.splice(appendBeforeIndex,0,p)
                   }
                 }
                 var song = "";
@@ -508,7 +518,6 @@
                       console.log("getYtErr: " + getYtErr);
                     }else{
                       player.loadVideoById({videoId:searchData.items[0].id.videoId});
-                      //trackTime();
                     }
                   })
                 })
