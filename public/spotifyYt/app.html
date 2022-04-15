@@ -422,7 +422,7 @@ var currentPos = -1; //represents current position in the array
             for (var i=1;i<document.getElementById("songs").children.length;i++){
               document.getElementById("songs").children[i].id="song"+(i-1);
             }
-            currentPos=0;
+            currentPos=-1;
             playedSongs=[];
           })
           //has to be nested function cuz reading variable of outer for loop is not working
