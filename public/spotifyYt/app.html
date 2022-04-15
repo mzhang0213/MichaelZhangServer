@@ -375,6 +375,7 @@
                     }
                     getSongs(this.id.substring(8),playlistData);
                     gebi("playPause").disabled=false;
+                    totalSongs=[];
                   })
                   if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
                     p.click();
