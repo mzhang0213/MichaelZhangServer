@@ -193,10 +193,6 @@
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
-
-var currentPos = -1; //represents current position in the array
-        var playedSongs = []; //PUSH IDS
-
       const gebi = function(e){return document.getElementById(e)};
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
@@ -350,304 +346,306 @@ var currentPos = -1; //represents current position in the array
           }
         }else{
 
-        //get user's playlists
-        //find the playlist total
-        var playlistTotal = 0;
-        getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ //dogs fetch
-          if (dogsErr){
-            console.log("playlistFetchErr first: " + dogsErr);
-          }else{
-            playlistTotal=theStuffData.total;
-            var things = function(atoms){
-              getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
-                if (playlistFetchErr){
-                  console.log("playlistFetchErr: " + playlistFetchErr);
-                } else {
-                  for (var i=0;i<playlistData.items.length;i++){
-                    var p = document.createElement("p");
-                    document.getElementById("playlists").appendChild(p);
-                    p.append(playlistData.items[i].name);
-                    p.style.color = "#94bdff";
-                    p.id="playlist"+i;
-                    p.className="playlists";
-                    p.addEventListener("click", function(){
-                      var lists = document.getElementsByClassName("playlists");
-                      for(var a=0;a<lists.length;a++){
-                        lists[a].style.color=this.style.color="#94bdff";
+          var resetSongColor = function() {
+            var titles = document.getElementsByClassName("songs");
+            for(var b=0;b<titles.length;b++){
+              if (titles[b].innerHTML===playedSongs[currentPos]){
+                titles[b].style.color="green";
+              }else{
+                titles[b].style.color="lightgreen";
+              }
+            }
+          }
+          //get user's playlists
+          //find the playlist total
+          var playlistTotal = 0;
+          getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ //dogs fetch
+            if (dogsErr){
+              console.log("playlistFetchErr first: " + dogsErr);
+            }else{
+              playlistTotal=theStuffData.total;
+              var things = function(atoms){
+                getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+                  if (playlistFetchErr){
+                    console.log("playlistFetchErr: " + playlistFetchErr);
+                  } else {
+                    for (var i=0;i<playlistData.items.length;i++){
+                      var p = document.createElement("p");
+                      document.getElementById("playlists").appendChild(p);
+                      p.append(playlistData.items[i].name);
+                      p.style.color = "#94bdff";
+                      p.id="playlist"+i;
+                      p.className="playlists";
+                      p.addEventListener("click", function(){
+                        var lists = document.getElementsByClassName("playlists");
+                        for(var a=0;a<lists.length;a++){
+                          lists[a].style.color=this.style.color="#94bdff";
+                        }
+                        getSongs(this.id.substring(8),playlistData);
+                        gebi("playPause").disabled=false;
+                        totalSongs=[];
+                      })
+                      if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                        p.click();
                       }
-                      getSongs(this.id.substring(8),playlistData);
-                      gebi("playPause").disabled=false;
-                      totalSongs=[];
-                    })
-                    if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-                      p.click();
                     }
+                  }
+                })
+              }
+              for (var mz=0;mz<playlistTotal;mz+=50){
+                things(mz);
+              }
+            }
+          })
+          
+          var currentPos = -1; //represents current position in the array
+          var playedSongs = []; //PUSH IDS
+          var fromQueueAndPlay = false;
+          var fromPrev = false;
+          var fromRepeat = false;
+          //get playlist's songs function
+          var getSongs = function(index, playlistData){
+            document.getElementById("playlist"+index).style.color = "#4287f5";
+            document.getElementById("songs").innerHTML="";
+
+            var searchBox = document.createElement("input");
+            searchBox.placeholder="🔎 Search";
+            document.getElementById("songs").appendChild(searchBox);
+            searchBox.addEventListener("input", function(){
+              document.querySelectorAll(".songs").forEach(function(song){song.remove()});
+              for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
+              for (var i=document.getElementById("songs").children.length-1;i>0;i--){ //i=1 since omit the input element itself (very unelegant idgaf)
+                var good = false;
+                for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
+                  if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
+                    good = true;
+                    break;
+                  }
+                }
+                if (!good){
+                  document.getElementById("songs").children[i].remove();
+                }
+              }
+              for (var i=1;i<document.getElementById("songs").children.length;i++){
+                document.getElementById("songs").children[i].id="song"+(i-1);
+              }
+              currentPos=-1;
+              playedSongs=[];
+            })
+            //has to be nested function cuz reading variable of outer for loop is not working
+            var stuff = function(ions){
+              getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
+                if (songsFetchErr){
+                  console.log("tracksFetchErr: " + songsFetchErr);
+                  if (songsFetchErr.indexOf("The access token expired")!==-1){
+                    alert("Relogging you in :P\nGoing home...");
+                    window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
+                  }
+                }else{
+                  var allSongs = document.getElementsByClassName("songs");
+                  //just jump by 50s until you get there
+                  var appendBeforeThisElement = "";
+                  var appendBeforeIndex = 0;
+                  var first=false;
+                  if (allSongs.length===0){
+                    first=true;
+                  }else{
+                    var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
+                    var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
+                    for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not always the end-resulting "0th" group
+                      if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
+                        appendBeforeIndex=c*50;
+                        appendBeforeThisElement=document.getElementById("song"+appendBeforeIndex);
+                        break;
+                      }
+                    }
+                  }
+                  var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
+                  for (var k=0;k<songsData.items.length;k++){
+                    var p = document.createElement("p");
+                    if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
+                      document.getElementById("songs").appendChild(p);
+                      if (first) console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
+                      totalSongs.push(p);
+                    }else{
+                      appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                      totalSongs.splice(spot+k,0,p)
+                    }
+                    var song = "";
+                    song+=songsData.items[k].track.artists[0].name
+                    if (song.trim().length!==0){
+                      //song has stuff rn
+                      song+=" - ";
+                    }
+                    song+=songsData.items[k].track.name;
+                    p.append(song);
+                    p.style.color = "lightgreen";
+                    var idVal=k+ions;
+                    p.id="song"+idVal;
+                    p.className="songs";
+                    p.addEventListener("click", function(){
+                      if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                        playedSongs.push(this.id);
+                        currentPos++;
+                      }
+                      fromQueueAndPlay=false;
+                      fromPrev=false;
+                      fromRepeat=false;
+
+                      //make sure the rest of the song titles lightgreen
+                      resetSongColor();
+                      //this.style.color="green"; //this elem dark green
+                      
+                      //free me saronite chain gang
+                      gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                      
+                      document.getElementById("documentTitle").innerHTML="";
+                      document.getElementById("documentTitle").innerHTML=this.innerHTML;
+                      
+                      //append songDesc
+                      document.getElementById("songDesc").innerHTML="";
+                      var sdItalics = document.createElement("i");
+                      var sdBlue = document.createElement("font");
+                      sdBlue.style.color="#1284ff";
+                      
+                      sdItalics.append("Playing:  ");
+                      sdBlue.append(htmlDecode(this.innerHTML));
+                      document.getElementById("songDesc").appendChild(sdItalics);
+                      document.getElementById("songDesc").appendChild(sdBlue);
+                      
+                      var searchQ=this.innerHTML;
+                      if (document.getElementById("oaSliderCheckBox").checked){
+                        searchQ+=" Official Audio";
+                      }
+                      if (document.getElementById("lyricModeSliderCheckBox").checked){
+                        searchQ+=" Lyrics";
+                      }
+                      if (document.getElementById("ostModeSliderCheckBox").checked){
+                        searchQ+=" ost";
+                      }
+                      console.log(searchQ)
+                      //youtube load
+                      //avaliable keys:
+                        //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                        //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                        //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+                      getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                                +"&q="+searchQ,
+                                undefined,
+                                (getYtErr,searchData)=>{
+                        if (getYtErr){
+                          console.log("getYtErr: " + getYtErr);
+                        }else{
+                          player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                        }
+                      })
+                    })
                   }
                 }
               })
             }
-            for (var mz=0;mz<playlistTotal;mz+=50){
-              things(mz);
+            for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
+              stuff(j)
             }
           }
-        })
-        
-        
-        var fromQueueAndPlay = false;
-        var fromPrev = false;
-        var fromRepeat = false;
-        //get playlist's songs function
-        var getSongs = function(index, playlistData){
-          document.getElementById("playlist"+index).style.color = "#4287f5";
-          document.getElementById("songs").innerHTML="";
 
-          var searchBox = document.createElement("input");
-          searchBox.placeholder="🔎 Search";
-          document.getElementById("songs").appendChild(searchBox);
-          searchBox.addEventListener("input", function(){
-            document.querySelectorAll(".songs").forEach(function(song){song.remove()});
-            for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
-            for (var i=document.getElementById("songs").children.length-1;i>0;i--){ //i=1 since omit the input element itself (very unelegant idgaf)
-              var good = false;
-              for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
-                if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
-                  good = true;
-                  break;
+          var firstRandom = false;
+          var queueAndPlay = function(){
+            fromQueueAndPlay=true;
+            if (document.getElementById("shuffleSliderCheckBox").checked){
+              //shuffle play
+              function getRandomPos(){
+                var randomPos = Math.floor(Math.random()*document.getElementsByClassName("songs").length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
+                if ("song"+randomPos===playedSongs[currentPos]){
+                  return getRandomPos();
                 }
+                return randomPos;
               }
-              if (!good){
-                document.getElementById("songs").children[i].remove();
-              }
-            }
-            for (var i=1;i<document.getElementById("songs").children.length;i++){
-              document.getElementById("songs").children[i].id="song"+(i-1);
-            }
-            currentPos=-1;
-            playedSongs=[];
-          })
-          //has to be nested function cuz reading variable of outer for loop is not working
-          var stuff = function(ions){
-            getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
-              if (songsFetchErr){
-                console.log("tracksFetchErr: " + songsFetchErr);
-                if (songsFetchErr.indexOf("The access token expired")!==-1){
-                  alert("Relogging you in :P\nGoing home...");
-                  window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
-                }
+
+              if (firstRandom) {playedSongs.length=currentPos+1;firstRandom = false;}
+
+              if (currentPos===playedSongs.length-1)playedSongs.push("song"+getRandomPos());
+              
+              currentPos++;
+              document.getElementById(playedSongs[currentPos]).click();
+            } else {
+              //ordered play
+              
+              firstRandom=true;
+
+              if (playedSongs.length===0){
+                playedSongs.push("song0");
               }else{
-                var allSongs = document.getElementsByClassName("songs");
-                //just jump by 50s until you get there
-                var appendBeforeThisElement = "";
-                var appendBeforeIndex = 0;
-                var first=false;
-                if (allSongs.length===0){
-                  first=true;
-                }else{
-                  var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
-                  var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
-                  for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not always the end-resulting "0th" group
-                    if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
-                      appendBeforeIndex=c*50;
-                      appendBeforeThisElement=document.getElementById("song"+appendBeforeIndex);
-                      break;
-                    }
-                  }
-                }
-                var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
-                for (var k=0;k<songsData.items.length;k++){
-                  var p = document.createElement("p");
-                  if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
-                    document.getElementById("songs").appendChild(p);
-                    if (first) console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
-                    totalSongs.push(p);
-                  }else{
-                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
-                    totalSongs.splice(spot+k,0,p)
-                  }
-                  var song = "";
-                  song+=songsData.items[k].track.artists[0].name
-                  if (song.trim().length!==0){
-                    //song has stuff rn
-                    song+=" - ";
-                  }
-                  song+=songsData.items[k].track.name;
-                  p.append(song);
-                  p.style.color = "lightgreen";
-                  var idVal=k+ions;
-                  p.id="song"+idVal;
-                  p.className="songs";
-                  p.addEventListener("click", function(){
-                    //time tracking
-                    /*
-                    if (start!==""){
-                      console.log("adding time from onclick paragraph")
-                      addTime();
-                    } */
-                    //make sure the rest of the song titles lightgreen
-                    var titles = document.getElementsByClassName("songs");
-                    for(var b=0;b<titles.length;b++){
-                      titles[b].style.color=this.style.color="lightgreen";
-                    }
-                    //free me saronite chain gang
-                    gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
-                    
-                    this.style.color="green"; //this elem dark green
-
-                    document.getElementById("documentTitle").innerHTML="";
-                    document.getElementById("documentTitle").innerHTML=this.innerHTML;
-                    
-                    if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
-                      playedSongs.push(this.id);
-                      currentPos++;
-                    }
-                    fromQueueAndPlay=false;
-                    fromPrev=false;
-                    fromRepeat=false;
-
-                    //append songDesc
-                    document.getElementById("songDesc").innerHTML="";
-                    var sdItalics = document.createElement("i");
-                    var sdBlue = document.createElement("font");
-                    sdBlue.style.color="#1284ff";
-                    
-                    sdItalics.append("Playing:  ");
-                    sdBlue.append(htmlDecode(this.innerHTML));
-                    document.getElementById("songDesc").appendChild(sdItalics);
-                    document.getElementById("songDesc").appendChild(sdBlue);
-                    
-                    var searchQ=this.innerHTML;
-                    if (document.getElementById("oaSliderCheckBox").checked){
-                      searchQ+=" Official Audio";
-                    }
-                    if (document.getElementById("lyricModeSliderCheckBox").checked){
-                      searchQ+=" Lyrics";
-                    }
-                    if (document.getElementById("ostModeSliderCheckBox").checked){
-                      searchQ+=" ost";
-                    }
-                    console.log(searchQ)
-                    //youtube load
-                    //avaliable keys:
-                      //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
-                      //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
-                      //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                    getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
-                              +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
-                              +"&q="+searchQ,
-                              undefined,
-                              (getYtErr,searchData)=>{
-                      if (getYtErr){
-                        console.log("getYtErr: " + getYtErr);
-                      }else{
-                        player.loadVideoById({videoId:searchData.items[0].id.videoId});
-                      }
-                    })
-                  })
+                if (playedSongs[currentPos+1]===undefined){
+                  playedSongs.push("song"+(parseInt(playedSongs[currentPos].substring(4))+1));
                 }
               }
-            })
-          }
-          for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
-            stuff(j)
-          }
-        }
-
-        var firstRandom = false;
-        var queueAndPlay = function(){
-          fromQueueAndPlay=true;
-          if (document.getElementById("shuffleSliderCheckBox").checked){
-            //shuffle play
-            function getRandomPos(){
-              var randomPos = Math.floor(Math.random()*document.getElementsByClassName("songs").length+0); //random params: random()*x+y  where x is number generating up to but not including and y is starting index
-              if ("song"+randomPos===playedSongs[currentPos]){
-                return getRandomPos();
-              }
-              return randomPos;
+              //if next pos is empty, add new song and move to that
+              //if next pos is full, only ++
+              currentPos++;
+              document.getElementById(playedSongs[currentPos]).click();
             }
+          }
 
-            if (firstRandom) {playedSongs.length=currentPos+1;firstRandom = false;}
-
-            if (currentPos===playedSongs.length-1)playedSongs.push("song"+getRandomPos());
-            
-            currentPos++;
-            document.getElementById(playedSongs[currentPos]).click();
-          } else {
-            //ordered play
-            
-            firstRandom=true;
-
-            if (playedSongs.length===0){
+          document.getElementById("playPause").addEventListener("click", function(){
+            //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
+            if (player.getPlayerState()===5){
+              queueAndPlay();
+            } else if (player.getPlayerState()===1){
+              //playing; pause the video
+              player.pauseVideo();
+            } else if (player.getPlayerState()===2){
+              //paused; play the video
+              player.playVideo();
+            }
+          })
+          document.getElementById("prev").addEventListener("click", function(){
+            if (currentPos!==0){
+              fromPrev=true;
+              currentPos--;
+              document.getElementById(playedSongs[currentPos]).click();
+            }
+          })
+          document.getElementById("next").addEventListener("click", function(){
+            if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
+              queueAndPlay();
+            } else if (document.getElementById("repeatSliderCheckBox").checked){
+              //on the last song and want to repeat playlist
+              fromRepeat=true;
               playedSongs.push("song0");
-            }else{
-              if (playedSongs[currentPos+1]===undefined){
-                playedSongs.push("song"+(parseInt(playedSongs[currentPos].substring(4))+1));
-              }
+              currentPos++;
+              document.getElementById(playedSongs[currentPos]).click();
             }
-            //if next pos is empty, add new song and move to that
-            //if next pos is full, only ++
-            currentPos++;
-            document.getElementById(playedSongs[currentPos]).click();
-          }
+          })
+          document.getElementById("volumeUp").addEventListener("click", function(){
+            var currentVolume = player.getVolume();
+            if (currentVolume<5){
+              player.setVolume(player.getVolume()+1);
+            }else if(currentVolume===5){
+              player.setVolume(player.getVolume()+5);
+            }else{
+              player.setVolume(player.getVolume()+10);
+            }
+          })
+          //1 2 3 4 5 10 20 30 ...
+          document.getElementById("volumeDown").addEventListener("click", function(){
+            var currentVolume = player.getVolume();
+            if (currentVolume>10){
+              player.setVolume((Math.floor(player.getVolume()/10)-1)*10);
+            }else if(currentVolume===10){
+              player.setVolume(player.getVolume()-5);
+            }else if (currentVolume!==1){
+              player.setVolume(player.getVolume()-1);
+            }
+          })
         }
-
-        document.getElementById("playPause").addEventListener("click", function(){
-          //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
-          if (player.getPlayerState()===5){
-            queueAndPlay();
-          } else if (player.getPlayerState()===1){
-            //playing; pause the video
-            player.pauseVideo();
-          } else if (player.getPlayerState()===2){
-            //paused; play the video
-            player.playVideo();
-          }
-        })
-        document.getElementById("prev").addEventListener("click", function(){
-          if (currentPos!==0){
-            fromPrev=true;
-            currentPos--;
-            document.getElementById(playedSongs[currentPos]).click();
-          }
-        })
-        document.getElementById("next").addEventListener("click", function(){
-          if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
-            queueAndPlay();
-          } else if (document.getElementById("repeatSliderCheckBox").checked){
-            //on the last song and want to repeat playlist
-            fromRepeat=true;
-            playedSongs.push("song0");
-            currentPos++;
-            document.getElementById(playedSongs[currentPos]).click();
-          }
-        })
-        document.getElementById("volumeUp").addEventListener("click", function(){
-          var currentVolume = player.getVolume();
-          if (currentVolume<5){
-            player.setVolume(player.getVolume()+1);
-          }else if(currentVolume===5){
-            player.setVolume(player.getVolume()+5);
-          }else{
-            player.setVolume(player.getVolume()+10);
-          }
-        })
-        //1 2 3 4 5 10 20 30 ...
-        document.getElementById("volumeDown").addEventListener("click", function(){
-          var currentVolume = player.getVolume();
-          if (currentVolume>10){
-            player.setVolume((Math.floor(player.getVolume()/10)-1)*10);
-          }else if(currentVolume===10){
-            player.setVolume(player.getVolume()-5);
-          }else if (currentVolume!==1){
-            player.setVolume(player.getVolume()-1);
-          }
-        })
-      }
-    })//this is the closing stuff for the check access token
-    document.getElementById("logout").addEventListener("click", function(){
-      alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
-      window.location = "https://spotify.com/logout/";
-    })
-    //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+      })//this is the closing stuff for the check access token
+      document.getElementById("logout").addEventListener("click", function(){
+        alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
+        window.location = "https://spotify.com/logout/";
+      })
+      //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
   </body>
 </html>
