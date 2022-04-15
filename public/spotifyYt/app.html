@@ -403,7 +403,7 @@
         searchBox.placeholder="🔎 Search";
         document.getElementById("songs").appendChild(searchBox);
         searchBox.addEventListener("input", function(){
-          for (var i=0;i<document.getElementsByClassName("songs").length;i++)document.getElementsByClassName("songs")[i].remove();
+          document.querySelectorAll(".songs").forEach(function(song){song.remove()});
           for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
           for (var i=1;i<document.getElementById("songs").children.length;i++){ //i=1 since omit the input element itself (very unelegant idgaf)
             var good = false;
