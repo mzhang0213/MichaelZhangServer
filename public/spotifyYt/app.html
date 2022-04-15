@@ -521,6 +521,7 @@
                       if (document.getElementById("ostModeSliderCheckBox").checked){
                         searchQ+=" ost";
                       }
+
                       console.log(searchQ)
                       //youtube load
                       //avaliable keys:
@@ -533,7 +534,31 @@
                                 undefined,
                                 (getYtErr,searchData)=>{
                         if (getYtErr){
-                          console.log("getYtErr: " + getYtErr);
+                          console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
+
+                          getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                    +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
+                                    +"&q="+searchQ,
+                                    undefined,
+                                    (getYtErrTwo,searchData)=>{
+                            if (getYtErrTwo){
+                              console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
+
+                              getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                        +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                                        +"&q="+searchQ,
+                                        undefined,
+                                        (getYtErrThree,searchData)=>{
+                                if (getYtErrThree){
+                                  console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
+                                }else{
+                                  player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                                }
+                              })
+                            }else{
+                              player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                            }
+                          })
                         }else{
                           player.loadVideoById({videoId:searchData.items[0].id.videoId});
                         }
