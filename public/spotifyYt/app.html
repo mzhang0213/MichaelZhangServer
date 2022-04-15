@@ -428,19 +428,14 @@
               }
               for (var k=0;k<songsData.items.length;k++){
                 var p = document.createElement("p");
-                if (first){
+                if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
                   document.getElementById("songs").appendChild(p);
-                  console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
+                  if (first) console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
                   totalSongs.push(p);
                 }else{
-                  if (appendBeforeThisElement.length===0){
-                    document.getElementById("songs").appendChild(p);
-                    totalSongs.push(p);
-                    console.log("it should never come here");
-                  } else {
-                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
-                    totalSongs.splice(appendBeforeIndex+k,0,p)
-                  }
+                  appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                  var spot = totalSongs.indexOf(document.getElementById("songs"+appendBeforeIndex));
+                  totalSongs.splice(spot+k,0,p)
                 }
                 var song = "";
                 song+=songsData.items[k].track.artists[0].name
