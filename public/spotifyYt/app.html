@@ -426,6 +426,7 @@
                   }
                 }
               }
+              var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
               for (var k=0;k<songsData.items.length;k++){
                 var p = document.createElement("p");
                 if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
@@ -434,7 +435,6 @@
                   totalSongs.push(p);
                 }else{
                   appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
-                  var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
                   totalSongs.splice(spot+k,0,p)
                 }
                 var song = "";
