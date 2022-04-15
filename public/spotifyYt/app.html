@@ -406,7 +406,7 @@
         searchBox.addEventListener("input", function(){
           document.querySelectorAll(".songs").forEach(function(song){song.remove()});
           for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
-          for (var i=1;i<document.getElementById("songs").children.length;i++){ //i=1 since omit the input element itself (very unelegant idgaf)
+          for (var i=document.getElementById("songs").children.length;i>1;i--){ //i=1 since omit the input element itself (very unelegant idgaf)
             var good = false;
             for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
               if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
