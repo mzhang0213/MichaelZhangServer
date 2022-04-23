@@ -18,8 +18,8 @@
   <body>
     <font style="font-family: 'Cabin';">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
-      <div id="one" class="sideBySide">
-        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
+      <div id="one" style="overflow-y:scroll;" class="sideBySide">
+        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;overflow-y:scroll;">Logout</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
@@ -193,14 +193,16 @@
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script>
-      var currentPos = -1; //represents current position in the array
-          var playedSongs = []; //PUSH IDS
       const gebi = function(e){return document.getElementById(e)};
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
-        gebi("one").style.width=window.innerWidth*0.5+"px";gebi("one").style.height=window.innerHeight+"px";
-        gebi("two").style.width=(window.innerWidth*0.5-30)+"px";gebi("two").style.height=window.innerHeight+"px";
-        gebi("two").style.left=window.innerWidth*0.5+"px";
+
+        gebi("one").style.width=window.innerWidth*0.5+(gebi("one").offsetWidth-gebi("one").clientWidth)+"px";
+        gebi("two").style.width=window.innerWidth*0.5-(gebi("one").offsetWidth-gebi("one").clientWidth)-3+"px"; //3 for border left width
+        gebi("two").style.left=window.innerWidth*0.5+(gebi("one").offsetWidth-gebi("one").clientWidth)+"px";
+        gebi("one").style.height=window.innerHeight+"px";
+        gebi("two").style.height=window.innerHeight+"px";
+
         gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
         gebi("playlists").style.top="20px";
         gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
@@ -400,6 +402,8 @@
           var fromQueueAndPlay = false;
           var fromPrev = false;
           var fromRepeat = false;
+          var currentPos = -1; //represents current position in the array
+          var playedSongs = []; //PUSH IDS
           //get playlist's songs function
           var getSongs = function(index, playlistData){
             document.getElementById("playlist"+index).style.color = "#4287f5";
