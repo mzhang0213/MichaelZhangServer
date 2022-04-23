@@ -18,13 +18,13 @@
   <body>
     <font style="font-family: 'Cabin';">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
-      <div id="one" style="overflow-y:scroll;" class="sideBySide">
-        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;overflow-y:scroll;">Logout</button>
+      <div id="one" style="overflow-y:auto;" class="sideBySide">
+        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
       </div>
-      <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:scroll;">
+      <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
