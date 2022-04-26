@@ -86,7 +86,7 @@
           <div id="ostModeParagraphContainer" class="sliderParagraph">
             <p id="ostModeSliderDescription" class="sliderDescription">OST Search Mode</p>
           </div>
-          <div id="actualOstModeSliderContainer" class="actualSliderContainer">
+          <div id="actualostModeSliderContainer" class="actualSliderContainer">
             <label class="sliderSwitch">
             <input type="checkbox" id="ostModeSliderCheckBox" class="sliderCheckBox">
             <span class="sliderSlider"></span>
@@ -225,7 +225,7 @@
         gebi("ostModeSliderContainer").style.top=heightCalc(3)+"px";
         gebi("ostModeParagraphContainer").style.left="-110px";
         gebi("ostModeSliderDescription").style.width="200px";
-        gebi("actualOstModeSliderContainer").style.left="40px";
+        gebi("actualostModeSliderContainer").style.left="40px";
 
         gebi("oaSliderContainer").style.left=window.innerWidth*0.25+"px";
         gebi("oaSliderContainer").style.top=heightCalc(1)+"px";
@@ -411,6 +411,7 @@
 
             var searchBox = document.createElement("input");
             searchBox.placeholder="🔎 Search";
+            searchBox.id="searchBox";
             document.getElementById("songs").appendChild(searchBox);
             searchBox.addEventListener("input", function(){
               document.querySelectorAll(".songs").forEach(function(song){song.remove()});
@@ -664,6 +665,12 @@
               player.setVolume(player.getVolume()-5);
             }else if (currentVolume!==1){
               player.setVolume(player.getVolume()-1);
+            }
+          })
+          document.addEventListener("keydown", function(e){
+            if (e.key==="Escape"&&document.getElementById("songs").children.length!==0){
+              document.getElementById("searchBox").value="";
+              document.getElementById("searchBox").dispatchEvent(new Event("input"));
             }
           })
         }
