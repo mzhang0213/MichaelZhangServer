@@ -519,12 +519,6 @@
                       document.getElementById("songDesc").appendChild(sdBlue);
                       
                       var searchQ=this.innerHTML;
-                      for (var i=0;i<specialSongs.length;i++){
-                        console.log("does "+specialSongs[i][0]+" equal "+this.innerHTML);
-                        if (specialSongs[i][0]===this.innerHTML){
-                          searchQ=specialSongs[i][1];
-                        }
-                      }
                       if (document.getElementById("oaSliderCheckBox").checked){
                         searchQ+=" Official Audio";
                       }
@@ -534,8 +528,13 @@
                       if (document.getElementById("ostModeSliderCheckBox").checked){
                         searchQ+=" ost";
                       }
-
-                      console.log(searchQ)
+                      for (var i=0;i<specialSongs.length;i++){
+                        if (specialSongs[i][0]===this.innerHTML){
+                          searchQ=specialSongs[i][1];
+                        }
+                      }
+                      console.log(searchQ);
+                      
                       //youtube load
                       //avaliable keys:
                         //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
