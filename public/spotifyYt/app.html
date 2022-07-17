@@ -398,7 +398,9 @@
             }
           })
           
-          
+          var specialSongs = [
+            ["希望の唄","https://www.youtube.com/watch?v=3NOMJ5CEeLo"]
+          ]
           var fromQueueAndPlay = false;
           var fromPrev = false;
           var fromRepeat = false;
@@ -475,7 +477,7 @@
                       totalSongs.splice(spot+k,0,p)
                     }
                     var song = "";
-                    song+=songsData.items[k].track.artists[0].name
+                    song+=songsData.items[k].track.artists[0].name;
                     if (song.trim().length!==0){
                       //song has stuff rn
                       song+=" - ";
@@ -517,6 +519,12 @@
                       document.getElementById("songDesc").appendChild(sdBlue);
                       
                       var searchQ=this.innerHTML;
+                      for (var i=0;i<specialSongs.length;i++){
+                        console.log("does "+specialSongs[i][0]+" equal "+this.innerHTML);
+                        if (specialSongs[i][0]===this.innerHTML){
+                          searchQ=specialSongs[i][1];
+                        }
+                      }
                       if (document.getElementById("oaSliderCheckBox").checked){
                         searchQ+=" Official Audio";
                       }
