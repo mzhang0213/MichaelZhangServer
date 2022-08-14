@@ -295,6 +295,7 @@
       var end = "";
       var tracking = 0;
       var intervalId = "";
+      var cooldown = false;
       var trackTime = function() {
         console.log("starting to track");
         start = Date.now();
@@ -317,7 +318,7 @@
         }else{
           console.log("start: "+start);
           console.log("end: "+end);
-          alert("ERROR: Time save invalid\nDetails in console\n\nPage refreshing after dialogue closes...");
+          alert("ERROR: Time save invalid\nDetails:   "+"start: "+start+", end: "+end+"\nPage refreshing after dialogue closes...");
           window.location.reload();
         }
         start = "";
@@ -495,92 +496,99 @@
                     p.id="song"+idVal;
                     p.className="songs";
                     p.addEventListener("click", function(){
-                      if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
-                        playedSongs.push(this.id);
-                        currentPos++;
-                      }
-                      fromQueueAndPlay=false;
-                      fromPrev=false;
-                      fromRepeat=false;
-
-                      //make sure the rest of the song titles lightgreen
-                      resetSongColor();
-                      this.style.color="green"; //this elem dark green
-                      
-                      //free me saronite chain gang
-                      gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
-                      
-                      document.getElementById("documentTitle").innerHTML="";
-                      document.getElementById("documentTitle").innerHTML=this.innerHTML;
-                      
-                      //append songDesc
-                      document.getElementById("songDesc").innerHTML="";
-                      var sdItalics = document.createElement("i");
-                      var sdBlue = document.createElement("font");
-                      sdBlue.style.color="#1284ff";
-                      
-                      sdItalics.append("Playing:  ");
-                      sdBlue.append(htmlDecode(this.innerHTML));
-                      document.getElementById("songDesc").appendChild(sdItalics);
-                      document.getElementById("songDesc").appendChild(sdBlue);
-                      
-                      var searchQ=this.innerHTML;
-                      if (document.getElementById("oaSliderCheckBox").checked){
-                        searchQ+=" Official Audio";
-                      }
-                      if (document.getElementById("lyricModeSliderCheckBox").checked){
-                        searchQ+=" Lyrics";
-                      }
-                      if (document.getElementById("ostModeSliderCheckBox").checked){
-                        searchQ+=" ost";
-                      }
-                      for (var i=0;i<specialSongs.length;i++){
-                        if (specialSongs[i][0]===this.innerHTML){
-                          searchQ=specialSongs[i][1];
+                      if (!cooldown){
+                        cooldown=true;
+                        if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                          playedSongs.push(this.id);
+                          currentPos++;
                         }
-                      }
-                      console.log(searchQ);
-                      
-                      //youtube load
-                      //avaliable keys:
-                        //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
-                        //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
-                        //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                      getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
-                                +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
-                                +"&q="+searchQ,
-                                undefined,
-                                (getYtErr,searchData)=>{
-                        if (getYtErr){
-                          console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
-
-                          getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
-                                    +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
-                                    +"&q="+searchQ,
-                                    undefined,
-                                    (getYtErrTwo,searchData)=>{
-                            if (getYtErrTwo){
-                              console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
-
-                              getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
-                                        +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
-                                        +"&q="+searchQ,
-                                        undefined,
-                                        (getYtErrThree,searchData)=>{
-                                if (getYtErrThree){
-                                  console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
-                                }else{
-                                  player.loadVideoById({videoId:searchData.items[0].id.videoId});
-                                }
-                              })
-                            }else{
-                              player.loadVideoById({videoId:searchData.items[0].id.videoId});
-                            }
-                          })
-                        }else{
-                          player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                        fromQueueAndPlay=false;
+                        fromPrev=false;
+                        fromRepeat=false;
+  
+                        //make sure the rest of the song titles lightgreen
+                        resetSongColor();
+                        this.style.color="green"; //this elem dark green
+                        
+                        //free me saronite chain gang
+                        gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                        
+                        document.getElementById("documentTitle").innerHTML="";
+                        document.getElementById("documentTitle").innerHTML=this.innerHTML;
+                        
+                        //append songDesc
+                        document.getElementById("songDesc").innerHTML="";
+                        var sdItalics = document.createElement("i");
+                        var sdBlue = document.createElement("font");
+                        sdBlue.style.color="#1284ff";
+                        
+                        sdItalics.append("Playing:  ");
+                        sdBlue.append(htmlDecode(this.innerHTML));
+                        document.getElementById("songDesc").appendChild(sdItalics);
+                        document.getElementById("songDesc").appendChild(sdBlue);
+                        
+                        var searchQ=this.innerHTML;
+                        if (document.getElementById("oaSliderCheckBox").checked){
+                          searchQ+=" Official Audio";
                         }
-                      })
+                        if (document.getElementById("lyricModeSliderCheckBox").checked){
+                          searchQ+=" Lyrics";
+                        }
+                        if (document.getElementById("ostModeSliderCheckBox").checked){
+                          searchQ+=" ost";
+                        }
+                        for (var i=0;i<specialSongs.length;i++){
+                          if (specialSongs[i][0]===this.innerHTML){
+                            searchQ=specialSongs[i][1];
+                          }
+                        }
+                        console.log(searchQ);
+                        
+                        //youtube load
+                        //avaliable keys:
+                          //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                          //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                          //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                  +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                                  +"&q="+searchQ,
+                                  undefined,
+                                  (getYtErr,searchData)=>{
+                          if (getYtErr){
+                            console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
+  
+                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                      +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
+                                      +"&q="+searchQ,
+                                      undefined,
+                                      (getYtErrTwo,searchData)=>{
+                              if (getYtErrTwo){
+                                console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
+  
+                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&format=5&type=video&videoEmbeddable=true"
+                                          +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                                          +"&q="+searchQ,
+                                          undefined,
+                                          (getYtErrThree,searchData)=>{
+                                  if (getYtErrThree){
+                                    console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
+                                  }else{
+                                    player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                                  }
+                                })
+                              }else{
+                                player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                              }
+                            })
+                          }else{
+                            player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                          }
+                        })
+                        setTimeout(()=>{
+                          console.log("GREEN")
+                          cooldown=false;
+                        },500)
+                      }
                     })
                   }
                 }
