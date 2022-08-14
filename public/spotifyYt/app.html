@@ -435,7 +435,7 @@
             var searchBox = document.createElement("input");
             searchBox.placeholder="🔎 Search";
             searchBox.id="searchBox";
-            searchBox.position="fixed";
+            searchBox.style.position="fixed";
             document.getElementById("songs").appendChild(searchBox);
             searchBox.addEventListener("input", function(){
               document.querySelectorAll(".songs").forEach(function(song){song.remove()});
