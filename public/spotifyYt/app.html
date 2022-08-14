@@ -124,12 +124,13 @@
         left:0;
       }
       #tooFastAlert{
-        position:absolute;
+        position:fixed;
         height:13px;
         left:5px;
         margin:0;
         padding:0;
         font-size:13px;
+        z-index:5;
       }
     </style>
     <style>
@@ -434,6 +435,7 @@
             var searchBox = document.createElement("input");
             searchBox.placeholder="🔎 Search";
             searchBox.id="searchBox";
+            searchBox.position="fixed";
             document.getElementById("songs").appendChild(searchBox);
             searchBox.addEventListener("input", function(){
               document.querySelectorAll(".songs").forEach(function(song){song.remove()});
@@ -457,6 +459,9 @@
               playedSongs=[];
               resetSongColor();
             })
+            var offsetDiv = document.createElement("div");
+            offsetDiv.height="15px";
+            document.getElementById("songs").appendChild(offsetDiv);
             //has to be nested function cuz reading variable of outer for loop is not working
             var stuff = function(ions){
               getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
@@ -606,7 +611,7 @@
                         document.getElementById("tooFastAlert").style.display="";
                         document.getElementById("tooFastAlert").innerHTML="";
                         document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
-                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),100);
+                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
                       }
                     })
                   }
