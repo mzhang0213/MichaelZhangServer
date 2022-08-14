@@ -311,7 +311,7 @@
       var addTime = function(){
         console.log("ending track");
         end = Date.now();
-        if (end-start>=3E10){
+        if (end-start<=3E10){
           console.log(end-start);
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
           tracking=0;
