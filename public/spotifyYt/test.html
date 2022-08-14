@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+		<p id="tooFastAlert">Too fast! Wait </p>
+    </font>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+	<style>
+		#tooFastAlert{
+			position:absolute;
+			height:13px;
+			left:5px;
+			margin:0;
+			padding:0;
+			font-size:13px;
+		}
+	</style>
+    <script>
+      document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
+	  function fadeOut() {
+		setTimeout(()=>$("#tooFastAlert").fadeOut(200),100)
+	  }
+    </script>
+  </body>
+</html>

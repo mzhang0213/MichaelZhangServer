@@ -19,6 +19,7 @@
     <font style="font-family: 'Cabin';">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
       <div id="one" style="overflow-y:auto;" class="sideBySide">
+        <p id="tooFastAlert">Too fast! Wait </p>
         <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
@@ -121,6 +122,14 @@
         position:absolute;
         top:0;
         left:0;
+      }
+      #tooFastAlert{
+        position:absolute;
+        height:13px;
+        left:5px;
+        margin:0;
+        padding:0;
+        font-size:13px;
       }
     </style>
     <style>
@@ -236,6 +245,8 @@
 
         gebi("player").width = window.innerWidth*0.40;
         gebi("player").height = window.innerHeight*0.47;
+
+        document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
       window.addEventListener("load", resize);
       window.addEventListener("resize", resize);
@@ -291,11 +302,13 @@
         resize();
       }
 
+      document.getElementById("tooFastAlert").style.display="none";
       var start = "";
       var end = "";
       var tracking = 0;
       var intervalId = "";
       var cooldown = false;
+      var remainDur = 0;
       var trackTime = function() {
         console.log("starting to track");
         start = Date.now();
@@ -498,6 +511,7 @@
                     p.addEventListener("click", function(){
                       if (!cooldown){
                         cooldown=true;
+                        remainDur=Date.now();
                         if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
                           playedSongs.push(this.id);
                           currentPos++;
@@ -588,6 +602,11 @@
                           console.log("GREEN")
                           cooldown=false;
                         },500)
+                      }else{
+                        document.getElementById("tooFastAlert").style.display="";
+                        document.getElementById("tooFastAlert").innerHTML="";
+                        document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
+                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),100);
                       }
                     })
                   }
