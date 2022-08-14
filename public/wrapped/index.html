@@ -36,10 +36,8 @@
       }
     </style>
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
-      if(window.location.href.indexOf("http:")!==-1){
-        window.location="https://"+window.location.host+"/wrapped"
-      }
       if (localStorage.getItem("totalTime")===null||localStorage.getItem("totalTime")===undefined||localStorage.getItem("totalTime")===""){
         alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
         window.location=window.location.origin+"/spotifyYt";

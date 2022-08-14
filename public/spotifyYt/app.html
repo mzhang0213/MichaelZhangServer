@@ -192,6 +192,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
       var resize = function() {
@@ -309,12 +310,15 @@
       var addTime = function(){
         console.log("ending track");
         end = Date.now();
-        if (end-start>=0){
+        if (end-start>=3E10){
           console.log(end-start);
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
           tracking=0;
         }else{
-          console.log("wtf start is less than end","start: "+start,"end: "+end);
+          console.log("start: "+start);
+          console.log("end: "+end);
+          alert("ERROR: Time save invalid\nDetails in console\n\nPage refreshing after dialogue closes...");
+          window.location.reload();
         }
         start = "";
         clearInterval(intervalId);
