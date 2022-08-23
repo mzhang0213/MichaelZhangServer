@@ -448,7 +448,7 @@
                     break;
                   }
                 }
-                if (!good){
+                if (!good&&document.getElementById("songs").children[i].id!=="offsetDiv"){
                   document.getElementById("songs").children[i].remove();
                 }
               }
@@ -460,6 +460,7 @@
               resetSongColor();
             })
             var offsetDiv = document.createElement("div");
+            offsetDiv.id="offsetDiv"
             offsetDiv.style.height="15px";
             document.getElementById("songs").appendChild(offsetDiv);
             //has to be nested function cuz reading variable of outer for loop is not working
