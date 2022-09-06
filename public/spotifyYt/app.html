@@ -327,6 +327,9 @@
         end = Date.now();
         if (end-start<=3E10){
           console.log(end-start);
+          if (localStorage.getItem("totalTime")===null){
+            localStorage.setItem("totalTime",0);
+          }
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
           tracking=0;
         }else{
