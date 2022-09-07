@@ -354,6 +354,10 @@
         } else if (player.getPlayerState()===2){
           //changed and is paused
           addTime();
+        } else if (player.getPlayerState()==-1&&lastState==3){
+          setTimeout(function(){
+            document.getElementById("next").dispatchEvent(new Event("click"));
+          },3500)
         }
       }
 
