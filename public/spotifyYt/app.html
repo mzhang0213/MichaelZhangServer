@@ -563,6 +563,9 @@
                           searchQ+=" ost";
                         }
                         
+                        var rejectedIds = [
+                          "ngd1Y_90PcY"
+                        ]
                         var specialSongs = [
                           ["希望の唄","https://youtu.be/3NOMJ5CEeLo"],
                           ["Reol - 平面鏡","https://www.youtube.com/watch?v=xbXbEZY-IvE"],
@@ -607,17 +610,56 @@
                                     console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
                                   }else{
                                     console.log(searchData.items)
-                                    player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                                    var theLoadedVideo = -1;
+                                    for (var o=0;o<searchData.items.length;o++){
+                                      for (var p=0;p<rejectedIds.length;p++){
+                                        if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                          theLoadedVideo=o;
+                                          break;
+                                        }
+                                      }
+                                    }
+                                    if(theLoadedVideo===-1){
+                                      console.log("undesired video load");
+                                      theLoadedVideo=0;
+                                    }
+                                    player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
                                   }
                                 })
                               }else{
                                 console.log(searchData.items)
-                                player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                                var theLoadedVideo = -1;
+                                for (var o=0;o<searchData.items.length;o++){
+                                  for (var p=0;p<rejectedIds.length;p++){
+                                    if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                      theLoadedVideo=o;
+                                      break;
+                                    }
+                                  }
+                                }
+                                if(theLoadedVideo===-1){
+                                  console.log("undesired video load");
+                                  theLoadedVideo=0;
+                                }
+                                player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
                               }
                             })
                           }else{
                             console.log(searchData.items)
-                            player.loadVideoById({videoId:searchData.items[0].id.videoId});
+                            var theLoadedVideo = -1;
+                            for (var o=0;o<searchData.items.length;o++){
+                              for (var p=0;p<rejectedIds.length;p++){
+                                if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                  theLoadedVideo=o;
+                                  break;
+                                }
+                              }
+                            }
+                            if(theLoadedVideo===-1){
+                              console.log("undesired video load");
+                              theLoadedVideo=0;
+                            }
+                            player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
                           }
                         })
                         setTimeout(()=>{
