@@ -469,6 +469,9 @@
               playedSongs=[];
               resetSongColor();
             })
+            var offsetDiv = document.createElement("div");
+            offsetDiv.id="offsetDiv"
+            offsetDiv.style.height="15px";
             //has to be nested function cuz reading variable of outer for loop is not working
             var stuff = function(ions){
               getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
