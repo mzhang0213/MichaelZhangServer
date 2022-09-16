@@ -446,7 +446,7 @@
               document.getElementById("one").scrollTo(0,0);//scroll up
               document.querySelectorAll(".songs").forEach(function(song){song.remove()});
               for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
-              for (var i=document.getElementById("songs").children.length-1;i>0;i--){ //i=1 since omit the input element itself (very unelegant idgaf)
+              for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
                 var good = false;
                 for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
                   if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
@@ -458,7 +458,7 @@
                   document.getElementById("songs").children[i].remove();
                 }
               }
-              for (var i=1;i<document.getElementById("songs").children.length;i++){
+              for (var i=2;i<document.getElementById("songs").children.length;i++){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
                 document.getElementById("songs").children[i].id="song"+(i-1);
               }
               currentPos=-1;
