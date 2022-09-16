@@ -445,12 +445,8 @@
             searchBox.addEventListener("input", function(){
               document.getElementById("one").scrollTo(0,0);//scroll up
               document.querySelectorAll(".songs").forEach(function(song){song.remove()});
-              var offsetDiv = document.createElement("div");
-              offsetDiv.id="offsetDiv"
-              offsetDiv.style.height="15px";
-              document.getElementById("songs").append(offsetDiv);
               for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
-              for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
+              for (var i=document.getElementById("songs").children.length-1;i>0;i--){ //i=1 since omit the input element itself (very unelegant idgaf)
                 var good = false;
                 for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
                   if (document.getElementById("songs").children[i].innerHTML.substring(j,j+searchBox.value.length).toLowerCase()===searchBox.value.toLowerCase()) { //and yes non case sensitive
@@ -472,6 +468,7 @@
             var offsetDiv = document.createElement("div");
             offsetDiv.id="offsetDiv"
             offsetDiv.style.height="15px";
+            document.getElementById("songs").append(offsetDiv);
             //has to be nested function cuz reading variable of outer for loop is not working
             var stuff = function(ions){
               getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
