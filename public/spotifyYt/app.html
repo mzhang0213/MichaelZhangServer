@@ -621,7 +621,10 @@
                                           wantNewVid=true;
                                           break;
                                         }
-                                        if (!wantNewVid)break;
+                                      }
+                                      if (!wantNewVid){
+                                        theLoadedVideo=o;
+                                        break;
                                       }
                                     }
                                     if(theLoadedVideo===-1){
@@ -642,7 +645,10 @@
                                       wantNewVid=true;
                                       break;
                                     }
-                                    if (!wantNewVid)break;
+                                  }
+                                  if (!wantNewVid){
+                                    theLoadedVideo=o;
+                                    break;
                                   }
                                 }
                                 if(theLoadedVideo===-1){
@@ -663,7 +669,10 @@
                                   wantNewVid=true;
                                   break;
                                 }
-                                if (!wantNewVid)break;
+                              }
+                              if (!wantNewVid){
+                                theLoadedVideo=o;
+                                break;
                               }
                             }
                             if(theLoadedVideo===-1){
