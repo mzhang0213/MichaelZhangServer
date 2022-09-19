@@ -615,7 +615,7 @@
                                     var theLoadedVideo = -1;
                                     for (var o=0;o<searchData.items.length;o++){
                                       for (var p=0;p<rejectedIds.length;p++){
-                                        if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                        if (searchData.items[o].id.videoId===rejectedIds[p]){
                                           theLoadedVideo=o;
                                           break;
                                         }
@@ -633,7 +633,7 @@
                                 var theLoadedVideo = -1;
                                 for (var o=0;o<searchData.items.length;o++){
                                   for (var p=0;p<rejectedIds.length;p++){
-                                    if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                    if (searchData.items[o].id.videoId===rejectedIds[p]){
                                       theLoadedVideo=o;
                                       break;
                                     }
@@ -651,7 +651,7 @@
                             var theLoadedVideo = -1;
                             for (var o=0;o<searchData.items.length;o++){
                               for (var p=0;p<rejectedIds.length;p++){
-                                if (searchData.items[o].id.videoId!==rejectedIds[p]){
+                                if (searchData.items[o].id.videoId===rejectedIds[p]){
                                   theLoadedVideo=o;
                                   break;
                                 }
