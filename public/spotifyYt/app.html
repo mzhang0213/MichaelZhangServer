@@ -587,7 +587,7 @@
                           //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
                           //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
                           //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true&order=relevance"
+                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
                                   +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
                                   +"&q="+searchQ,
                                   undefined,
@@ -595,7 +595,7 @@
                           if (getYtErr){
                             console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
   
-                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true&order=relevance"
+                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
                                       +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
                                       +"&q="+searchQ,
                                       undefined,
@@ -603,7 +603,7 @@
                               if (getYtErrTwo){
                                 console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
   
-                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true&order=relevance"
+                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
                                           +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
                                           +"&q="+searchQ,
                                           undefined,
