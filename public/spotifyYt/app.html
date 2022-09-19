@@ -614,7 +614,7 @@
                                     console.log(searchData.items)
                                     var theLoadedVideo = -1;
                                     for (var o=0;o<searchData.items.length;o++){
-                                      var wantNewVid = false;
+                                      var wantNewVid=false;
                                       for (var p=0;p<rejectedIds.length;p++){
                                         if (searchData.items[o].id.videoId===rejectedIds[p]){
                                           theLoadedVideo=o;
@@ -635,6 +635,7 @@
                                 console.log(searchData.items)
                                 var theLoadedVideo = -1;
                                 for (var o=0;o<searchData.items.length;o++){
+                                  var wantNewVid=false;
                                   for (var p=0;p<rejectedIds.length;p++){
                                     if (searchData.items[o].id.videoId===rejectedIds[p]){
                                       theLoadedVideo=o;
@@ -655,6 +656,7 @@
                             console.log(searchData.items)
                             var theLoadedVideo = -1;
                             for (var o=0;o<searchData.items.length;o++){
+                              var wantNewVid=false;
                               for (var p=0;p<rejectedIds.length;p++){
                                 if (searchData.items[o].id.videoId===rejectedIds[p]){
                                   theLoadedVideo=o;
