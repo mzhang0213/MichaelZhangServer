@@ -361,7 +361,7 @@
           addTime();
         } else if (player.getPlayerState()==-1&&lastState==3){
           setTimeout(function(){
-            document.getElementById("next").dispatchEvent(new Event("click"));
+            if (player.getPlayerState()!==1) document.getElementById("next").dispatchEvent(new Event("click"));
           },2500)
         }
         lastState=player.getPlayerState();
