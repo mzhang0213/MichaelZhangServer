@@ -450,7 +450,7 @@
               var queries = [];
               var last = 0;
               for (var a=0;a<searchBox.value.length-2;a++){
-                if (a.charAt(i)==="&"&&a.charAt(i+1)==="&"){
+                if (searchBox.value.charAt(i)==="&"&&searchBox.value.charAt(i+1)==="&"){
                   queries.push(searchBox.value.substring(last,a-1));
                   last=a+2;
                   a+=2;
@@ -461,6 +461,7 @@
               }else{
                 queries.push(searchBox.value.substring(last,searchBox.value.length-1));
               }
+              console.log(queries);
               for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
                 var good = false;
                 for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-searchBox.value.length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
