@@ -179,6 +179,19 @@ app.get("/classroom/callback", (req,res)=>{
 		res.redirect("/classroom/app.html?"+querystring.stringify(token));
 	});
 });
+
+app.post('/subscribe', (req, res) => {
+	const subscription = req.body;
+	res.status(201).json({});
+	const payload = JSON.stringify({ title: 'pog test', body:'wazzup' });
+
+	console.log(subscription);
+
+	webpush.sendNotification(subscription, payload).catch(error => {
+		console.error(error.stack);
+	});
+});
+
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
