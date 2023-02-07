@@ -10,6 +10,7 @@
   "author": "michael-zhang",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.1",
     "child_process": "^1.0.2",
     "cookie-parser": "^1.4.6",
     "cookieparser": "^0.1.0",

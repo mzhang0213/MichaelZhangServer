@@ -3,13 +3,9 @@ var app = express();
 var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
-var cookieParser = require('cookie-parser');
-var cp = require("child_process");
+var bodyParser = require('body-parser');
 var fs = require("fs");
-var path = require('path');
-var readline = require('readline');
 var {google} = require('googleapis');
-const res = require("express/lib/response");
 
 const PORT = process.env.PORT || "12232";
 
@@ -36,7 +32,7 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
+app.use(express.static(__dirname + '/public')).use(cors()).use(bodyParser());
 
 var lastPlaylist = "";
 app.get('/spotifyYt/login', function(req, res) {
@@ -180,17 +176,39 @@ app.get("/classroom/callback", (req,res)=>{
 	});
 });
 
-app.post('/subscribe', (req, res) => {
+const vapidKeys = {
+	'publicKey':'BJInwFCwuXAY2BkzBJ5sqaeBdrsp_QY-QOwsw7c7XoZtTWXmkMF7Y3F31QElUFEVgtkrSo6xkwKA6paDThqJNWg',
+	'privateKey':'dOrY1IFvLBDzyLV5vmN94JzkJUCo4XS9smw5bk5dZ80'
+}
+
+const saveToDatabase = async subscription => {
+	localStorage.setItem("savedSubscription",subscription);
+	console.log("saved sub: " + subscription);
+}
+
+app.post('/save-subscription', async (req, res) => {
 	const subscription = req.body;
-	res.status(201).json({});
-	const payload = JSON.stringify({ title: 'pog test', body:'wazzup' });
+	await saveToDatabase(subscription) //Method to save the subscription to Database
+	res.json({ message: 'success' })
+})
 
-	console.log(subscription);
-
-	webpush.sendNotification(subscription, payload).catch(error => {
-		console.error(error.stack);
-	});
-});
+//setting our previously generated VAPID keys
+webpush.setVapidDetails(
+	'mailto:mzhang0213@gmail.com',
+	vapidKeys.publicKey,
+	vapidKeys.privateKey
+)
+//function to send the notification to the subscribed device
+const sendNotification = (subscription, dataToSend='') => {
+	webpush.sendNotification(subscription, dataToSend)
+}
+app.get('/send-notification', (req, res) => {
+	const subscription = localStorage.getItem("savedSubscription"); //get subscription from your databse here.
+	console.log("gotten sub: " + subscription);
+	const message = 'Hello World'
+	sendNotification(subscription, message)
+	res.json({ message: 'message sent' })
+})
 
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
