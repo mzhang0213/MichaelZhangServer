@@ -459,7 +459,7 @@
               if (searchBox.value.indexOf("&&")===-1){
                 queries.push(searchBox.value);
               }else if (last<=searchBox.value.length-1){
-                queries.push(searchBox.value.substring(last,searchBox.value.length-1));
+                queries.push(searchBox.value.substring(last,searchBox.value.length));
               }
               console.log(queries);
               for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
@@ -471,6 +471,7 @@
                       break;
                     }
                   }
+                  if (good)break;
                 }
                 if (!good&&document.getElementById("songs").children[i].id!=="offsetDiv"){
                   document.getElementById("songs").children[i].remove();
