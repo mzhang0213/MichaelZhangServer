@@ -451,14 +451,14 @@
               var last = 0;
               for (var a=0;a<searchBox.value.length-1;a++){
                 if (searchBox.value.charAt(a)==="&"&&searchBox.value.charAt(a+1)==="&"){
-                  queries.push(searchBox.value.substring(last,a-1));
-                  last=a+3;
+                  queries.push(searchBox.value.substring(last,a));
+                  last=a+2;
                   a+=2;
                 }
               }
               if (searchBox.value.indexOf("&&")===-1){
                 queries.push(searchBox.value);
-              }else{
+              }else if (last<=searchBox.value.length-1){
                 queries.push(searchBox.value.substring(last,searchBox.value.length-1));
               }
               console.log(queries);
