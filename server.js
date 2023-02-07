@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var fs = require("fs");
 var {google} = require('googleapis');
 var webpush = require('web-push');
+var {Client} = require("pg");
 
 const PORT = process.env.PORT || "12232";
 
@@ -181,6 +182,18 @@ const vapidKeys = {
 	'publicKey':'BJInwFCwuXAY2BkzBJ5sqaeBdrsp_QY-QOwsw7c7XoZtTWXmkMF7Y3F31QElUFEVgtkrSo6xkwKA6paDThqJNWg',
 	'privateKey':'dOrY1IFvLBDzyLV5vmN94JzkJUCo4XS9smw5bk5dZ80'
 }
+
+const client = new Client({
+	user: 'fqsahprtphxgee',
+	host: 'ec2-3-230-122-20.compute-1.amazonaws.com',
+	database: 'dav6o6jbso0u1g',
+	password: 'eb98643376d6a579400f52b4e0f5af75843f6b942d845b96c87d7ec6c374654b',
+	port: 5432,
+})
+client.connect(function(err) {
+	if (err) throw err;
+	console.log("Connected!");
+});
 
 const saveToDatabase = async subscription => {
 	localStorage.setItem("savedSubscription",subscription);
