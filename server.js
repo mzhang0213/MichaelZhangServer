@@ -184,16 +184,13 @@ const vapidKeys = {
 }
 
 const client = new Client({
-	user: 'fqsahprtphxgee',
-	host: 'ec2-3-230-122-20.compute-1.amazonaws.com',
-	database: 'dav6o6jbso0u1g',
-	password: 'eb98643376d6a579400f52b4e0f5af75843f6b942d845b96c87d7ec6c374654b',
-	port: 5432,
-})
-client.connect(function(err) {
-	if (err) throw err;
-	console.log("Connected!");
+	connectionString: process.env.DATABASE_URL,
+	ssl: {
+	  rejectUnauthorized: false
+	}
 });
+  
+client.connect();
 
 const saveToDatabase = async subscription => {
 	localStorage.setItem("savedSubscription",subscription);
