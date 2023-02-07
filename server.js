@@ -178,20 +178,7 @@ app.get("/classroom/callback", (req,res)=>{
 	});
 });
 
-const vapidKeys = {
-	'publicKey':'BJInwFCwuXAY2BkzBJ5sqaeBdrsp_QY-QOwsw7c7XoZtTWXmkMF7Y3F31QElUFEVgtkrSo6xkwKA6paDThqJNWg',
-	'privateKey':'dOrY1IFvLBDzyLV5vmN94JzkJUCo4XS9smw5bk5dZ80'
-}
-
-const client = new Client({
-	connectionString: process.env.DATABASE_URL,
-	ssl: {
-	  rejectUnauthorized: false
-	}
-});
-  
-client.connect();
-
+//does not work
 const saveToDatabase = async subscription => {
 	localStorage.setItem("savedSubscription",subscription);
 	console.log("saved sub: " + subscription);
