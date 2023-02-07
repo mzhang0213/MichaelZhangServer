@@ -20,7 +20,7 @@
         }
       }
       const registerServiceWorker = async () => {
-        const swRegistration = await navigator.serviceWorker.register('/app/sw.js')
+        const swRegistration = await navigator.serviceWorker.register('https://michaelzhangwebsite.herokuapp.com/notificationHub/sw.js')
         return swRegistration;
       }
       const requestNotificationPermission = async () => {
