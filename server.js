@@ -5,7 +5,7 @@ var cors = require('cors');
 var querystring = require('querystring');
 var fs = require("fs");
 var {google} = require('googleapis');
-var cookieParser = require('cookie');
+var cookieParser = require('cookie-parser');
 const res = require("express/lib/response");
 
 /*
