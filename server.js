@@ -3,12 +3,13 @@ var app = express();
 var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
-var bodyParser = require('body-parser');
 var fs = require("fs");
 var {google} = require('googleapis');
+/*
+var bodyParser = require('body-parser');
 var webpush = require('web-push');
 var {Client} = require("pg");
-
+*/
 const PORT = process.env.PORT || "12232";
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
@@ -177,7 +178,7 @@ app.get("/classroom/callback", (req,res)=>{
 		res.redirect("/classroom/app.html?"+querystring.stringify(token));
 	});
 });
-
+/*
 //does not work
 const saveToDatabase = async subscription => {
 	localStorage.setItem("savedSubscription",subscription);
@@ -207,7 +208,7 @@ app.get('/send-notification', (req, res) => {
 	sendNotification(subscription, message)
 	res.json({ message: 'message sent' })
 })
-
+*/
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
