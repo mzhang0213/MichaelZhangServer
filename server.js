@@ -5,6 +5,8 @@ var cors = require('cors');
 var querystring = require('querystring');
 var fs = require("fs");
 var {google} = require('googleapis');
+var cookieParser = require('cookie');
+
 /*
 var bodyParser = require('body-parser');
 var webpush = require('web-push');
@@ -35,7 +37,7 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/public')).use(cors());
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
 var lastPlaylist = "";
 app.get('/spotifyYt/login', function(req, res) {
