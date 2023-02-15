@@ -310,6 +310,7 @@
       var intervalId = "";
       var cooldown = false;
       var remainDur = 0;
+      const year = new Date().getUTCFullYear();
       var trackTime = function() {
         console.log("starting to track");
         start = Date.now();
@@ -319,6 +320,10 @@
             localStorage.setItem("totalTime",0);
           }
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))+2000);
+          if (localStorage.getItem("totalTime"+year)===null){
+            localStorage.setItem("totalTime"+year,0);
+          }
+          localStorage.setItem("totalTime"+year,parseInt(localStorage.getItem("totalTime"+year))+2000);
           tracking+=2000;
         },2000);
       }
@@ -331,6 +336,10 @@
             localStorage.setItem("totalTime",0);
           }
           localStorage.setItem("totalTime",parseInt(localStorage.getItem("totalTime"))-tracking+(end-start));
+          if (localStorage.getItem("totalTime"+year)===null){
+            localStorage.setItem("totalTime"+year,0);
+          }
+          localStorage.setItem("totalTime"+year,parseInt(localStorage.getItem("totalTime"+year))-tracking+(end-start));
           tracking=0;
         }else{
           console.log("start: "+start);

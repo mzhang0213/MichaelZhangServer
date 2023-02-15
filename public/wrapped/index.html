@@ -38,21 +38,47 @@
     <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
     <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
+      /**
+       * Get the total time in String format
+       * [time] is total time in milliseconds
+      */
+      var getTime = function(time){
+        var cout = "";
+        if(Math.floor(time/3600000)!==0)cout+=(Math.floor(time/3600000));if(Math.floor(time/3600000)==1)cout+=(" hour, ");else if(Math.floor(time/3600000)!==0)cout+=(" hours, ");time%=3600000;
+        if(Math.floor(time/60000)!==0)cout+=(Math.floor(time/60000));if(Math.floor(time/60000)==1)cout+=(" minute, ");else if(Math.floor(time/60000)!==0)cout+=(" minutes, ");time%=60000;
+        if(Math.floor(time/1000)!==0)cout+=(Math.floor(time/1000));if(Math.floor(time/1000)==1)cout+=(" second, ");else if(Math.floor(time/1000)!==0)cout+=(" seconds, ");time%=1000;
+        cout+=("and "+time);if(time==1)cout+=(" millisecond");else cout+=(" milliseconds");
+        return cout;
+      }
+      /**
+       * Get the total time IN MINUTES in String format
+       * [time] is total time in milliseconds
+      */
+      var getTimeMins = function(time){
+        return (time)/60000;
+      }
       if (localStorage.getItem("totalTime")===null||localStorage.getItem("totalTime")===undefined||localStorage.getItem("totalTime")===""){
         alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
         window.location=window.location.origin+"/spotifyYt";
       }else{
         var timeE = document.getElementById("time");
-        var ms = parseInt(localStorage.getItem("totalTime"));
+        //for curr year:
+        const year = new Date().getUTCFullYear();
         timeE.append("You've listened for ");
-        if(Math.floor(ms/3600000)!==0)timeE.append(Math.floor(ms/3600000));if(Math.floor(ms/3600000)==1)timeE.append(" hour, ");else if(Math.floor(ms/3600000)!==0)timeE.append(" hours, ");ms%=3600000;
-        if(Math.floor(ms/60000)!==0)timeE.append(Math.floor(ms/60000));if(Math.floor(ms/60000)==1)timeE.append(" minute, ");else if(Math.floor(ms/60000)!==0)timeE.append(" minutes, ");ms%=60000;
-        if(Math.floor(ms/1000)!==0)timeE.append(Math.floor(ms/1000));if(Math.floor(ms/1000)==1)timeE.append(" second, ");else if(Math.floor(ms/1000)!==0)timeE.append(" seconds, ");ms%=1000;
-        timeE.append(" and "+ms);if(ms==1)timeE.append(" millisecond!");else timeE.append(" milliseconds!");
+        getTime(parseInt(localStorage.getItem("totalTime"+year)));
+        timeE.append(" this year in "+year+"!");
         //mins only
-        var mins = parseInt(parseInt(localStorage.getItem("totalTime"))/60000);
         timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-        timeE.append("You've listened for " + mins + " total minutes!");
+        timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"+year))) + " total minutes this year!");
+
+        //for all of time
+        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+        timeE.append("You've listened for ");
+        getTime(parseInt(localStorage.getItem("totalTime")));
+        timeE.append(" for all of time!");
+        //mins only
+        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+        timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"))) + " total minutes!");
       }
     </script>
   </body>
