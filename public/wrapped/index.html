@@ -35,7 +35,7 @@
         opacity:50%;
       }
     </style>
-    <script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
       /**
@@ -55,7 +55,7 @@
        * [time] is total time in milliseconds
       */
       var getTimeMins = function(time){
-        return (time)/60000;
+        return parseInt((time)/60000);
       }
       if (localStorage.getItem("totalTime")===null||localStorage.getItem("totalTime")===undefined||localStorage.getItem("totalTime")===""){
         alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
@@ -64,18 +64,15 @@
         var timeE = document.getElementById("time");
         //for curr year:
         const year = new Date().getUTCFullYear();
-        timeE.append("You've listened for ");
-        getTime(parseInt(localStorage.getItem("totalTime"+year)));
-        timeE.append(" this year in "+year+"!");
+        timeE.append("You've listened for " + getTime(parseInt(localStorage.getItem("totalTime"+year))) + " this year in "+year+"!");
         //mins only
         timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
         timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"+year))) + " total minutes this year!");
 
-        //for all of time
         timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-        timeE.append("You've listened for ");
-        getTime(parseInt(localStorage.getItem("totalTime")));
-        timeE.append(" for all of time!");
+        
+        //for all of time
+        timeE.append("You've listened for " + getTime(parseInt(localStorage.getItem("totalTime"))) + " for all of time!");
         //mins only
         timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
         timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"))) + " total minutes!");
