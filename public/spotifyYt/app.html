@@ -385,7 +385,7 @@
             if (player.getPlayerState()!==1){
               if (currSongPos!==currSongIds.length-1){
                 currSongPos++;
-                player.loadVideoById({videoId:currSongIds[currSongPos]});
+                player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
               }else{
                 document.getElementById("next").dispatchEvent(new Event("click"));
               }
@@ -666,7 +666,7 @@
                                     currSongPos = 0;
                                     for (var o=0;o<searchData.items.length;o++){
                                       for (var p=0;p<rejectedIds.length;p++){
-                                        if (searchData.items[o].id.videoId===rejectedIds[p]){
+                                        if (currSongIds[o].id.videoId===rejectedIds[p]){
                                           currSongIds.splice(o,1);
                                         }
                                       }
@@ -674,7 +674,7 @@
                                     if(currSongIds.length===0){
                                       console.log("undesired video load");
                                     }
-                                    player.loadVideoById({videoId:currSongIds[currSongPos]});
+                                    player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                                   }
                                 })
                               }else{
@@ -691,7 +691,7 @@
                                 if(currSongIds.length===0){
                                   console.log("undesired video load");
                                 }
-                                player.loadVideoById({videoId:currSongIds[currSongPos]});
+                                player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                               }
                             })
                           }else{
@@ -708,7 +708,7 @@
                             if(currSongIds.length===0){
                               console.log("undesired video load");
                             }
-                            player.loadVideoById({videoId:currSongIds[currSongPos]});
+                            player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                           }
                         })
                         setTimeout(()=>{
@@ -775,7 +775,7 @@
             }else{
               currSongPos++;
             }
-            player.loadVideoById({videoId:currSongIds[currSongPos]});
+            player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
           })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
