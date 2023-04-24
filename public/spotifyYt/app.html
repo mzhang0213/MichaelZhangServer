@@ -104,7 +104,10 @@
         font-size:17px;
       }
       #nextId{
-        position:relative;
+        position:absolute;
+        left:0;
+        top:0;
+        font-size:12px;
         z-index:10;
       }
       #prev{
@@ -223,10 +226,6 @@
         gebi("playlists").style.top="20px";
         gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
         gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
-
-        gebi("nextId").style.left=gebi("two").style.left;
-        gebi("nextId").style.top=0;
-        gebi("nextId").style.fontSize="500px";
         
         gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+43)+"px"
         gebi("actualShuffleSliderContainer").style.left="20px";
