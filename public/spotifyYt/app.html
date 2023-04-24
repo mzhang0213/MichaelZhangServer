@@ -26,7 +26,7 @@
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
-        <button id="nextId">⬇</button>
+        <button id="nextId"> ⬇ </button>
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
@@ -226,7 +226,7 @@
 
         gebi("nextId").style.left=gebi("two").style.left;
         gebi("nextId").style.top=0;
-        gebi("nextId").style.fontSize="12px";
+        gebi("nextId").style.fontSize="500px";
         
         gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+43)+"px"
         gebi("actualShuffleSliderContainer").style.left="20px";
@@ -261,7 +261,8 @@
       window.addEventListener("load", resize);
       window.addEventListener("resize", resize);
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
-
+      gebi("nextId").disabled=true;
+      
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
       const refreshToken = urlParams.get("refresh_token");
@@ -585,6 +586,7 @@
                         
                         //free me saronite chain gang
                         gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                        gebi("nextId").disabled=false;
                         
                         document.getElementById("documentTitle").innerHTML="";
                         document.getElementById("documentTitle").innerHTML=this.innerHTML;
