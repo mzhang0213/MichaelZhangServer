@@ -26,6 +26,7 @@
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
+        <button id="nextId">⬇</button>
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
@@ -101,6 +102,9 @@
       #songDesc{
         position:relative;
         font-size:17px;
+      }
+      #nextId{
+        position:relative;
       }
       #prev{
         left:-20px;
@@ -219,6 +223,10 @@
         gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
         gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
 
+        gebi("nextId").style.left=gebi("two").style.left;
+        gebi("nextId").style.top=0;
+        gebi("nextId").style.fontSize="12px";
+        
         gebi("shuffleSliderContainer").style.left=(window.innerWidth*0.25+43)+"px"
         gebi("actualShuffleSliderContainer").style.left="20px";
 
@@ -357,6 +365,8 @@
       }
 
       var lastState = 9999;
+      var currSongIds = [];
+      var currSongPos = 0;
       function onPlayerStateChange(){
         console.log(player.getPlayerState());
         if (player.getPlayerState()===0){
@@ -369,9 +379,18 @@
           //changed and is paused
           addTime();
         } else if (player.getPlayerState()==-1&&lastState==3){
+          //blocked / loading (if ur slow)
+          //bugged: when seeking video, player state put on 3 for no reason
           setTimeout(function(){
-            if (player.getPlayerState()!==1) document.getElementById("next").dispatchEvent(new Event("click"));
-          },2500)
+            if (player.getPlayerState()!==1){
+              if (currSongPos!==currSongIds.length-1){
+                currSongPos++;
+                player.loadVideoById({videoId:currSongIds[currSongPos]});
+              }else{
+                document.getElementById("next").dispatchEvent(new Event("click"));
+              }
+            }
+          },3500)
         }
         lastState=player.getPlayerState();
       }
@@ -618,7 +637,7 @@
                           //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
                           //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
                           //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
+                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&format=5&type=video&videoEmbeddable=true"
                                   +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
                                   +"&q="+searchQ,
                                   undefined,
@@ -626,7 +645,7 @@
                           if (getYtErr){
                             console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
   
-                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
+                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&format=5&type=video&videoEmbeddable=true"
                                       +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
                                       +"&q="+searchQ,
                                       undefined,
@@ -634,7 +653,7 @@
                               if (getYtErrTwo){
                                 console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
   
-                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&format=5&type=video&videoEmbeddable=true"
+                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&format=5&type=video&videoEmbeddable=true"
                                           +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
                                           +"&q="+searchQ,
                                           undefined,
@@ -643,74 +662,53 @@
                                     console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
                                   }else{
                                     console.log(searchData.items)
-                                    var theLoadedVideo = -1;
+                                    currSongIds = searchData.items;
+                                    currSongPos = 0;
                                     for (var o=0;o<searchData.items.length;o++){
-                                      var wantNewVid=false;
                                       for (var p=0;p<rejectedIds.length;p++){
                                         if (searchData.items[o].id.videoId===rejectedIds[p]){
-                                          theLoadedVideo=o;
-                                          wantNewVid=true;
-                                          break;
+                                          currSongIds.splice(o,1);
                                         }
                                       }
-                                      if (!wantNewVid){
-                                        theLoadedVideo=o;
-                                        break;
-                                      }
                                     }
-                                    if(theLoadedVideo===-1){
+                                    if(currSongIds.length===0){
                                       console.log("undesired video load");
-                                      theLoadedVideo=0;
                                     }
-                                    player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
+                                    player.loadVideoById({videoId:currSongIds[currSongPos]});
                                   }
                                 })
                               }else{
                                 console.log(searchData.items)
-                                var theLoadedVideo = -1;
+                                currSongIds = searchData.items;
+                                currSongPos = 0;
                                 for (var o=0;o<searchData.items.length;o++){
-                                  var wantNewVid=false;
                                   for (var p=0;p<rejectedIds.length;p++){
                                     if (searchData.items[o].id.videoId===rejectedIds[p]){
-                                      theLoadedVideo=o;
-                                      wantNewVid=true;
-                                      break;
+                                      currSongIds.splice(o,1);
                                     }
                                   }
-                                  if (!wantNewVid){
-                                    theLoadedVideo=o;
-                                    break;
-                                  }
                                 }
-                                if(theLoadedVideo===-1){
+                                if(currSongIds.length===0){
                                   console.log("undesired video load");
-                                  theLoadedVideo=0;
                                 }
-                                player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
+                                player.loadVideoById({videoId:currSongIds[currSongPos]});
                               }
                             })
                           }else{
                             console.log(searchData.items)
-                            var theLoadedVideo = -1;
+                            currSongIds = searchData.items;
+                            currSongPos = 0;
                             for (var o=0;o<searchData.items.length;o++){
-                              var wantNewVid=false;
                               for (var p=0;p<rejectedIds.length;p++){
                                 if (searchData.items[o].id.videoId===rejectedIds[p]){
-                                  theLoadedVideo=o;
-                                  wantNewVid=true;
-                                  break;
+                                  currSongIds.splice(o,1);
                                 }
                               }
-                              if (!wantNewVid){
-                                theLoadedVideo=o;
-                                break;
-                              }
                             }
-                            if(theLoadedVideo===-1){
+                            if(currSongIds.length===0){
                               console.log("undesired video load");
-                              theLoadedVideo=0;
                             }
-                            player.loadVideoById({videoId:searchData.items[theLoadedVideo].id.videoId});
+                            player.loadVideoById({videoId:currSongIds[currSongPos]});
                           }
                         })
                         setTimeout(()=>{
@@ -771,6 +769,14 @@
             }
           }
 
+          document.getElementById("nextId").addEventListener("click", function(){
+            if (currSongPos===currSongIds.length-1){
+              currSongPos=0;
+            }else{
+              currSongPos++;
+            }
+            player.loadVideoById({videoId:currSongIds[currSongPos]});
+          })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
             if (player.getPlayerState()===5){
@@ -792,6 +798,7 @@
           })
           document.getElementById("next").addEventListener("click", function(){
             if (document.getElementById("shuffleSliderCheckBox").checked||(playedSongs[currentPos]!=="song"+(document.getElementsByClassName("songs").length-1))){
+              //calc random play
               queueAndPlay();
             } else if (document.getElementById("repeatSliderCheckBox").checked){
               //on the last song and want to repeat playlist
