@@ -339,7 +339,7 @@
       var addTime = function(){
         console.log("ending track");
         end = Date.now();
-        if (end-start<=3E10){
+        if (end-start<=3E10 && end-start>=0){
           console.log(end-start);
           if (localStorage.getItem("totalTime")===null){
             localStorage.setItem("totalTime",0);
@@ -369,10 +369,10 @@
       var currSongIds = [];
       var currSongPos = 0;
       function onPlayerStateChange(){
-        console.log(player.getPlayerState());
         if (player.getPlayerState()===0){
           //song ended, play next
-          document.getElementById("next").click(); // :EZ:
+          addTime();
+          document.getElementById("next").dispatchEvent(new Event("click")); // :EZ:
         } else if (player.getPlayerState()===1){
           //changed and is playing
           if (intervalId=="") trackTime();
@@ -489,7 +489,6 @@
               }else if (last<=searchBox.value.length-1){
                 queries.push(searchBox.value.substring(last,searchBox.value.length));
               }
-              console.log(queries);
               for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
                 var good = false;
                 for (var k=0;k<queries.length;k++){
@@ -664,6 +663,9 @@
                                     console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
                                   }else{
                                     console.log(searchData.items)
+                                    if (searchData.items.length==0){
+                                      document.getElementById("next").dispatchEvent(new Event("click"));
+                                    }
                                     currSongIds = searchData.items;
                                     currSongPos = 0;
                                     for (var o=0;o<searchData.items.length;o++){
@@ -681,6 +683,9 @@
                                 })
                               }else{
                                 console.log(searchData.items)
+                                if (searchData.items.length==0){
+                                  document.getElementById("next").dispatchEvent(new Event("click"));
+                                }
                                 currSongIds = searchData.items;
                                 currSongPos = 0;
                                 for (var o=0;o<searchData.items.length;o++){
@@ -698,6 +703,9 @@
                             })
                           }else{
                             console.log(searchData.items)
+                            if (searchData.items.length==0){
+                              document.getElementById("next").dispatchEvent(new Event("click"));
+                            }
                             currSongIds = searchData.items;
                             currSongPos = 0;
                             for (var o=0;o<searchData.items.length;o++){
