@@ -663,9 +663,6 @@
                                     console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
                                   }else{
                                     console.log(searchData.items)
-                                    if (searchData.items.length==0){
-                                      document.getElementById("next").dispatchEvent(new Event("click"));
-                                    }
                                     currSongIds = searchData.items;
                                     currSongPos = 0;
                                     for (var o=0;o<searchData.items.length;o++){
@@ -677,48 +674,63 @@
                                     }
                                     if(currSongIds.length===0){
                                       console.log("undesired video load");
+                                      var searchQParams = new URLSearchParams(searchQ);
+                                      if (searchQParams.get("v")!==null){
+                                        player.loadVideoById({videoId:searchQParams.get("v")});
+                                      }else{
+                                        document.getElementById("next").dispatchEvent(new Event("click"));
+                                      }
+                                    }else{
+                                      player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                                     }
-                                    player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                                   }
                                 })
                               }else{
                                 console.log(searchData.items)
-                                if (searchData.items.length==0){
-                                  document.getElementById("next").dispatchEvent(new Event("click"));
-                                }
                                 currSongIds = searchData.items;
                                 currSongPos = 0;
                                 for (var o=0;o<searchData.items.length;o++){
                                   for (var p=0;p<rejectedIds.length;p++){
-                                    if (searchData.items[o].id.videoId===rejectedIds[p]){
+                                    if (currSongIds[o].id.videoId===rejectedIds[p]){
                                       currSongIds.splice(o,1);
                                     }
                                   }
                                 }
                                 if(currSongIds.length===0){
                                   console.log("undesired video load");
+                                  var searchQParams = new URLSearchParams(searchQ);
+                                  if (searchQParams.get("v")!==null){
+                                    player.loadVideoById({videoId:searchQParams.get("v")});
+                                  }else{
+                                    document.getElementById("next").dispatchEvent(new Event("click"));
+                                  }
+                                }else{
+                                  player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                                 }
-                                player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                               }
                             })
                           }else{
                             console.log(searchData.items)
-                            if (searchData.items.length==0){
-                              document.getElementById("next").dispatchEvent(new Event("click"));
-                            }
                             currSongIds = searchData.items;
                             currSongPos = 0;
                             for (var o=0;o<searchData.items.length;o++){
                               for (var p=0;p<rejectedIds.length;p++){
-                                if (searchData.items[o].id.videoId===rejectedIds[p]){
+                                if (currSongIds[o].id.videoId===rejectedIds[p]){
                                   currSongIds.splice(o,1);
                                 }
                               }
                             }
                             if(currSongIds.length===0){
                               console.log("undesired video load");
+                              var searchQParams = new URLSearchParams(searchQ);
+                              if (searchQParams.get("v")!==null){
+                                player.loadVideoById({videoId:searchQParams.get("v")});
+                              }else{
+                                document.getElementById("next").dispatchEvent(new Event("click"));
+                              }
+                            }else{
+                              player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                             }
-                            player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
                           }
                         })
                         setTimeout(()=>{
