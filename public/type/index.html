@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <!-- This is the HOMEPAGE -->
+  
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <title>Michael Zhang's Website</title>
+  </head>
+  <body style="background-color:#f2f2f2;">
+    <font style="font-family: 'Cabin';">
+      <div id="navContainer"></div>
+      <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+      <!--<script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>-->
+      <script>
+        const navBar = document.createElement("script");
+        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        document.body.appendChild(navBar);
+        const navBarStyle = document.createElement("link");
+        navBarStyle.rel="stylesheet";
+        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        document.body.appendChild(navBarStyle);
+      </script>
+      <div id="navContainer"></div>
+	  <br>
+	  <center>
+		<h1>Typing Tester</h1>
+	  </center>
+	  <br><br>
+	  <div class="mainContainer">
+		<input type="checkbox" id="commonWords" class="check">
+		<p id="cwdesc" class="desc">Type with common words</p>
+	  </div>
+	  <div class="mainContainer">
+		<input type="checkbox" id="thirtySeconds" class="check">
+		<p id="tsdesc" class="desc">Type for only 30 seconds</p>
+	</div>
+	  <br><br><br><br>
+	  <center>
+		<button id="play">Play!</button>
+	  </center>
+    </font>
+	<style>
+	  .check{
+		  margin-right:15px;
+	  }
+	  .mainContainer{
+		  display:flex;
+		  justify-content:center;
+		  align-items:center;
+	  }
+	  #play{
+		border-radius:8px;
+		border:2px solid #000000;
+		font-size:20px;
+		font-family:'Cabin';
+		outline:none;
+		background-color:#4eb8ff;
+	  }
+	  #play:hover{
+		background-color:#4091c6;
+	  }
+	  .desc{
+		user-select: none;
+		-moz-user-select: none;
+	  }
+	</style>
+	<script>
+		function markChecked(e){
+			if (e.checked)e.checked=false;
+			else e.checked=true;
+		}
+		document.getElementById("play").addEventListener("click",function(){
+			window.location=window.location.origin+"/speeedTypeDude/?commonWords="+document.getElementById("commonWords").checked+"&thirtySeconds="+document.getElementById("thirtySeconds").checked
+		})
+		document.getElementById("cwdesc").addEventListener("click",function(){
+			markChecked(document.getElementById("commonWords"))
+		})
+		document.getElementById("tsdesc").addEventListener("click",function(){
+			markChecked(document.getElementById("thirtySeconds"))
+		})
+	</script>
+  </body>
+</html>
