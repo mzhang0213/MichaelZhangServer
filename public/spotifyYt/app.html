@@ -271,6 +271,7 @@
       window.addEventListener("resize", resize);
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
       gebi("nextId").disabled=true;
+      gebi("saveSong").disabled=true;
       
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
@@ -371,6 +372,16 @@
         intervalId="";
       }
 
+      function checkSongInStorage(){
+        var bad=false;
+        for(var i=0;i<storedSongs.items.length;i++){
+          if (storedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
+            bad=true;
+          }
+        }
+        return bad;
+      }
+
       function onPlayerReady(){
         player.setVolume(50);//not rip headphones users immediately
       }
@@ -378,7 +389,7 @@
       var lastState = 9999;
       var currSongIds = [];
       var currSongPos = 0;
-      
+
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
@@ -387,6 +398,7 @@
         } else if (player.getPlayerState()===1){
           //changed and is playing
           if (intervalId=="") trackTime();
+          if (!checkSongInStorage())document.getElementById("saveSong").disabled=false;
         } else if (player.getPlayerState()===2){
           //changed and is paused
           addTime();
@@ -596,6 +608,7 @@
                         //free me saronite chain gang
                         gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
                         gebi("nextId").disabled=false;
+                        gebi("saveSong").disabled=false;
                         
                         document.getElementById("documentTitle").innerHTML="";
                         document.getElementById("documentTitle").innerHTML=this.innerHTML;
@@ -818,7 +831,16 @@
           })
           document.getElementById("saveSong").addEventListener("click",function(){
             var storedSongs = JSON.parse(localStorage.getItem("savedSongs"));
-            
+            if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+              storedSongs={
+                items:[]
+              }
+              storedSongs.items[0]=document.getElementById(playedSongs[currentPos]).innerHTML;
+            }else{
+              if (!checkSongInStorage()){
+                storedSongs.items.append(document.getElementById(playedSongs[currentPos]).innerHTML)
+              }
+            }
             this.disabled=true;
           })
           document.getElementById("playPause").addEventListener("click", function(){
