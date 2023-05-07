@@ -835,12 +835,12 @@
               storedSongs={
                 items:[]
               }
-              storedSongs.items[0]=document.getElementById(playedSongs[currentPos]).innerHTML;
             }else{
               if (!checkSongInStorage()){
-                storedSongs.items.append(document.getElementById(playedSongs[currentPos]).innerHTML)
+                storedSongs.items.push(document.getElementById(playedSongs[currentPos]).innerHTML)
               }
             }
+            localStorage.setItem("savedSongs",JSON.stringify(storedSongs));
             this.disabled=true;
           })
           document.getElementById("playPause").addEventListener("click", function(){
