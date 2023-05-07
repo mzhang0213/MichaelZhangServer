@@ -41,7 +41,7 @@
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <!--<script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>-->
     <script>
-	    if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+	    if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""||localStorage.getItem("savedSongs").items.length===0){
         document.getElementById("saved").innerHTML="Save some songs by clicking the \"save\" button in the app!";
       }else{
         var songs = JSON.parse(localStorage.getItem("savedSongs"));

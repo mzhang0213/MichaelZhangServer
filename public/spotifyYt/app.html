@@ -407,6 +407,7 @@
           //changed and is playing
           if (intervalId=="") trackTime();
           if (!checkSongInStorage())document.getElementById("saveSong").disabled=false;
+          else document.getElementById("saveSong").disabled=true;
         } else if (player.getPlayerState()===2){
           //changed and is paused
           addTime();
