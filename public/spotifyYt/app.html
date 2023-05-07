@@ -375,14 +375,15 @@
       function checkSongInStorage(){
         var bad=false;
         if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
-          storedSongs={
+          var loadedSongs={
             items:[]
           }
-          localStorage.setItem("savedSongs",JSON.stringify(storedSongs))
+          localStorage.setItem("savedSongs",JSON.stringify(loadedSongs));
           return false;
         }
-        for(var i=0;i<storedSongs.items.length;i++){
-          if (storedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
+        var loadedSongs = JSON.parse(localStorage.getItem("savedSongs"));
+        for(var i=0;i<loadedSongs.items.length;i++){
+          if (loadedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
             bad=true;
           }
         }
