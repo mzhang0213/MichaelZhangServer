@@ -413,6 +413,8 @@
           addTime();
         } else if (player.getPlayerState()==-1&&lastState==3){
           //blocked / loading (if ur slow)
+          if (!checkSongInStorage())document.getElementById("saveSong").disabled=false;
+          else document.getElementById("saveSong").disabled=true;
           //bugged: when seeking video, player state put on 3 for no reason
           setTimeout(function(){
             if (player.getPlayerState()!==1){
