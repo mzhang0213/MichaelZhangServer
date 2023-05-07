@@ -835,6 +835,7 @@
               storedSongs={
                 items:[]
               }
+              storedSongs.items.push(document.getElementById(playedSongs[currentPos]).innerHTML)
             }else{
               if (!checkSongInStorage()){
                 storedSongs.items.push(document.getElementById(playedSongs[currentPos]).innerHTML)
