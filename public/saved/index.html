@@ -41,40 +41,42 @@
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <!--<script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>-->
     <script>
-	    if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""||JSON.stringify(localStorage.getItem("savedSongs")).items.length===0){
+	    if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
         document.getElementById("saved").innerHTML="Save some songs by clicking the \"save\" button in the app!";
       }else{
         var songs = JSON.parse(localStorage.getItem("savedSongs"));
-        for (var i=0;i<songs.items.length;i++){
-          var div = document.createElement("div");
-          div.className="container"
-          div.id=toString(i)
-          div.style.display="flex"
-          div.style.flexDirection="row";
-          div.style.justifyContent="center";
-          div.style.alignContent="center"
-          var xButton = document.createElement("button");
-          xButton.style.marginRight="20px"
-          xButton.id=toString(i+"b")
-          var song = document.createElement("p");
-          song.className="saved"
-          song.innerHTML=songs.items[i];
-          song.width="20px";
-          xButton.className="x";
-          xButton.innerHTML="❌";
-          div.appendChild(xButton);
-          div.appendChild(song);
-          document.getElementById("saved").append(div);
-          xButton.addEventListener("click",function(){
-            thisDivId=toString(this.id.charAt(0))
-            document.getElementById(thisDivId).remove()
-            var elements=document.getElementsByClassName("container")
-            var newSongs = {items:[]}
-            for (var i=0;i<elements.length;i++){
-              newSongs.items.push(elements[i].children[1])
-            }
-            localStorage.setItem("savedSongs",JSON.stringify(newSongs));
-          })
+        if (songs.items.length!==0){
+          for (var i=0;i<songs.items.length;i++){
+            var div = document.createElement("div");
+            div.className="container"
+            div.id=toString(i)
+            div.style.display="flex"
+            div.style.flexDirection="row";
+            div.style.justifyContent="center";
+            div.style.alignContent="center"
+            var xButton = document.createElement("button");
+            xButton.style.marginRight="20px"
+            xButton.id=toString(i+"b")
+            var song = document.createElement("p");
+            song.className="saved"
+            song.innerHTML=songs.items[i];
+            song.width="20px";
+            xButton.className="x";
+            xButton.innerHTML="❌";
+            div.appendChild(xButton);
+            div.appendChild(song);
+            document.getElementById("saved").append(div);
+            xButton.addEventListener("click",function(){
+              thisDivId=toString(this.id.charAt(0))
+              document.getElementById(thisDivId).remove()
+              var elements=document.getElementsByClassName("container")
+              var newSongs = {items:[]}
+              for (var i=0;i<elements.length;i++){
+                newSongs.items.push(elements[i].children[1])
+              }
+              localStorage.setItem("savedSongs",JSON.stringify(newSongs));
+            })
+          }
         }
       }
     </script>
