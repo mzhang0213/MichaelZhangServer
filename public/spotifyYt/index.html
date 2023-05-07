@@ -34,6 +34,8 @@
         <button id="login" class="main">Login</button>
         <br><br><br>
         <button id="wrapped" class="main">View Your Wrapped!</button>
+        <br><br><br>
+        <button id="cache" class="main">See Saved Songs!</button>
       </center>
       <style>
         .main{
@@ -55,6 +57,12 @@
         #wrapped:hover{
           background-color:#489ed8;
         }
+        #cache{
+          background-color:#d984e6;
+        }
+        #cache:hover{
+          background-color:#a141b0;
+        }
       </style>
       <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -67,6 +75,9 @@
         })
         document.getElementById("wrapped").addEventListener("click",()=>{
           window.location=window.location.origin+"/wrapped/";
+        })
+        document.getElementById("cache").addEventListener("click",()=>{
+          window.location=window.location.origin+"/cache/";
         })
         if (urlParams.has("exp")){
           var message = document.createElement("p");

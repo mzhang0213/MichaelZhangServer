@@ -27,6 +27,7 @@
       </div>
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
         <button id="nextId"> ⬇ </button>
+        <button id="saveSong">Save</button>
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
@@ -104,6 +105,13 @@
         font-size:17px;
       }
       #nextId{
+        position:absolute;
+        left:0;
+        top:0;
+        font-size:9px;
+        z-index:10;
+      }
+      #saveSong{
         position:absolute;
         left:0;
         top:0;
@@ -255,6 +263,8 @@
         gebi("player").width = window.innerWidth*0.40;
         gebi("player").height = window.innerHeight*0.47;
 
+        gebi("saveSong").style.left=gebi("nextId").offsetWidth+"px";
+
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
       window.addEventListener("load", resize);
@@ -368,6 +378,7 @@
       var lastState = 9999;
       var currSongIds = [];
       var currSongPos = 0;
+      
       function onPlayerStateChange(){
         if (player.getPlayerState()===0){
           //song ended, play next
@@ -397,6 +408,11 @@
       }
 
       var totalSongs = [];
+      var fromQueueAndPlay = false;
+      var fromPrev = false;
+      var fromRepeat = false;
+      var currentPos = -1; //represents current position in the array
+      var playedSongs = []; //PUSH IDS
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
@@ -456,11 +472,6 @@
             }
           })
           
-          var fromQueueAndPlay = false;
-          var fromPrev = false;
-          var fromRepeat = false;
-          var currentPos = -1; //represents current position in the array
-          var playedSongs = []; //PUSH IDS
           //get playlist's songs function
           var getSongs = function(index, playlistData){
             document.getElementById("playlist"+index).style.color = "#4287f5";
@@ -804,6 +815,11 @@
               currSongPos++;
             }
             player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+          })
+          document.getElementById("saveSong").addEventListener("click",function(){
+            var storedSongs = JSON.parse(localStorage.getItem("savedSongs"));
+            
+            this.disabled=true;
           })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/sFavicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+      gtag('config', 'UA-167496422-1');
+    </script>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+
+    <title id="documentTitle">Saved Songs for Cracked Spotify</title>
+  </head>
+  <body>
+    <font style="font-family: 'Cabin';">
+      <center>
+		    <h1>Saved Song Viewer</h1>
+        <br>
+        <p id="desc">These are your saved song titles!</p>
+        <br><br><br>
+        <p id="saved"></p>
+      </center>
+    </font>
+    <style>
+      #saved{
+        font-size:14px;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+    <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
+    <script>
+	    if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+        document.getElementById("saved").innerHTML="Save some songs by clicking the \"save\" button in the app!";
+      }else{
+        var songs = JSON.parse(localStorage.getItem("savedSongs"));
+        for (var i=0;i<songs.items.length;i++){
+          document.getElementById("saved").append(songs.items[i]);
+        }
+      }
+    </script>
+  </body>
+</html>
