@@ -378,6 +378,7 @@
           storedSongs={
             items:[]
           }
+          localStorage.setItem("savedSongs",JSON.stringify(storedSongs))
           return false;
         }
         for(var i=0;i<storedSongs.items.length;i++){
