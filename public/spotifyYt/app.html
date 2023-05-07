@@ -374,6 +374,12 @@
 
       function checkSongInStorage(){
         var bad=false;
+        if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+          storedSongs={
+            items:[]
+          }
+          return false;
+        }
         for(var i=0;i<storedSongs.items.length;i++){
           if (storedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
             bad=true;
