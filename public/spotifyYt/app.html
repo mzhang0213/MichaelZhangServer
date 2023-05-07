@@ -374,7 +374,7 @@
 
       function checkSongInStorage(){
         var bad=false;
-        if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+        if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""||localStorage.getItem("savedSongs")==="null"){
           var loadedSongs={
             items:[]
           }
@@ -842,7 +842,7 @@
           })
           document.getElementById("saveSong").addEventListener("click",function(){
             var storedSongs = JSON.parse(localStorage.getItem("savedSongs"));
-            if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""){
+            if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""||localStorage.getItem("savedSongs")==="null"){
               storedSongs={
                 items:[]
               }
