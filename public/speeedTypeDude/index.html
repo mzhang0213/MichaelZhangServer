@@ -160,16 +160,17 @@
         clearInterval(startId);
         document.getElementById("answerBox").disabled = true;
 
-        setTimeout(()=>{$("#results").append("<font style='color:red'>Incorrect Attempts: " + incorrectAnswers + "</font>");
+      setTimeout(()=>{
+        $("#results").append("<font style='color:red'>Incorrect Attempts: " + incorrectAnswers + "</font>");
         function br() {$("#results").append("<br>");}
         br();
         //determine avg by zapping out outliers and taking good numbers and avg those :)
         //method: find outliers by finding mean and standard deviation and then applying z-score; cutoff will be 1.25
-        mean = 0;
-        stdD = 0;
         sorted = wpms.sort();
         outliers = [];
         /*
+        mean = 0;
+        stdD = 0;
         for (var i=0;i<wpms.length;i++)mean += wpms[i];
         mean/=wpms.length;
         for (var i=0;i<wpms.length;i++)stdD += Math.pow(wpms[i]-mean,2);
@@ -182,10 +183,27 @@
             }
           }
         }*/
-        for (var i=0;i<sorted.length;i++){
-          
+        var firstQ = Math.floor(sorted.length/4)
+        var thirdQ = Math.floor(sorted.length*3/4)
+        for (var i=0;i<firstQ;i++){
+          outliers.push(sorted[i]);
         }
-        avg/=wpms.length;
+        for (var i=thirdQ;i<sorted.length;i++){
+          outliers.push(sorted[i]);
+        }
+        for (var i=wpms.length;i>=0;i--){
+          if(outliers.indexOf(wpms[i])!=-1){
+            //found in outliers
+            wpms.pop(i);
+          }
+        }
+        
+        //now get avg
+        avg = 0;
+        for (var i=0;i<sorted.length;i++){
+          avg+=sorted[i];
+        }
+        avg/=sorted.length;
         if (avg.toString().length>5){ //11.11 is 5 ch long, 111.11 is 6 ch long
           avg = parseFloat(avg.toString().substring(0,avg.toString().indexOf(".")+2+1)); //+2 for decimals, +1 since substring works up to index+1
         }
