@@ -69,7 +69,7 @@
       const consonants = "bcdfghjklmnpqrstvwxyz"; //index range is 0-19
       const vowels = "aeiou"; //index range is 0-5
       const letterGroups = ["ck", "ch", "ing", "ugh", "th", "er", "tion", "ity", /*"ness",*/ "ism", "ment", "ant", /*"ship",*/ "ery"];
-      const commonWords = ['the','of','and','a','to','in','is','you','that','it','he','she','was','for','on','are','as','with','his','they','I','at',
+      const commonWords = ['the','of','and','a','to','in','is','you','that','it','he','she','was','for','on','are','as','with','his','they','at',
 'be','this','have','from','or','one','had','by','word','but','not','what','all','were','we','when','your','can','said','there','use','an','each','which',
 /*'she',*/'do','how','their','if',,'will','up','other','about','out','many','then','them','these','people','some','her','would','make','like','him','into',
 'time','has','look','two','more','write','go','see','number','no','way','could','people','my','than','first','water','been','call','who','oil','its','now',
@@ -142,7 +142,7 @@
         var timeString = document.getElementById("timer").innerHTML;
         var ms = parseInt(timeString.substring(0,2))*60*60*100+parseInt(timeString.substring(3,5))*60*100+parseInt(timeString.substring(6,8))*100+parseInt(timeString.substring(9,11));
         ms++;
-        if (thirty==="true" && ms >= 30000) {
+        if (thirty==="true" && ms >= 30000/10) {
           stopGame();
           alert("Thirty seconds are over!!")
         }
@@ -159,14 +159,17 @@
       const stopGame = ()=>{
         clearInterval(startId);
         document.getElementById("answerBox").disabled = true;
-
-      setTimeout(()=>{
-        $("#results").append("<font style='color:red'>Incorrect Attempts: " + incorrectAnswers + "</font>");
+        
+      setTimeout(()=>{$("#results").append("<font style='color:red'>Incorrect Attempts: " + incorrectAnswers + "</font>");
         function br() {$("#results").append("<br>");}
         br();
         //determine avg by zapping out outliers and taking good numbers and avg those :)
         //method: find outliers by finding mean and standard deviation and then applying z-score; cutoff will be 1.25
-        sorted = wpms.sort();
+        function compareNums(a,b) {
+          return a-b;
+        }
+        sorted = wpms.slice();
+        sorted.sort(compareNums);
         outliers = [];
         /*
         mean = 0;
@@ -194,16 +197,16 @@
         for (var i=wpms.length;i>=0;i--){
           if(outliers.indexOf(wpms[i])!=-1){
             //found in outliers
-            wpms.pop(i);
+            wpms.splice(i,1);
           }
         }
         
         //now get avg
         avg = 0;
-        for (var i=0;i<sorted.length;i++){
-          avg+=sorted[i];
+        for (var i=0;i<wpms.length;i++){
+          avg+=wpms[i];
         }
-        avg/=sorted.length;
+        avg/=wpms.length;
         if (avg.toString().length>5){ //11.11 is 5 ch long, 111.11 is 6 ch long
           avg = parseFloat(avg.toString().substring(0,avg.toString().indexOf(".")+2+1)); //+2 for decimals, +1 since substring works up to index+1
         }
@@ -212,13 +215,7 @@
         $("#results").append("All wpm datapoints:")
         br();
 
-        outside:
         for (var i=0;i<wpms.length;i++){
-          for (var j=0;j<outliers.length;j++){
-            if (outliers[j]===wpms[i]){
-              continue outside;
-            }
-          }
           $("#results").append(wpms[i] + " ");
         }
         for (var i=0;i<outliers.length;i++){
@@ -243,11 +240,11 @@
           $("#outline").append(commonWords[getNewRandom(before,ezRandom(0,100),0,100)] + " ");
         }
       } else {
-        thirty = urlParams.get("thirtySeconds")
         for(var i=0;i<50;i++){
           $("#outline").append(generate(ezRandom(1,7)) + " ")
         }
       }
+      thirty = urlParams.get("thirtySeconds")
       
       var theTest = document.getElementById("outline").innerHTML.split(" ");
 
