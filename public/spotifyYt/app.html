@@ -128,6 +128,11 @@
         top:0;
         z-index:10;
       }
+      #hidePlayer img{
+        position:absolute;
+        left:0;
+        top:0;
+      }
       #prev{
         left:-20px;
       }
@@ -275,7 +280,7 @@
 
         gebi("saveSong").style.left=gebi("nextId").offsetWidth+"px";
 
-        gebi("hidePlayer").style.left=(window.innerWidth-100)+"px";
+        gebi("hidePlayer").style.left=(window.innerWidth/2-100)+"px";
 
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
@@ -286,8 +291,8 @@
       gebi("saveSong").disabled=true;
       gebi("closedEye").style.display="none";
 
-      gebi("openEye").src=window.location+"/spotifyYt/openeye.png"
-      gebi("closedEye").src=window.location+"/spotifyYt/closedeye.png"
+      gebi("openEye").src=window.location.origin+"/spotifyYt/openeye.png"
+      gebi("closedEye").src=window.location.origin+"/spotifyYt/closedeye.png"
       
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
