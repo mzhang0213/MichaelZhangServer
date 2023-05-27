@@ -281,6 +281,8 @@
         gebi("saveSong").style.left=gebi("nextId").offsetWidth+"px";
 
         gebi("hidePlayer").style.left=(window.innerWidth/2-100)+"px";
+        gebi("openEye").style.width=(gebi("openEye").offsetWidth*0.3)+"px";
+        gebi("closedEye").style.width=(gebi("closedEye").offsetWidth*0.3)+"px";
 
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
@@ -876,16 +878,15 @@
             localStorage.setItem("savedSongs",JSON.stringify(storedSongs));
             this.disabled=true;
           })
-          document.getElementById("hidePlayer").addEventListener("click",function(){
-            if(document.getElementById("openEye").style.display==""){
-              document.getElementById("openEye").style.display=="none"
-              document.getElementById("closedEye").style.display==""
-              document.getElementById("player").style.display=="none"
-            } else{
-              document.getElementById("openEye").style.display==""
-              document.getElementById("closedEye").style.display=="none"
-              document.getElementById("player").style.display==""
-            }
+          document.getElementById("openEye").addEventListener("click",function(){
+            document.getElementById("openEye").style.display=="none"
+            document.getElementById("closedEye").style.display==""
+            document.getElementById("player").style.display=="none"
+          })
+          document.getElementById("closedEye").addEventListener("click",function(){
+            document.getElementById("openEye").style.display==""
+            document.getElementById("closedEye").style.display=="none"
+            document.getElementById("player").style.display==""
           })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
