@@ -28,6 +28,10 @@
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
         <button id="nextId"> ⬇ </button>
         <button id="saveSong">Save</button>
+        <div id="hidePlayer">
+          <img id="openEye">
+          <img id="closedEye">
+        </div>
         <center id="centered">
           <div id="player"></div> <!--iframe will replace this div here :)-->
           <br clear="all"><br>
@@ -116,6 +120,12 @@
         left:0;
         top:0;
         font-size:12px;
+        z-index:10;
+      }
+      #hidePlayer{
+        position:absolute;
+        left:0;
+        top:0;
         z-index:10;
       }
       #prev{
@@ -265,6 +275,8 @@
 
         gebi("saveSong").style.left=gebi("nextId").offsetWidth+"px";
 
+        gebi("hidePlayer").style.left=(window.innerWidth-100)+"px";
+
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
       window.addEventListener("load", resize);
@@ -272,6 +284,10 @@
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
       gebi("nextId").disabled=true;
       gebi("saveSong").disabled=true;
+      gebi("closedEye").style.display="none";
+
+      gebi("openEye").src=window.location+"/spotifyYt/openeye.png"
+      gebi("closedEye").src=window.location+"/spotifyYt/closedeye.png"
       
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
@@ -854,6 +870,17 @@
             }
             localStorage.setItem("savedSongs",JSON.stringify(storedSongs));
             this.disabled=true;
+          })
+          document.getElementById("hidePlayer").addEventListener("click",function(){
+            if(document.getElementById("openEye").style.display==""){
+              document.getElementById("openEye").style.display=="none"
+              document.getElementById("closedEye").style.display==""
+              document.getElementById("player").style.display=="none"
+            } else{
+              document.getElementById("openEye").style.display==""
+              document.getElementById("closedEye").style.display=="none"
+              document.getElementById("player").style.display==""
+            }
           })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
