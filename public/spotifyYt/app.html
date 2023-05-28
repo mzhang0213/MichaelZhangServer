@@ -239,6 +239,9 @@
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
 
+        var wasHidden = gebi("player").style.display=="none"?true:false;
+        gebi("player").style.display=""
+
         gebi("one").style.width=window.innerWidth*0.5+(gebi("one").offsetWidth-gebi("one").clientWidth)+"px";
         gebi("two").style.width=window.innerWidth*0.5-(gebi("one").offsetWidth-gebi("one").clientWidth)-3+"px"; //3 for border left width
         gebi("two").style.left=window.innerWidth*0.5+(gebi("one").offsetWidth-gebi("one").clientWidth)+"px";
@@ -285,6 +288,8 @@
         gebi("hidePlayer").style.left=(gebi("two").clientWidth-gebi("openEye").offsetWidth)+"px"
 
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
+
+        if (wasHidden)gebi("player").style.display="none";
       }
       window.addEventListener("load", resize);
       window.addEventListener("resize", resize);
