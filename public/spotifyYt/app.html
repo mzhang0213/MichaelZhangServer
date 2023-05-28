@@ -282,7 +282,7 @@
 
         gebi("openEye").style.width=(100*0.3)+"px";
         gebi("closedEye").style.width=(100*0.3)+"px";
-        gebi("hidePlayer").style.left=(window.innerWidth/2-gebi("openEye").offsetWidth)+"px";
+        gebi("hidePlayer").style.left=(gebi("two").clientWidth-gebi("openEye").offsetWidth)+"px"
 
         document.getElementById("tooFastAlert").style.top=(window.innerHeight-20)+"px";
       }
@@ -879,14 +879,14 @@
             this.disabled=true;
           })
           document.getElementById("openEye").addEventListener("click",function(){
-            document.getElementById("openEye").style.display=="none"
-            document.getElementById("closedEye").style.display==""
+            document.getElementById("openEye").style.display="none"
+            document.getElementById("closedEye").style.display=""
             document.getElementById("player").style.display=="none"
           })
           document.getElementById("closedEye").addEventListener("click",function(){
-            document.getElementById("openEye").style.display==""
-            document.getElementById("closedEye").style.display=="none"
-            document.getElementById("player").style.display==""
+            document.getElementById("openEye").style.display=""
+            document.getElementById("closedEye").style.display="none"
+            document.getElementById("player").style.display=""
           })
           document.getElementById("playPause").addEventListener("click", function(){
             //assume that playerstate=5 means that the user hasn't selected video because that is what it returns in testing and idc also im not using video queue
