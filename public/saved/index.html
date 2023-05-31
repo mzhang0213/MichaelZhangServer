@@ -49,14 +49,14 @@
           for (var i=0;i<songs.items.length;i++){
             var div = document.createElement("div");
             div.className="container"
-            div.id=toString(i)
+            div.id=i+""
             div.style.display="flex"
             div.style.flexDirection="row";
             div.style.justifyContent="center";
             div.style.alignContent="center"
             var xButton = document.createElement("button");
             xButton.style.marginRight="20px"
-            xButton.id=toString(i+"b")
+            xButton.id=(i+"b")
             var song = document.createElement("p");
             song.className="saved"
             song.innerHTML=songs.items[i];
@@ -67,7 +67,7 @@
             div.appendChild(song);
             document.getElementById("saved").append(div);
             xButton.addEventListener("click",function(){
-              thisDivId=toString(this.id.charAt(0))
+              thisDivId=this.id.charAt(0)+""
               document.getElementById(thisDivId).remove()
               var elements=document.getElementsByClassName("container")
               var newSongs = {items:[]}
@@ -81,6 +81,10 @@
           document.getElementById("saved").innerHTML="Save some songs by clicking the \"save\" button in the app!";
         }
       }
+      /*
+      milet flare
+      
+      */
     </script>
   </body>
 </html>
