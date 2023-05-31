@@ -72,7 +72,7 @@
               var elements=document.getElementsByClassName("container")
               var newSongs = {items:[]}
               for (var i=0;i<elements.length;i++){
-                newSongs.items.push(elements[i].children[1])
+                newSongs.items.push(elements[i].children[1].innerHTML)
               }
               localStorage.setItem("savedSongs",JSON.stringify(newSongs));
             })
@@ -83,7 +83,7 @@
       }
       /*
       milet flare
-      
+
       */
     </script>
   </body>
