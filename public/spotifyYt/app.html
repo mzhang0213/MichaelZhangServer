@@ -460,7 +460,6 @@
       var fromRepeat = false;
       var currentPos = -1; //represents current position in the array
       var playedSongs = []; //PUSH IDS
-      var justGo = false;
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
@@ -477,13 +476,10 @@
             if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
               alert("Relogging you in :P\nGoing home...");
               window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-            }else{
-              justGo=true;
             }
           }else{
             console.log("fetching for bones err: "+bonesErr);
           }
-        }else if (justGo){
 
           var resetSongColor = function() {
             var titles = document.getElementsByClassName("songs");
@@ -587,7 +583,6 @@
             offsetDiv.id="offsetDiv"
             offsetDiv.style.height="15px";
             document.getElementById("songs").append(offsetDiv);
-            var justGoGo = false;
             //has to be nested function cuz reading variable of outer for loop is not working
             var stuff = function(ions){
               getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
@@ -605,238 +600,236 @@
                   if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
                     alert("Relogging you in :P\nGoing home...");
                     window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-                  }else{
-                    justGoGo=true;
-                  }
-                }else if (justGoGo){
-                  var allSongs = document.getElementsByClassName("songs");
-                  //just jump by 50s until you get there
-                  var appendBeforeThisElement = "";
-                  var appendBeforeIndex = 0;
-                  var first=false;
-                  if (allSongs.length===0){
-                    first=true;
-                  }else{
-                    var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
-                    var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
-                    for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not always the end-resulting "0th" group
-                      if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
-                        appendBeforeIndex=c*50;
-                        appendBeforeThisElement=document.getElementById("song"+appendBeforeIndex);
-                        break;
-                      }
-                    }
-                  }
-                  var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
-                  for (var k=0;k<songsData.items.length;k++){
-                    var p = document.createElement("p");
-                    if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
-                      document.getElementById("songs").appendChild(p);
-                      if (first) console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
-                      totalSongs.push(p);
-                    }else{
-                      appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
-                      totalSongs.splice(spot+k,0,p)
-                    }
-                    var song = "";
-                    song+=songsData.items[k].track.artists[0].name;
-                    if (song.trim().length!==0){
-                      //song has stuff rn
-                      song+=" - ";
-                    }
-                    song+=songsData.items[k].track.name;
-                    p.append(song);
-                    p.style.color = "lightgreen";
-                    var idVal=k+ions;
-                    p.id="song"+idVal;
-                    p.className="songs";
-                    p.addEventListener("click", function(){
-                      if (!cooldown){
-                        cooldown=true;
-                        remainDur=Date.now();
-                        if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
-                          playedSongs.push(this.id);
-                          currentPos++;
-                        }
-                        fromQueueAndPlay=false;
-                        fromPrev=false;
-                        fromRepeat=false;
-  
-                        //make sure the rest of the song titles lightgreen
-                        resetSongColor();
-                        this.style.color="green"; //this elem dark green
-                        
-                        //free me saronite chain gang
-                        gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
-                        gebi("nextId").disabled=false;
-                        gebi("saveSong").disabled=false;
-                        
-                        document.getElementById("documentTitle").innerHTML="";
-                        document.getElementById("documentTitle").innerHTML=this.innerHTML;
-                        
-                        //append songDesc
-                        document.getElementById("songDesc").innerHTML="";
-                        var sdItalics = document.createElement("i");
-                        var sdBlue = document.createElement("font");
-                        sdBlue.style.color="#1284ff";
-                        
-                        sdItalics.append("Playing:  ");
-                        sdBlue.append(htmlDecode(this.innerHTML));
-                        document.getElementById("songDesc").appendChild(sdItalics);
-                        document.getElementById("songDesc").appendChild(sdBlue);
-                        
-                        var searchQ=this.innerHTML;
-                        if (document.getElementById("oaSliderCheckBox").checked){
-                          searchQ+=" Official Audio";
-                        }
-                        if (document.getElementById("lyricModeSliderCheckBox").checked){
-                          searchQ+=" Lyrics";
-                        }
-                        if (document.getElementById("ostModeSliderCheckBox").checked){
-                          searchQ+=" ost";
-                        }
-                        
-                        var rejectedIds = [
-                          "ngd1Y_90PcY"
-                        ]
-                        var specialSongs = [
-                          ["希望の唄","https://youtu.be/3NOMJ5CEeLo"],
-                          ["Reol - 平面鏡","https://www.youtube.com/watch?v=xbXbEZY-IvE"],
-                          ["YOASOBI - 夜に駆ける","https://www.youtube.com/watch?v=mJ1N7-HyH1A"],
-                          ["MONGOL800 - 小さな恋のうた","https://www.youtube.com/watch?v=JoJ6lnF07U4"],
-                          ["Always With Me_Youmi Kimura [Music Box] (Studio Ghibli Anime 'Spirited Away' Theme Song)","Always With Me Youmi Kimura [Music Box]"],
-                          ["My Hair is Bad - 音楽家になりたくて","https://www.youtube.com/watch?v=oAlXNOyiyoA"],
-                          ["back number - 高嶺の花子さん","https://www.youtube.com/watch?v=KisuZab-kEM"],
-                          ["HoneyWorks - Kawaikutegomen","可愛くてごめん (feat. かぴ)／HoneyWorks"],
-                          ["SawanoHiroyuki[nZk] - &amp;Z","https://www.youtube.com/watch?v=a23xMSlTTk4"],
-                          ["Gen Hoshino - Doraemon","https://www.youtube.com/watch?v=dN5AX_W93dA"]
-                        ]
-                        for (var i=0;i<specialSongs.length;i++){
-                          if (specialSongs[i][0]===this.innerHTML){
-                            searchQ=specialSongs[i][1];
-                          }
-                        }
-                        console.log(searchQ);
-                        
-                        //youtube load
-                        //avaliable keys:
-                          //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
-                          //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
-                          //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
-                        getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
-                                  +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
-                                  +"&q="+searchQ,
-                                  undefined,
-                                  (getYtErr,searchData)=>{
-                          if (getYtErr){
-                            console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
-  
-                            getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
-                                      +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
-                                      +"&q="+searchQ,
-                                      undefined,
-                                      (getYtErrTwo,searchData)=>{
-                              if (getYtErrTwo){
-                                console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
-  
-                                getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
-                                          +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
-                                          +"&q="+searchQ,
-                                          undefined,
-                                          (getYtErrThree,searchData)=>{
-                                  if (getYtErrThree){
-                                    console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
-                                  }else{
-                                    console.log(searchData.items)
-                                    currSongIds = searchData.items;
-                                    currSongPos = 0;
-                                    for (var o=0;o<searchData.items.length;o++){
-                                      for (var p=0;p<rejectedIds.length;p++){
-                                        if (currSongIds[o].id.videoId===rejectedIds[p]){
-                                          currSongIds.splice(o,1);
-                                        }
-                                      }
-                                    }
-                                    if(currSongIds.length===0){
-                                      console.log("undesired video load");
-                                      var searchQParams = new URLSearchParams(searchQ);
-                                      if (searchQParams.get("v")!==null){
-                                        player.loadVideoById({videoId:searchQParams.get("v")});
-                                      }else{
-                                        setTimeout(function(){
-                                          document.getElementById("next").dispatchEvent(new Event("click"));
-                                        },1500)
-                                      }
-                                    }else{
-                                      player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
-                                    }
-                                  }
-                                })
-                              }else{
-                                console.log(searchData.items)
-                                currSongIds = searchData.items;
-                                currSongPos = 0;
-                                for (var o=0;o<searchData.items.length;o++){
-                                  for (var p=0;p<rejectedIds.length;p++){
-                                    if (currSongIds[o].id.videoId===rejectedIds[p]){
-                                      currSongIds.splice(o,1);
-                                    }
-                                  }
-                                }
-                                if(currSongIds.length===0){
-                                  console.log("undesired video load");
-                                  var searchQParams = new URLSearchParams(searchQ);
-                                  if (searchQParams.get("v")!==null){
-                                    player.loadVideoById({videoId:searchQParams.get("v")});
-                                  }else{
-                                    setTimeout(function(){
-                                      document.getElementById("next").dispatchEvent(new Event("click"));
-                                    },1500)
-                                  }
-                                }else{
-                                  player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
-                                }
-                              }
-                            })
-                          }else{
-                            console.log(searchData.items)
-                            currSongIds = searchData.items;
-                            currSongPos = 0;
-                            for (var o=0;o<searchData.items.length;o++){
-                              for (var p=0;p<rejectedIds.length;p++){
-                                if (currSongIds[o].id.videoId===rejectedIds[p]){
-                                  currSongIds.splice(o,1);
-                                }
-                              }
-                            }
-                            if(currSongIds.length===0){
-                              console.log("undesired video load");
-                              var searchQParams = new URLSearchParams(searchQ);
-                              if (searchQParams.get("v")!==null){
-                                player.loadVideoById({videoId:searchQParams.get("v")});
-                              }else{
-                                setTimeout(function(){
-                                  document.getElementById("next").dispatchEvent(new Event("click"));
-                                },1500)
-                              }
-                            }else{
-                              player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
-                            }
-                          }
-                        })
-                        setTimeout(()=>{
-                          console.log("GREEN")
-                          cooldown=false;
-                        },500)
-                      }else{
-                        document.getElementById("tooFastAlert").style.display="";
-                        document.getElementById("tooFastAlert").innerHTML="";
-                        document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
-                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
-                      }
-                    })
                   }
                 }
+                var allSongs = document.getElementsByClassName("songs");
+                //just jump by 50s until you get there
+                var appendBeforeThisElement = "";
+                var appendBeforeIndex = 0;
+                var first=false;
+                if (allSongs.length===0){
+                  first=true;
+                }else{
+                  var firstGroup = Math.floor(parseInt(allSongs[0].id.substring(4))/50);
+                  var lastGroup = Math.floor(parseInt(allSongs[allSongs.length-1].id.substring(4))/50);
+                  for (var c=firstGroup;c<=lastGroup;c++){//c=firstGroup since the first group position is not always the end-resulting "0th" group
+                    if (c>ions/50&&document.getElementById("song"+c*50)!==null){//if selected group is greater than group-to-be-moved and the current group is valid
+                      appendBeforeIndex=c*50;
+                      appendBeforeThisElement=document.getElementById("song"+appendBeforeIndex);
+                      break;
+                    }
+                  }
+                }
+                var spot = totalSongs.indexOf(document.getElementById("song"+appendBeforeIndex));
+                for (var k=0;k<songsData.items.length;k++){
+                  var p = document.createElement("p");
+                  if (first || appendBeforeThisElement.length===0){ //second condition if this batch is the greatest pos batch
+                    document.getElementById("songs").appendChild(p);
+                    if (first) console.log(totalSongs.length+" <-- THIS VAL SHOULD BE 0; this is first batch");
+                    totalSongs.push(p);
+                  }else{
+                    appendBeforeThisElement.parentNode.insertBefore(p,appendBeforeThisElement);
+                    totalSongs.splice(spot+k,0,p)
+                  }
+                  var song = "";
+                  song+=songsData.items[k].track.artists[0].name;
+                  if (song.trim().length!==0){
+                    //song has stuff rn
+                    song+=" - ";
+                  }
+                  song+=songsData.items[k].track.name;
+                  p.append(song);
+                  p.style.color = "lightgreen";
+                  var idVal=k+ions;
+                  p.id="song"+idVal;
+                  p.className="songs";
+                  p.addEventListener("click", function(){
+                    if (!cooldown){
+                      cooldown=true;
+                      remainDur=Date.now();
+                      if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                        playedSongs.push(this.id);
+                        currentPos++;
+                      }
+                      fromQueueAndPlay=false;
+                      fromPrev=false;
+                      fromRepeat=false;
+
+                      //make sure the rest of the song titles lightgreen
+                      resetSongColor();
+                      this.style.color="green"; //this elem dark green
+                      
+                      //free me saronite chain gang
+                      gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                      gebi("nextId").disabled=false;
+                      gebi("saveSong").disabled=false;
+                      
+                      document.getElementById("documentTitle").innerHTML="";
+                      document.getElementById("documentTitle").innerHTML=this.innerHTML;
+                      
+                      //append songDesc
+                      document.getElementById("songDesc").innerHTML="";
+                      var sdItalics = document.createElement("i");
+                      var sdBlue = document.createElement("font");
+                      sdBlue.style.color="#1284ff";
+                      
+                      sdItalics.append("Playing:  ");
+                      sdBlue.append(htmlDecode(this.innerHTML));
+                      document.getElementById("songDesc").appendChild(sdItalics);
+                      document.getElementById("songDesc").appendChild(sdBlue);
+                      
+                      var searchQ=this.innerHTML;
+                      if (document.getElementById("oaSliderCheckBox").checked){
+                        searchQ+=" Official Audio";
+                      }
+                      if (document.getElementById("lyricModeSliderCheckBox").checked){
+                        searchQ+=" Lyrics";
+                      }
+                      if (document.getElementById("ostModeSliderCheckBox").checked){
+                        searchQ+=" ost";
+                      }
+                      
+                      var rejectedIds = [
+                        "ngd1Y_90PcY"
+                      ]
+                      var specialSongs = [
+                        ["希望の唄","https://youtu.be/3NOMJ5CEeLo"],
+                        ["Reol - 平面鏡","https://www.youtube.com/watch?v=xbXbEZY-IvE"],
+                        ["YOASOBI - 夜に駆ける","https://www.youtube.com/watch?v=mJ1N7-HyH1A"],
+                        ["MONGOL800 - 小さな恋のうた","https://www.youtube.com/watch?v=JoJ6lnF07U4"],
+                        ["Always With Me_Youmi Kimura [Music Box] (Studio Ghibli Anime 'Spirited Away' Theme Song)","Always With Me Youmi Kimura [Music Box]"],
+                        ["My Hair is Bad - 音楽家になりたくて","https://www.youtube.com/watch?v=oAlXNOyiyoA"],
+                        ["back number - 高嶺の花子さん","https://www.youtube.com/watch?v=KisuZab-kEM"],
+                        ["HoneyWorks - Kawaikutegomen","可愛くてごめん (feat. かぴ)／HoneyWorks"],
+                        ["SawanoHiroyuki[nZk] - &amp;Z","https://www.youtube.com/watch?v=a23xMSlTTk4"],
+                        ["Gen Hoshino - Doraemon","https://www.youtube.com/watch?v=dN5AX_W93dA"]
+                      ]
+                      for (var i=0;i<specialSongs.length;i++){
+                        if (specialSongs[i][0]===this.innerHTML){
+                          searchQ=specialSongs[i][1];
+                        }
+                      }
+                      console.log(searchQ);
+                      
+                      //youtube load
+                      //avaliable keys:
+                        //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                        //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                        //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+                      getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                                +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                                +"&q="+searchQ,
+                                undefined,
+                                (getYtErr,searchData)=>{
+                        if (getYtErr){
+                          console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
+
+                          getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                                    +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
+                                    +"&q="+searchQ,
+                                    undefined,
+                                    (getYtErrTwo,searchData)=>{
+                            if (getYtErrTwo){
+                              console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
+
+                              getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                                        +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                                        +"&q="+searchQ,
+                                        undefined,
+                                        (getYtErrThree,searchData)=>{
+                                if (getYtErrThree){
+                                  console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
+                                }else{
+                                  console.log(searchData.items)
+                                  currSongIds = searchData.items;
+                                  currSongPos = 0;
+                                  for (var o=0;o<searchData.items.length;o++){
+                                    for (var p=0;p<rejectedIds.length;p++){
+                                      if (currSongIds[o].id.videoId===rejectedIds[p]){
+                                        currSongIds.splice(o,1);
+                                      }
+                                    }
+                                  }
+                                  if(currSongIds.length===0){
+                                    console.log("undesired video load");
+                                    var searchQParams = new URLSearchParams(searchQ);
+                                    if (searchQParams.get("v")!==null){
+                                      player.loadVideoById({videoId:searchQParams.get("v")});
+                                    }else{
+                                      setTimeout(function(){
+                                        document.getElementById("next").dispatchEvent(new Event("click"));
+                                      },1500)
+                                    }
+                                  }else{
+                                    player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                                  }
+                                }
+                              })
+                            }else{
+                              console.log(searchData.items)
+                              currSongIds = searchData.items;
+                              currSongPos = 0;
+                              for (var o=0;o<searchData.items.length;o++){
+                                for (var p=0;p<rejectedIds.length;p++){
+                                  if (currSongIds[o].id.videoId===rejectedIds[p]){
+                                    currSongIds.splice(o,1);
+                                  }
+                                }
+                              }
+                              if(currSongIds.length===0){
+                                console.log("undesired video load");
+                                var searchQParams = new URLSearchParams(searchQ);
+                                if (searchQParams.get("v")!==null){
+                                  player.loadVideoById({videoId:searchQParams.get("v")});
+                                }else{
+                                  setTimeout(function(){
+                                    document.getElementById("next").dispatchEvent(new Event("click"));
+                                  },1500)
+                                }
+                              }else{
+                                player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                              }
+                            }
+                          })
+                        }else{
+                          console.log(searchData.items)
+                          currSongIds = searchData.items;
+                          currSongPos = 0;
+                          for (var o=0;o<searchData.items.length;o++){
+                            for (var p=0;p<rejectedIds.length;p++){
+                              if (currSongIds[o].id.videoId===rejectedIds[p]){
+                                currSongIds.splice(o,1);
+                              }
+                            }
+                          }
+                          if(currSongIds.length===0){
+                            console.log("undesired video load");
+                            var searchQParams = new URLSearchParams(searchQ);
+                            if (searchQParams.get("v")!==null){
+                              player.loadVideoById({videoId:searchQParams.get("v")});
+                            }else{
+                              setTimeout(function(){
+                                document.getElementById("next").dispatchEvent(new Event("click"));
+                              },1500)
+                            }
+                          }else{
+                            player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                          }
+                        }
+                      })
+                      setTimeout(()=>{
+                        console.log("GREEN")
+                        cooldown=false;
+                      },500)
+                    }else{
+                      document.getElementById("tooFastAlert").style.display="";
+                      document.getElementById("tooFastAlert").innerHTML="";
+                      document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
+                      setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
+                    }
+                  })
+                }
+                
               })
             }
             for (var j=0;j<playlistData.items[index].tracks.total;j+=50){
