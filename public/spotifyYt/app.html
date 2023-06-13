@@ -460,16 +460,30 @@
       var fromRepeat = false;
       var currentPos = -1; //represents current position in the array
       var playedSongs = []; //PUSH IDS
+      var justGo = false;
       //see if access token expired
       getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
         if (bonesErr){
           if (bonesErr.indexOf("The access token expired")!==-1){
-            alert("Relogging you in :P\nGoing home...");
-            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+            console.log("getting new token, old: "+accessToken)
+            var oldToken = accessToken;
+            var req = new XMLHttpRequest()
+            req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+            req.onload=()=>{
+              accessToken=req.responseText.access_token;
+            }
+            req.send()
+            console.log("new token: "+accessToken)
+            if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
+              alert("Relogging you in :P\nGoing home...");
+              window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+            }else{
+              justGo=true;
+            }
           }else{
             console.log("fetching for bones err: "+bonesErr);
           }
-        }else{
+        }else if (justGo){
 
           var resetSongColor = function() {
             var titles = document.getElementsByClassName("songs");
@@ -573,16 +587,28 @@
             offsetDiv.id="offsetDiv"
             offsetDiv.style.height="15px";
             document.getElementById("songs").append(offsetDiv);
+            var justGoGo = false;
             //has to be nested function cuz reading variable of outer for loop is not working
             var stuff = function(ions){
               getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
                 if (songsFetchErr){
                   console.log("tracksFetchErr: " + songsFetchErr);
-                  if (songsFetchErr.indexOf("The access token expired")!==-1){
-                    alert("Relogging you in :P\nGoing home...");
-                    window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true&playlistInfo="+encodeURI(document.getElementById("playlist"+index).innerHTML);
+                  console.log("getting new token, old: "+accessToken)
+                  var oldToken = accessToken;
+                  var req = new XMLHttpRequest()
+                  req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+                  req.onload=()=>{
+                    accessToken=req.responseText.access_token;
                   }
-                }else{
+                  req.send()
+                  console.log("new token: "+accessToken)
+                  if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
+                    alert("Relogging you in :P\nGoing home...");
+                    window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+                  }else{
+                    justGoGo=true;
+                  }
+                }else if (justGoGo){
                   var allSongs = document.getElementsByClassName("songs");
                   //just jump by 50s until you get there
                   var appendBeforeThisElement = "";
