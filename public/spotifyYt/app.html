@@ -469,7 +469,7 @@
             var req = new XMLHttpRequest()
             req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
             req.onload=()=>{
-              accessToken=req.responseText.access_token;
+              accessToken=JSON.parse(r.responseText).access_token;
             }
             req.send()
             console.log("new token: "+accessToken)
@@ -593,7 +593,7 @@
                 var req = new XMLHttpRequest()
                 req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
                 req.onload=()=>{
-                  accessToken=req.responseText.access_token;
+                  accessToken=JSON.parse(r.responseText).access_token;
                 }
                 req.send()
                 console.log("new token: "+accessToken)
