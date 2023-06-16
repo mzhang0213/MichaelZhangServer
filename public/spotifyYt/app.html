@@ -594,7 +594,7 @@
                   var req = new XMLHttpRequest()
                   req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
                   req.onload=()=>{
-                    alert(req.responseText)
+                    alert(JSON.parse(req.responseText).access_token)
                     accessToken=JSON.parse(req.responseText).access_token;
                   }
                   req.send()
