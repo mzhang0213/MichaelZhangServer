@@ -596,13 +596,13 @@
                   req.onload=()=>{
                     alert(JSON.parse(req.responseText).access_token)
                     accessToken=JSON.parse(req.responseText).access_token;
+                    console.log("new token: "+accessToken)
+                    if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
+                      console.log("Relogging you in :P\nGoing home...");
+                      window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+                    }
                   }
                   req.send()
-                  console.log("new token: "+accessToken)
-                  if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
-                    console.log("Relogging you in :P\nGoing home...");
-                    window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-                  }
                 }else{
                   console.log("songs fetch error idk");
                 }
