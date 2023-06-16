@@ -589,17 +589,18 @@
               if (songsFetchErr){
                 if (songsFetchErr.indexOf("The access token expired")!==-1){
                   console.log("tracksFetchErr: " + songsFetchErr);
-                  alert("getting new token, old: "+accessToken)
+                  console.log("getting new token, old: "+accessToken)
                   var oldToken = accessToken;
                   var req = new XMLHttpRequest()
                   req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
                   req.onload=()=>{
-                    accessToken=JSON.parse(r.responseText).access_token;
+                    alert(req.responseText)
+                    accessToken=JSON.parse(req.responseText).access_token;
                   }
                   req.send()
-                  alert("new token: "+accessToken)
+                  console.log("new token: "+accessToken)
                   if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
-                    alert("Relogging you in :P\nGoing home...");
+                    console.log("Relogging you in :P\nGoing home...");
                     window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
                   }
                 }else{
