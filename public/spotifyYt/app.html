@@ -605,25 +605,7 @@
         var stuff = function(ions){
           getRequest("https://api.spotify.com/v1/playlists/"+playlistData.items[index].id+"/tracks"+"?"+"&limit=50"+"&offset="+ions, accessToken, (songsFetchErr, songsData)=>{ //the ions in this line is the purpose of the wrapper function: this statement cannot access "j" from the for loop :P
             if (songsFetchErr){
-              if (songsFetchErr.indexOf("The access token expired")!==-1){
-                console.log("tracksFetchErr: " + songsFetchErr);
-                console.log("getting new token, old: "+accessToken)
-                var oldToken = accessToken;
-                var req = new XMLHttpRequest()
-                req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
-                req.onload=()=>{
-                  alert(JSON.parse(req.responseText).access_token)
-                  accessToken=JSON.parse(req.responseText).access_token;
-                  console.log("new token: "+accessToken)
-                  if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
-                    console.log("Relogging you in :P\nGoing home...");
-                    window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-                  }
-                }
-                req.send()
-              }else{
-                console.log("songs fetch error idk");
-              }
+              console.log("songs fetch error idk");
             }
             var allSongs = document.getElementsByClassName("songs");
             //just jump by 50s until you get there
