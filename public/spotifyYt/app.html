@@ -485,7 +485,7 @@
           }
         })
       }
-      setInterval(function(){
+      var tokenRefreshInterval = setInterval(function(){
         var oldToken = accessToken;
         var req = new XMLHttpRequest()
         req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
@@ -498,7 +498,7 @@
           }else console.log("token refreshed")
         }
         req.send()
-      },45*60*1000)
+      },20*60*1000)
       //see if access token expired
       var resetSongColor = function() {
         var titles = document.getElementsByClassName("songs");
