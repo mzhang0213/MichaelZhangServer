@@ -442,6 +442,7 @@
           //bugged: when seeking video, player state put on 3 for no reason
           setTimeout(function(){
             if (player.getPlayerState()!==1){
+              console.log("cycled from onplayerstatechange")
               if (currSongPos!==currSongIds.length-1){
                 currSongPos++;
                 player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
@@ -881,6 +882,7 @@
       }
 
       document.getElementById("nextId").addEventListener("click", function(){
+        console.log("cycled")
         if (currSongPos===currSongIds.length-1){
           currSongPos=0;
         }else{
