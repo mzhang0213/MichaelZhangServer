@@ -557,8 +557,8 @@
               if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
                 alert("Relogging you in :P\nGoing home...");
                 window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
-                getPlaylists(theStuffData)
               }
+              getPlaylists(theStuffData)
             }
             req.send()
           }else{
