@@ -473,7 +473,7 @@
               req.onload=()=>{
                 accessToken=JSON.parse(req.responseText).access_token;
                 console.log("new token: "+accessToken)
-                if (oldToken===accessToken||access_token===undefined||access_token===null||accessToken===""){
+                if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
                   alert("Relogging you in :P\nGoing home...");
                   window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
                 }
@@ -498,7 +498,7 @@
           }else console.log("token refreshed")
         }
         req.send()
-      },20*60*1000)
+      },45*60*1000)
       //see if access token expired
       var resetSongColor = function() {
         var titles = document.getElementsByClassName("songs");
@@ -509,42 +509,63 @@
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
+      var getPlaylists = function(theStuffData) {
+        playlistTotal=theStuffData.total;
+        var things = function(atoms){
+          getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+            if (playlistFetchErr){
+              console.log("playlistFetchErr: " + playlistFetchErr);
+            } else {
+              for (var i=0;i<playlistData.items.length;i++){
+                var p = document.createElement("p");
+                document.getElementById("playlists").appendChild(p);
+                p.append(playlistData.items[i].name);
+                p.style.color = "#94bdff";
+                p.id="playlist"+i;
+                p.className="playlists";
+                p.addEventListener("click", function(){
+                  var lists = document.getElementsByClassName("playlists");
+                  for(var a=0;a<lists.length;a++){
+                    lists[a].style.color=this.style.color="#94bdff";
+                  }
+                  getSongs(this.id.substring(8),playlistData);
+                  gebi("playPause").disabled=false;
+                  totalSongs=[];
+                })
+                if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                  p.click();
+                }
+              }
+            }
+          })
+        }
+        for (var mz=0;mz<playlistTotal;mz+=50){
+          things(mz);
+        }
+      }
       getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ //dogs fetch
         if (dogsErr){
           console.log("playlistFetchErr first: " + dogsErr);
-        }else{
-          playlistTotal=theStuffData.total;
-          var things = function(atoms){
-            getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
-              if (playlistFetchErr){
-                console.log("playlistFetchErr: " + playlistFetchErr);
-              } else {
-                for (var i=0;i<playlistData.items.length;i++){
-                  var p = document.createElement("p");
-                  document.getElementById("playlists").appendChild(p);
-                  p.append(playlistData.items[i].name);
-                  p.style.color = "#94bdff";
-                  p.id="playlist"+i;
-                  p.className="playlists";
-                  p.addEventListener("click", function(){
-                    var lists = document.getElementsByClassName("playlists");
-                    for(var a=0;a<lists.length;a++){
-                      lists[a].style.color=this.style.color="#94bdff";
-                    }
-                    getSongs(this.id.substring(8),playlistData);
-                    gebi("playPause").disabled=false;
-                    totalSongs=[];
-                  })
-                  if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-                    p.click();
-                  }
-                }
+          if (dogsErr.indexOf("The access token expired")!==-1){
+            console.log("getting new token, old: "+accessToken)
+            var oldToken = accessToken;
+            var req = new XMLHttpRequest()
+            req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+            req.onload=()=>{
+              accessToken=JSON.parse(req.responseText).access_token;
+              console.log("new token: "+accessToken)
+              if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
+                alert("Relogging you in :P\nGoing home...");
+                window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+                getPlaylists(theStuffData)
               }
-            })
+            }
+            req.send()
+          }else{
+            console.log("fetching for bones err: "+dogsErr);
           }
-          for (var mz=0;mz<playlistTotal;mz+=50){
-            things(mz);
-          }
+        }else{
+          getPlaylists(theStuffData)
         }
       })
       
