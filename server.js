@@ -14,7 +14,8 @@ var webpush = require('web-push');
 var {Client} = require("pg");
 */
 const PORT = process.env.PORT || "12232";
-
+var app = express();
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -99,10 +100,6 @@ var generateRandomString = function(length) {
 };
 
 var stateKey = 'spotify_auth_state';
-
-var app = express();
-
-app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
 var lastPlaylist = "";
 app.get('/spotifyYt/login', function(req, res) {
