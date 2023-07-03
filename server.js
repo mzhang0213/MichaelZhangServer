@@ -56,33 +56,38 @@ app.get("/accounts", async (req,res)=>{
 	}
 })
 app.post("/updateTime", async (req,res)=>{
-	var user = req.body.user;
-	var time = req.body.time;
-	const dbTracking = client.db("spotifyYt").collection("timeTrack");
-	const currContent = await dbTracking.findOne();
-	const currAccs = currContent.accs;
-	var submit = []
-	var oldAcc = false;
-	for (var acc in currAccs){
-		if (user===acc.user){
+	try{
+		await client.connect();
+		var user = req.body.user;
+		var time = req.body.time;
+		const dbTracking = client.db("spotifyYt").collection("timeTrack");
+		const currContent = await dbTracking.findOne();
+		const currAccs = currContent.accs;
+		var submit = []
+		var oldAcc = false;
+		for (var acc in currAccs){
+			if (user===acc.user){
+				submit.push({user:time})
+				oldAcc=true;
+			}else{
+				submit.push(acc);
+			}
+		}
+		if (!oldAcc){
+			//create new
 			submit.push({user:time})
-			oldAcc=true;
-		}else{
-			submit.push(acc);
 		}
-	}
-	if (!oldAcc){
-		//create new
-		submit.push({user:time})
-	}
-	const filter = {"_id":{"$oid":"649deef45fcb1fd9b3716a96"}}
-	const updateDoc = {
-		$set: {
-			accs:submit
+		const filter = {"_id":{"$oid":"649deef45fcb1fd9b3716a96"}}
+		const updateDoc = {
+			$set: {
+				accs:submit
+			}
 		}
+		await dbTracking.updateOne(filter,updateDoc);
+		res.send({res:"success"});
+	}finally{
+		await client.close();
 	}
-	await dbTracking.updateOne(filter,updateDoc);
-	res.send({res:"success"});
 })
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
