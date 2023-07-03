@@ -87,6 +87,7 @@ app.post("/updateTime", async (req,res)=>{
 				["totalTime"+year]:0
 			})
 		}
+		console.log(accs)
 		const filter = {title:"accounts"}
 		const updateDoc = {
 			$set: {
