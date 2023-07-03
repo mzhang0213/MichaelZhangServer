@@ -398,7 +398,7 @@
 
       var getAccs = new XMLHttpRequest();
       var accs = [];
-      getAccs.open("GET",path);
+      getAccs.open("GET",window.location.origin+"/accounts");
       getAccs.send();
       getAccs.addEventListener("readystatechange", ()=>{
         if (getAccs.status === 200 && getAccs.readyState === 4) {
