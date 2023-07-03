@@ -185,7 +185,7 @@
                   time:0
                 }
                 newAccReq.open("POST",window.location.origin+"/updateTime");
-                newAccReq.setRsetRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+                newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
                 newAccReq.send(JSON.stringify(body));
                 newAccReq.addEventListener("readystatechange", ()=>{
                   if (newAccReq.status === 200 && newAccReq.readyState === 4) {
