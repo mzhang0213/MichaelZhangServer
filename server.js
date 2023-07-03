@@ -7,7 +7,9 @@ var fs = require("fs");
 var {google} = require('googleapis');
 var cookieParser = require("cookie-parser");
 const res = require("express/lib/response");
+const multer = require('multer');
 
+const upload = multer();
 /*
 var bodyParser = require('body-parser');
 var webpush = require('web-push');
@@ -49,13 +51,12 @@ app.get("/accounts", async (req,res)=>{
 		await client.connect();
 		const dbTracking = client.db("spotifyYt").collection("timeTrack");
 		const result = await dbTracking.findOne();
-		console.log(result);
 		res.send(result);
 	}finally{
 		await client.close();
 	}
 })
-app.post("/updateTime", async (req,res)=>{
+app.post("/updateTime", upload.none(), async (req,res)=>{
 	try{
 		await client.connect();
 		console.log(req.body);

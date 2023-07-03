@@ -121,6 +121,9 @@
         document.getElementById("cache").addEventListener("click",()=>{
           window.location=window.location.origin+"/saved/";
         })
+        
+        document.getElementById("loggedInMsg").style.display="none";
+        document.getElementById("logout").style.display="none";
 
         var getAccs = new XMLHttpRequest();
         var accs = [];
@@ -134,8 +137,7 @@
             console.log("reeeeeeee err: "+getAccs.responseText)
           }
         })
-        document.getElementById("loggedInMsg").style.display="none";
-        document.getElementById("logout").style.display="none";
+
         if (localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""){
           //create new login input
           document.getElementById("mainContent").style.display="none";
@@ -172,6 +174,8 @@
                 document.getElementById("createNewContainer").style.display="none";
                 document.getElementById("loggedInMsg").style.display="";
                 document.getElementById("logout").style.display="";
+                document.getElementById("login").disabled=false;
+                document.getElementById("wrapped").disabled=false;
                 localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
                 document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
@@ -208,6 +212,8 @@
                 document.getElementById("createNewContainer").style.display="none";
                 document.getElementById("loggedInMsg").style.display="";
                 document.getElementById("logout").style.display="";
+                document.getElementById("login").disabled=false;
+                document.getElementById("wrapped").disabled=false;
                 localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
                 document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
