@@ -411,8 +411,9 @@
       setInterval(function(){
         var newAccReq = new XMLHttpRequest();
         var body = {
-          user:document.getElementById("timeLoginField").value.trim(),
-          time:localStorage.getItem("totalTime")
+          user:localStorage.getItem("savedTimeLogin"),
+          ["totalTime"]:localStorage.getItem("totalTime"),
+          ["totalTime"+year]:localStorage.getItem("totalTime"+year)
         }
         newAccReq.open("POST",window.location.origin+"/updateTime");
         newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
