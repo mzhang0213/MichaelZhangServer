@@ -136,9 +136,10 @@
         })
         document.getElementById("loggedInMsg").style.display="none";
         document.getElementById("logout").style.display="none";
-        if (document.getElementById("timeLoginField").value!==null&&document.getElementById("timeLoginField").value!==undefined&&document.getElementById("timeLoginField").value.trim()!==""){
+        if (localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""){
           //create new login input
           document.getElementById("mainContent").style.display="none";
+          document.getElementById("createNewContainer").style.display="none";
           document.getElementById("loggedInMsg").style.display="";
           document.getElementById("logout").style.display="";
           document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
@@ -156,28 +157,41 @@
           }else{
             //good name
             if (creatingNew){
-              document.getElementById("mainContent").style.display="none";
-              document.getElementById("loggedInMsg").style.display="";
-              document.getElementById("logout").style.display="";
-              localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
-              document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
-              document.getElementById("loggedInMsg").append(document.createElement("br"));
-              var newAccReq = new XMLHttpRequest();
-              var body = {
-                user:document.getElementById("timeLoginField").value.trim(),
-                time:0
-              }
-              newAccReq.open("POST",window.location.origin+"/updateTime");
-              newAccReq.send(body);
-              newAccReq.addEventListener("readystatechange", ()=>{
-                if (newAccReq.status === 200 && newAccReq.readyState === 4) {
-                  alert("New account created successfully :D :D");
-                  document.getElementById("login").disabled=false;
-                  document.getElementById("wrapped").disabled=false;
-                } else if (newAccReq.readyState === 4){
-                  console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+              //if it already exists, cannot use the account
+              var exists = false;
+              for (var i=0;i<accs.length;i++){
+                if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
+                  //exists
+                  exists=true;
                 }
-              })
+              }
+              if (exists){
+                alert("That account name already exists (sorry!)")
+              }else{
+                document.getElementById("mainContent").style.display="none";
+                document.getElementById("createNewContainer").style.display="none";
+                document.getElementById("loggedInMsg").style.display="";
+                document.getElementById("logout").style.display="";
+                localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+                document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+                document.getElementById("loggedInMsg").append(document.createElement("br"));
+                var newAccReq = new XMLHttpRequest();
+                var body = {
+                  user:document.getElementById("timeLoginField").value.trim(),
+                  time:0
+                }
+                newAccReq.open("POST",window.location.origin+"/updateTime");
+                newAccReq.send(body);
+                newAccReq.addEventListener("readystatechange", ()=>{
+                  if (newAccReq.status === 200 && newAccReq.readyState === 4) {
+                    alert("New account created successfully :D :D");
+                    document.getElementById("login").disabled=false;
+                    document.getElementById("wrapped").disabled=false;
+                  } else if (newAccReq.readyState === 4){
+                    console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+                  }
+                })
+              }
             }else{
               //see if it is in accs; else, reject
               var exists = false;
@@ -188,9 +202,10 @@
                 }
               }
               if (!exists){
-                alert("not a registered account; please create a new one :)")
+                alert("Not a registered account name; please create a new one :)")
               }else{
                 document.getElementById("mainContent").style.display="none";
+                document.getElementById("createNewContainer").style.display="none";
                 document.getElementById("loggedInMsg").style.display="";
                 document.getElementById("logout").style.display="";
                 localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
