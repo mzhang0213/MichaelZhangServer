@@ -180,7 +180,14 @@
               })
             }else{
               //see if it is in accs; else, reject
-              if (accs.document.getElementById("timeLoginField").value.trim()===null){
+              var exists = false;
+              for (var i=0;i<accs.length;i++){
+                if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
+                  //exists
+                  exists=true;
+                }
+              }
+              if (!exists){
                 alert("not a registered account; please create a new one :)")
               }else{
                 document.getElementById("mainContent").style.display="none";
