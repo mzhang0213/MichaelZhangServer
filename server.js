@@ -45,10 +45,15 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/accounts", async (req,res)=>{
-	const dbTracking = client.db("spotifyYt").collection("timeTrack");
-	const result = await dbTracking.findOne();
-	console.log(result);
-	res.send(result);
+	try{
+		await client.connect();
+		const dbTracking = client.db("spotifyYt").collection("timeTrack");
+		const result = await dbTracking.findOne();
+		console.log(result);
+		res.send(result);
+	}finally{
+		await client.close();
+	}
 })
 app.post("/updateTime", async (req,res)=>{
 	var user = req.body.user;
