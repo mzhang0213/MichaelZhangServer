@@ -22,11 +22,59 @@
         <br>
         <p id="time"></p>
         <br>
+        <p id="message"></p>
         <br>
         <p id="disc">As of this feature's release date, Saturday, February 26, 2022<br>at 8:41:26pm EST (or 01:41:26 UTC)</p>
+        <div id="timeLoginContainer">
+          <div id="outside">
+            <div id="mainContent">
+              <p id="mainContentLabel" class="loginContainer" style="font-size:22px;"><b>Sign in to Wrapped!</b></h1>
+              <div id="loginFieldContainer" class="loginContainer" style="display:flex;align-items:flex-start;justify-content:center;">
+                <label>Username:</label>
+                <input id="timeLoginField" type="text">
+              </div>
+              <div id="buttonContainer" class="loginContainer" style="display:flex;align-items:center;justify-content:center;">
+                <button id="submitLogin" style="display:block">Login!</button>
+              </div>
+            </div>
+            <div id="createNewContainer" class="loginContainer" style="position:absolute;bottom:0;right:0;font-size:11px;color:rgb(154, 225, 255)">
+              <p id="createNew" style="display:block;margin:0;padding:0;">Create a new account!</p>
+            </div>
+            <br>
+            <p id="loggedInMsg"></p>
+            <button id="logout">Logout</button>
+          </div>
+        </div>
       </center>
     </font>
     <style>
+      .loginContainer{
+        width:200px;
+      }
+      #mainContent{
+        display:flex;
+        justify-content:center;
+        flex-wrap:wrap;
+        height:150px;
+      }
+      #timeLoginContainer{
+        z-index:10;
+        position:absolute;
+        top:20px;
+        right:20px;
+      }
+      #outside{
+        position:relative;
+        background-image:linear-gradient(to bottom right, #79eefe,#293bc6);
+        border: 2px solid black;
+        width:275px;
+        height:200px;
+      }
+      #message{
+        bottom:0;
+        left:0;
+        font-size:9px;
+      }
       #time{
         font-size:22px;
       }
@@ -38,6 +86,140 @@
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
     <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
+      document.getElementById("loggedInMsg").style.display="none";
+      document.getElementById("logout").style.display="none";
+
+      var getAccs = new XMLHttpRequest();
+      var accs = [];
+      getAccs.open("GET",window.location.origin+"/accounts");
+      getAccs.send();
+      getAccs.addEventListener("readystatechange", ()=>{
+        if (getAccs.status === 200 && getAccs.readyState === 4) {
+          var body = JSON.parse(getAccs.responseText);
+          accs=body.accs;
+        } else if (getAccs.readyState === 4){
+          console.log("reeeeeeee err: "+getAccs.responseText)
+        }
+      })
+
+      if (localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""){
+        //create new login input
+        document.getElementById("mainContent").style.display="none";
+        document.getElementById("createNewContainer").style.display="none";
+        document.getElementById("loggedInMsg").style.display="";
+        document.getElementById("logout").style.display="";
+        var white = document.createElement("font");
+        white.style.color="white";
+        white.append(localStorage.getItem("savedTimeLogin"));
+        document.getElementById("loggedInMsg").append("Logged in as: ");
+        document.getElementById("loggedInMsg").append(white);
+        document.getElementById("loggedInMsg").append(document.createElement("br"));
+      }else{
+        document.getElementById("login").disabled=true;
+        document.getElementById("wrapped").disabled=true;
+      }
+      var creatingNew = false;
+      document.getElementById("submitLogin").addEventListener("click",function(){
+        if (document.getElementById("timeLoginField").value===null||document.getElementById("timeLoginField").value===undefined||document.getElementById("timeLoginField").value.trim()===""){
+          alert("actually input something please");
+        }else if (document.getElementById("timeLoginField").value.trim().length<=2){
+          alert("too short; longer than 2 characters pls");
+        }else{
+          //good name
+          if (creatingNew){
+            //if it already exists, cannot use the account
+            var exists = false;
+            for (var i=0;i<accs.length;i++){
+              if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
+                //exists
+                exists=true;
+              }
+            }
+            if (exists){
+              alert("That account name already exists (sorry!)")
+            }else{
+              document.getElementById("mainContent").style.display="none";
+              document.getElementById("createNewContainer").style.display="none";
+              document.getElementById("loggedInMsg").style.display="";
+              document.getElementById("logout").style.display="";
+              localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+              document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+              document.getElementById("loggedInMsg").append(document.createElement("br"));
+              var newAccReq = new XMLHttpRequest();
+              var body = {
+                user:document.getElementById("timeLoginField").value.trim(),
+                time:0
+              }
+              newAccReq.open("POST",window.location.origin+"/updateTime");
+              newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+              newAccReq.send(JSON.stringify(body));
+              newAccReq.addEventListener("readystatechange", ()=>{
+                if (newAccReq.status === 200 && newAccReq.readyState === 4) {
+                  alert("New account created successfully :D :D");
+                } else if (newAccReq.readyState === 4){
+                  console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+                }
+              })
+            }
+          }else{
+            //see if it is in accs; else, reject
+            var exists = false;
+            for (var i=0;i<accs.length;i++){
+              if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
+                //exists
+                exists=true;
+              }
+            }
+            if (!exists){
+              alert("Not a registered account name; please create a new one :)")
+            }else{
+              document.getElementById("mainContent").style.display="none";
+              document.getElementById("createNewContainer").style.display="none";
+              document.getElementById("loggedInMsg").style.display="";
+              document.getElementById("logout").style.display="";
+              localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+              document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+              document.getElementById("loggedInMsg").append(document.createElement("br"));
+            }
+          }
+        }
+      })
+      document.getElementById("createNew").addEventListener("click",function(){
+        if (creatingNew){
+          document.getElementById("mainContentLabel").innerHTML="";
+          var b = document.createElement("b");b.append("Sign in to Wrapped!")
+          document.getElementById("mainContentLabel").append(b);
+          document.getElementById("createNew").innerHTML="";
+          document.getElementById("createNew").innerHTML="Create a new acc!";
+        }else{
+          document.getElementById("mainContentLabel").innerHTML="";
+          var b = document.createElement("b");b.append("Create a new acc!")
+          document.getElementById("mainContentLabel").append(b);
+          document.getElementById("createNew").innerHTML="<< Back";
+        }
+        creatingNew=!creatingNew
+      })
+      document.getElementById("logout").addEventListener("click",function(){
+        var accName = localStorage.getItem("savedTimeLogin");
+        localStorage.setItem("savedTimeLogin","");
+        window.location.reload();
+        /*
+        //destory account req
+        var destroyAccReq = new XMLHttpRequest();
+        var body = {
+          destroy:accName
+        }
+        destroyAccReq.open("POST",path);
+        destroyAccReq.send(body);
+        destroyAccReq.addEventListener("readystatechange", ()=>{
+          if (destroyAccReq.status === 200 && destroyAccReq.readyState === 4) {
+            alert("Account deleted");
+          } else if (destroyAccReq.readyState === 4){
+            console.log("reeeeeeee err: "+destroyAccReq.responseText)
+          }
+        })*/
+      })
+      
       /**
        * Get the total time in String format
        * [time] is total time in milliseconds
@@ -50,6 +232,8 @@
         cout+=("and "+time);if(time==1)cout+=(" millisecond");else cout+=(" milliseconds");
         return cout;
       }
+
+      const year = new Date().getUTCFullYear();
       /**
        * Get the total time IN MINUTES in String format
        * [time] is total time in milliseconds
@@ -57,25 +241,70 @@
       var getTimeMins = function(time){
         return parseInt((time)/60000);
       }
-      if (localStorage.getItem("totalTime")===null||localStorage.getItem("totalTime")===undefined||localStorage.getItem("totalTime")===""){
-        alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
-        window.location=window.location.origin+"/spotifyYt";
-      }else{
-        var timeE = document.getElementById("time");
-        //for curr year:
-        const year = new Date().getUTCFullYear();
-        timeE.append("You've listened for " + getTime(parseInt(localStorage.getItem("totalTime"+year))) + " this year in "+year+"!");
-        //mins only
-        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-        timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"+year))) + " total minutes this year!");
-
-        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-        
-        //for all of time
-        timeE.append("You've listened for " + getTime(parseInt(localStorage.getItem("totalTime"))) + " for all of time!");
-        //mins only
-        timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-        timeE.append("You've listened for " + getTimeMins(parseInt(localStorage.getItem("totalTime"))) + " total minutes!");
+      var displayTimeListened = function(time,timeYear,fromMDB){
+        if (time===null||time===undefined||time===""){
+          alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
+          window.location=window.location.origin+"/spotifyYt";
+        }else{
+          var timeE = document.getElementById("time");
+          //for curr year:
+          var printTimeYear = getTime(parseInt(timeYear));
+          if (fromMDB){
+            printTimeYear=document.createElement("font").append(printTimeYear);
+            printTimeYear.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeYear);
+          timeE.append(" this year in "+year+"!");
+          
+          //mins only
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          var printTimeYearMins = getTimeMins(parseInt(timeYear));
+          if (fromMDB){
+            printTimeYearMins=document.createElement("font").append(printTimeYearMins);
+            printTimeYearMins.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeYearMins);
+          timeE.append(" total minutes this year!");
+  
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          
+          //for all of time
+          var printTime = getTime(parseInt(time));
+          if (fromMDB){
+            printTime=document.createElement("font").append(printTime);
+            printTime.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTime);
+          timeE.append(" for all of time!");
+          
+          //mins only
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          var printTimeMins = getTimeMins(parseInt(time));
+          if (fromMDB){
+            printTimeMins=document.createElement("font").append(printTimeMins);
+            printTimeMins.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeMins);
+          timeE.append(" total minutes!");
+        }
+      }
+      //time is in accs[ind to acc].totalTime / .totalTime2023
+      for (var i=0;i<accs.length;i++){
+        if (accs[i].name===localStorage.getItem("savedTimeLogin")){
+          displayTimeListened(accs[i].totalTime,accs[i]["totalTime"+year],true);
+          document.getElementById("message").innerHTML="Time gathered from MDB";
+          found=true;
+          break;
+        }
+      }
+      if (!found){
+        //display localstorage
+        displayTimeListened(localStorage.getItem("totalTime"),localStorage.getItem("totalTime"+year),false);
+        document.getElementById("message").innerHTML="Time gathered from localStorage";
       }
     </script>
   </body>

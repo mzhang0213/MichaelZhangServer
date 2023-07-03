@@ -54,11 +54,14 @@ app.get("/accounts", async (req,res)=>{
 		await client.close();
 	}
 })
+
+const year = new Date().getUTCFullYear();
 app.post("/updateTime", async (req,res)=>{
 	try{
 		await client.connect();
 		var user = req.body.user;
-		var time = req.body.time;
+		var time = req.body.totalTime;
+		var timeYear = req.body["totalTime"+year];
 		const dbTracking = client.db("spotifyYt").collection("timeTrack");
 		const currContent = await dbTracking.findOne();
 		const currAccs = currContent.accs;
@@ -68,7 +71,8 @@ app.post("/updateTime", async (req,res)=>{
 			if (user===acc.user){
 				submit.push({
 					"name":user,
-					"time":time
+					["totalTime"]:time,
+					["totalTime"+year]:timeYear
 				})
 				oldAcc=true;
 			}else{
@@ -79,7 +83,8 @@ app.post("/updateTime", async (req,res)=>{
 			//create new
 			submit.push({
 				"name":user,
-				"time":time
+				["totalTime"]:0,
+				["totalTime"+year]:0
 			})
 		}
 		const filter = {title:"accounts"}

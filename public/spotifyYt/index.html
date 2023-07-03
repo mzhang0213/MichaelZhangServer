@@ -144,7 +144,11 @@
           document.getElementById("createNewContainer").style.display="none";
           document.getElementById("loggedInMsg").style.display="";
           document.getElementById("logout").style.display="";
-          document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+          var white = document.createElement("font");
+          white.style.color="white";
+          white.append(localStorage.getItem("savedTimeLogin"));
+          document.getElementById("loggedInMsg").append("Logged in as: ");
+          document.getElementById("loggedInMsg").append(white);
           document.getElementById("loggedInMsg").append(document.createElement("br"));
         }else{
           document.getElementById("login").disabled=true;
@@ -180,9 +184,11 @@
                 document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
                 var newAccReq = new XMLHttpRequest();
+                const year = new Date().getUTCFullYear();
                 var body = {
                   user:document.getElementById("timeLoginField").value.trim(),
-                  time:0
+                  ["totalTime"]:0,
+                  ["totalTime"+year]:0
                 }
                 newAccReq.open("POST",window.location.origin+"/updateTime");
                 newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')

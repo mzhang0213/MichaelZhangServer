@@ -409,8 +409,22 @@
         }
       })
       setInterval(function(){
-
-      },30*1000)
+        var newAccReq = new XMLHttpRequest();
+        var body = {
+          user:document.getElementById("timeLoginField").value.trim(),
+          time:localStorage.getItem("totalTime")
+        }
+        newAccReq.open("POST",window.location.origin+"/updateTime");
+        newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        newAccReq.send(JSON.stringify(body));
+        newAccReq.addEventListener("readystatechange", ()=>{
+          if (newAccReq.status === 200 && newAccReq.readyState === 4) {
+            console.log("time updated :D :D");
+          } else if (newAccReq.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+          }
+        })
+      },60*1000)
 
       function checkSongInStorage(){
         var bad=false;
