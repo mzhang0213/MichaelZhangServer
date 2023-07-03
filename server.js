@@ -7,17 +7,15 @@ var fs = require("fs");
 var {google} = require('googleapis');
 var cookieParser = require("cookie-parser");
 const res = require("express/lib/response");
-const multer = require('multer');
-
-const upload = multer();
-/*
 var bodyParser = require('body-parser');
+
+/*
 var webpush = require('web-push');
 var {Client} = require("pg");
 */
 const PORT = process.env.PORT || "12232";
 var app = express();
-app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser()).use(bodyParser.json());
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -56,7 +54,7 @@ app.get("/accounts", async (req,res)=>{
 		await client.close();
 	}
 })
-app.post("/updateTime", upload.none(), async (req,res)=>{
+app.post("/updateTime", async (req,res)=>{
 	try{
 		await client.connect();
 		console.log(req.body);
