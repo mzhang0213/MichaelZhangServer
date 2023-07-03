@@ -69,7 +69,10 @@ app.post("/updateTime", upload.none(), async (req,res)=>{
 		var oldAcc = false;
 		for (var acc in currAccs){
 			if (user===acc.user){
-				submit.push({user:time})
+				submit.push({
+					"name":user,
+					"time":time
+				})
 				oldAcc=true;
 			}else{
 				submit.push(acc);
@@ -77,7 +80,10 @@ app.post("/updateTime", upload.none(), async (req,res)=>{
 		}
 		if (!oldAcc){
 			//create new
-			submit.push({user:time})
+			submit.push({
+				"name":user,
+				"time":time
+			})
 		}
 		const filter = {"_id":{"$oid":"649deef45fcb1fd9b3716a96"}}
 		const updateDoc = {

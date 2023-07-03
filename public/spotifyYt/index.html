@@ -185,6 +185,7 @@
                   time:0
                 }
                 newAccReq.open("POST",window.location.origin+"/updateTime");
+                newAccReq.setRequestHeader("Content-Type", "multipart/form-data");
                 newAccReq.send(body);
                 newAccReq.addEventListener("readystatechange", ()=>{
                   if (newAccReq.status === 200 && newAccReq.readyState === 4) {
