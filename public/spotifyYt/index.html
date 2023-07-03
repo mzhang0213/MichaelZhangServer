@@ -181,7 +181,9 @@
                 document.getElementById("login").disabled=false;
                 document.getElementById("wrapped").disabled=false;
                 localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
-                document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+                var white = document.createElement("font");
+                white.style.color="white";
+                white.append(localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
                 var newAccReq = new XMLHttpRequest();
                 const year = new Date().getUTCFullYear();
@@ -221,7 +223,9 @@
                 document.getElementById("logout").style.display="";
                 document.getElementById("login").disabled=false;
                 document.getElementById("wrapped").disabled=false;
-                localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+                var white = document.createElement("font");
+                white.style.color="white";
+                white.append(localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
                 document.getElementById("login").disabled=false;
