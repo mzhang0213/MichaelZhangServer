@@ -124,7 +124,7 @@
 
         var getAccs = new XMLHttpRequest();
         var accs = [];
-        getAccs.open("GET",path);
+        getAccs.open("GET",window.location.origin+"/accounts");
         getAccs.send();
         getAccs.addEventListener("readystatechange", ()=>{
           if (getAccs.status === 200 && getAccs.readyState === 4) {
@@ -167,7 +167,7 @@
                 user:document.getElementById("timeLoginField").value.trim(),
                 time:0
               }
-              newAccReq.open("POST","/updateTime");
+              newAccReq.open("POST",window.location.origin+"/updateTime");
               newAccReq.send(body);
               newAccReq.addEventListener("readystatechange", ()=>{
                 if (newAccReq.status === 200 && newAccReq.readyState === 4) {
