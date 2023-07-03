@@ -112,7 +112,7 @@
         return parseInt((time)/60000);
       }
       var displayTimeListened = function(time,timeYear,fromMDB){
-        if (time===null||time===undefined||time===""){
+        if (time===null||time===undefined||time===""||time===0||timeYear===0){
           alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
           window.location=window.location.origin+"/spotifyYt";
         }else{

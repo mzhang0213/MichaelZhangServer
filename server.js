@@ -70,7 +70,7 @@ app.post("/updateTime", async (req,res)=>{
 		for (var acc in currAccs){
 			if (theName===acc.name){
 				submit.push({
-					name:user,
+					name:theName,
 					["totalTime"]:time,
 					["totalTime"+year]:timeYear
 				})
