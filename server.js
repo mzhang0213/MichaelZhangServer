@@ -82,9 +82,9 @@ app.post("/updateTime", async (req,res)=>{
 		if (!oldAcc){
 			//create new
 			submit.push({
-				"name":user,
-				["totalTime"]:0,
-				["totalTime"+year]:0
+				name:theName,
+				["totalTime"]:time,
+				["totalTime"+year]:timeYear
 			})
 		}
 		console.log(accs)
