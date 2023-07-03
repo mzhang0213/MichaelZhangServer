@@ -120,8 +120,9 @@
           //for curr year:
           var printTimeYear = getTime(parseInt(timeYear));
           if (fromMDB){
+            var txt = printTimeYear;
             printTimeYear=document.createElement("font");
-            printTimeYear.append(printTimeYear);
+            printTimeYear.append(txt);
             printTimeYear.style.color="#0d920d"
           }
           timeE.append("You've listened for ");
@@ -132,8 +133,9 @@
           timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
           var printTimeYearMins = getTimeMins(parseInt(timeYear));
           if (fromMDB){
+            var txt = printTimeYearMins;
             printTimeYearMins=document.createElement("font");
-            printTimeYearMins.append(printTimeYearMins);
+            printTimeYearMins.append(txt);
             printTimeYearMins.style.color="#0d920d"
           }
           timeE.append("You've listened for ");
@@ -145,8 +147,9 @@
           //for all of time
           var printTime = getTime(parseInt(time));
           if (fromMDB){
+            var txt = printTime;
             printTime=document.createElement("font");
-            printTime.append(printTime);
+            printTime.append(txt);
             printTime.style.color="#0d920d"
           }
           timeE.append("You've listened for ");
@@ -157,8 +160,9 @@
           timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
           var printTimeMins = getTimeMins(parseInt(time));
           if (fromMDB){
+            var txt = printTimeMins;
             printTimeMins=document.createElement("font");
-            printTimeMins.append(printTimeMins);
+            printTimeMins.append(txt);
             printTimeMins.style.color="#0d920d"
           }
           timeE.append("You've listened for ");
