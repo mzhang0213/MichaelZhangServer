@@ -58,7 +58,7 @@ app.get("/accounts", async (req,res)=>{
 app.post("/updateTime", async (req,res)=>{
 	try{
 		await client.connect();
-		console.log(req);
+		console.log(req.body);
 		var user = req.body.user;
 		var time = req.body.time;
 		const dbTracking = client.db("spotifyYt").collection("timeTrack");
