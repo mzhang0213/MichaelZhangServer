@@ -147,7 +147,7 @@
               document.getElementById("loggedInMsg").append(document.createElement("br"));
               var newAccReq = new XMLHttpRequest();
               var body = {
-                user:document.getElementById("timeLoginField").value.trim(),
+                name:document.getElementById("timeLoginField").value.trim(),
                 time:0
               }
               newAccReq.open("POST",window.location.origin+"/updateTime");

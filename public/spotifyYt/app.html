@@ -411,7 +411,7 @@
       setInterval(function(){
         var newAccReq = new XMLHttpRequest();
         var body = {
-          user:localStorage.getItem("savedTimeLogin"),
+          name:localStorage.getItem("savedTimeLogin"),
           ["totalTime"]:localStorage.getItem("totalTime"),
           ["totalTime"+year]:localStorage.getItem("totalTime"+year)
         }

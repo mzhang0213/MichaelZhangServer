@@ -59,7 +59,7 @@ const year = new Date().getUTCFullYear();
 app.post("/updateTime", async (req,res)=>{
 	try{
 		await client.connect();
-		var user = req.body.user;
+		var theName = req.body.name;
 		var time = req.body.totalTime;
 		var timeYear = req.body["totalTime"+year];
 		const dbTracking = client.db("spotifyYt").collection("timeTrack");
@@ -68,9 +68,9 @@ app.post("/updateTime", async (req,res)=>{
 		var submit = []
 		var oldAcc = false;
 		for (var acc in currAccs){
-			if (user===acc.user){
+			if (theName===acc.name){
 				submit.push({
-					"name":user,
+					name:user,
 					["totalTime"]:time,
 					["totalTime"+year]:timeYear
 				})
