@@ -71,9 +71,10 @@
         height:200px;
       }
       #message{
+        position:absolute;
         bottom:0;
         left:0;
-        font-size:9px;
+        font-size:11px;
       }
       #time{
         font-size:22px;
@@ -89,6 +90,79 @@
       document.getElementById("loggedInMsg").style.display="none";
       document.getElementById("logout").style.display="none";
 
+/**
+       * Get the total time in String format
+       * [time] is total time in milliseconds
+      */
+      var getTime = function(time){
+        var cout = "";
+        if(Math.floor(time/3600000)!==0)cout+=(Math.floor(time/3600000));if(Math.floor(time/3600000)==1)cout+=(" hour, ");else if(Math.floor(time/3600000)!==0)cout+=(" hours, ");time%=3600000;
+        if(Math.floor(time/60000)!==0)cout+=(Math.floor(time/60000));if(Math.floor(time/60000)==1)cout+=(" minute, ");else if(Math.floor(time/60000)!==0)cout+=(" minutes, ");time%=60000;
+        if(Math.floor(time/1000)!==0)cout+=(Math.floor(time/1000));if(Math.floor(time/1000)==1)cout+=(" second, ");else if(Math.floor(time/1000)!==0)cout+=(" seconds, ");time%=1000;
+        cout+=("and "+time);if(time==1)cout+=(" millisecond");else cout+=(" milliseconds");
+        return cout;
+      }
+
+      const year = new Date().getUTCFullYear();
+      /**
+       * Get the total time IN MINUTES in String format
+       * [time] is total time in milliseconds
+      */
+      var getTimeMins = function(time){
+        return parseInt((time)/60000);
+      }
+      var displayTimeListened = function(time,timeYear,fromMDB){
+        if (time===null||time===undefined||time===""){
+          alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
+          window.location=window.location.origin+"/spotifyYt";
+        }else{
+          var timeE = document.getElementById("time");
+          //for curr year:
+          var printTimeYear = getTime(parseInt(timeYear));
+          if (fromMDB){
+            printTimeYear=document.createElement("font").append(printTimeYear);
+            printTimeYear.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeYear);
+          timeE.append(" this year in "+year+"!");
+          
+          //mins only
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          var printTimeYearMins = getTimeMins(parseInt(timeYear));
+          if (fromMDB){
+            printTimeYearMins=document.createElement("font").append(printTimeYearMins);
+            printTimeYearMins.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeYearMins);
+          timeE.append(" total minutes this year!");
+  
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          
+          //for all of time
+          var printTime = getTime(parseInt(time));
+          if (fromMDB){
+            printTime=document.createElement("font").append(printTime);
+            printTime.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTime);
+          timeE.append(" for all of time!");
+          
+          //mins only
+          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
+          var printTimeMins = getTimeMins(parseInt(time));
+          if (fromMDB){
+            printTimeMins=document.createElement("font").append(printTimeMins);
+            printTimeMins.style.color="#0d920d"
+          }
+          timeE.append("You've listened for ");
+          timeE.append(printTimeMins);
+          timeE.append(" total minutes!");
+        }
+      }
+
       var getAccs = new XMLHttpRequest();
       var accs = [];
       getAccs.open("GET",window.location.origin+"/accounts");
@@ -97,6 +171,21 @@
         if (getAccs.status === 200 && getAccs.readyState === 4) {
           var body = JSON.parse(getAccs.responseText);
           accs=body.accs;
+          //time is in accs[ind to acc].totalTime / .totalTime2023
+          var found = false;
+          for (var i=0;i<accs.length;i++){
+            if (accs[i].name===localStorage.getItem("savedTimeLogin")){
+              displayTimeListened(accs[i].totalTime,accs[i]["totalTime"+year],true);
+              document.getElementById("message").innerHTML="Time gathered from MDB";
+              found=true;
+              break;
+            }
+          }
+          if (!found){
+            //display localstorage
+            displayTimeListened(localStorage.getItem("totalTime"),localStorage.getItem("totalTime"+year),false);
+            document.getElementById("message").innerHTML="Time gathered from localStorage";
+          }
         } else if (getAccs.readyState === 4){
           console.log("reeeeeeee err: "+getAccs.responseText)
         }
@@ -219,94 +308,6 @@
           }
         })*/
       })
-      
-      /**
-       * Get the total time in String format
-       * [time] is total time in milliseconds
-      */
-      var getTime = function(time){
-        var cout = "";
-        if(Math.floor(time/3600000)!==0)cout+=(Math.floor(time/3600000));if(Math.floor(time/3600000)==1)cout+=(" hour, ");else if(Math.floor(time/3600000)!==0)cout+=(" hours, ");time%=3600000;
-        if(Math.floor(time/60000)!==0)cout+=(Math.floor(time/60000));if(Math.floor(time/60000)==1)cout+=(" minute, ");else if(Math.floor(time/60000)!==0)cout+=(" minutes, ");time%=60000;
-        if(Math.floor(time/1000)!==0)cout+=(Math.floor(time/1000));if(Math.floor(time/1000)==1)cout+=(" second, ");else if(Math.floor(time/1000)!==0)cout+=(" seconds, ");time%=1000;
-        cout+=("and "+time);if(time==1)cout+=(" millisecond");else cout+=(" milliseconds");
-        return cout;
-      }
-
-      const year = new Date().getUTCFullYear();
-      /**
-       * Get the total time IN MINUTES in String format
-       * [time] is total time in milliseconds
-      */
-      var getTimeMins = function(time){
-        return parseInt((time)/60000);
-      }
-      var displayTimeListened = function(time,timeYear,fromMDB){
-        if (time===null||time===undefined||time===""){
-          alert("Start listening to see how much total time you have listened for in the future!\nSending you home...");
-          window.location=window.location.origin+"/spotifyYt";
-        }else{
-          var timeE = document.getElementById("time");
-          //for curr year:
-          var printTimeYear = getTime(parseInt(timeYear));
-          if (fromMDB){
-            printTimeYear=document.createElement("font").append(printTimeYear);
-            printTimeYear.style.color="#0d920d"
-          }
-          timeE.append("You've listened for ");
-          timeE.append(printTimeYear);
-          timeE.append(" this year in "+year+"!");
-          
-          //mins only
-          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-          var printTimeYearMins = getTimeMins(parseInt(timeYear));
-          if (fromMDB){
-            printTimeYearMins=document.createElement("font").append(printTimeYearMins);
-            printTimeYearMins.style.color="#0d920d"
-          }
-          timeE.append("You've listened for ");
-          timeE.append(printTimeYearMins);
-          timeE.append(" total minutes this year!");
-  
-          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-          
-          //for all of time
-          var printTime = getTime(parseInt(time));
-          if (fromMDB){
-            printTime=document.createElement("font").append(printTime);
-            printTime.style.color="#0d920d"
-          }
-          timeE.append("You've listened for ");
-          timeE.append(printTime);
-          timeE.append(" for all of time!");
-          
-          //mins only
-          timeE.append(document.createElement("br"));timeE.append(document.createElement("br"));
-          var printTimeMins = getTimeMins(parseInt(time));
-          if (fromMDB){
-            printTimeMins=document.createElement("font").append(printTimeMins);
-            printTimeMins.style.color="#0d920d"
-          }
-          timeE.append("You've listened for ");
-          timeE.append(printTimeMins);
-          timeE.append(" total minutes!");
-        }
-      }
-      //time is in accs[ind to acc].totalTime / .totalTime2023
-      var found = false;
-      for (var i=0;i<accs.length;i++){
-        if (accs[i].name===localStorage.getItem("savedTimeLogin")){
-          displayTimeListened(accs[i].totalTime,accs[i]["totalTime"+year],true);
-          document.getElementById("message").innerHTML="Time gathered from MDB";
-          found=true;
-          break;
-        }
-      }
-      if (!found){
-        //display localstorage
-        displayTimeListened(localStorage.getItem("totalTime"),localStorage.getItem("totalTime"+year),false);
-        document.getElementById("message").innerHTML="Time gathered from localStorage";
-      }
     </script>
   </body>
 </html>
