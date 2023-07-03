@@ -396,6 +396,22 @@
         intervalId="";
       }
 
+      var getAccs = new XMLHttpRequest();
+      var accs = [];
+      getAccs.open("GET",path);
+      getAccs.send();
+      getAccs.addEventListener("readystatechange", ()=>{
+        if (getAccs.status === 200 && getAccs.readyState === 4) {
+          var body = JSON.parse(getAccs.responseText);
+          accs=body.accs;
+        } else if (getAccs.readyState === 4){
+          console.log("reeeeeeee err: "+getAccs.responseText)
+        }
+      })
+      setInterval(function(){
+
+      },30*1000)
+
       function checkSongInStorage(){
         var bad=false;
         if (localStorage.getItem("savedSongs")===null||localStorage.getItem("savedSongs")===undefined||localStorage.getItem("savedSongs")===""||localStorage.getItem("savedSongs")==="null"){

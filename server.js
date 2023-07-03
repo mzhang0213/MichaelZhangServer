@@ -15,6 +15,69 @@ var {Client} = require("pg");
 */
 const PORT = process.env.PORT || "12232";
 
+
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://mzhang0213:jIdggOURnfAJOROQ@heroku.qkcqp9r.mongodb.net/?retryWrites=true&w=majority";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
+app.get("/accounts", async (req,res)=>{
+	const dbTracking = client.db("spotifyYt").collection("timeTrack");
+	const result = await dbTracking.findOne();
+	res.send(result);
+})
+app.post("/updateTime", async (req,res)=>{
+	var user = req.body.user;
+	var time = req.body.time;
+	const dbTracking = client.db("spotifyYt").collection("timeTrack");
+	const currContent = await dbTracking.findOne();
+	const currAccs = currContent.accs;
+	var submit = []
+	var oldAcc = false;
+	for (var acc in currAccs){
+		if (user===acc.user){
+			submit.push({user:time})
+			oldAcc=true;
+		}else{
+			submit.push(acc);
+		}
+	}
+	if (!oldAcc){
+		//create new
+		submit.push({user:time})
+	}
+	const filter = {"_id":{"$oid":"649deef45fcb1fd9b3716a96"}}
+	const updateDoc = {
+		$set: {
+			accs:submit
+		}
+	}
+	await dbTracking.updateOne(filter,updateDoc);
+	res.send({res:"success"});
+})
+
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
 var redirect_uri = 'https://michaelzhangwebsite.herokuapp.com/spotifyYt/callback'; // Your redirect uri
