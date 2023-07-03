@@ -46,6 +46,7 @@ run().catch(console.dir);
 app.get("/accounts", async (req,res)=>{
 	const dbTracking = client.db("spotifyYt").collection("timeTrack");
 	const result = await dbTracking.findOne();
+	console.log(result);
 	res.send(result);
 })
 app.post("/updateTime", async (req,res)=>{
