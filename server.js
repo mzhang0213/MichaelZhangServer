@@ -95,9 +95,11 @@ app.post("/updateTime", async (req,res)=>{
 		}
 		if (newAcc){
 			//create new
+			var devs = []
+			devs.push(theUpdatedDevice);
 			submit.push({
 				name:theName,
-				devices:theUpdatedDevice //will be filled with zeros
+				devices:devs //will be filled with zeros
 			})
 		}
 		const filter = {title:"accounts"}
