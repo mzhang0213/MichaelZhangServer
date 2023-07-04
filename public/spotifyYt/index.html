@@ -182,7 +182,7 @@
             msg+="'"+acc.devices[acc.devices.length-1].name+"'";
             var device = prompt(msg);
             for (var i=0;i<acc.devices.length;i++){
-              if (acc.devices[i]===device){
+              if (acc.devices[i].name===device){
                 if (confirm("Logging into saved device "+device+", ok?")){
                   //good device login
                   newDevice = false;
