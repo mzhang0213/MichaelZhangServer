@@ -68,6 +68,8 @@ app.post("/updateTime", async (req,res)=>{
 		var newAcc = true;
 		console.log(currAccs,theName,theUpdatedDevice);
 		for (var acc in currAccs){
+			console.log("acc below")
+			console.log(acc)
 			if (theName===acc.name){
 				//found old account that we are trying to update
 				console.log("found old acc");
