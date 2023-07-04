@@ -76,7 +76,7 @@ app.post("/updateTime", async (req,res)=>{
 				var submitDevices = [];
 				var newDevice = true;
 				for (var j=0;j<currAccs[i].devices.length;j++){ //find if device alr exists >> old device being updated
-					if (currAccs[i].devices[j].name===theUpdatedDevice){
+					if (currAccs[i].devices[j].name===theUpdatedDevice.name){
 						//device that is being updated
 						console.log("found old acc and updating device");
 						submitDevices.push(theUpdatedDevice);
