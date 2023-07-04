@@ -419,7 +419,7 @@
         console.log(pushDevice)
         var body = {
           name:localStorage.getItem("savedTimeLogin"),
-          device:pushDevice
+          updatedDevice:pushDevice
         }
         newAccReq.open("POST",window.location.origin+"/updateTime");
         newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
