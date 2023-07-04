@@ -256,7 +256,6 @@
           }
           if (newDevice){
             //case appears when the acc exists but a new device logged on
-            var device = prompt(msg);
             if(confirm("Creating new device '"+device+"', ok?")){
               //good device login
               localStorage.setItem("savedDeviceLogin",device);
@@ -354,6 +353,7 @@
                       break;
                     }
                   }
+                  var savedTime = localStorage.getItem("totalTime");
                   if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
                     updateTime();
                   }
@@ -409,6 +409,7 @@
                   break;
                 }
               }
+              var savedTime = localStorage.getItem("totalTime");
               if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
                 updateTime();
               }

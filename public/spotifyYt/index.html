@@ -351,6 +351,7 @@
                 document.getElementById("loggedInMsg").append("on device ");
                 document.getElementById("loggedInMsg").append(white);
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
+                var savedTime = localStorage.getItem("totalTime");
                 if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
                   updateTime();
                 }
