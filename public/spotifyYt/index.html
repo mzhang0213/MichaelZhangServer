@@ -144,7 +144,11 @@
           }
         })
 
-        if (localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""){
+        if (
+            localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""
+            &&
+            localStorage.getItem("savedDeviceLogin")!==null&&localStorage.getItem("savedDeviceLogin")!==undefined&&localStorage.getItem("savedDeviceLogin").trim()!==""
+        ){
           //create new login input
           document.getElementById("mainContent").style.display="none";
           document.getElementById("createNewContainer").style.display="none";
@@ -156,10 +160,66 @@
           document.getElementById("loggedInMsg").append("Logged in as: ");
           document.getElementById("loggedInMsg").append(white);
           document.getElementById("loggedInMsg").append(document.createElement("br"));
+          var white = document.createElement("font");
+          white.style.color="white";
+          white.append(localStorage.getItem("savedDeviceLogin"));
+          document.getElementById("loggedInMsg").append("on device ");
+          document.getElementById("loggedInMsg").append(white);
+          document.getElementById("loggedInMsg").append(document.createElement("br"));
         }else{
           document.getElementById("login").disabled=true;
           document.getElementById("wrapped").disabled=true;
         }
+        //returns if device put into storage is new or not t/f (fresh account is -1, err -1)
+        var pickDevice = function(acc){
+          var newDevice = true;
+          var msg = "What device are you on? Or a new one?"
+          if (acc.devices.length>0){
+            msg+="\n"
+            for (var i=0;i<acc.devices.length-1;i++){
+              msg+="'"+acc.devices[i].name+"' ,  ";
+            }
+            msg+="'"+acc.devices[acc.devices.length-1].name+"'";
+            var device = prompt(msg);
+            for (var i=0;i<acc.devices.length;i++){
+              if (acc.devices[i]===device){
+                if (confirm("Logging into saved device "+device+", ok?")){
+                  //good device login
+                  newDevice = false;
+                  localStorage.setItem("savedDeviceLogin",device);
+                  return false;
+                }else{
+                  alert("ok fine. bruv actually type in the correct device");
+                  pickDevice(acc);
+                }
+                break;
+              }
+            }
+          }else{
+            //given acc is new, no devices
+            var device = prompt("Noice new account, what device are you using right now? Used in tracking time!");
+            if (confirm("ok with the name "+device)){
+              localStorage.setItem("savedDeviceLogin",device);
+            }else{
+              alert("do it again");
+              pickDevice(acc);
+            }
+          }
+          if (newDevice){
+            //case appears when the acc exists but a new device logged on
+            var device = prompt(msg);
+            if(confirm("Creating new device '"+device+"', ok?")){
+              //good device login
+              localStorage.setItem("savedDeviceLogin",device);
+              return true;
+            }else{
+              alert("be decisive. go again!");
+              pickDevice(acc);
+            }
+          }
+          return -1;
+        }
+
         var creatingNew = false;
         document.getElementById("submitLogin").addEventListener("click",function(){
           if (document.getElementById("timeLoginField").value===null||document.getElementById("timeLoginField").value===undefined||document.getElementById("timeLoginField").value.trim()===""){
@@ -187,16 +247,32 @@
                 document.getElementById("login").disabled=false;
                 document.getElementById("wrapped").disabled=false;
                 localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+                var newDevice = pickDevice({devices:[]});
                 var white = document.createElement("font");
                 white.style.color="white";
                 white.append(localStorage.getItem("savedTimeLogin"));
+                document.getElementById("loggedInMsg").append("Logged in as: ");
+                document.getElementById("loggedInMsg").append(white);
+                document.getElementById("loggedInMsg").append(document.createElement("br"));
+                var white = document.createElement("font");
+                white.style.color="white";
+                white.append(localStorage.getItem("savedDeviceLogin"));
+                document.getElementById("loggedInMsg").append("on device ");
+                document.getElementById("loggedInMsg").append(white);
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
                 var newAccReq = new XMLHttpRequest();
                 const year = new Date().getUTCFullYear();
+                var submitDevice = {}
+                if (newDevice){
+                  submitDevice = {
+                    name:localStorage.getItem("savedDeviceLogin"),
+                    totalTime:0,
+                    ["totalTime"+year]:0
+                  }
+                }
                 var body = {
-                  name:document.getElementById("timeLoginField").value.trim(),
-                  ["totalTime"]:0,
-                  ["totalTime"+year]:0
+                  name:document.getElementById("timeLoginField").value,
+                  updatedDevice:submitDevice
                 }
                 newAccReq.open("POST",window.location.origin+"/updateTime");
                 newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -204,6 +280,8 @@
                 newAccReq.addEventListener("readystatechange", ()=>{
                   if (newAccReq.status === 200 && newAccReq.readyState === 4) {
                     alert("New account created successfully :D :D");
+                    var body = JSON.parse(getAccs.responseText);
+                    accs=body.accs;
                     document.getElementById("login").disabled=false;
                     document.getElementById("wrapped").disabled=false;
                   } else if (newAccReq.readyState === 4){
@@ -214,9 +292,11 @@
             }else{
               //see if it is in accs; else, reject
               var exists = false;
+              var currAcc = ""
               for (var i=0;i<accs.length;i++){
                 if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
                   //exists
+                  currAcc=accs[i]
                   exists=true;
                 }
               }
@@ -229,13 +309,20 @@
                 document.getElementById("logout").style.display="";
                 document.getElementById("login").disabled=false;
                 document.getElementById("wrapped").disabled=false;
+                localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
+                pickDevice(currAcc);
                 var white = document.createElement("font");
                 white.style.color="white";
                 white.append(localStorage.getItem("savedTimeLogin"));
-                document.getElementById("loggedInMsg").append("Logged in as: "+localStorage.getItem("savedTimeLogin"));
+                document.getElementById("loggedInMsg").append("Logged in as: ");
+                document.getElementById("loggedInMsg").append(white);
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
-                document.getElementById("login").disabled=false;
-                document.getElementById("wrapped").disabled=false;
+                var white = document.createElement("font");
+                white.style.color="white";
+                white.append(localStorage.getItem("savedDeviceLogin"));
+                document.getElementById("loggedInMsg").append("on device ");
+                document.getElementById("loggedInMsg").append(white);
+                document.getElementById("loggedInMsg").append(document.createElement("br"));
               }
             }
           }
@@ -258,6 +345,7 @@
         document.getElementById("logout").addEventListener("click",function(){
           var accName = localStorage.getItem("savedTimeLogin");
           localStorage.setItem("savedTimeLogin","");
+          localStorage.setItem("savedDeviceLogin","");
           window.location.reload();
           /*
           //destory account req

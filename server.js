@@ -57,34 +57,47 @@ app.get("/accounts", async (req,res)=>{
 
 const year = new Date().getUTCFullYear();
 app.post("/updateTime", async (req,res)=>{
-	try{
+	try{ //find if im creating a whole new account and then if in a) old acc new device or not and b) new acc new device
 		await client.connect();
 		var theName = req.body.name;
-		var time = req.body.totalTime;
-		var timeYear = req.body["totalTime"+year];
+		var theUpdatedDevice = req.body.updatedDevice;
 		const dbTracking = client.db("spotifyYt").collection("timeTrack");
 		const currContent = await dbTracking.findOne();
 		const currAccs = currContent.accs;
 		var submit = []
-		var oldAcc = false;
+		var newAcc = true;
+		console.log(currContent)
 		for (var acc in currAccs){
 			if (theName===acc.name){
+				//found old account that we are trying to update
+				var submitDevices = []
+				var newDevice = true;
+				for (var device in acc.devices){ //find if device alr exists >> old device being updated
+					if (device.name===theUpdatedDevice){
+						//device that is being updated
+						submitDevices.push(theUpdatedDevice);
+						newDevice = false;
+					}else{
+						submitDevices.push(device);
+					}
+				}
+				if (newDevice){
+					submitDevices.push(theUpdatedDevice); //will be zeros
+				}
 				submit.push({
 					name:theName,
-					["totalTime"]:time,
-					["totalTime"+year]:timeYear
+					devices:submitDevices
 				})
-				oldAcc=true;
+				newAcc=false;
 			}else{
 				submit.push(acc);
 			}
 		}
-		if (!oldAcc){
+		if (newAcc){
 			//create new
 			submit.push({
 				name:theName,
-				["totalTime"]:time,
-				["totalTime"+year]:timeYear
+				devices:theUpdatedDevice //will be filled with zeros
 			})
 		}
 		const filter = {title:"accounts"}
@@ -94,7 +107,10 @@ app.post("/updateTime", async (req,res)=>{
 			}
 		}
 		await dbTracking.updateOne(filter,updateDoc);
-		res.send({res:"success"});
+		var sendMsg = {
+			accs:submit
+		}
+		res.send(JSON.stringify(sendMsg));
 	}finally{
 		await client.close();
 	}

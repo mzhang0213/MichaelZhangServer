@@ -409,11 +409,24 @@
         }
       })
       setInterval(function(){
+        //have access to acc name and device
         var newAccReq = new XMLHttpRequest();
+        var submitDevices = [];
+        for (var i=0;i<accs.devices.length;i++){
+          if (accs.devices[i].name===localStorage.getItem("savedDeviceLogin")){
+            var pushDevice = {
+              name:localStorage.getItem("savedDeviceLogin"),
+              ["totalTime"]:localStorage.getItem("totalTime"),
+              ["totalTime"+year]:localStorage.getItem("totalTime"+year)
+            }
+            submitDevices.push(pushDevice);
+          }else{
+            submitDevices.push(accs.devices[i]);
+          }
+        }
         var body = {
           name:localStorage.getItem("savedTimeLogin"),
-          ["totalTime"]:localStorage.getItem("totalTime"),
-          ["totalTime"+year]:localStorage.getItem("totalTime"+year)
+          device:pushDevice
         }
         newAccReq.open("POST",window.location.origin+"/updateTime");
         newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -421,6 +434,8 @@
         newAccReq.addEventListener("readystatechange", ()=>{
           if (newAccReq.status === 200 && newAccReq.readyState === 4) {
             console.log("time updated :D :D");
+            var body = JSON.parse(getAccs.responseText);
+            accs=body.accs;
           } else if (newAccReq.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
           }
