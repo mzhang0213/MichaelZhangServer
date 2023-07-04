@@ -67,16 +67,16 @@ app.post("/updateTime", async (req,res)=>{
 		var submit = []
 		var newAcc = true;
 		console.log(currAccs,theName,theUpdatedDevice);
-		for (var acc in currAccs){
+		for (var i=0;i<currAccs.length;i++){
 			console.log("acc below")
 			console.log(acc)
-			if (theName===acc.name){
+			if (theName===currAccs[i].name){
 				//found old account that we are trying to update
 				console.log("found old acc");
 				var submitDevices = [];
 				var newDevice = true;
-				for (var device in acc.devices){ //find if device alr exists >> old device being updated
-					if (device.name===theUpdatedDevice){
+				for (var j=0;j<currAccs[i].devices.length;j++){ //find if device alr exists >> old device being updated
+					if (currAccs[i].devices[j].name===theUpdatedDevice){
 						//device that is being updated
 						console.log("found old acc and updating device");
 						submitDevices.push(theUpdatedDevice);
