@@ -114,6 +114,7 @@
       </style>
       <script>
         const urlParams = new URLSearchParams(window.location.search);
+        const year = new Date().getUTCFullYear();
         document.getElementById("login").addEventListener("click",()=>{
           var redirect = "./login";
           if (urlParams.has("playlistInfo")){
@@ -285,7 +286,6 @@
                 document.getElementById("loggedInMsg").append(white);
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
                 var newAccReq = new XMLHttpRequest();
-                const year = new Date().getUTCFullYear();
                 var submitDevice = {}
                 if (newDevice){
                   submitDevice = {

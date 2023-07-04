@@ -89,8 +89,9 @@
     <script>
       document.getElementById("loggedInMsg").style.display="none";
       document.getElementById("logout").style.display="none";
-
-/**
+      const year = new Date().getUTCFullYear();
+      
+      /**
        * Get the total time in String format
        * [time] is total time in milliseconds
       */
@@ -103,7 +104,6 @@
         return cout;
       }
 
-      const year = new Date().getUTCFullYear();
       /**
        * Get the total time IN MINUTES in String format
        * [time] is total time in milliseconds
@@ -278,6 +278,32 @@
         return -1;
       }
       
+      var updateTime = function(){
+        var newAccReq = new XMLHttpRequest();
+        var pushDevice = {
+          name:localStorage.getItem("savedDeviceLogin"),
+          ["totalTime"]:localStorage.getItem("totalTime"),
+          ["totalTime"+year]:localStorage.getItem("totalTime"+year)
+        }
+        console.log(pushDevice, "accs: "+accs)
+        var body = {
+          name:localStorage.getItem("savedTimeLogin"),
+          updatedDevice:pushDevice
+        }
+        newAccReq.open("POST",window.location.origin+"/updateTime");
+        newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        newAccReq.send(JSON.stringify(body));
+        newAccReq.addEventListener("readystatechange", ()=>{
+          if (newAccReq.status === 200 && newAccReq.readyState === 4) {
+            console.log("time updated :D :D");
+            var body = JSON.parse(getAccs.responseText);
+            accs=body.accs;
+          } else if (newAccReq.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+          }
+        })
+      }
+
       var creatingNew = false;
       document.getElementById("submitLogin").addEventListener("click",function(){
         if (document.getElementById("timeLoginField").value===null||document.getElementById("timeLoginField").value===undefined||document.getElementById("timeLoginField").value.trim()===""){
@@ -317,7 +343,6 @@
               document.getElementById("loggedInMsg").append(white);
               document.getElementById("loggedInMsg").append(document.createElement("br"));
               var newAccReq = new XMLHttpRequest();
-              const year = new Date().getUTCFullYear();
               var submitDevice = {}
               if (newDevice){
                 submitDevice = {
