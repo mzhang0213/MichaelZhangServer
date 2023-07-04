@@ -353,6 +353,9 @@
                       break outside;
                     }
                   }
+                  if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                    updateTime();
+                  }
                 } else if (newAccReq.readyState === 4){
                   console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
                 }
@@ -406,6 +409,9 @@
                   found=true;
                   break outside;
                 }
+              }
+              if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                updateTime();
               }
             }
           }

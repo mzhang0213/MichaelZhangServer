@@ -220,6 +220,31 @@
           }
           return -1;
         }
+        var updateTime = function(){
+          var newAccReq = new XMLHttpRequest();
+          var pushDevice = {
+            name:localStorage.getItem("savedDeviceLogin"),
+            ["totalTime"]:localStorage.getItem("totalTime"),
+            ["totalTime"+year]:localStorage.getItem("totalTime"+year)
+          }
+          console.log(pushDevice, "accs: "+accs)
+          var body = {
+            name:localStorage.getItem("savedTimeLogin"),
+            updatedDevice:pushDevice
+          }
+          newAccReq.open("POST",window.location.origin+"/updateTime");
+          newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+          newAccReq.send(JSON.stringify(body));
+          newAccReq.addEventListener("readystatechange", ()=>{
+            if (newAccReq.status === 200 && newAccReq.readyState === 4) {
+              console.log("time updated :D :D");
+              var body = JSON.parse(getAccs.responseText);
+              accs=body.accs;
+            } else if (newAccReq.readyState === 4){
+              console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
+            }
+          })
+        }
 
         var creatingNew = false;
         document.getElementById("submitLogin").addEventListener("click",function(){
@@ -281,6 +306,10 @@
                 newAccReq.addEventListener("readystatechange", ()=>{
                   if (newAccReq.status === 200 && newAccReq.readyState === 4) {
                     alert("New account created successfully :D :D");
+                    var savedTime = localStorage.getItem("totalTime");
+                    if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                      updateTime();
+                    }
                     var body = JSON.parse(getAccs.responseText);
                     accs=body.accs;
                     document.getElementById("login").disabled=false;
@@ -324,6 +353,9 @@
                 document.getElementById("loggedInMsg").append("on device ");
                 document.getElementById("loggedInMsg").append(white);
                 document.getElementById("loggedInMsg").append(document.createElement("br"));
+                if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                  updateTime();
+                }
               }
             }
           }
