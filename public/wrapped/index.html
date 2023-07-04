@@ -248,7 +248,7 @@
                 return false;
               }else{
                 alert("ok fine. bruv actually type in the correct device");
-                pickDevice(acc);
+                return pickDevice(acc);
               }
               break;
             }
@@ -260,7 +260,7 @@
             localStorage.setItem("savedDeviceLogin",device);
           }else{
             alert("do it again");
-            pickDevice(acc);
+            return pickDevice(acc);
           }
         }
         if (newDevice){
@@ -272,7 +272,7 @@
             return true;
           }else{
             alert("be decisive. go again!");
-            pickDevice(acc);
+            return pickDevice(acc);
           }
         }
         return -1;
