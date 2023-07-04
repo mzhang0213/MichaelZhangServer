@@ -411,18 +411,10 @@
       setInterval(function(){
         //have access to acc name and device
         var newAccReq = new XMLHttpRequest();
-        var submitDevices = [];
-        for (var i=0;i<accs.devices.length;i++){
-          if (accs.devices[i].name===localStorage.getItem("savedDeviceLogin")){
-            var pushDevice = {
-              name:localStorage.getItem("savedDeviceLogin"),
-              ["totalTime"]:localStorage.getItem("totalTime"),
-              ["totalTime"+year]:localStorage.getItem("totalTime"+year)
-            }
-            submitDevices.push(pushDevice);
-          }else{
-            submitDevices.push(accs.devices[i]);
-          }
+        var pushDevice = {
+          name:localStorage.getItem("savedDeviceLogin"),
+          ["totalTime"]:localStorage.getItem("totalTime"),
+          ["totalTime"+year]:localStorage.getItem("totalTime"+year)
         }
         var body = {
           name:localStorage.getItem("savedTimeLogin"),
