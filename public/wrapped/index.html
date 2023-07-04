@@ -128,6 +128,7 @@
           }
           timeE.append("You've listened for ");
           timeE.append(printTimeYear);
+          timeE.append(document.createElement("br"));
           timeE.append(" this year in "+year+"!");
           
           //mins only
@@ -253,6 +254,18 @@
               break;
             }
           }
+          if (newDevice){
+            //case appears when the acc exists but a new device logged on
+            var device = prompt(msg);
+            if(confirm("Creating new device '"+device+"', ok?")){
+              //good device login
+              localStorage.setItem("savedDeviceLogin",device);
+              return true;
+            }else{
+              alert("be decisive. go again!");
+              return pickDevice(acc);
+            }
+          }
         }else{
           //given acc is new, no devices
           var device = prompt("Noice new account, what device are you using right now? Used in tracking time!");
@@ -260,18 +273,6 @@
             localStorage.setItem("savedDeviceLogin",device);
           }else{
             alert("do it again");
-            return pickDevice(acc);
-          }
-        }
-        if (newDevice){
-          //case appears when the acc exists but a new device logged on
-          var device = prompt(msg);
-          if(confirm("Creating new device '"+device+"', ok?")){
-            //good device login
-            localStorage.setItem("savedDeviceLogin",device);
-            return true;
-          }else{
-            alert("be decisive. go again!");
             return pickDevice(acc);
           }
         }

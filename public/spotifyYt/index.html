@@ -190,9 +190,20 @@
                   return false;
                 }else{
                   alert("ok fine. bruv actually type in the correct device");
-                  pickDevice(acc);
+                  return pickDevice(acc);
                 }
                 break;
+              }
+            }
+            if (newDevice){
+              //case appears when the acc exists but a new device logged on
+              if(confirm("Creating new device '"+device+"', ok?")){
+                //good device login
+                localStorage.setItem("savedDeviceLogin",device);
+                return true;
+              }else{
+                alert("be decisive. go again!");
+                return pickDevice(acc);
               }
             }
           }else{
@@ -200,22 +211,9 @@
             var device = prompt("Noice new account, what device are you using right now? Used in tracking time!");
             if (confirm("ok with the name "+device)){
               localStorage.setItem("savedDeviceLogin",device);
-              newDevice = false;
             }else{
               alert("do it again");
-              pickDevice(acc);
-            }
-          }
-          if (newDevice){
-            //case appears when the acc exists but a new device logged on
-            var device = prompt(msg);
-            if(confirm("Creating new device '"+device+"', ok?")){
-              //good device login
-              localStorage.setItem("savedDeviceLogin",device);
-              return true;
-            }else{
-              alert("be decisive. go again!");
-              pickDevice(acc);
+              return pickDevice(acc);
             }
           }
           return -1;
