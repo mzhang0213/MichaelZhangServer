@@ -69,7 +69,7 @@ app.post("/updateTime", async (req,res)=>{
 		console.log(currAccs,theName,theUpdatedDevice);
 		for (var i=0;i<currAccs.length;i++){
 			console.log("acc below")
-			console.log(acc)
+			console.log(currAccs[i])
 			if (theName===currAccs[i].name){
 				//found old account that we are trying to update
 				console.log("found old acc");
@@ -82,7 +82,7 @@ app.post("/updateTime", async (req,res)=>{
 						submitDevices.push(theUpdatedDevice);
 						newDevice = false;
 					}else{
-						submitDevices.push(device);
+						submitDevices.push(currAccs[i].devices[j]);
 					}
 				}
 				if (newDevice){
@@ -95,7 +95,7 @@ app.post("/updateTime", async (req,res)=>{
 				})
 				newAcc=false;
 			}else{
-				submit.push(acc);
+				submit.push(currAccs[i]);
 			}
 		}
 		if (newAcc){
