@@ -66,7 +66,7 @@ app.post("/updateTime", async (req,res)=>{
 		const currAccs = currContent.accs;
 		var submit = []
 		var newAcc = true;
-		console.log(currContent,theName,theUpdatedDevice);
+		console.log(currAccs,theName,theUpdatedDevice);
 		for (var acc in currAccs){
 			if (theName===acc.name){
 				//found old account that we are trying to update
@@ -75,6 +75,7 @@ app.post("/updateTime", async (req,res)=>{
 				for (var device in acc.devices){ //find if device alr exists >> old device being updated
 					if (device.name===theUpdatedDevice){
 						//device that is being updated
+						console.log("found old acc and updating device");
 						submitDevices.push(theUpdatedDevice);
 						newDevice = false;
 					}else{
@@ -82,6 +83,7 @@ app.post("/updateTime", async (req,res)=>{
 					}
 				}
 				if (newDevice){
+					console.log("new device")
 					submitDevices.push(theUpdatedDevice); //will be zeros
 				}
 				submit.push({
@@ -95,6 +97,7 @@ app.post("/updateTime", async (req,res)=>{
 		}
 		if (newAcc){
 			//create new
+			console.log("completely new acc")
 			var devs = []
 			devs.push(theUpdatedDevice);
 			submit.push({
@@ -102,6 +105,8 @@ app.post("/updateTime", async (req,res)=>{
 				devices:devs //will be filled with zeros
 			})
 		}
+		console.log("submit")
+		console.log(submit)
 		const filter = {title:"accounts"}
 		const updateDoc = {
 			$set: {
