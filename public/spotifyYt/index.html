@@ -200,6 +200,7 @@
             var device = prompt("Noice new account, what device are you using right now? Used in tracking time!");
             if (confirm("ok with the name "+device)){
               localStorage.setItem("savedDeviceLogin",device);
+              newDevice = false;
             }else{
               alert("do it again");
               pickDevice(acc);
