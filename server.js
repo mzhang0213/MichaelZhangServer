@@ -70,6 +70,7 @@ app.post("/updateTime", async (req,res)=>{
 		for (var acc in currAccs){
 			if (theName===acc.name){
 				//found old account that we are trying to update
+				console.log("found old acc");
 				var submitDevices = [];
 				var newDevice = true;
 				for (var device in acc.devices){ //find if device alr exists >> old device being updated
