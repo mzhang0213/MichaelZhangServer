@@ -277,7 +277,7 @@
         }
         return -1;
       }
-      
+
       var updateTime = function(){
         var newAccReq = new XMLHttpRequest();
         var pushDevice = {
@@ -364,6 +364,10 @@
                   var body = JSON.parse(getAccs.responseText);
                   accs=body.accs;
                   var found = false;
+                  var savedTime = localStorage.getItem("totalTime");
+                  if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                    updateTime();
+                  }
                   for (var i=0;i<accs.length;i++){
                     if (accs[i].name===localStorage.getItem("savedTimeLogin")){
                       var ttTime = 0;
@@ -377,10 +381,6 @@
                       found=true;
                       break;
                     }
-                  }
-                  var savedTime = localStorage.getItem("totalTime");
-                  if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
-                    updateTime();
                   }
                 } else if (newAccReq.readyState === 4){
                   console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
@@ -419,6 +419,10 @@
               document.getElementById("loggedInMsg").append("on device ");
               document.getElementById("loggedInMsg").append(white);
               document.getElementById("loggedInMsg").append(document.createElement("br"));
+              var savedTime = localStorage.getItem("totalTime");
+              if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
+                updateTime();
+              }
               var found = false;
               for (var i=0;i<accs.length;i++){
                 if (accs[i].name===localStorage.getItem("savedTimeLogin")){
@@ -433,10 +437,6 @@
                   found=true;
                   break;
                 }
-              }
-              var savedTime = localStorage.getItem("totalTime");
-              if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
-                updateTime();
               }
             }
           }
