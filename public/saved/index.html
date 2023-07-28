@@ -67,7 +67,7 @@
             div.appendChild(song);
             document.getElementById("saved").append(div);
             xButton.addEventListener("click",function(){
-              thisDivId=this.id.charAt(0)+""
+              thisDivId=this.id.substring(0,this.id.length-1)+""
               document.getElementById(thisDivId).remove()
               var elements=document.getElementsByClassName("container")
               var newSongs = {items:[]}
