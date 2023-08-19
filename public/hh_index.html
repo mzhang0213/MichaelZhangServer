@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
 <head>
@@ -70,15 +69,57 @@
 
   <!--event topics -->
   <div class="relative h-3/4 flex flex-col justify-center items-center bg-white">
-    <div class="z-10 relative sm:py-3 md:py-7 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-gradient-to-tr from-blue-500 to-sky-300">
-      <p class="font-bold sm:text-5xl md:text-7xl text-white">Hippo Hack 2023</p>
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Hippo Hack 2023</p>
+      </div>
     </div>
   </div>
 
   <!--announcements-->
   <div class="relative flex flex-col justify-center items-center w-screen" style="height:800px;">
     <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8">Announcements</p>
-    <div id="announcementsBox" class="relative flex flex-col justify-center items-start rounded-xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
+    <div id="announcementsBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
+  </div>
+  <script>
+    /*how the announcements system will work:
+    -mongodb push announcements in a ui sys: either external website or a simple get request in the url
+    -upon website load, load all announcements
+    -once loaded, compare with localstorage's copy of the announcements
+      -determine new announcements by comparing: if there are announcmenets not documented in the local storage, then they are new and mark them as such
+      -for new ones put sparkles, hyphened NEW ✨✨ << like that
+    -update localstorage with the announcements
+
+    displaying announcements:
+
+    ______________________________________________________
+    |  ✨NEW✨ title_of_anno
+    |  <i> Posted xx:yy [A|P]M </i>  <<make the time a different color / font than the posted and the rest of the title
+    |
+    |  <body of announcement in html>
+    |
+    |
+    |
+    ------------------------------------------------------
+
+    <div> 10/12 width height-auto flex flex-col items-center rounded-2xl shadow-xl
+      <h1_title></h1> width-full 
+      <p_time></p> width-full
+      <p_body></p> width-full
+    </div>
+    */
+  </script>
+
+  <!-- day's schedule-->
+  <div class="relative h-3/4 flex flex-col justify-center items-center bg-white">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Schedule</p>
+      </div>
+    </div>
+    <div class="relative mt-12">
+      <!--make a table using table tag and stuff-->
+    </div>
   </div>
 </body>
 </html>
