@@ -1,0 +1,22 @@
+WOAH A THING I CAN DO IS PUT PEOPLES' ACCOUNT USERNAME (SIGNIN) INFOS ON THEIR BADGE AND THATS HOW THEY CAN SIGN INTO THE PLATFORM POG
+
+schematic:
+writing notification
+my_noti > post to server.js > write to mongodb + post to service worker > show notification + update localstorage
+
+https://www.section.io/engineering-education/push-notification-in-nodejs-using-service-worker/
+
+
+food ordering schematic
+OK THIS IS SUPER COMPLICATED AND MAYBE DONT MAKE
+
+pizza_person-side:
+wworker receives order > disp as order with the name, items (ie token count), time_placed. put call button and done button under the info
+onclick: grow, dim bg, show the food as a series of panels popping out on the right of the main panel
+also include a place to mark food items gone / missing / finished
+
+client-side:
+menu options as panels, onhover grow, big shadows
+order credits in the top right of the page
+click on item, darken bg, grow even more, have an order button w/ how many creds you want to spend (1cred=1unit)
+onsubmit > post to server.js > send data to pizza_person-side's wworker
