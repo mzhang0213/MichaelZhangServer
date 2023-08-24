@@ -70,7 +70,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
-          <a onclick="(function(){localStorage.setItem('hh-username','');localStorage.setItem('hh-first','');localStorage.setItem('hh-last','');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
