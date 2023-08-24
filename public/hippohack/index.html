@@ -70,7 +70,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
-          <a onclick="(function(){localStorage.setItem('hh-username','');localStorage.setItem('hh-first','');localStorage.setItem('hh-last','');});window.location.reload();" id="logout">Logout</a>
+          <a onclick="(function(){localStorage.setItem('hh-username','');localStorage.setItem('hh-first','');localStorage.setItem('hh-last','');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -137,7 +137,7 @@
   <!--announcements-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
     <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg bg-gradient-to-bl p-8 from-blue-500 to-sky-300">Announcements</p>
-    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-scroll" style="height:600px"></div>
+    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-auto" style="height:600px"></div>
   </div>
   <script>
     var createAnno = function(title,time,body){
