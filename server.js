@@ -205,7 +205,20 @@ app.post("/hh-anno", async(req,res)=>{
 	}
 })
 
-app.get("/hh-getAnnos")
+app.get("/hh-getAnnos",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db("hippohack2023").collection("annos");
+		const currContent = await db.findOne();
+		var db_annos = currContent.annos;
+		var msg = {
+			annos:db_annos
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
 
 
 
