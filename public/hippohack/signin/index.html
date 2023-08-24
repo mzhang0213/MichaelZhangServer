@@ -84,7 +84,7 @@
       message.style.fontSize = "30px";
       message.id="welcome";
       document.body.appendChild(message);
-      message.zIndex="20";
+      message.style.zIndex="20";
       
       gebi("dim").style.display="";
 
@@ -115,9 +115,12 @@
             },1000)
           },1000)
         },1000)
-      },1250)
+      },2000)
     }
-
+    if (localStorage.getItem("hh-username")!==null){
+      //alr logged in??? but ok
+      introMsg(localStorage.getItem("hh-first"));
+    }
     gebi("login").addEventListener("click",function(){
       var req = new XMLHttpRequest();
       var username = gebi("user").value;
