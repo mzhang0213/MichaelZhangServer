@@ -134,10 +134,11 @@ app.post("/hh-login", async (req,res)=>{
 		//req.body.user is the username submitted
 
 		await client.connect();
-		var theUpdatedDevice = req.body.updatedDevice;
 		const db = client.db("hippohack2023").collection("accounts");
 		const currContent = await db.findOne();
 		const usernames = currContent.usernames;
+		console.log(currContent)
+		console.log(usernames)
 	
 		//black box: fetch registered usernames from mongodb and put it in var usernames
 		//check if the username is one in the registered usernames
