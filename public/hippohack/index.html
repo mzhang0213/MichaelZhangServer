@@ -50,7 +50,7 @@
     }
   </style>
 </head>
-<body class="bg-gray-800" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+<body class="bg-gray-900" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
     <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
@@ -68,7 +68,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
-          <a id="logout">Logout</a>
+          <a onclick="(function(){localStorage.setItem('hh-username','');localStorage.setItem('hh-first','');localStorage.setItem('hh-last','');});window.location.reload();" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -133,8 +133,8 @@
   </div>
 
   <!--announcements-->
-  <div class="relative flex flex-col justify-center items-center bg-gradient-to-bl h-full from-blue-500 to-sky-300" style="height:800px;">
-    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg">Announcements</p>
+  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
+    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg bg-gradient-to-bl h-full from-blue-500 to-sky-300">Announcements</p>
     <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
   </div>
   <script>
