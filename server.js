@@ -129,40 +129,45 @@ app.post("/updateTime", async (req,res)=>{
 
 // HIPPO HACK
 
-//PUT THIS IN THE FVKN MONGO DB OK
-const usernames = [
-	{
-		"username":"mzlord","first":"michael","last":"zhang"
-	},
-	{
-		"username":""
-	}
-]
-app.post("/hh-login",(req,res)=>{
-	//req.body.user is the username submitted
+app.post("/hh-login", async (req,res)=>{
+	try{
+		//req.body.user is the username submitted
 
-	//black box: fetch registered usernames from mongodb and put it in var usernames
-	//check if the username is one in the registered usernames
-	var found=false;
-	var msg = {
-		error:0
-	}
-	for (var i=0;i<usernames.length;i++){
-		if (req.body.user==usernames[i].username){
-			//usernames[i] is the correct registered username
-			msg.user=usernames[i].username;
-			msg.first=usernames[i].first;
-			msg.last=usernames[i].last;
-			found=true;
+		await client.connect();
+		var theUpdatedDevice = req.body.updatedDevice;
+		const db = client.db("hippohack2023").collection("accounts");
+		const currContent = await db.findOne();
+		const usernames = currContent.usernames;
+	
+		//black box: fetch registered usernames from mongodb and put it in var usernames
+		//check if the username is one in the registered usernames
+		var found=false;
+		var msg = {
+			error:0
 		}
+		for (var i=0;i<usernames.length;i++){
+			if (req.body.user==usernames[i].username){
+				//usernames[i] is the correct registered username
+				msg.user=usernames[i].username;
+				msg.first=usernames[i].first;
+				msg.last=usernames[i].last;
+				found=true;
+			}
+		}
+		if (!found){
+			msg.error=1;
+			console.log("toast");
+		}
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
 	}
-	if (!found){
-		msg.error=1;
-	}
-	res.send(JSON.stringify(msg))
 })
 
+app.post("/hh-noti", async(req,res)=>{
 
+})
 
 
 

@@ -65,6 +65,8 @@
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Submit Project</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
@@ -134,13 +136,13 @@
 
   <!--announcements-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
-    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg bg-gradient-to-bl h-full from-blue-500 to-sky-300">Announcements</p>
-    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
+    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg bg-gradient-to-bl p-8 from-blue-500 to-sky-300">Announcements</p>
+    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-scroll" style="height:600px"></div>
   </div>
   <script>
     var createAnno = function(title,time,body){
       var anno = document.createElement("div");
-      anno.className="relative w-10/12 h-auto flex flex-col items-center text-left rounded-2xl shadow-xl bg-gray-400";
+      anno.className="relative w-10/12 h-auto flex flex-col items-center text-left rounded-2xl shadow-xl bg-sky-400";
       var annos = JSON.parse(localStorage.getItem("annos")).annos;
 
       var titleE = document.createElement("h1");
