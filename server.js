@@ -148,10 +148,10 @@ app.post("/hh-login", async (req,res)=>{
 		}
 		for (var i=0;i<usernames.length;i++){
 			console.log("submitted username: "+req.body.user);
-			console.log("db username: "+usernames[i].username);
-			if (req.body.user==usernames[i].username){
+			console.log("db username: "+usernames[i].user);
+			if (req.body.user==usernames[i].user){
 				//usernames[i] is the correct registered username
-				msg.user=usernames[i].username;
+				msg.user=usernames[i].user;
 				msg.first=usernames[i].first;
 				msg.last=usernames[i].last;
 				found=true;
