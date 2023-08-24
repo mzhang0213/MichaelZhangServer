@@ -53,46 +53,31 @@
 <body class="-z-10 bg-gray-200">
   <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./hippoooooo.png')"></div>
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
-    <input id="">
-    <input id="user" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
-    <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
+    <input id="title" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
+    <input id="body" class="text-center mt-12 rounded-xl" style="width:300px;height:100px;border:2px black solid; overflow:auto;">
+    <button id="submit" class="main mt-6 px-3 py-2">Go! >></button>
   </div>
-  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-30" style="width:100%;height:100%;display:none"></div>
-  <style>
-    input{
-      border:2px black solid;
-    }
-  </style>
   <script>
     var gebi = function(e){return document.getElementById(e)}
 
-    gebi("login").addEventListener("click",function(){
+    gebi("submit").addEventListener("click",function(){
       var req = new XMLHttpRequest();
-      var username = gebi("user").value;
+      var title = gebi("title").value;
+      var msg_body = gebi("body").value;
       var body = {
-        user:username
+        title:title,
+        body:msg_body
       }
-      req.open("POST",window.location.origin+"/hh-login");
+      req.open("POST",window.location.origin+"/hh-anno");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
-          var body = JSON.parse(req.responseText);
-          //now check for responded errors
-          if (body.error == 1) {
-            //code 1: invalid username
-            alert("wrong / misspelled username. sorry!")
-          }else if (body.error == 0){
-            //code 0: success
-            console.log("acc signin success");
-            localStorage.setItem("hh-username",body.user);
-            localStorage.setItem("hh-first",body.first);
-            localStorage.setItem("hh-last",body.last);
-            introMsg();
-          }
+          var b = JSON.parse(req.responseText);
+          alert("sent message: "+b.body);
         } else if (req.readyState === 4){
-          console.log("reeeeeeee err new acc creation: "+req.responseText);
-          alert("please ask michael for help oh noes")
+          console.log("reeeeeeee err: "+req.responseText);
+          alert("r.i.p.")
         }
       })
     })

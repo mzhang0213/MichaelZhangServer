@@ -168,9 +168,44 @@ app.post("/hh-login", async (req,res)=>{
 	}
 })
 
-app.post("/hh-noti", async(req,res)=>{
+app.post("/hh-anno", async(req,res)=>{
+	try {
+		
+		// payload @ req.body.title req.body.body
+		await client.connect();
+		const db = client.db("hippohack2023").collection("annos");
+		const currContent = await db.findOne();
+		var db_annos = currContent.annos;
+		var submit = [];
+		for (var i=0;i<db_annos.lenght;i++){
+			submit.push(db_annos[i]);
+		}
+		var currAnno = {
+			title:req.body.title,
+			date:Date.now(),
+			body:req.body.body
+		}
+		submit.push(currAnno);
 
+		const filter = {title:"annos"}
+		const updateDoc = {
+			$set: {
+				annos:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		var msg = {
+			body:req.body.body
+		}
+		res.send(JSON.stringify(msg))
+
+	} finally {
+		// Ensures that the client will close when you finish/error
+		await client.close();
+	}
 })
+
+app.get("/hh-getAnnos")
 
 
 

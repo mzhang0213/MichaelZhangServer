@@ -200,7 +200,22 @@
       localStorage.setItem("annos",JSON.stringify({annos:[]}));
     }
     //black box: get announcements from mongodb
-    //for each anno in mongodb, create here
+    var req = new XMLHttpRequest();
+    var db_annos = [];
+    req.open("GET",window.location.origin+"/hh-getAnnos");
+    req.send();
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
+        db_annos = body.annos;
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+    for (var i=0;i<db_annos.length;i++){
+      createAnno(db_annos[i]);
+    }
     //include another schematic for doing async notification pushing
   </script>
 
