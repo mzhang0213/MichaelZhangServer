@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+  <!--navbar-->
+  <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <img class="h-8 mr-2" id="logo" src="./logo.png">
+      <button class="text-xl tracking-tight">Hippo Hack</span>
+    </div>
+    <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white mr-4">
+        <button id="userButton"></button>
+        <div id="userContent">
+          <a id="logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    //check for account presence
+    if (localStorage.getItem("hh-username")==null){
+      alert("Sign in to your Hippo Hack account with the username on your badge to access the platform!\n\nHit OK to proceed...");
+      window.location="./signin/"
+    }else{
+      gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
+    }
+  </script>
+  <style>
+    #user {
+      position:relative;
+      display:inline-block;
+    }
+    #userContent {
+      display:none;
+      position:absolute;
+      background-color:rgb(36, 36, 36);
+      min-width: 170px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      left: 50%;
+      right: auto;
+      text-align: center;
+      transform: translate(-50%, 0);
+    }
+    #userContent a {
+      font-size:12px;
+      text-decoration:none;
+      padding: 12px 16px;
+      color:white;
+      display:block;
+    }
+    #user:hover #userContent {
+      display:block;
+    }
+    #user a:hover {
+      background-color:#f2f2f2;
+    }
+    #userButton:hover {
+      background-color:#cccccc;
+    }
+    #logout{
+      color:red;
+    }
+    #logout:hover{
+      color:rgb(216, 0, 0);
+    }
+  </style>
+
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./hippooo.png')"></div>
+  <!--event topics -->
+  <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Hippo Hack 2023</p>
+      </div>
+    </div>
+  </div>
+
+  <!--announcements-->
+  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
+    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8">Announcements</p>
+    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
+  </div>
+  <script>
+    var createAnno = function(title,time,body){
+      var anno = document.createElement("div");
+      anno.className="relative w-10/12 h-auto flex flex-col items-center text-left rounded-2xl shadow-xl bg-gray-400";
+      var annos = JSON.parse(localStorage.getItem("annos")).annos;
+
+      var titleE = document.createElement("h1");
+      titleE.className="relative w-full text-xl";
+      var created=false;
+      for (var i=0;i<annos.length;i++){
+        if (annos[i].time==time){ //if the localstorage time = mongodb time
+          created=true;
+        }
+      }
+      if (created){
+        //created before; don't add new
+        titleE.innerHTML=title;
+      }else{
+        //new anno; add new, add to localstorage
+        titleE.innerHTML="✨NEW✨ "+title;
+        var newAnno = {
+          title:title,
+          time:time,
+          body,body
+        }
+        annos.push(newAnno);
+      }
+
+      var timeE = document.createElement("p");
+      var date_time = new Date(time);
+      timeE.className="relative w-full text-lg";
+      var display = "Posted ";
+      if ((new Date()).getHours()-hrs>24){
+        display+="on "+date_time.getMonth()+" "+date_time.getDate()+", "+date_time.getFullYear()+" ";
+      }
+      var hrs = date_time.getHours();
+      var AM = true;
+      if (hrs>12){
+        AM=false;
+        hrs-=12;
+      }
+      display+="at "+hrs+":"+date_time.getMinutes()+(AM?"AM":"PM");
+
+      var bodyE = document.createElement("p");
+      bodyE.className="relative w-full text-lg mt-4";
+      bodyE.innerHTML=body;
+
+      anno.appendChild(titleE);
+      anno.appendChild(timeE);
+      anno.appendChild(bodyE);
+      gebi("annoBox").appendChild(anno);
+      
+      var annosLS = {
+        annos:annos
+      }
+      localStorage.setItem("annos",JSON.stringify(annosLS));
+    }
+    if (localStorage.getItem("annos")==null){
+      localStorage.setItem("annos",JSON.stringify({annos:[]}));
+    }
+    //black box: get announcements from mongodb
+    //for each anno in mongodb, create here
+    //include another schematic for doing async notification pushing
+  </script>
+
+  <!-- day's schedule-->
+  <div class="relative flex flex-col justify-center items-center" style="height:75vh;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Schedule</p>
+      </div>
+    </div>
+    <div class="relative mt-12">
+      <!--make a table using table tag and stuff-->
+    </div>
+  </div>
+
+  <!--
+    what if i made a feature that showed people serving foods who had what allergies, what food they wanted
+    then use web workers to post data w/o refreshing so kids can submit easily
+  -->
+</body>
+</html>

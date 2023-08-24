@@ -20,3 +20,9 @@ menu options as panels, onhover grow, big shadows
 order credits in the top right of the page
 click on item, darken bg, grow even more, have an order button w/ how many creds you want to spend (1cred=1unit)
 onsubmit > post to server.js > send data to pizza_person-side's wworker
+
+
+put sponsors somewhere
+
+-as the scheudle progresses, red pointer indicator on curr hour pos
+-make system to show current presentation position and like slides and project link and position and all that jazz

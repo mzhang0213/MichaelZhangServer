@@ -64,67 +64,74 @@
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
     </div>
   </nav>
 
-  <!--event topics -->
-  <div class="relative h-3/4 flex flex-col justify-center items-center bg-white">
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./hippooo.png')"></div>
+  <!--title -->
+  <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
     <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
       <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
-        <p class="font-bold sm:text-5xl md:text-7xl">Hippo Hack 2023</p>
+        <p class="font-bold sm:text-5xl md:text-7xl">Projects</p>
       </div>
     </div>
   </div>
 
-  <!--announcements-->
-  <div class="relative flex flex-col justify-center items-center w-screen" style="height:800px;">
-    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8">Announcements</p>
-    <div id="announcementsBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
-  </div>
-  <script>
-    /*how the announcements system will work:
-    -mongodb push announcements in a ui sys: either external website or a simple get request in the url
-    -upon website load, load all announcements
-    -once loaded, compare with localstorage's copy of the announcements
-      -determine new announcements by comparing: if there are announcmenets not documented in the local storage, then they are new and mark them as such
-      -for new ones put sparkles, hyphened NEW ✨✨ << like that
-    -update localstorage with the announcements
-
-    displaying announcements:
-
-    ______________________________________________________
-    |  ✨NEW✨ title_of_anno
-    |  <i> Posted xx:yy [A|P]M </i>  <<make the time a different color / font than the posted and the rest of the title
-    |
-    |  <body of announcement in html>
-    |
-    |
-    |
-    ------------------------------------------------------
-
-    <div> 10/12 width height-auto flex flex-col items-center rounded-2xl shadow-xl
-      <h1_title></h1> width-full 
-      <p_time></p> width-full
-      <p_body></p> width-full
-    </div>
-    */
-  </script>
-
-  <!-- day's schedule-->
-  <div class="relative h-3/4 flex flex-col justify-center items-center bg-white">
-    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
-      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
-        <p class="font-bold sm:text-5xl md:text-7xl">Schedule</p>
+  <!--submit-->
+  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
+    <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
+    <div id="data" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px">
+      <div>
+        <p class="text-2xl">Project Name</p>
+        <input id="projName" class="relative">
       </div>
-    </div>
-    <div class="relative mt-12">
-      <!--make a table using table tag and stuff-->
+      <div>
+        <p class="text-2xl">Group Name</p>
+        <input id="groupName" class="relative">
+      </div>
+      <div>
+        <p class="text-2xl">Group Members</p>
+        <input id="groupMembers" class="relative">
+      </div>
+      <div>
+        <p class="text-2xl">Project Description</p>
+        <input id="projDesc" class="relative">
+      </div>
+      <div>
+        <p class="text-2xl">Visual Media Link</p>
+        <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
+        <input id="mediaLink" class="relative">
+      </div>
+      <button id="submit" class="relative" style="margin-left:70vh;">Submit!!</button>
     </div>
   </div>
 
   <!--
-    what if i made a feature that showed people serving foods who had what allergies, what food they wanted
-    then use web workers to post data w/o refreshing so kids can submit easily
+    schematic
+
+    data: proj name, group name - group members, project description, visual media link [slides || yt]
+
+    just make it like this; maybe get images if mongodb can allow but idk how to store those
+
+
+
+    on proj display,
+    -------------------------------------
+    |
+    | PROJ NAMEEEEEEEEEE
+    | PROJ NAMEEEEEEEEEE
+    | Group Name - group members         here embed slides/yt
+    |
+    |
+    | DESCRIPTION
+    |
+    |
+    | DESCRIPTION
+    -------------------------------------
+
+
   -->
 </body>
 </html>

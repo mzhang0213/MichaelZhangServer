@@ -126,6 +126,52 @@ app.post("/updateTime", async (req,res)=>{
 	}
 })
 
+
+// HIPPO HACK
+
+//PUT THIS IN THE FVKN MONGO DB OK
+const usernames = [
+	{
+		"username":"mzlord","first":"michael","last":"zhang"
+	},
+	{
+		"username":""
+	}
+]
+app.post("/hh-login",(req,res)=>{
+	//req.body.user is the username submitted
+
+	//black box: fetch registered usernames from mongodb and put it in var usernames
+	//check if the username is one in the registered usernames
+	var found=false;
+	var msg = {
+		error:0
+	}
+	for (var i=0;i<usernames.length;i++){
+		if (req.body.user==usernames[i].username){
+			//usernames[i] is the correct registered username
+			msg.user=usernames[i].username;
+			msg.first=usernames[i].first;
+			msg.last=usernames[i].last;
+			found=true;
+		}
+	}
+	if (!found){
+		msg.error=1;
+	}
+	res.send(JSON.stringify(msg))
+})
+
+
+
+
+
+
+
+// SPOTIFY
+
+
+
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
 var redirect_uri = 'https://michaelzhangwebsite.herokuapp.com/spotifyYt/callback'; // Your redirect uri
