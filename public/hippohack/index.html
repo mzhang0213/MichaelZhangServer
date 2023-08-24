@@ -50,7 +50,7 @@
     }
   </style>
 </head>
-<body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+<body class="bg-gray-800" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
     <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
@@ -65,7 +65,7 @@
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
-      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white mr-4">
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
           <a id="logout">Logout</a>
@@ -92,7 +92,7 @@
       display:none;
       position:absolute;
       background-color:rgb(36, 36, 36);
-      min-width: 170px;
+      min-width: 100px;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
       z-index: 1;
       left: 50%;
@@ -104,23 +104,20 @@
       font-size:12px;
       text-decoration:none;
       padding: 12px 16px;
-      color:white;
       display:block;
     }
     #user:hover #userContent {
       display:block;
     }
     #user a:hover {
-      background-color:#f2f2f2;
-    }
-    #userButton:hover {
-      background-color:#cccccc;
+      background-color:#383838;
+      cursor:pointer;
     }
     #logout{
       color:red;
     }
     #logout:hover{
-      color:rgb(216, 0, 0);
+      color:rgb(190, 0, 0);
     }
   </style>
 
@@ -136,8 +133,8 @@
   </div>
 
   <!--announcements-->
-  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
-    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8">Announcements</p>
+  <div class="relative flex flex-col justify-center items-center bg-gradient-to-bl h-full from-blue-500 to-sky-300" style="height:800px;">
+    <p class="font-bold sm:text-5xl md:text-7xl text-white mt-8 rounded-lg">Announcements</p>
     <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px"></div>
   </div>
   <script>
