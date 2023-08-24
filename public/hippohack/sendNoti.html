@@ -53,70 +53,18 @@
 <body class="-z-10 bg-gray-200">
   <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./hippoooooo.png')"></div>
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
-    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login with the username on your badge!</h1>
+    <input id="">
     <input id="user" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
     <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
   </div>
-  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-30" style="width:100%;height:100%;display:none"></div>
   <style>
-    #login{
-      background-color:rgb(117, 234, 117);
-      border-radius:8px;
-      border:2px solid #000000;
-      font-size:20px;
-      font-family:'Cabin';
-      outline:none;
-    }
-    #login:disabled{
-      background-color:rgb(170, 255, 170);
-    }
-    #login:hover{
-      background-color:rgb(48, 194, 48);
+    input{
+      border:2px black solid;
     }
   </style>
   <script>
     var gebi = function(e){return document.getElementById(e)}
-    var introMsg = function(first){
-      var message = document.createElement("p");
-      message.style.backgroundColor="white"
-      message.style.position = "absolute";
-      message.style.top = window.innerHeight*0.3+"px";
-      message.style.fontSize = "30px";
-      message.id="welcome";
-      document.body.appendChild(message);
-      message.zIndex="20";
-      
-      gebi("dim").style.display="";
-
-      gebi("welcome").innerHTML="Welcome to Hippo Hack, "+first+"!";
-      gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
-      setTimeout(()=>{
-        gebi("welcome").innerHTML="Welcome to Hippo Hack, "+first+"! Hang tight - redirecting you in 3..."
-        gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
-        setTimeout(()=>{
-          gebi("welcome").innerHTML="Welcome to Hippo Hack, "+first+"! Hang tight - redirecting you in 2..."
-          gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
-          setTimeout(()=>{
-            gebi("welcome").innerHTML="Welcome to Hippo Hack, "+first+"! Hang tight - redirecting you in 1..."
-            gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
-            setTimeout(()=>{
-
-              var iter=0;
-              var interval = setInterval(()=>{
-                if (iter<=70){
-                  document.getElementById("welcome").style.opacity= 100-iter* 100/70 + "%";
-                  iter++;
-                } else {
-                  clearInterval(interval);
-                  window.location=window.location.origin+"/hippohack/"
-                }
-              },10)
-
-            },1000)
-          },1000)
-        },1000)
-      },1250)
-    }
 
     gebi("login").addEventListener("click",function(){
       var req = new XMLHttpRequest();
@@ -140,7 +88,7 @@
             localStorage.setItem("hh-username",body.user);
             localStorage.setItem("hh-first",body.first);
             localStorage.setItem("hh-last",body.last);
-            introMsg(body.first);
+            introMsg();
           }
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
