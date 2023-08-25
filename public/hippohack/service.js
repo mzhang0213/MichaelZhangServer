@@ -32,8 +32,7 @@ const saveSubscription = async subscription => {
 self.addEventListener("message", (event) => {
   // event is an ExtendableMessageEvent object
   console.log(`The client sent me a message: ${event.data}`);
-  // username = something
-  event.source.postMessage("Hi client");
+  username=event.data.data;
 });
 
 self.addEventListener('activate', async (event) => {

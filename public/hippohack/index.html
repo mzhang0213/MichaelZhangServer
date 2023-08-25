@@ -229,7 +229,7 @@
       }
     }
     const registerServiceWorker = async () => {
-      var myWorker = new Worker('YourWorker.js');
+      var myWorker = new Worker('./service.js');
       myWorker.postMessage({
         data: localStorage.getItem("hh-username")
       });
