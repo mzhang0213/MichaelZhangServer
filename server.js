@@ -231,7 +231,8 @@ app.post("/hh-anno", async(req,res)=>{
 })
 
 app.post("/hh-save-sub",async(req,res)=>{
-	try{
+	console.log("HI"+req.body)
+	/*try{
 		//data: req.body.user req.body.sub
 		await client.connect();
 		const db = client.db("hippohack2023").collection("subs");
@@ -258,7 +259,7 @@ app.post("/hh-save-sub",async(req,res)=>{
 		res.send(JSON.stringify(msg))
 	}finally{
 		await client.close();
-	}
+	}*/
 })
 
 app.get("/hh-getAnnos",async (req,res)=>{
