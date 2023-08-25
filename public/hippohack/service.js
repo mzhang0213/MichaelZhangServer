@@ -10,6 +10,7 @@ const urlB64ToUint8Array = base64String => {
   }
   return outputArray
 }
+var username = "";
 // saveSubscription saves the subscription to the backend
 const saveSubscription = async subscription => {
   console.log(subscription);
@@ -18,19 +19,49 @@ const saveSubscription = async subscription => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(subscription),
+    body: {
+      user:username,
+      sub:subscription
+    }
   })
   console.log(response);
   return response.json()
 }
-self.addEventListener('activate', async () => {
+self.addEventListener("message", (event) => {
+  // event is an ExtendableMessageEvent object
+  console.log(`The client sent me a message: ${event.data}`);
+  // username = something
+  event.source.postMessage("Hi client");
+});
+
+self.addEventListener('activate', async (event) => {
   // This will be called only once when the service worker is activated.
   try {
     const applicationServerKey = urlB64ToUint8Array(
       'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
     )
     const options = { applicationServerKey, userVisibleOnly: true }
-    const subscription = await self.registration.pushManager.subscribe(options)
+    const subscription = await self.registration.pushManager.subscribe(options);
+    
+    event.waitUntil(
+      (async () => {
+        // Exit early if we don't have access to the client.
+        // Eg, if it's cross-origin.
+        if (!event.clientId) return;
+  
+        // Get the client.
+        const client = await clients.get(event.clientId);
+        // Exit early if we don't get the client.
+        // Eg, if it closed.
+        if (!client) return;
+  
+        // Send a message to the client.
+        client.postMessage({
+          msg: "Hey I just got a fetch from you!"
+        });
+      })(),
+    );
+
     const response = await saveSubscription(subscription)
     console.log(response)
   } catch (err) {
