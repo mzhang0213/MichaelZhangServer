@@ -246,14 +246,14 @@
         check();
         const swRegistration = await registerServiceWorker();
         const permission =  await requestNotificationPermission();
+        var myWorker = new Worker('./service.js');
+        myWorker.postMessage({
+          data: localStorage.getItem("hh-username")
+        });
     }
     var conf = confirm("allow notifications for announcements?");
     if (conf) {
-      await main();
-      var myWorker = new Worker('./service.js');
-      myWorker.postMessage({
-        data: localStorage.getItem("hh-username")
-      });
+      main();
     }
   
   </script>
