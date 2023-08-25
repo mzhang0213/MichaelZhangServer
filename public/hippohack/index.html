@@ -243,13 +243,17 @@
       }
     }
     const main = async () => {
-        check();
-        const swRegistration = await registerServiceWorker();
-        const permission =  await requestNotificationPermission();
-        var myWorker = new Worker('./service.js');
-        myWorker.postMessage({
-          data: localStorage.getItem("hh-username")
-        });
+        check()
+        registerServiceWorker()
+        .then(function(){
+          requestNotificationPermission()
+          .then(function(){
+            var myWorker = new Worker('./service.js');
+            myWorker.postMessage({
+              data: localStorage.getItem("hh-username")
+            });
+          })
+        })
     }
     var conf = confirm("allow notifications for announcements?");
     if (conf) {
