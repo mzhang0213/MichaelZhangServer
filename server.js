@@ -243,7 +243,11 @@ app.post("/hh-save-sub",async(req,res)=>{
 		var db_subs = currContent.subs;
 		var submit = [];
 		for (var i=0;i<db_subs.length;i++){
-			submit.push(db_subs[i]);
+			//found a sub that alr has a user
+			//dont push the old sub back, update the it instead
+			if (db_subs[i].user!==req.body.user){
+				submit.push(db_subs[i]);
+			}
 		}
 		var currSub = {
 			user:req.body.user,
