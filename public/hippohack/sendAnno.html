@@ -57,6 +57,22 @@
     <input id="body" class="text-center mt-12 rounded-xl" style="width:300px;height:100px;border:2px black solid; overflow:auto;">
     <button id="submit" class="main mt-6 px-3 py-2">Go! >></button>
   </div>
+  <style>
+    #submit{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #submit:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #submit:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
   <script>
     var gebi = function(e){return document.getElementById(e)}
 

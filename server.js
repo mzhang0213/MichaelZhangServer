@@ -8,9 +8,9 @@ var {google} = require('googleapis');
 var cookieParser = require("cookie-parser");
 const res = require("express/lib/response");
 var bodyParser = require('body-parser');
+var webpush = require('web-push');
 
 /*
-var webpush = require('web-push');
 var {Client} = require("pg");
 */
 const PORT = process.env.PORT || "12232";
@@ -168,17 +168,32 @@ app.post("/hh-login", async (req,res)=>{
 	}
 })
 
+const vapidKeys = {
+	publicKey: 'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk',
+	privateKey: 'qMGFVirZJSr5GyPScdP26bbQkBSwXo2YVc2QZ651no8',
+}
+//setting our previously generated VAPID keys
+webpush.setVapidDetails(
+	'mailto:mzhang0213@gmail.com',
+	vapidKeys.publicKey,
+	vapidKeys.privateKey
+)
+//function to send the notification to the subscribed device
+const sendNotification = (subscription, dataToSend) => {
+	webpush.sendNotification(subscription, dataToSend)
+}
+
 app.post("/hh-anno", async(req,res)=>{
 	try {
 		
 		// payload @ req.body.title req.body.body
 		await client.connect();
-		const db = client.db("hippohack2023").collection("annos");
-		const currContent = await db.findOne();
-		var db_annos = currContent.annos;
+		const db_annos = client.db("hippohack2023").collection("annos");
+		const currContent = await db_annos.findOne();
+		var annos_content = currContent.annos;
 		var submit = [];
-		for (var i=0;i<db_annos.lenght;i++){
-			submit.push(db_annos[i]);
+		for (var i=0;i<annos_content.length;i++){
+			submit.push(annos_content[i]);
 		}
 		var currAnno = {
 			title:req.body.title,
@@ -193,14 +208,55 @@ app.post("/hh-anno", async(req,res)=>{
 				annos:submit
 			}
 		}
-		await db.updateOne(filter,updateDoc);
+		await db_annos.updateOne(filter,updateDoc);
 		var msg = {
 			body:req.body.body
 		}
+
+		//service worker time
+		const db_subs = client.db("hippohack2023").collection("subs");
+		var subs_content = currContent.subs;
+		var message = req.body.body;
+		for (var i=0;i<subs_content.length;i++){
+			//for each subscription, send noti
+			sendNotification(subs_content[i],message);
+		}
+
 		res.send(JSON.stringify(msg))
 
 	} finally {
 		// Ensures that the client will close when you finish/error
+		await client.close();
+	}
+})
+
+app.post("/hh-save-sub",async(req,res)=>{
+	try{
+		//data: req.body.user req.body.sub
+		await client.connect();
+		const db = client.db("hippohack2023").collection("subs");
+		var db_subs = currContent.subs;
+		var submit = [];
+		for (var i=0;i<db_subs.length;i++){
+			submit.push(db_subs[i]);
+		}
+		var currSub = {
+			user:req.body.user,
+			sub:req.body.sub
+		}
+		submit.push(currSub);
+		const filter = {title:"subs"}
+		const updateDoc = {
+			$set: {
+				subs:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		var msg = {
+			"msg":"yay"
+		}
+		res.send(JSON.stringify(msg))
+	}finally{
 		await client.close();
 	}
 })
