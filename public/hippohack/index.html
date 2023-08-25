@@ -249,7 +249,7 @@
     }
     var conf = confirm("allow notifications for announcements?");
     if (conf) {
-      main();
+      await main();
       var myWorker = new Worker('./service.js');
       myWorker.postMessage({
         data: localStorage.getItem("hh-username")
