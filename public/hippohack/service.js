@@ -53,6 +53,9 @@ self.addEventListener("push", function(event) {
     console.log("Push event but no data");
   }
 });
+self.addEventListener("pushsubscriptionchange",function(event){
+  console.log("wtf oh noes")
+})
 const showLocalNotification = (title, body, swRegistration) => {
   const options = {
     body
