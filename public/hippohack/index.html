@@ -169,7 +169,7 @@
 
       var dateE = document.createElement("p");
       var date_date = new Date(date);
-      dateE.className="relative w-full text-lg";
+      dateE.className="relative w-full text-lg text-gray-600";
       var display = "Posted ";
       if ((new Date()).getHours()-hrs>24){
         display+="on "+date_date.getMonth()+" "+date_date.getDate()+", "+date_date.getFullYear()+" ";
@@ -181,6 +181,7 @@
         hrs-=12;
       }
       display+="at "+hrs+":"+date_date.getMinutes()+(AM?"AM":"PM");
+      dateE.innerHTML=display;
 
       var bodyE = document.createElement("p");
       bodyE.className="relative w-full text-lg mt-4";
@@ -201,6 +202,7 @@
     }
 
     var updateNotis = function(){
+      gebi("annoBox").innerHTML="";
       var req = new XMLHttpRequest();
       var db_annos = [];
       req.open("GET",window.location.origin+"/hh-getAnnos");
@@ -209,7 +211,7 @@
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           db_annos = body.annos;
-          for (var i=db_annos.length-1;i>=0;i++){
+          for (var i=db_annos.length-1;i>=0;i--){
             createAnno(db_annos[i].title,db_annos[i].date,db_annos[i].body);
           }
         } else if (req.readyState === 4){
