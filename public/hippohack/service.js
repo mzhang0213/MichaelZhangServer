@@ -47,13 +47,16 @@ self.addEventListener('activate', async (event) => {
     var sub = await self.registration.pushManager.subscribe(options);
     
     // Get the client.
-    const client = await self.clients.get(event.clientId);
 
     // Send a message to the client.
     console.log("posting")
-    client.postMessage({
-      sub:JSON.stringify(sub)
-    });
+    self.clients.matchAll().then(function (clients){
+      clients.forEach(function(client){
+          client.postMessage({
+            sub:JSON.stringify(sub)
+          });
+      });
+  });
   } catch (err) {
     console.log('Error', err)
   }
