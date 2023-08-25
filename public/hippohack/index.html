@@ -180,7 +180,11 @@
         AM=false;
         hrs-=12;
       }
-      display+="at "+hrs+":"+date_date.getMinutes()+(AM?"AM":"PM");
+      var min = date_date.getMinutes();
+      if (min<10){
+        min="0"+min;
+      }
+      display+="at "+hrs+":"+min+(AM?"AM":"PM");
       dateE.innerHTML=display;
 
       var bodyE = document.createElement("p");
