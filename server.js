@@ -189,8 +189,8 @@ app.post("/hh-anno", async(req,res)=>{
 		// payload @ req.body.title req.body.body
 		await client.connect();
 		const db_annos = client.db("hippohack2023").collection("annos");
-		const currContent = await db_annos.findOne();
-		var annos_content = currContent.annos;
+		const currContent_annos = await db_annos.findOne();
+		var annos_content = currContent_annos.annos;
 		var submit = [];
 		for (var i=0;i<annos_content.length;i++){
 			submit.push(annos_content[i]);
@@ -215,11 +215,12 @@ app.post("/hh-anno", async(req,res)=>{
 
 		//service worker time
 		const db_subs = client.db("hippohack2023").collection("subs");
-		var subs_content = currContent.subs;
+		const currContent_subs = await db_subs.findOne();
+		var subs_content = currContent_subs.subs;
 		var message = req.body.body;
 		for (var i=0;i<subs_content.length;i++){
 			//for each subscription, send noti
-			sendNotification(subs_content[i],message);
+			sendNotification(subs_content[i].sub,message);
 		}
 
 		res.send(JSON.stringify(msg))
