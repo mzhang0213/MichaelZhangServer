@@ -48,13 +48,25 @@ self.addEventListener('activate', async (event) => {
 self.addEventListener("push", function(event) {
   if (event.data) {
     var b = (event.data.json())
-    showLocalNotification(event.data.title, event.data.body,  self.registration);
+    showLocalNotification(b.title, b.body,  self.registration);
   } else {
     console.log("Push event but no data");
   }
 });
-self.addEventListener("pushsubscriptionchange",function(event){
-  console.log("wtf oh noes")
+self.addEventListener("pushsubscriptionchange", async function(event){
+  try {
+    const applicationServerKey = urlB64ToUint8Array(
+      'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
+    )
+    const options = { applicationServerKey, userVisibleOnly: true }
+    const subscription = await self.registration.pushManager.subscribe(options)
+    console.log(self.location,self.location.search)
+    var params = new URLSearchParams(self.location.search);
+    const response = await saveSubscription(params.get("user"),subscription)
+    console.log(response)
+  } catch (err) {
+    console.log('Error', err)
+  }
 })
 const showLocalNotification = (title, body, swRegistration) => {
   const options = {
