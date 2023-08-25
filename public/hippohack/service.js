@@ -12,6 +12,7 @@ const urlB64ToUint8Array = base64String => {
 }
 // saveSubscription saves the subscription to the backend
 const saveSubscription = async subscription => {
+  console.log(subscription);
   const response = await fetch(self.location.origin+"/hh-save-sub", {
     method: 'post',
     headers: {
@@ -19,6 +20,7 @@ const saveSubscription = async subscription => {
     },
     body: JSON.stringify(subscription),
   })
+  console.log(response);
   return response.json()
 }
 self.addEventListener('activate', async () => {
