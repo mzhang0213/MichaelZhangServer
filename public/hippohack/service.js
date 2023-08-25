@@ -54,7 +54,7 @@ self.addEventListener('activate', async (event) => {
 self.addEventListener("push", function(event) {
   if (event.data) {
     var b = (event.data.json())
-    showLocalNotification(b.title, b.body,  self.registration);
+    showLocalNotification(b.title, b.body, self.registration);
     newAnnos();
   } else {
     console.log("Push event but no data");
@@ -77,7 +77,9 @@ self.addEventListener("pushsubscriptionchange", async function(event){
 })
 const showLocalNotification = (title, body, swRegistration) => {
   const options = {
-    body
+    body:body,
+    image:self.origin+"/hippohack/logo.png",
+    title:""
     // here you can add more properties like icon, image, vibrate, etc.
   };
   swRegistration.showNotification(title, options);
