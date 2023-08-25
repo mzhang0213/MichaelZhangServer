@@ -180,13 +180,12 @@ webpush.setVapidDetails(
 )
 //function to send the notification to the subscribed device
 const sendNotification = (subscription, dataToSend) => {
-	webpush.sendNotification(subscription, dataToSend)
+	webpush.sendNotification(subscription, JSON.stringify(dataToSend))
 }
 
 app.post("/hh-anno", async(req,res)=>{
 	try {
 		
-		// payload @ req.body.title req.body.body
 		await client.connect();
 		const db_annos = client.db("hippohack2023").collection("annos");
 		const currContent_annos = await db_annos.findOne();
@@ -214,10 +213,14 @@ app.post("/hh-anno", async(req,res)=>{
 		}
 
 		//service worker time
+		// payload @ req.body.title req.body.body
 		const db_subs = client.db("hippohack2023").collection("subs");
 		const currContent_subs = await db_subs.findOne();
 		var subs_content = currContent_subs.subs;
-		var message = req.body.body;
+		var message = {
+			title:req.body.title,
+			body:req.body.body
+		};
 		for (var i=0;i<subs_content.length;i++){
 			//for each subscription, send noti
 			sendNotification(subs_content[i].sub,message);
