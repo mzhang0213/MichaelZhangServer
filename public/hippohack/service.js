@@ -43,10 +43,7 @@ self.addEventListener('activate', async (event) => {
     const options = { applicationServerKey, userVisibleOnly: true }
     const subscription = await self.registration.pushManager.subscribe(options);
     
-    const client = await clients.get(event.clientId);
-    client.postMessage({
-      msg: "Hey I just got a fetch from you!"
-    });
+    postMessage("gib msg","/hippohack")
 
     const response = await saveSubscription(subscription)
     console.log(response)
