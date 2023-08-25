@@ -229,10 +229,6 @@
       }
     }
     const registerServiceWorker = async () => {
-      var myWorker = new Worker('./service.js');
-      myWorker.postMessage({
-        data: localStorage.getItem("hh-username")
-      });
       const swRegistration = await navigator.serviceWorker.register('./service.js'); //notice the file name
       return swRegistration;
     }
@@ -252,7 +248,13 @@
         const permission =  await requestNotificationPermission();
     }
     var conf = confirm("allow notifications for announcements?");
-    if (conf) main();
+    if (conf) {
+      main();
+      var myWorker = new Worker('./service.js');
+      myWorker.postMessage({
+        data: localStorage.getItem("hh-username")
+      });
+    }
   
   </script>
 

@@ -11,10 +11,8 @@ const urlB64ToUint8Array = base64String => {
   return outputArray
 }
 
-var username = "";
-
 // saveSubscription saves the subscription to the backend
-const saveSubscription = async subscription => {
+const saveSubscription = async (username, subscription) => {
   console.log(subscription);
   console.log(username);
   const response = await fetch(self.location.origin+"/hh-save-sub", {
@@ -30,11 +28,12 @@ const saveSubscription = async subscription => {
   console.log(response);
   return response.json()
 }
-self.addEventListener("message", (event) => {
+
+var sub = "";
+self.addEventListener("message",async (event) => {
   // event is an ExtendableMessageEvent object
   console.log(`The client sent me a message: ${event.data}`);
-  username=event.data.data;
-  console.log(username);
+  const response = await saveSubscription(event.data.data,sub);
 });
 
 self.addEventListener('activate', async (event) => {
@@ -44,9 +43,8 @@ self.addEventListener('activate', async (event) => {
       'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
     )
     const options = { applicationServerKey, userVisibleOnly: true }
-    const subscription = await self.registration.pushManager.subscribe(options);
-    const response = await saveSubscription(subscription)
-    console.log(response)
+    sub = await self.registration.pushManager.subscribe(options);
+    console.log("done")
   } catch (err) {
     console.log('Error', err)
   }
