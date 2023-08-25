@@ -37,6 +37,7 @@ self.addEventListener('activate', async (event) => {
     )
     const options = { applicationServerKey, userVisibleOnly: true }
     const subscription = await self.registration.pushManager.subscribe(options)
+    console.log(self.location,self.location.search)
     var params = new URLSearchParams(self.location);
     const response = await saveSubscription(params.get("user"),subscription)
     console.log(response)
