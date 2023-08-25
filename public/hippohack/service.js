@@ -28,6 +28,12 @@ const saveSubscription = async (username, subscription) => {
   return response
 }
 
+const newAnnos = async ()=>{
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => client.postMessage({msg: 'Hello from SW'}));
+  })
+}
+
 self.addEventListener('activate', async (event) => {
   // This will be called only once when the service worker is activated.
   try {
@@ -44,10 +50,12 @@ self.addEventListener('activate', async (event) => {
     console.log('Error', err)
   }
 })
+
 self.addEventListener("push", function(event) {
   if (event.data) {
     var b = (event.data.json())
     showLocalNotification(b.title, b.body,  self.registration);
+    newAnnos();
   } else {
     console.log("Push event but no data");
   }

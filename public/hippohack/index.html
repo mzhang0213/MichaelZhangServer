@@ -199,23 +199,30 @@
     if (localStorage.getItem("annos")==null){
       localStorage.setItem("annos",JSON.stringify({annos:[]}));
     }
-    //black box: get announcements from mongodb
-    var req = new XMLHttpRequest();
-    var db_annos = [];
-    req.open("GET",window.location.origin+"/hh-getAnnos");
-    req.send();
-    req.addEventListener("readystatechange", ()=>{
-      if (req.status === 200 && req.readyState === 4) {
-        var body = JSON.parse(req.responseText);
-        db_annos = body.annos;
-        for (var i=db_annos.length-1;i>=0;i++){
-          createAnno(db_annos[i].title,db_annos[i].date,db_annos[i].body);
+
+    var updateNotis = function(){
+      var req = new XMLHttpRequest();
+      var db_annos = [];
+      req.open("GET",window.location.origin+"/hh-getAnnos");
+      req.send();
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          db_annos = body.annos;
+          for (var i=db_annos.length-1;i>=0;i++){
+            createAnno(db_annos[i].title,db_annos[i].date,db_annos[i].body);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
         }
-      } else if (req.readyState === 4){
-        console.log("reeeeeeee err new acc creation: "+req.responseText);
-        alert("please ask michael for help oh noes")
-      }
-    })
+      })
+    }
+    updateNotis()
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      console.log(event.data.msg)
+      updateNotis();
+    });
     //include another schematic for doing async notification pushing
   </script>
 
