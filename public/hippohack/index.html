@@ -137,19 +137,19 @@
   <!--announcements-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
     <p class="font-bold text-5xl text-white mt-8 rounded-lg bg-gradient-to-bl p-6 from-blue-500 to-sky-300">Announcements</p>
-    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-auto py-10" style="height:600px"></div>
+    <div id="annoBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto py-10" style="height:600px"></div>
   </div>
   <script>
-    var createAnno = function(title,time,body){
+    var createAnno = function(title,date,body){
       var anno = document.createElement("div");
-      anno.className="relative w-10/12 pl-3 py-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
+      anno.className="relative w-10/12 pl-3 py-3 mb-6 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
       var annos = JSON.parse(localStorage.getItem("annos")).annos;
 
       var titleE = document.createElement("h1");
       titleE.className="relative w-full text-xl";
       var created=false;
       for (var i=0;i<annos.length;i++){
-        if (annos[i].time==time){ //if the localstorage time = mongodb time
+        if (annos[i].date==date){ //if the localstorage time = mongodb time
           created=true;
         }
       }
@@ -161,33 +161,33 @@
         titleE.innerHTML="✨NEW✨ "+title;
         var newAnno = {
           title:title,
-          time:time,
+          date:date,
           body,body
         }
         annos.push(newAnno);
       }
 
-      var timeE = document.createElement("p");
-      var date_time = new Date(time);
-      timeE.className="relative w-full text-lg";
+      var dateE = document.createElement("p");
+      var date_date = new Date(date);
+      dateE.className="relative w-full text-lg";
       var display = "Posted ";
       if ((new Date()).getHours()-hrs>24){
-        display+="on "+date_time.getMonth()+" "+date_time.getDate()+", "+date_time.getFullYear()+" ";
+        display+="on "+date_date.getMonth()+" "+date_date.getDate()+", "+date_date.getFullYear()+" ";
       }
-      var hrs = date_time.getHours();
+      var hrs = date_date.getHours();
       var AM = true;
       if (hrs>12){
         AM=false;
         hrs-=12;
       }
-      display+="at "+hrs+":"+date_time.getMinutes()+(AM?"AM":"PM");
+      display+="at "+hrs+":"+date_date.getMinutes()+(AM?"AM":"PM");
 
       var bodyE = document.createElement("p");
       bodyE.className="relative w-full text-lg mt-4";
       bodyE.innerHTML=body;
 
       anno.appendChild(titleE);
-      anno.appendChild(timeE);
+      anno.appendChild(dateE);
       anno.appendChild(bodyE);
       gebi("annoBox").appendChild(anno);
       
@@ -208,8 +208,8 @@
       if (req.status === 200 && req.readyState === 4) {
         var body = JSON.parse(req.responseText);
         db_annos = body.annos;
-        for (var i=0;i<db_annos.length;i++){
-          createAnno(db_annos[i].title,db_annos[i].time,db_annos[i].body);
+        for (var i=db_annos.length-1;i>=0;i++){
+          createAnno(db_annos[i].title,db_annos[i].date,db_annos[i].body);
         }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
