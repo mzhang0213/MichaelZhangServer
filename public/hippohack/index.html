@@ -230,6 +230,11 @@
     }
     const registerServiceWorker = async () => {
       const swRegistration = await navigator.serviceWorker.register('./service.js'); //notice the file name
+      navigator.serviceWorker.ready.then((registration)=>{
+        registration.active.postMessage({
+          data: localStorage.getItem("hh-username")
+        });
+      })
       return swRegistration;
     }
     const requestNotificationPermission = async () => {
@@ -244,16 +249,8 @@
     }
     const main = async () => {
         check()
-        registerServiceWorker()
-        .then(()=>{
-          requestNotificationPermission()
-        })
-        .then(()=>{
-          var myWorker = new Worker('./service.js');
-          myWorker.postMessage({
-            data: localStorage.getItem("hh-username")
-          });
-        })
+        await registerServiceWorker()
+        await requestNotificationPermission()
     }
     var conf = confirm("allow notifications for announcements?");
     if (conf) {
