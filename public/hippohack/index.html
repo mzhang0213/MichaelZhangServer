@@ -137,12 +137,12 @@
   <!--announcements-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
     <p class="font-bold text-5xl text-white mt-8 rounded-lg bg-gradient-to-bl p-6 from-blue-500 to-sky-300">Announcements</p>
-    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-auto" style="height:600px"></div>
+    <div id="annoBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 bg-gray-700 overflow-auto py-10" style="height:600px"></div>
   </div>
   <script>
     var createAnno = function(title,time,body){
       var anno = document.createElement("div");
-      anno.className="relative w-10/12 h-auto flex flex-col items-center text-left rounded-2xl shadow-xl bg-sky-400";
+      anno.className="relative w-10/12 pl-3 py-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-xl bg-sky-300";
       var annos = JSON.parse(localStorage.getItem("annos")).annos;
 
       var titleE = document.createElement("h1");
@@ -208,14 +208,14 @@
       if (req.status === 200 && req.readyState === 4) {
         var body = JSON.parse(req.responseText);
         db_annos = body.annos;
+        for (var i=0;i<db_annos.length;i++){
+          createAnno(db_annos[i].title,db_annos[i].time,db_annos[i].body);
+        }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
         alert("please ask michael for help oh noes")
       }
     })
-    for (var i=0;i<db_annos.length;i++){
-      createAnno(db_annos[i]);
-    }
     //include another schematic for doing async notification pushing
   </script>
 
