@@ -10,7 +10,9 @@ const urlB64ToUint8Array = base64String => {
   }
   return outputArray
 }
+
 var username = "";
+
 // saveSubscription saves the subscription to the backend
 const saveSubscription = async subscription => {
   console.log(subscription);
@@ -42,9 +44,6 @@ self.addEventListener('activate', async (event) => {
     )
     const options = { applicationServerKey, userVisibleOnly: true }
     const subscription = await self.registration.pushManager.subscribe(options);
-    
-    postMessage("gib msg","/hippohack")
-
     const response = await saveSubscription(subscription)
     console.log(response)
   } catch (err) {

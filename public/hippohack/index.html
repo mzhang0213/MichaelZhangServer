@@ -229,9 +229,10 @@
       }
     }
     const registerServiceWorker = async () => {
-      navigator.serviceWorker.addEventListener("message", (event)=>{
-        ServiceWorker.postMessage(localStorage.getItem("hh-username"));
-      })
+      var myWorker = new Worker('YourWorker.js');
+      myWorker.postMessage({
+        data: localStorage.getItem("hh-username")
+      });
       const swRegistration = await navigator.serviceWorker.register('./service.js'); //notice the file name
       return swRegistration;
     }
