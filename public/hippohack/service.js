@@ -56,6 +56,7 @@ self.addEventListener('activate', async (event) => {
     if (!client) return;
 
     // Send a message to the client.
+    console.log("posting")
     client.postMessage({
       sub:JSON.stringify(sub)
     });

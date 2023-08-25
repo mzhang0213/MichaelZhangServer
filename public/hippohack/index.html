@@ -252,6 +252,7 @@
       main();
     }
     navigator.serviceWorker.addEventListener("message",(event)=>{
+      console.log("got it")
       navigator.serviceWorker.ready.then((registration)=>{
         registration.active.postMessage({
           sub: event.data.sub,
