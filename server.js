@@ -233,9 +233,11 @@ app.post("/hh-anno", async(req,res)=>{
 app.post("/hh-save-sub",async(req,res)=>{
 	try{
 		//data: req.body.user req.body.sub
+		console.log("started")
 		await client.connect();
 		const db = client.db("hippohack2023").collection("subs");
 		var db_subs = currContent.subs;
+		console.log(db_subs)
 		var submit = [];
 		for (var i=0;i<db_subs.length;i++){
 			submit.push(db_subs[i]);

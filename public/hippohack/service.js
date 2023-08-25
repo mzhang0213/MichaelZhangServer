@@ -20,10 +20,10 @@ const saveSubscription = async (username, subscription) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: {
+    body: JSON.stringify({
       user:username,
       sub:subscription
-    }
+    })
   })
   console.log(response);
   return response
