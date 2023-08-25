@@ -45,7 +45,6 @@ self.addEventListener('activate', async (event) => {
     )
     const options = { applicationServerKey, userVisibleOnly: true }
     var sub = await self.registration.pushManager.subscribe(options);
-    sendDataBack(event,sub);
     event.waitUntil(
       (async () => {
         // Exit early if we don't have access to the client.
