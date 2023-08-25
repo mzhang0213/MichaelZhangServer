@@ -230,11 +230,6 @@
     }
     const registerServiceWorker = async () => {
       const swRegistration = await navigator.serviceWorker.register('./service.js'); //notice the file name
-      navigator.serviceWorker.ready.then((registration)=>{
-        registration.active.postMessage({
-          data: localStorage.getItem("hh-username")
-        });
-      })
       return swRegistration;
     }
     const requestNotificationPermission = async () => {
@@ -256,6 +251,14 @@
     if (conf) {
       main();
     }
+    navigator.serviceWorker.addEventListener("message",(event)=>{
+      navigator.serviceWorker.ready.then((registration)=>{
+        registration.active.postMessage({
+          sub: event.data.sub,
+          data: localStorage.getItem("hh-username")
+        });
+      })
+    })
   
   </script>
 

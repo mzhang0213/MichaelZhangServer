@@ -29,12 +29,12 @@ const saveSubscription = async (username, subscription) => {
   return response.json()
 }
 
-var sub = "";
+
 self.addEventListener("message",async (event) => {
   // event is an ExtendableMessageEvent object
   console.log(`The client sent me a message: ${event.data}`);
   console.log(sub);
-  const response = await saveSubscription(event.data.data,sub);
+  const response = await saveSubscription(event.data.data,JSON.parse(sub));
 });
 
 self.addEventListener('activate', async (event) => {
@@ -44,9 +44,26 @@ self.addEventListener('activate', async (event) => {
       'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
     )
     const options = { applicationServerKey, userVisibleOnly: true }
-    sub = await self.registration.pushManager.subscribe(options);
-    console.log("done");
-    console.log(sub);
+    var sub = await self.registration.pushManager.subscribe(options);
+    sendDataBack(event,sub);
+    event.waitUntil(
+      (async () => {
+        // Exit early if we don't have access to the client.
+        // Eg, if it's cross-origin.
+        if (!event.clientId) return;
+  
+        // Get the client.
+        const client = await self.clients.get(event.clientId);
+        // Exit early if we don't get the client.
+        // Eg, if it closed.
+        if (!client) return;
+  
+        // Send a message to the client.
+        client.postMessage({
+          sub:JSON.stringify(sub)
+        });
+      })()
+    );
   } catch (err) {
     console.log('Error', err)
   }
