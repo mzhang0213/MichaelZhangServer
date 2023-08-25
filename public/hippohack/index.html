@@ -247,10 +247,7 @@
         await registerServiceWorker()
         await requestNotificationPermission()
     }
-    var conf = confirm("allow notifications for announcements?");
-    if (conf) {
-      main();
-    }
+    main();
   
   </script>
 
