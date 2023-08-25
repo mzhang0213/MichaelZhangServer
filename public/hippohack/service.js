@@ -20,13 +20,13 @@ const saveSubscription = async (username, subscription) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
+    body: {
       user:username,
       sub:subscription
-    })
+    }
   })
   console.log(response);
-  return response.json()
+  return response
 }
 
 self.addEventListener('activate', async (event) => {
