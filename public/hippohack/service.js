@@ -33,6 +33,7 @@ var sub = "";
 self.addEventListener("message",async (event) => {
   // event is an ExtendableMessageEvent object
   console.log(`The client sent me a message: ${event.data}`);
+  console.log(sub);
   const response = await saveSubscription(event.data.data,sub);
 });
 
@@ -44,7 +45,8 @@ self.addEventListener('activate', async (event) => {
     )
     const options = { applicationServerKey, userVisibleOnly: true }
     sub = await self.registration.pushManager.subscribe(options);
-    console.log("done")
+    console.log("done");
+    console.log(sub);
   } catch (err) {
     console.log('Error', err)
   }
