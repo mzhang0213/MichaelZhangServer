@@ -29,14 +29,6 @@ const saveSubscription = async (username, subscription) => {
   return response.json()
 }
 
-
-self.addEventListener("message",async (event) => {
-  // event is an ExtendableMessageEvent object
-  console.log(`The client sent me a message: ${event.data}`);
-  console.log(sub);
-  const response = await saveSubscription(event.data.data,JSON.parse(sub));
-});
-
 self.addEventListener('activate', async (event) => {
   // This will be called only once when the service worker is activated.
   try {
@@ -44,19 +36,10 @@ self.addEventListener('activate', async (event) => {
       'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
     )
     const options = { applicationServerKey, userVisibleOnly: true }
-    var sub = await self.registration.pushManager.subscribe(options);
-    
-    // Get the client.
-
-    // Send a message to the client.
-    console.log("posting")
-    self.clients.matchAll().then(function (clients){
-      clients.forEach(function(client){
-          client.postMessage({
-            sub:JSON.stringify(sub)
-          });
-      });
-  });
+    const subscription = await self.registration.pushManager.subscribe(options)
+    var params = new URLSearchParams(self.location);
+    const response = await saveSubscription(params.get("user"),subscription)
+    console.log(response)
   } catch (err) {
     console.log('Error', err)
   }
