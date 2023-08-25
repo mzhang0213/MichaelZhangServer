@@ -16,6 +16,7 @@ var username = "";
 // saveSubscription saves the subscription to the backend
 const saveSubscription = async subscription => {
   console.log(subscription);
+  console.log(username);
   const response = await fetch(self.location.origin+"/hh-save-sub", {
     method: 'post',
     headers: {
@@ -33,6 +34,7 @@ self.addEventListener("message", (event) => {
   // event is an ExtendableMessageEvent object
   console.log(`The client sent me a message: ${event.data}`);
   username=event.data.data;
+  console.log(username);
 });
 
 self.addEventListener('activate', async (event) => {
