@@ -245,14 +245,14 @@
     const main = async () => {
         check()
         registerServiceWorker()
-        .then(function(){
+        .then(()=>{
           requestNotificationPermission()
-          .then(function(){
-            var myWorker = new Worker('./service.js');
-            myWorker.postMessage({
-              data: localStorage.getItem("hh-username")
-            });
-          })
+        })
+        .then(()=>{
+          var myWorker = new Worker('./service.js');
+          myWorker.postMessage({
+            data: localStorage.getItem("hh-username")
+          });
         })
     }
     var conf = confirm("allow notifications for announcements?");
