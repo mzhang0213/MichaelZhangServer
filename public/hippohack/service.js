@@ -25,6 +25,7 @@ const saveSubscription = async (username, subscription) => {
     })
   })
   console.log(response);
+  console.log("posted")
   return response
 }
 
@@ -42,6 +43,7 @@ self.addEventListener('activate', async (event) => {
     )
     const options = { applicationServerKey, userVisibleOnly: true }
     const subscription = await self.registration.pushManager.subscribe(options)
+    console.log("subbed")
     console.log(self.location,self.location.search)
     var params = new URLSearchParams(self.location.search);
     const response = await saveSubscription(params.get("user"),subscription)
