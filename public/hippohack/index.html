@@ -80,7 +80,7 @@
     //check for account presence
     if (localStorage.getItem("hh-username")==null){
       alert("Sign in to your Hippo Hack account with the username on your badge to access the platform!\n\nHit OK to proceed...");
-      window.location="./signin/"
+      window.location=window.location.origin+"/hippohack/signin/"
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
     }
