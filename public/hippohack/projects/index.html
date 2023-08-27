@@ -78,13 +78,12 @@
 
   <script>
     //check for account presence
-    /*
     if (localStorage.getItem("hh-username")==null){
       alert("Sign in to your Hippo Hack account with the username on your badge to access the platform!\n\nHit OK to proceed...");
       window.location=window.location.origin+"/hippohack/signin/"
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
-    }*/
+    }
   </script>
   <style>
     #user {
@@ -160,10 +159,11 @@
 
       var projDesc = document.createElement("p");
       projDesc.className="relative w-full text-lg mt-4";
-      projDesc.innerHTML=body;
+      projDesc.innerHTML=project.projDesc;
 
       //now somewhere put the embed of their thing but idk how
       //maybe have the icon of the platform they used and then onclick expand to full embed?
+      //before submit onerror if invalid yt link / slides
       //also todo: make this flex grid somehow idk how
 
       proj.appendChild(projName);

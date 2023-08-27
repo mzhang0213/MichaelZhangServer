@@ -140,8 +140,6 @@ app.post("/hh-login", async (req,res)=>{
 		console.log(currContent)
 		console.log(usernames)
 	
-		//black box: fetch registered usernames from mongodb and put it in var usernames
-		//check if the username is one in the registered usernames
 		var found=false;
 		var msg = {
 			error:0
