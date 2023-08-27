@@ -89,7 +89,7 @@
       var req1 = new XMLHttpRequest();
       var username = gebi("groupname").value;
       var submit1 = {
-        group:groupname
+        group:groupname,
         user:localStorage.getItem("hh-username");
       }
       req1.open("POST",window.location.origin+"/hh-glogin");
