@@ -87,7 +87,7 @@
     }
     if (localStorage.getItem("group")==null){
       gebi("group").innerHTML="Join your group";
-      gebi("group").onclick="(function(){window.location=window.location.origin+'/hippohack/group/'})()"
+      gebi("group").onclick=function(){window.location=window.location.origin+'/hippohack/group/'}
     }else{
       gebi("group").innerHTML=localStorage.getItem("group");
     }
