@@ -136,7 +136,7 @@
 
   <!--projects display-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
-    <div id="projectBox" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4" style="height:600px"></div>
+    <div id="projectBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 mt-4" style="height:600px"></div>
   </div>
 
   <script>
@@ -149,12 +149,13 @@
       projName.className="relative w-full text-3xl";
       projName.innerHTML=project.projName;
 
+      //combine the group name line and italicize the names
       var groupName = document.createElement("p");
       groupName.className="relative w-full text-sm mt-1";
       groupName.innerHTML=project.groupName;
 
       var groupMembers = document.createElement("p");
-      groupMembers.classMembers="relative w-full text-sm mt-1";
+      groupMembers.className="relative w-full text-sm mt-1";
       groupMembers.innerHTML=project.groupMembers;
 
       var projDesc = document.createElement("p");

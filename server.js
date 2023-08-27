@@ -166,6 +166,97 @@ app.post("/hh-login", async (req,res)=>{
 	}
 })
 
+app.post("/hh-glogin", async (req,res)=>{
+	try{
+		//req.body.group is the username submitted, req.body.user is the user's username
+		/*
+		  group schematic:
+		  {
+			group:"gname"
+			user:"######" //6 random numbers
+			members:[users]
+		  }
+		*/
+
+		await client.connect();
+		const db = client.db("hippohack2023").collection("accounts");
+		const currContent = await db.findOne();
+		const groups = currContent.groups;
+		console.log(currContent)
+		console.log(groups)
+	
+		var found=false;
+		var submit = [];
+		var msg = {
+			error:0
+		}
+		for (var i=0;i<groups.length;i++){
+			console.log("submitted gname: "+req.body.group);
+			console.log("db gname: "+groups[i].group);
+			if (req.body.group==groups[i].group){
+				found=true;
+				groups[i].members.push(req.body.user);
+			}
+			submit.push(groups[i])
+		}
+		if (found){
+			const filter = {title:"accounts"}
+			const updateDoc = {
+				$set: {
+					projects:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+		}else {
+			//new group, but i want to send confirmation that they are creating new group
+			msg.error=1;
+			msg.group=req.body.group
+			res.send(JSON.stringify(msg))
+		}
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
+app.post("/hh-glogin-confirm", async (req,res)=>{
+	//posted to req.body.confirm, req.body.group, req.body.user
+	try{
+		await client.connect();
+		const db = client.db("hippohack2023").collection("accounts");
+		const currContent = await db.findOne();
+		const groups = currContent.groups;
+		console.log(currContent)
+		console.log(groups)
+		var submit = [];
+		for (var i=0;i<groups.length;i++){
+			submit.push(groups[i])
+		}
+		var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
+		var currGroup = {
+			group:req.body.group, //gname
+			user:randomName, //random name
+			members:[].push(req.body.user)
+		}
+		submit.push(currGroup);
+		const filter = {title:"accounts"}
+		const updateDoc = {
+			$set: {
+				projects:submit
+			}
+		}
+		var msg = {
+			group:req.body.group
+		}
+		await db.updateOne(filter,updateDoc);
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
 app.post("/hh-proj", async (req,res)=>{
 	try{
 		/*

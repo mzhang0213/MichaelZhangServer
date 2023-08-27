@@ -124,7 +124,7 @@
   </style>
 
   <!--entire site bg-->
-  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./hippooo.png')"></div>
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
   <!--title -->
   <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
     <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
@@ -135,32 +135,33 @@
   </div>
 
   <!--submit-->
-  <div class="relative flex flex-col justify-center items-center" style="height:1000px;">
+  <div class="relative flex flex-col justify-center items-center" style="height:1200px;">
     <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
-    <div id="data" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 pl-8 bg-gray-200" style="height:600px">
+    <div id="data" class="relative flex flex-col justify-center items-center rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px">
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Name</p>
-        <textarea id="projName" class="relative w-full" style="height:25px;"></textarea>
+        <textarea id="projName" class="regField relative w-full"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Group Name</p>
-        <textarea id="groupName" class="relative w-full" style="height:25px;"></textarea>
+        <textarea id="groupName" class="regField relative w-full"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Group Members</p>
-        <textarea id="groupMembers" class="relative w-full" style="height:25px;"></textarea>
+        <textarea id="groupMembers" class="regField relative w-full"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Description</p>
-        <textarea id="projDesc" class="relative w-full" style="height:50px;"></textarea>
+        <textarea id="projDesc" class="relative w-full" style="height:70px;"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Visual Media Link</p>
         <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
-        <textarea id="mediaLink" class="relative w-full" style="height:25px;"></textarea>
+        <textarea id="mediaLink" class="regField relative w-full"></textarea>
       </div>
-      <button id="submit" class="relative p-3" style="margin-left:80%;">Submit!!</button>
+      <style>.regField{height:32px;}</style>
     </div>
+    <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
   </div>
 
   <style>

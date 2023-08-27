@@ -70,6 +70,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
+          <a onclick="(function(){})()" id="group"></a>
           <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
@@ -83,6 +84,9 @@
       window.location=window.location.origin+"/hippohack/signin/"
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
+    }
+    if (localStorage.getItem("group")==null){
+      gebi("group").innerHTML="Join your group";
     }
   </script>
   <style>
