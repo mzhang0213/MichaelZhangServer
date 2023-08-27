@@ -168,6 +168,51 @@ app.post("/hh-login", async (req,res)=>{
 	}
 })
 
+app.post("/hh-proj", async (req,res)=>{
+	try{
+		/*
+		data: (req.body.xxx)
+			projName
+			groupName
+			groupMembers
+			projDesc
+			mediaLink
+		*/
+		var msg = {
+			error:0
+		}
+		
+
+		await client.connect();
+		const db = client.db("hippohack2023").collection("projects");
+		const currContent = await db.findOne();
+		const projects = currContent.projects;
+		var submit = [];
+		for (var i=0;i<projects.length;i++){
+			submit.push(projects[i]);
+		}
+		var proj = {
+			projName:req.body.projName,
+			groupName:req.body.groupName,
+			groupMembers:req.body.groupMembers,
+			projDesc:req.body.projDesc,
+			mediaLink:req.body.mediaLink
+		}
+		const filter = {title:"projects"}
+		const updateDoc = {
+			$set: {
+				projects:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
 const vapidKeys = {
 	publicKey: 'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk',
 	privateKey: 'qMGFVirZJSr5GyPScdP26bbQkBSwXo2YVc2QZ651no8',

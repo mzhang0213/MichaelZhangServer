@@ -129,7 +129,7 @@
   <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
     <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
       <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
-        <p class="font-bold sm:text-5xl md:text-7xl">Projects</p>
+        <p class="font-bold sm:text-5xl md:text-7xl">My Project</p>
       </div>
     </div>
   </div>
@@ -137,38 +137,87 @@
   <!--submit-->
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
     <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
-    <div id="data" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:600px">
-      <div class="relative pl-2">
+    <div id="data" class="relative flex flex-col justify-center items-start rounded-2xl w-11/12 mt-4 pl-8 bg-gray-200" style="height:600px">
+      <div class="mb-4 w-10/12">
         <p class="text-2xl">Project Name</p>
-        <input id="projName" class="relative">
+        <textarea id="projName" class="relative"></textarea>
       </div>
-      <div>
+      <div class="mb-4 w-10/12">
         <p class="text-2xl">Group Name</p>
-        <input id="groupName" class="relative">
+        <textarea id="groupName" class="relative"></textarea>
       </div>
-      <div>
+      <div class="mb-4 w-10/12">
         <p class="text-2xl">Group Members</p>
-        <input id="groupMembers" class="relative">
+        <textarea id="groupMembers" class="relative"></textarea>
       </div>
-      <div>
+      <div class="mb-4 w-10/12">
         <p class="text-2xl">Project Description</p>
-        <input id="projDesc" class="relative">
+        <textarea id="projDesc" class="relative"></textarea>
       </div>
-      <div>
+      <div class="mb-4 w-10/12">
         <p class="text-2xl">Visual Media Link</p>
         <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
-        <input id="mediaLink" class="relative">
+        <textarea id="mediaLink" class="relative" placeholder="https://slides.google.com/....."></textarea>
       </div>
       <button id="submit" class="relative" style="margin-left:70vh;">Submit!!</button>
     </div>
   </div>
 
   <style>
-    input{
+    textarea{
       border: 2px black solid;
-
+      resize:none;
+    }
+    #submit{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #submit:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #submit:hover{
+      background-color:rgb(48, 194, 48);
     }
   </style>
+  <script>
+    gebi("submit").addEventListener("click",function(){
+      var req = new XMLHttpRequest();
+      var projName = gebi("projName").value;
+      var groupName = gebi("groupName").value;
+      var groupMembers = gebi("groupMembers").value;
+      var projDesc = gebi("projDesc").value;
+      var mediaLink = gebi("mediaLink").value;
+      var body = {
+        projName:projName,
+        groupName:groupName,
+        groupMembers:groupMembers,
+        projDesc:projDesc,
+        mediaLink:mediaLink
+      }
+      req.open("POST",window.location.origin+"/hh-proj");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          //now check for responded errors
+          if (body.error == 1) {
+            //code 1: invalid username
+            alert("wrong / misspelled username. sorry!")
+          }else if (body.error == 0){
+            //code 0: success
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+  </script>
   <!--
     schematic
 
@@ -194,5 +243,6 @@
 
 
   -->
+  
 </body>
 </html>
