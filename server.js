@@ -239,10 +239,10 @@ app.post("/hh-glogin-confirm", async (req,res)=>{
 			members:[].push(req.body.user)
 		}
 		submit.push(currGroup);
-		const filter = {title:"accounts"}
+		const filter = {title:"usernames"}
 		const updateDoc = {
 			$set: {
-				projects:submit
+				groups:submit
 			}
 		}
 		var msg = {
