@@ -181,8 +181,6 @@ app.post("/hh-proj", async (req,res)=>{
 		var msg = {
 			error:0
 		}
-		
-
 		await client.connect();
 		const db = client.db("hippohack2023").collection("projects");
 		const currContent = await db.findOne();
@@ -198,6 +196,7 @@ app.post("/hh-proj", async (req,res)=>{
 			projDesc:req.body.projDesc,
 			mediaLink:req.body.mediaLink
 		}
+		submit.push(proj);
 		const filter = {title:"projects"}
 		const updateDoc = {
 			$set: {
@@ -330,7 +329,20 @@ app.get("/hh-getAnnos",async (req,res)=>{
 	}
 })
 
-
+app.get("/hh-getProjects",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db("hippohack2023").collection("projects");
+		const currContent = await db.findOne();
+		var db_proj = currContent.projects;
+		var msg = {
+			projects:db_proj
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
 
 
 
