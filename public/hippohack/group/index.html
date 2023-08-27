@@ -90,7 +90,7 @@
       var username = gebi("groupname").value;
       var submit1 = {
         group:groupname,
-        user:localStorage.getItem("hh-username");
+        user:localStorage.getItem("hh-username")
       }
       req1.open("POST",window.location.origin+"/hh-glogin");
       req1.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
