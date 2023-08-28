@@ -431,6 +431,7 @@ app.post("/hh-getMembers",async (req,res)=>{
 		const db = client.db("hippohack2023").collection("accounts");
 		const currContent = await db.findOne();
 		var db_group = currContent.groups;
+		console.log(currContent);
 		var msg = {
 			members:db_group.members
 		}
