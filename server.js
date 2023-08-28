@@ -436,8 +436,19 @@ app.post("/hh-getMembers",async (req,res)=>{
 		var db_group = currContent.groups;
 		console.log(currContent);
 		var msg = {
-			members:db_group.members
+			error:0
 		}
+		for (var i=0;i<db_group.length;i++){
+			if (db_group[i].group===req.body.group){
+				//found the group, now ret members
+				var msg = {
+					members:db_group[i].members
+				}
+				res.send(JSON.stringify(msg));
+				break;
+			}
+		}
+		msg.error=1;
 		res.send(JSON.stringify(msg));
 	}finally{
 		await client.close();
