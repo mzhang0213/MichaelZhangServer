@@ -296,6 +296,7 @@
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
         var body = JSON.parse(req.responseText);
+        console.log(body);
         //res: group a|b , other teams in group
         groupSide = body.group;
         opponents = body.teams;
