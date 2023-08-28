@@ -143,7 +143,7 @@ app.post("/hh-login", async (req,res)=>{
 			console.log("toast");
 		}
 		res.send(JSON.stringify(msg))
-		await db_accs.updateOne(filter,updateDoc).then(async function(){
+		await db.updateOne(filter,updateDoc).then(async function(){
 			await client.close();
 		});
 	} catch(error) {
