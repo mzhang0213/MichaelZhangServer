@@ -158,15 +158,15 @@
     <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
     <div id="data" class="relative flex flex-col justify-center items-center rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:700px">
       <p id="groupBlurb" class="mb-8 w-7/12 text-center text-xl"></p>
-      <div id="field1" class="mb-4 w-9/12">
+      <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Name</p>
         <textarea id="projName" class="regField relative w-full"></textarea>
       </div>
-      <div id="field2" class="mb-4 w-9/12">
+      <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Description</p>
         <textarea id="projDesc" class="relative w-full" style="height:70px;"></textarea>
       </div>
-      <div id="field3" class="mb-4 w-9/12">
+      <div class="mb-4 w-9/12">
         <p class="text-2xl">Visual Media Link</p>
         <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
         <textarea id="mediaLink" class="regField relative w-full"></textarea>
@@ -258,17 +258,15 @@
 
     var loadEditor = function(){
       gebi("edit").disabled="";
-      gebi("field1").disabled=true;
-      gebi("field2").disabled=true;
-      gebi("field3").disabled=true;
-      gebi("field1").disabled=true;
+      gebi("projName").disabled=true;
+      gebi("projDesc").disabled=true;
+      gebi("mediaLink").disabled=true;
     }
     var loadCreator = function(){
       gebi("edit").disabled=true;
-      gebi("field1").disabled="";
-      gebi("field2").disabled="";
-      gebi("field3").disabled="";
-      gebi("field1").disabled="";
+      gebi("projName").disabled="";
+      gebi("projDesc").disabled="";
+      gebi("mediaLink").disabled="";
     }
     loadCreator();
     if (localStorage.getItem("submitted"))loadEditor();
