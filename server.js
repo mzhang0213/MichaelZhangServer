@@ -262,7 +262,6 @@ app.post("/hh-proj", async (req,res)=>{
 		data: (req.body.xxx)
 			projName
 			groupName
-			groupMembers
 			projDesc
 			mediaLink
 		*/
@@ -277,10 +276,18 @@ app.post("/hh-proj", async (req,res)=>{
 		for (var i=0;i<projects.length;i++){
 			submit.push(projects[i]);
 		}
+		const db_accs = client.db("hippohack2023").collection("accounts");
+		const currContent_members = await db.findOne();
+		const members = currContent.members;
+		var members_str = "";
+		for (var i=0;i<members.length;i++){
+			members_str=members[i]+", ";
+		}
+		members_str=members_str.substring(0,members_str.length()-2);
 		var proj = {
 			projName:req.body.projName,
 			groupName:req.body.groupName,
-			groupMembers:req.body.groupMembers,
+			groupMembers:members_str,
 			projDesc:req.body.projDesc,
 			mediaLink:req.body.mediaLink
 		}
@@ -410,6 +417,22 @@ app.get("/hh-getAnnos",async (req,res)=>{
 		var db_annos = currContent.annos;
 		var msg = {
 			annos:db_annos
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
+app.post("/hh-getMembers",async (req,res)=>{
+	//req.body.group
+	try{
+		await client.connect();
+		const db = client.db("hippohack2023").collection("accounts");
+		const currContent = await db.findOne();
+		var db_group = currContent.group;
+		var msg = {
+			members:db_group.members
 		}
 		res.send(JSON.stringify(msg));
 	}finally{
