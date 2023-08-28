@@ -119,33 +119,33 @@ app.post("/updateTime", async (req,res)=>{
 app.post("/hh-login", async (req,res)=>{
 	try{
 		//req.body.user is the username submitted
-
-		await client.connect();
-		const db = client.db("hippohack2023").collection("accounts");
-		const currContent = await db.findOne();
-		const usernames = currContent.usernames;
-	
-		var found=false;
-		var msg = {
-			error:0
-		}
-		for (var i=0;i<usernames.length;i++){
-			if (req.body.user==usernames[i].user){
-				//usernames[i] is the correct registered username
-				msg.user=usernames[i].user;
-				msg.first=usernames[i].first;
-				msg.last=usernames[i].last;
-				found=true;
+		(async function(){
+			await client.connect();
+			const db = client.db("hippohack2023").collection("accounts");
+			const currContent = await db.findOne();
+			const usernames = currContent.usernames;
+		
+			var found=false;
+			var msg = {
+				error:0
 			}
-		}
-		if (!found){
-			msg.error=1;
-			console.log("toast");
-		}
-		res.send(JSON.stringify(msg))
-		await db.updateOne(filter,updateDoc).then(async function(){
+			for (var i=0;i<usernames.length;i++){
+				if (req.body.user==usernames[i].user){
+					//usernames[i] is the correct registered username
+					msg.user=usernames[i].user;
+					msg.first=usernames[i].first;
+					msg.last=usernames[i].last;
+					found=true;
+				}
+			}
+			if (!found){
+				msg.error=1;
+				console.log("toast");
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
 			await client.close();
-		});
+		})
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
 		console.log(error);

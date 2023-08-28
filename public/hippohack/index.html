@@ -106,6 +106,7 @@
     function unregisterGroup(){
       if (localStorage.getItem("group")!==null){
         //group exists, remove them from it
+        var req = new XMLHttpRequest();
         var body = {
           user:localStorage.getItem("hh-username"),
           group:localStorage.getItem("group")
