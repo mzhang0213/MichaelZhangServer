@@ -304,6 +304,53 @@ app.post("/hh-removeGroup", async (req,res)=>{
 	}
 })
 
+app.post("/hh-vote", async (req,res)=>{
+	try{
+		//req.body.group is the username submitted, req.body.user is the user's username
+		
+		await client.connect();
+		const db = client.db("hippohack2023").collection("contest");
+		//groupAVote groupBVote >> arrays
+		const currContent = await db.findOne();
+		const groups = currContent.groups;
+		console.log(currContent)
+		console.log(groups)
+	
+		var found=false;
+		var submit = [];
+		var msg = {
+			error:0
+		}
+		for (var i=0;i<groups.length;i++){
+			console.log("submitted gname: "+req.body.group);
+			console.log("db gname: "+groups[i].group);
+			if (req.body.group==groups[i].group){
+				found=true;
+				groups[i].members.push(req.body.user);
+			}
+			submit.push(groups[i])
+		}
+		if (found){
+			const filter = {title:"accounts"}
+			const updateDoc = {
+				$set: {
+					projects:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+		}else {
+			//new group, but i want to send confirmation that they are creating new group
+			msg.error=1;
+			msg.group=req.body.group;
+			msg.user=req.body.user;
+		}
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
 app.post("/hh-proj", async (req,res)=>{
 	try{
 		/*
