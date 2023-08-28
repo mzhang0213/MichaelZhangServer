@@ -9,7 +9,7 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
-
+/*
 async function run(){
 	try {
 		//once the groups have populated, divide them up into groups a and b in contest
@@ -44,7 +44,7 @@ async function run(){
 	}
 }
 run().catch(console.dir)
-/*
+*/
 async function run() {
 	try {
 		// Connect the client to the server	(optional starting in v4.7)
@@ -53,7 +53,7 @@ async function run() {
 		const currContent_accs = await db_accs.findOne();
 		var accs_content = currContent_accs.usernames;
 		console.log(accs_content)
-		var rawNames=[""]
+		var rawNames=["Maria	Huang Ryan	Chang"]
 		rawNames=rawNames[0].split(" ")
 		var names=[]
 		var submit = []
@@ -83,4 +83,4 @@ async function run() {
 		await client.close();
 	}
 }
-run().catch(console.dir);*/
+run().catch(console.dir);

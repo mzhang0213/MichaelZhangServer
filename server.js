@@ -30,19 +30,6 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
 
 app.get("/accounts", async (req,res)=>{
 	try{
@@ -137,8 +124,6 @@ app.post("/hh-login", async (req,res)=>{
 		const db = client.db("hippohack2023").collection("accounts");
 		const currContent = await db.findOne();
 		const usernames = currContent.usernames;
-		console.log(currContent)
-		console.log(usernames)
 	
 		var found=false;
 		var msg = {
@@ -182,8 +167,6 @@ app.post("/hh-glogin", async (req,res)=>{
 		const db = client.db("hippohack2023").collection("accounts");
 		const currContent = await db.findOne();
 		const groups = currContent.groups;
-		console.log(currContent)
-		console.log(groups)
 	
 		var found=false;
 		var submit = [];
