@@ -194,10 +194,10 @@
     req.send(JSON.stringify(body));
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
         if (body.error==1){
           alert("something bad happened - couldnt find group")
         }else{
-          var body = JSON.parse(req.responseText);
           //groupBlurb
           var display1 = "Group Name: "+localStorage.getItem("group")+"  |  Group Members: ";
           var me = document.createElement("i");
