@@ -145,9 +145,12 @@ app.post("/hh-login", async (req,res)=>{
 			console.log("toast");
 		}
 		res.send(JSON.stringify(msg))
-
-	}finally{
-		await client.close();
+		await db_accs.updateOne(filter,updateDoc).then(async function(){
+			await client.close();
+		});
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(e);
 	}
 })
 

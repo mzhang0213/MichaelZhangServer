@@ -74,13 +74,12 @@ async function run() {
 				usernames:submit
 			}
 		}
-		await db_accs.updateOne(filter,updateDoc);
-		for (var i=0;i<submit.length;i++){
-			console.log(submit[i]);
-		}
-	} finally {
+		await db_accs.updateOne(filter,updateDoc).then(async function(){
+			await client.close();
+		});
+	} catch(error) {
 		// Ensures that the client will close when you finish/error
-		await client.close();
+		console.log(e);
 	}
 }
 run().catch(console.dir);
