@@ -169,6 +169,42 @@
         gebi("submit").disabled="";
       }
     }
+    var createProjectRight = function(project){
+      //project is JSON obj containing project properties
+      var proj = document.createElement("div");
+      proj.className="relative w-6/12 left-1/2 pl-3 py-3 mb-6 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
+
+      var projName = document.createElement("h1");
+      projName.className="relative w-full text-3xl";
+      projName.innerHTML=project.projName;
+
+      //combine the group name line and italicize the names
+      var groupName = document.createElement("p");
+      groupName.className="relative w-full text-sm mt-1";
+      groupName.innerHTML=project.groupName;
+
+      var groupMembers = document.createElement("p");
+      groupMembers.className="relative w-full text-sm mt-1";
+      groupMembers.innerHTML=project.groupMembers;
+
+      var projDesc = document.createElement("p");
+      projDesc.className="relative w-full text-lg mt-4";
+      projDesc.innerHTML=project.projDesc;
+
+      //now somewhere put the embed of their thing but idk how
+      //maybe have the icon of the platform they used and then onclick expand to full embed?
+      //before submit onerror if invalid yt link / slides
+      //also todo: make this flex grid somehow idk how
+
+      proj.appendChild(projName);
+      proj.appendChild(groupName);
+      proj.appendChild(groupMembers);
+      proj.appendChild(projDesc);
+      gebi("votingBox").appendChild(proj);
+    }
+    var body = {
+      group:localStorage.getItem("group")
+    }
     var createProjectLeft = function(project){
       //project is JSON obj containing project properties
       var proj = document.createElement("div");
@@ -223,42 +259,9 @@
         updateSubmit();
       })
     }
-    var createProjectRight = function(project){
-      //project is JSON obj containing project properties
-      var proj = document.createElement("div");
-      proj.className="relative w-6/12 left-1/2 pl-3 py-3 mb-6 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
-
-      var projName = document.createElement("h1");
-      projName.className="relative w-full text-3xl";
-      projName.innerHTML=project.projName;
-
-      //combine the group name line and italicize the names
-      var groupName = document.createElement("p");
-      groupName.className="relative w-full text-sm mt-1";
-      groupName.innerHTML=project.groupName;
-
-      var groupMembers = document.createElement("p");
-      groupMembers.className="relative w-full text-sm mt-1";
-      groupMembers.innerHTML=project.groupMembers;
-
-      var projDesc = document.createElement("p");
-      projDesc.className="relative w-full text-lg mt-4";
-      projDesc.innerHTML=project.projDesc;
-
-      //now somewhere put the embed of their thing but idk how
-      //maybe have the icon of the platform they used and then onclick expand to full embed?
-      //before submit onerror if invalid yt link / slides
-      //also todo: make this flex grid somehow idk how
-
-      proj.appendChild(projName);
-      proj.appendChild(groupName);
-      proj.appendChild(groupMembers);
-      proj.appendChild(projDesc);
-      gebi("votingBox").appendChild(proj);
-    }
-    var body = {
-      group:localStorage.getItem("group")
-    }
+    gebi("submit").addEventListener("click",function(){
+      //NEED TO D OTHIS
+    })
     var groupSide = "";
     var opponents = [];
     req.open("POST",window.location.origin+"/hh-getMyGroup");
