@@ -307,8 +307,6 @@ app.post("/hh-vote", async (req,res)=>{
 			error:0
 		}
 		for (var i=0;i<groups.length;i++){
-			console.log("submitted gname: "+req.body.group);
-			console.log("db gname: "+groups[i].group);
 			if (req.body.group==groups[i].group){
 				found=true;
 				groups[i].members.push(req.body.user);
