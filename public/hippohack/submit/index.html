@@ -145,7 +145,7 @@
   <div class="relative flex flex-col justify-center items-center" style="height:800px;">
     <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
     <div id="data" class="relative flex flex-col justify-center items-center rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:700px">
-      <p id="groupBlurb" class="mb-6 w-7/12"></p>
+      <p id="groupBlurb" class="mb-8 w-7/12 text-center text-xl"></p>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Name</p>
         <textarea id="projName" class="regField relative w-full"></textarea>
@@ -160,8 +160,8 @@
         <textarea id="mediaLink" class="regField relative w-full"></textarea>
       </div>
       <style>.regField{height:32px;}</style>
+      <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
     </div>
-    <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
   </div>
 
   <style>
@@ -194,24 +194,28 @@
     req.send(JSON.stringify(body));
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
-        var body = JSON.parse(req.responseText);
-        //groupBlurb
-        var display1 = "Group Name: "+localStorage.getItem("group")+"  |  Group Members: ";
-        var me = document.createElement("i");
-        var display2= "";
-        var two=false;
-        for (var i=0;i<body.members.length;i++){
-          if (body.members[i]===localStorage.getItem("hh-username")){
-            me.append(body.members[i]+" ")
-            two=true;
-          }else{
-            if (two)display2+=body.members[i]+" "
-            else display1+=body.members[i]+" "
+        if (body.error==1){
+          alert("something bad happened - couldnt find group")
+        }else{
+          var body = JSON.parse(req.responseText);
+          //groupBlurb
+          var display1 = "Group Name: "+localStorage.getItem("group")+"  |  Group Members: ";
+          var me = document.createElement("i");
+          var display2= "";
+          var two=false;
+          for (var i=0;i<body.members.length;i++){
+            if (body.members[i]===localStorage.getItem("hh-username")){
+              me.append(body.members[i]+" ")
+              two=true;
+            }else{
+              if (two)display2+=body.members[i]+" "
+              else display1+=body.members[i]+" "
+            }
           }
+          gebi("groupBlurb").append(display1);
+          gebi("groupBlurb").append(me);
+          gebi("groupBlurb").append(display2);
         }
-        gebi("groupBlurb").append(display1);
-        gebi("groupBlurb").append(me);
-        gebi("groupBlurb").append(display2);
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
         alert("please ask michael for help oh noes")
