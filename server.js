@@ -390,7 +390,7 @@ app.post("/hh-proj", async (req,res)=>{
 				for (var i=0;i<members.length;i++){
 					members_str=members[i]+", ";
 				}
-				members_str=members_str.substring(0,members_str.length()-2);
+				members_str=members_str.substring(0,members_str.length-2);
 				var proj = {
 					projName:req.body.projName,
 					groupName:req.body.groupName,
