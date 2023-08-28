@@ -580,10 +580,11 @@ app.post("/hh-getMyGroup",async (req,res)=>{
 			error:0
 		}
 		var otherMembers = [];
-		var groupA = db_group.a;
-		var groupB = db_group.b;
+		var groupA = db_group.a; //array
+		var groupB = db_group.b; //array
 		var found = false;
 		for (var i=0;i<groupA.length;i++){
+			console.log(groupA[i].group, req.body.group)
 			if (groupA[i].group===req.body.group){
 				//found group do the tasks
 				msg.group="a";
@@ -595,6 +596,7 @@ app.post("/hh-getMyGroup",async (req,res)=>{
 		if (!found){
 			otherMembers=[];
 			for (var i=0;i<groupB.length;i++){
+				console.log(groupA[i].group, req.body.group)
 				if (groupB[i].group===req.body.group){
 					//found group do the tasks
 					msg.group="b";
