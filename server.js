@@ -234,10 +234,12 @@ app.post("/hh-glogin-confirm", async (req,res)=>{
 			submit.push(groups[i])
 		}
 		var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
+		var members = [];
+		members.push(req.body.user);
 		var currGroup = {
 			group:req.body.group, //gname
 			user:randomName, //random name
-			members:[].push(req.body.user)
+			members:members
 		}
 		submit.push(currGroup);
 		const filter = {title:"usernames"}
