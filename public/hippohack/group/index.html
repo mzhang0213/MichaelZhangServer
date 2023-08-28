@@ -129,7 +129,7 @@
             }
           }else if (body1.error == 0){
             //code 0: success
-            alert("Joined group! Sending you home...");
+            alert(`Joined group ${body1.group}! Sending you home...`);
             localStorage.setItem("group",body1.group);
             window.location=window.location.origin+"/hippohack/";
           }
