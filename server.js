@@ -259,6 +259,51 @@ app.post("/hh-glogin-confirm", async (req,res)=>{
 	}
 })
 
+app.post("/hh-removeGroup", async (req,res)=>{
+	try{
+		//req.body.user req.body.group
+		var msg = {
+			error:0
+		}
+		await client.connect();
+		const db_accs = client.db("hippohack2023").collection("accounts");
+		const currContent_groups = await db_accs.findOne();
+		const groups = currContent_groups.groups;
+		var submit = [];
+		for (var i=0;i<groups.length;i++){
+			var dont=false
+			if (groups[i].group===req.body.group){
+				//found the correct group, now remove user
+				var newMembers = []
+				for (var j=0;j<groups[i].members.length;j++){
+					if (groups[i].members[j]!==req.body.user){
+						newMembers.push(groups[i].members[j]);
+					}
+				}
+				if (newMembers.length===0){
+					//well now there are no group members; don't push
+					dont=true;
+				}else{
+					groups[i].members=newMembers;
+				}
+			}
+			if (!dont) submit.push(groups[i]);
+		}
+		const filter = {title:"usernames"}
+		const updateDoc = {
+			$set: {
+				groups:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
 app.post("/hh-proj", async (req,res)=>{
 	try{
 		/*

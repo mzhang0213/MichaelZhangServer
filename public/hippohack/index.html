@@ -103,6 +103,26 @@
     if (now>1693265400000){
       gebi("myProjectButton").style.display="";
     }
+    function unregisterGroup(){
+      if (localStorage.getItem("group")!==null){
+        //group exists, remove them from it
+        var body = {
+          user:localStorage.getItem("hh-username"),
+          group:localStorage.getItem("group")
+        }
+        req.open("POST",window.location.origin+"/hh-removeGroup");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
+    }
   </script>
   <style>
     #user {

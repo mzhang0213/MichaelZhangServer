@@ -9,6 +9,42 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+async function run(){
+	try {
+		//once the groups have populated, divide them up into groups a and b in contest
+		await client.connect();
+		const db_accs = client.db("hippohack2023").collection("accounts");
+		const currContent_groups = await db_accs.findOne();
+		var groups = currContent_groups.groups;
+		const db_contest = client.db("hippohack2023").collection("contest");
+
+		var submitA = []
+		var submitB = []
+		for (var i=0;i<groups.length/2;i++){
+			submitA.push(groups[i]);
+		}
+		for (var i=groups.length/2;i<groups.length;i++){
+			submitB.push(groups[i]);
+		}
+
+		const filter = {title:"contest"}
+		const updateDoc = {
+			$set: {
+				groups:{
+					a:submitA,
+					b:submitB
+				}
+			}
+		}
+		await db_contest.updateOne(filter,updateDoc);
+	} finally {
+		// Ensures that the client will close when you finish/error
+		await client.close();
+	}
+}
+run().catch(console.dir)
+/*
 async function run() {
 	try {
 		// Connect the client to the server	(optional starting in v4.7)
@@ -47,4 +83,4 @@ async function run() {
 		await client.close();
 	}
 }
-run().catch(console.dir);
+run().catch(console.dir);*/
