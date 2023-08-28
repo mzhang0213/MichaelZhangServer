@@ -53,7 +53,7 @@ async function run() {
 		const currContent_accs = await db_accs.findOne();
 		var accs_content = currContent_accs.usernames;
 		console.log(accs_content)
-		var rawNames=["Maria	Huang Ryan	Chang"]
+		var rawNames=["Brian	Murphy Kevin	Yao"]
 		rawNames=rawNames[0].split(" ")
 		var names=[]
 		var submit = []
@@ -79,7 +79,7 @@ async function run() {
 		});
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
-		console.log(e);
+		console.log(error);
 	}
 }
 run().catch(console.dir);

@@ -184,10 +184,10 @@ app.post("/hh-glogin", async (req,res)=>{
 			submit.push(groups[i])
 		}
 		if (found){
-			const filter = {title:"accounts"}
+			const filter = {title:"usernames"}
 			const updateDoc = {
 				$set: {
-					projects:submit
+					groups:submit
 				}
 			}
 			await db.updateOne(filter,updateDoc);
