@@ -150,7 +150,7 @@ app.post("/hh-login", async (req,res)=>{
 		});
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
-		console.log(e);
+		console.log(error);
 	}
 })
 
