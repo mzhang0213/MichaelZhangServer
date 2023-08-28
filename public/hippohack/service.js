@@ -67,6 +67,7 @@ self.addEventListener("push", function(event) {
     console.log("Push event but no data");
   }
 });
+/*
 self.addEventListener("pushsubscriptionchange", async function(event){
   try {
     const applicationServerKey = urlB64ToUint8Array(
@@ -81,7 +82,7 @@ self.addEventListener("pushsubscriptionchange", async function(event){
   } catch (err) {
     console.log('Error', err)
   }
-})
+})*/
 const showLocalNotification = (title, body, swRegistration) => {
   const options = {
     body:body,
