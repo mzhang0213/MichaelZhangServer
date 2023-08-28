@@ -376,6 +376,8 @@ app.post("/hh-proj", async (req,res)=>{
 			const groups = currContent_groups.groups;
 			console.log(groups);
 			for (var i=0;i<groups.length;i++){
+				console.log("submitted gname: "+req.body.group);
+				console.log("db gname: "+groups[i].group);
 				if (groups[i].group===req.body.group){
 					//found the group
 					found=true;
