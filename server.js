@@ -130,8 +130,6 @@ app.post("/hh-login", async (req,res)=>{
 			error:0
 		}
 		for (var i=0;i<usernames.length;i++){
-			console.log("submitted username: "+req.body.user);
-			console.log("db username: "+usernames[i].user);
 			if (req.body.user==usernames[i].user){
 				//usernames[i] is the correct registered username
 				msg.user=usernames[i].user;
