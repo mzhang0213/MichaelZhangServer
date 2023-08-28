@@ -324,9 +324,18 @@ app.post("/hh-proj", async (req,res)=>{
 		for (var i=0;i<projects.length;i++){
 			submit.push(projects[i]);
 		}
+		var members = [];
+		var groupId = "";
 		const db_accs = client.db("hippohack2023").collection("accounts");
-		const currContent_members = await db_accs.findOne();
-		const members = currContent_members.members;
+		const currContent_groups = await db_accs.findOne();
+		const groups = currContent_groups.groups;
+		for (var i=0;i<groups.length;i++){
+			if (groups[i].group===req.body.group){
+				//found the group
+				members=groups[i].members;
+				groupId=groups[i].user;
+			}
+		}
 		var members_str = "";
 		for (var i=0;i<members.length;i++){
 			members_str=members[i]+", ";
@@ -336,6 +345,7 @@ app.post("/hh-proj", async (req,res)=>{
 			projName:req.body.projName,
 			groupName:req.body.groupName,
 			groupMembers:members_str,
+			id:groupId,
 			projDesc:req.body.projDesc,
 			mediaLink:req.body.mediaLink
 		}
