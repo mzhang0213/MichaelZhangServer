@@ -367,41 +367,50 @@ app.post("/hh-proj", async (req,res)=>{
 			}
 			submit.push(projects[i]);
 		}
+		var found=false;
 		if (!editing) {
 			var members = [];
 			var groupId = "";
 			const db_accs = client.db("hippohack2023").collection("accounts");
 			const currContent_groups = await db_accs.findOne();
 			const groups = currContent_groups.groups;
+			console.log(groups);
 			for (var i=0;i<groups.length;i++){
 				if (groups[i].group===req.body.group){
 					//found the group
+					found=true;
 					members=groups[i].members;
 					groupId=groups[i].user;
 				}
 			}
-			var members_str = "";
-			for (var i=0;i<members.length;i++){
-				members_str=members[i]+", ";
-			}
-			members_str=members_str.substring(0,members_str.length()-2);
-			var proj = {
-				projName:req.body.projName,
-				groupName:req.body.groupName,
-				groupMembers:members_str,
-				id:groupId,
-				projDesc:req.body.projDesc,
-				mediaLink:req.body.mediaLink
-			}
-			submit.push(proj);
-		}
-		const filter = {title:"projects"}
-		const updateDoc = {
-			$set: {
-				projects:submit
+			if (!found){
+				msg.error=1
+			}else{
+				var members_str = "";
+				for (var i=0;i<members.length;i++){
+					members_str=members[i]+", ";
+				}
+				members_str=members_str.substring(0,members_str.length()-2);
+				var proj = {
+					projName:req.body.projName,
+					groupName:req.body.groupName,
+					groupMembers:members_str,
+					id:groupId,
+					projDesc:req.body.projDesc,
+					mediaLink:req.body.mediaLink
+				}
+				submit.push(proj);
 			}
 		}
-		await db.updateOne(filter,updateDoc);
+		if(found){
+			const filter = {title:"projects"}
+			const updateDoc = {
+				$set: {
+					projects:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+		}
 		
 		res.send(JSON.stringify(msg));
 
