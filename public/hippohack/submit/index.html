@@ -261,14 +261,14 @@
       gebi("projName").disabled=true;
       gebi("projDesc").disabled=true;
       gebi("mediaLink").disabled=true;
-      gebi("submitted").disabled=true;
+      gebi("submit").disabled=true;
     }
     var loadCreator = function(){
       gebi("edit").disabled=true;
       gebi("projName").disabled="";
       gebi("projDesc").disabled="";
       gebi("mediaLink").disabled="";
-      gebi("submitted").disabled="";
+      gebi("submit").disabled="";
     }
     loadCreator();
     if (localStorage.getItem("submitted")==="true")loadEditor();
