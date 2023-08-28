@@ -102,7 +102,7 @@
           //now check for responded errors
           if (body1.error == 1) {
             //code 1: confirm new team name
-            var confirmation = confirm(`Confirm new group name ${body1.group}?`);
+            var confirmation = confirm(`Confirm new group name ${body1.group}?`+`\n${body1.user}`);
             if (confirmation){
               var req2 = new XMLHttpRequest();
               var submit2 = {
