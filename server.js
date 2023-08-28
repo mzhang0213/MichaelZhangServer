@@ -194,9 +194,9 @@ app.post("/hh-glogin", async (req,res)=>{
 		}else {
 			//new group, but i want to send confirmation that they are creating new group
 			msg.error=1;
-			msg.group=req.body.group;
-			msg.user=req.body.user;
 		}
+		msg.group=req.body.group;
+		msg.user=req.body.user;
 		res.send(JSON.stringify(msg))
 
 	}finally{
