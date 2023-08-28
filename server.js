@@ -277,8 +277,8 @@ app.post("/hh-proj", async (req,res)=>{
 			submit.push(projects[i]);
 		}
 		const db_accs = client.db("hippohack2023").collection("accounts");
-		const currContent_members = await db.findOne();
-		const members = currContent.members;
+		const currContent_members = await db_accs.findOne();
+		const members = currContent_members.members;
 		var members_str = "";
 		for (var i=0;i<members.length;i++){
 			members_str=members[i]+", ";
