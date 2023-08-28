@@ -163,45 +163,47 @@ app.post("/hh-glogin", async (req,res)=>{
 			members:[users]
 		  }
 		*/
-
-		await client.connect();
-		const db = client.db("hippohack2023").collection("accounts");
-		const currContent = await db.findOne();
-		const groups = currContent.groups;
-	
-		var found=false;
-		var submit = [];
-		var msg = {
-			error:0
-		}
-		for (var i=0;i<groups.length;i++){
-			console.log("submitted gname: "+req.body.group);
-			console.log("db gname: "+groups[i].group);
-			if (req.body.group==groups[i].group){
-				found=true;
-				groups[i].members.push(req.body.user);
+		(async function(){
+			await client.connect();
+			const db = client.db("hippohack2023").collection("accounts");
+			const currContent = await db.findOne();
+			const groups = currContent.groups;
+		
+			var found=false;
+			var submit = [];
+			var msg = {
+				error:0
 			}
-			submit.push(groups[i])
-		}
-		if (found){
-			const filter = {title:"usernames"}
-			const updateDoc = {
-				$set: {
-					groups:submit
+			for (var i=0;i<groups.length;i++){
+				console.log("submitted gname: "+req.body.group);
+				console.log("db gname: "+groups[i].group);
+				if (req.body.group==groups[i].group){
+					found=true;
+					groups[i].members.push(req.body.user);
 				}
+				submit.push(groups[i])
 			}
-			await db.updateOne(filter,updateDoc);
-			
-		}else {
-			//new group, but i want to send confirmation that they are creating new group
-			msg.error=1;
-		}
-		msg.group=req.body.group;
-		msg.user=req.body.user;
-		res.send(JSON.stringify(msg))
-
-	}finally{
-		await client.close();
+			if (found){
+				const filter = {title:"usernames"}
+				const updateDoc = {
+					$set: {
+						groups:submit
+					}
+				}
+				await db.updateOne(filter,updateDoc);
+				
+			}else {
+				//new group, but i want to send confirmation that they are creating new group
+				msg.error=1;
+			}
+			msg.group=req.body.group;
+			msg.user=req.body.user;
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (error){
+		console.log(error);
 	}
 })
 
@@ -280,7 +282,7 @@ app.post("/hh-removeGroup", async (req,res)=>{
 				groups:submit
 			}
 		}
-		await db.updateOne(filter,updateDoc);
+		await db_accs.updateOne(filter,updateDoc);
 		
 		res.send(JSON.stringify(msg))
 

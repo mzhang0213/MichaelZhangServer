@@ -261,10 +261,15 @@
     }
     gebi("submit").addEventListener("click",function(){
       //NEED TO D OTHIS
-      
+      if (highlights.length<2){
+        alert("choose more groups!");
+      }else{
+
+      }
     })
     var groupSide = "";
     var opponents = [];
+    var req = new XMLHttpRequest();
     req.open("POST",window.location.origin+"/hh-getMyGroup");
     req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     req.send(JSON.stringify(body));
@@ -274,6 +279,13 @@
         //res: group a|b , other teams in group
         groupSide = body.group;
         opponents = body.teams;
+        if (groupSide==="a"){
+          gebi("votingBox").style.backgroundColor=rgb(217,119,6);
+        }else if(groupSide==="b"){
+          gebi("votingBox").style.backgroundColor=rgb(132,204,22);
+        }else{
+          alert("see michael oh noes");
+        }
         for (var i=0;i<opponents.length;i+=2){
           createProjectLeft(i);
           createProjectRight(i+1);
