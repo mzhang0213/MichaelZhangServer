@@ -37,20 +37,25 @@ const newAnnos = async ()=>{
 
 self.addEventListener('activate', async (event) => {
   // This will be called only once when the service worker is activated.
+  const applicationServerKey = urlB64ToUint8Array(
+    'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
+  )
+  const options = { applicationServerKey, userVisibleOnly: true }
+  var subscription,params,response;
   try {
-    const applicationServerKey = urlB64ToUint8Array(
-      'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk'
-    )
-    const options = { applicationServerKey, userVisibleOnly: true }
-    const subscription = await self.registration.pushManager.subscribe(options)
-    console.log("subbed")
-    console.log(self.location,self.location.search)
-    var params = new URLSearchParams(self.location.search);
-    const response = await saveSubscription(params.get("user"),subscription)
-    console.log(response)
+    subscription = await self.registration.pushManager.subscribe(options)
   } catch (err) {
-    console.log('Error', err)
+    console.log('(1) sub Error', err)
   }
+  console.log("subbed")
+  console.log(self.location,self.location.search)
+  params = new URLSearchParams(self.location.search);
+  try{
+    response = await saveSubscription(params.get("user"),subscription)
+  } catch (err) {
+    console.log('(2) save sub Error', err)
+  }
+  console.log(response)
 })
 
 self.addEventListener("push", function(event) {
