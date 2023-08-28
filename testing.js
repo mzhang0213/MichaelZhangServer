@@ -9,7 +9,7 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
-/*
+
 async function run(){
 	try {
 		//once the groups have populated, divide them up into groups a and b in contest
@@ -37,14 +37,15 @@ async function run(){
 				}
 			}
 		}
-		await db_contest.updateOne(filter,updateDoc);
-	} finally {
-		// Ensures that the client will close when you finish/error
-		await client.close();
+		await db_contest.updateOne(filter,updateDoc).then(async function(){
+			await client.close();
+		});
+	} catch (error){
+		console.log(error);
 	}
 }
 run().catch(console.dir)
-*/
+/*
 async function run() {
 	try {
 		// Connect the client to the server	(optional starting in v4.7)
@@ -53,7 +54,7 @@ async function run() {
 		const currContent_accs = await db_accs.findOne();
 		var accs_content = currContent_accs.usernames;
 		console.log(accs_content)
-		var rawNames=["Brian	Murphy Kevin	Yao"]
+		var rawNames=["Ian	Wang Kevin	Yao"]
 		rawNames=rawNames[0].split(" ")
 		var names=[]
 		var submit = []
@@ -81,5 +82,5 @@ async function run() {
 		// Ensures that the client will close when you finish/error
 		console.log(error);
 	}
-}
+}*/
 run().catch(console.dir);

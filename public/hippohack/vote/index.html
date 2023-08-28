@@ -264,12 +264,32 @@
       if (highlights.length<2){
         alert("choose more groups!");
       }else{
-
+        var req = new XMLHttpRequest();
+        var body = {
+          votes:highlights,
+          user:localStorage.getItem("hh-username")
+        }
+        req.open("POST",window.location.origin+"/hh-vote");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+            //res: group a|b , other teams in group
+            
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
       }
     })
     var groupSide = "";
     var opponents = [];
     var req = new XMLHttpRequest();
+    var body = {
+      group:localStorage.getItem("group")
+    }
     req.open("POST",window.location.origin+"/hh-getMyGroup");
     req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     req.send(JSON.stringify(body));
@@ -287,8 +307,8 @@
           alert("see michael oh noes");
         }
         for (var i=0;i<opponents.length;i+=2){
-          createProjectLeft(i);
-          createProjectRight(i+1);
+          createProjectLeft(opponents[i]);
+          createProjectRight(opponents[i+1]);
         }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);

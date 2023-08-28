@@ -158,21 +158,22 @@
     <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
     <div id="data" class="relative flex flex-col justify-center items-center rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:700px">
       <p id="groupBlurb" class="mb-8 w-7/12 text-center text-xl"></p>
-      <div class="mb-4 w-9/12">
+      <div id="field1" class="mb-4 w-9/12">
         <p class="text-2xl">Project Name</p>
         <textarea id="projName" class="regField relative w-full"></textarea>
       </div>
-      <div class="mb-4 w-9/12">
+      <div id="field2" class="mb-4 w-9/12">
         <p class="text-2xl">Project Description</p>
         <textarea id="projDesc" class="relative w-full" style="height:70px;"></textarea>
       </div>
-      <div class="mb-4 w-9/12">
+      <div id="field3" class="mb-4 w-9/12">
         <p class="text-2xl">Visual Media Link</p>
         <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
         <textarea id="mediaLink" class="regField relative w-full"></textarea>
       </div>
       <style>.regField{height:32px;}</style>
       <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
+      <button id="edit" class="relative p-3 mt-4">Edit ✏</button>
     </div>
   </div>
 
@@ -233,6 +234,24 @@
         alert("please ask michael for help oh noes")
       }
     })
+
+    var loadEditor = function(){
+      gebi("edit").disabled="";
+      gebi("field1").disabled=true;
+      gebi("field2").disabled=true;
+      gebi("field3").disabled=true;
+      gebi("field1").disabled=true;
+    }
+    var loadCreator = function(){
+      gebi("edit").disabled=true;
+      gebi("field1").disabled="";
+      gebi("field2").disabled="";
+      gebi("field3").disabled="";
+      gebi("field1").disabled="";
+    }
+    loadCreator();
+    if (localStorage.getItem("submitted"))loadEditor();
+
     gebi("submit").addEventListener("click",function(){
       var req = new XMLHttpRequest();
       var projName = gebi("projName").value;
@@ -257,6 +276,9 @@
             alert("wrong / misspelled username. sorry!")
           }else if (body.error == 0){
             //code 0: success
+            alert("success!!");
+            loadEditor();
+            localStorage.setItem("submitted",true);
           }
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);

@@ -293,46 +293,49 @@ app.post("/hh-removeGroup", async (req,res)=>{
 
 app.post("/hh-vote", async (req,res)=>{
 	try{
-		//req.body.group is the username submitted, req.body.user is the user's username
+		//req.body.user req.body.votes
+		(async function(){
+
+			await client.connect();
+			const db = client.db("hippohack2023").collection("voting");
+			//groupAVote groupBVote >> arrays
+			const currContent = await db.findOne();
+			const people = currContent.groups;
 		
-		await client.connect();
-		const db = client.db("hippohack2023").collection("contest");
-		//groupAVote groupBVote >> arrays
-		const currContent = await db.findOne();
-		const groups = currContent.groups;
-		console.log(currContent)
-		console.log(groups)
-	
-		var found=false;
-		var submit = [];
-		var msg = {
-			error:0
-		}
-		for (var i=0;i<groups.length;i++){
-			if (req.body.group==groups[i].group){
-				found=true;
-				groups[i].members.push(req.body.user);
+			var found=false;
+			var submit = [];
+			var msg = {
+				error:0
 			}
-			submit.push(groups[i])
-		}
-		if (found){
-			const filter = {title:"accounts"}
+			for (var i=0;i<people.length;i++){
+				if (req.body.user===people[i].user){
+					//found user editing their vote
+					found=true;
+					people[i].votes=req.body.votes;
+				}
+				submit.push(people[i]);
+			}
+			if (!found){
+				//new vote
+				var vote = {
+					user:req.body.user,
+					votes:req.body.votes
+				}
+				submit.push(vote);
+			}
+			const filter = {title:"voting"}
 			const updateDoc = {
 				$set: {
-					projects:submit
+					groups:submit
 				}
 			}
-			await db.updateOne(filter,updateDoc);
-		}else {
-			//new group, but i want to send confirmation that they are creating new group
-			msg.error=1;
-			msg.group=req.body.group;
-			msg.user=req.body.user;
-		}
-		res.send(JSON.stringify(msg))
-
-	}finally{
-		await client.close();
+			await db_accs.updateOne(filter,updateDoc);
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (error){
+		console.log(error);
 	}
 })
 
@@ -353,35 +356,45 @@ app.post("/hh-proj", async (req,res)=>{
 		const currContent = await db.findOne();
 		const projects = currContent.projects;
 		var submit = [];
+		var editing = false;
 		for (var i=0;i<projects.length;i++){
+			if (projects[i].groupName===req.body.groupName){
+				//edited submission
+				editing = true;
+				projects[i].projName=req.body.projName
+				projects[i].projDesc=req.body.projDesc
+				projects[i].mediaLink=req.body.mediaLink
+			}
 			submit.push(projects[i]);
 		}
-		var members = [];
-		var groupId = "";
-		const db_accs = client.db("hippohack2023").collection("accounts");
-		const currContent_groups = await db_accs.findOne();
-		const groups = currContent_groups.groups;
-		for (var i=0;i<groups.length;i++){
-			if (groups[i].group===req.body.group){
-				//found the group
-				members=groups[i].members;
-				groupId=groups[i].user;
+		if (!editing) {
+			var members = [];
+			var groupId = "";
+			const db_accs = client.db("hippohack2023").collection("accounts");
+			const currContent_groups = await db_accs.findOne();
+			const groups = currContent_groups.groups;
+			for (var i=0;i<groups.length;i++){
+				if (groups[i].group===req.body.group){
+					//found the group
+					members=groups[i].members;
+					groupId=groups[i].user;
+				}
 			}
+			var members_str = "";
+			for (var i=0;i<members.length;i++){
+				members_str=members[i]+", ";
+			}
+			members_str=members_str.substring(0,members_str.length()-2);
+			var proj = {
+				projName:req.body.projName,
+				groupName:req.body.groupName,
+				groupMembers:members_str,
+				id:groupId,
+				projDesc:req.body.projDesc,
+				mediaLink:req.body.mediaLink
+			}
+			submit.push(proj);
 		}
-		var members_str = "";
-		for (var i=0;i<members.length;i++){
-			members_str=members[i]+", ";
-		}
-		members_str=members_str.substring(0,members_str.length()-2);
-		var proj = {
-			projName:req.body.projName,
-			groupName:req.body.groupName,
-			groupMembers:members_str,
-			id:groupId,
-			projDesc:req.body.projDesc,
-			mediaLink:req.body.mediaLink
-		}
-		submit.push(proj);
 		const filter = {title:"projects"}
 		const updateDoc = {
 			$set: {
@@ -390,7 +403,7 @@ app.post("/hh-proj", async (req,res)=>{
 		}
 		await db.updateOne(filter,updateDoc);
 		
-		res.send(JSON.stringify(msg))
+		res.send(JSON.stringify(msg));
 
 	}finally{
 		await client.close();
@@ -537,6 +550,55 @@ app.post("/hh-getMembers",async (req,res)=>{
 		}
 		if (!found){
 			msg.error=1;
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
+app.post("/hh-getMyGroup",async (req,res)=>{
+	//req.body.group
+	try{
+		//get group a|b
+		//get other group members
+		await client.connect();
+		const db = client.db("hippohack2023").collection("contest");
+		const currContent = await db.findOne();
+		var db_group = currContent.groups;
+		console.log(currContent);
+		var msg = {
+			error:0
+		}
+		var otherMembers = [];
+		var groupA = db_group.a;
+		var groupB = db_group.b;
+		var found = false;
+		for (var i=0;i<groupA.length;i++){
+			if (groupA[i].group===req.body.group){
+				//found group do the tasks
+				msg.group="a";
+				found=true;
+			}else {
+				otherMembers.push(groupA[i])
+			}
+		}
+		if (!found){
+			otherMembers=[];
+			for (var i=0;i<groupB.length;i++){
+				if (groupB[i].group===req.body.group){
+					//found group do the tasks
+					msg.group="b";
+					found=true;
+				}else {
+					otherMembers.push(groupB[i])
+				}
+			}
+		}
+		if (!found){
+			msg.error=1;
+		}else{
+			msg.teams=otherMembers;
 		}
 		res.send(JSON.stringify(msg));
 	}finally{
