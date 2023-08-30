@@ -76,34 +76,14 @@
       </div>
     </div>
   </nav>
-
   <script>
-    //check for account presence
-    if (localStorage.getItem("hh-username")==null){
-      alert("Sign in to your Hippo Hack account with the username on your badge to access the platform!\n\nHit OK to proceed...");
-      window.location=window.location.origin+"/hippohack/signin/"
+    if (localStorage.getItem("hh-username")===null){
+      gebi("userButton").innerHTML="Guest";
     }else{
-      gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
-    }
-    if (localStorage.getItem("group")==null){
-      gebi("group").innerHTML="Join your group";
-      gebi("group").onclick=function(){window.location=window.location.origin+'/hippohack/group/'}
-    }else{
-      gebi("group").innerHTML=localStorage.getItem("group");
-    }
-    var now = new Date().getTime();
-    if (now>1693249200000){
-      //show proj submit
-      gebi("myProjectButton").style.display="";
-    }
-    if (now>1693262400000){
-      //hide proj submit after deadline
-      gebi("myProjectButton").style.display="none";
-    }
-    if (now>1693265400000){
-      gebi("myProjectButton").style.display="";
+      gebi("userButton").innerHTML=`Hi, ${localStorage.getItem("hh-username")}!`;
     }
   </script>
+  
   <style>
     #user {
       position:relative;
