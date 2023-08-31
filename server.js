@@ -544,30 +544,34 @@ app.get("/hh-getAnnos",async (req,res)=>{
 app.post("/hh-getMembers",async (req,res)=>{
 	//req.body.group
 	try{
-		await client.connect();
-		const db = client.db("hippohack2023").collection("accounts");
-		const currContent = await db.findOne();
-		var db_group = currContent.groups;
-		console.log(currContent);
-		var msg = {
-			error:0
-		}
-		var found = false;
-		for (var i=0;i<db_group.length;i++){
-			if (db_group[i].group===req.body.group){
-				//found the group, now ret members
-				found = true;
-				var msg = {
-					members:db_group[i].members
+		(async function(){
+			await client.connect();
+			const db = client.db("hippohack2023").collection("accounts");
+			const currContent = await db.findOne();
+			var db_group = currContent.groups;
+			console.log(currContent);
+			var msg = {
+				error:0
+			}
+			var found = false;
+			for (var i=0;i<db_group.length;i++){
+				if (db_group[i].group===req.body.group){
+					//found the group, now ret members
+					found = true;
+					var msg = {
+						members:db_group[i].members
+					}
 				}
 			}
-		}
-		if (!found){
-			msg.error=1;
-		}
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
+			if (!found){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (e){
+		console.log(e);
 	}
 })
 
