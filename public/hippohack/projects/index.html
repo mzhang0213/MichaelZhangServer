@@ -70,6 +70,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
+          <a id="group"></a>
           <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
@@ -154,47 +155,26 @@
 
       var groupMembers = document.createElement("p");
       groupMembers.className="relative w-full text-sm mt-1";
-
+      var members = project.groupMembers;
       groupMembers.innerHTML="By: ";
-      var req = new XMLHttpRequest();
-      var body = {
-        group:project.groupName
+      for (var i=0;i<members.length;i++){
+        groupMembers.innerHTML+=members[i];
       }
-      req.open("POST",window.location.origin+"/hh-getMembers");
-      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-      req.send(JSON.stringify(body));
-      req.addEventListener("readystatechange", ()=>{
-        if (req.status === 200 && req.readyState === 4) {
-          var body = JSON.parse(req.responseText);
-          console.log(body);
-          if (body.error==1){
-            alert("something bad happened - couldnt find group")
-          }else{
 
-            for (var i=0;i<body.members.length;i++){
-              groupMembers.innerHTML+=body.members[i];
-            }
-            var projDesc = document.createElement("p");
-            projDesc.className="relative w-full text-lg mt-4";
-            projDesc.innerHTML=project.projDesc;
+      var projDesc = document.createElement("p");
+      projDesc.className="relative w-full text-lg mt-4";
+      projDesc.innerHTML=project.projDesc;
 
-            //now somewhere put the embed of their thing but idk how
-            //maybe have the icon of the platform they used and then onclick expand to full embed?
-            //before submit onerror if invalid yt link / slides
-            //also todo: make this flex grid somehow idk how
+      //now somewhere put the embed of their thing but idk how
+      //maybe have the icon of the platform they used and then onclick expand to full embed?
+      //before submit onerror if invalid yt link / slides
+      //also todo: make this flex grid somehow idk how
 
-            proj.appendChild(projName);
-            proj.appendChild(groupName);
-            proj.appendChild(groupMembers);
-            proj.appendChild(projDesc);
-            gebi("projectBox").appendChild(proj);
-
-          }
-        } else if (req.readyState === 4){
-          console.log("reeeeeeee err new acc creation: "+req.responseText);
-          alert("please ask michael for help oh noes")
-        }
-      })
+      proj.appendChild(projName);
+      proj.appendChild(groupName);
+      proj.appendChild(groupMembers);
+      proj.appendChild(projDesc);
+      gebi("projectBox").appendChild(proj);
     }
 
     var req = new XMLHttpRequest();
@@ -207,9 +187,6 @@
         db_projects = body.projects;
         for (var i=db_projects.length-1;i>=0;i--){
           createProject(db_projects[i]);
-          setTimeout(function(){
-            console.log("waiting")
-          },1000);
         }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
