@@ -156,9 +156,9 @@
       var groupMembers = document.createElement("p");
       groupMembers.className="relative w-full text-sm mt-1";
       var members = project.groupMembers;
-      groupMembers.innerHTML="By: ";
+      groupMembers.innerHTML="By:";
       for (var i=0;i<members.length;i++){
-        groupMembers.innerHTML+=members[i];
+        groupMembers.innerHTML+=" "+members[i]+" |";
       }
 
       var projDesc = document.createElement("p");
