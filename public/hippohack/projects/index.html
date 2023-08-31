@@ -206,7 +206,7 @@
         var body = JSON.parse(req.responseText);
         db_projects = body.projects;
         for (var i=db_projects.length-1;i>=0;i--){
-          createProject(db_projects[i]);
+          setTimeout(function(){createProject(db_projects[i])},1000);
         }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
