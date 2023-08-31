@@ -165,6 +165,10 @@
       projDesc.className="relative w-full text-lg mt-4";
       projDesc.innerHTML=project.projDesc;
 
+      var mediaLink = document.createElement("p");
+      mediaLink.className="relative w-full text-lg mt-4";
+      mediaLink.innerHTML="Link: " + project.mediaLink;
+
       //now somewhere put the embed of their thing but idk how
       //maybe have the icon of the platform they used and then onclick expand to full embed?
       //before submit onerror if invalid yt link / slides
@@ -174,6 +178,7 @@
       proj.appendChild(groupName);
       proj.appendChild(groupMembers);
       proj.appendChild(projDesc);
+      proj.appendChild(mediaLink);
       gebi("projectBox").appendChild(proj);
     }
 
