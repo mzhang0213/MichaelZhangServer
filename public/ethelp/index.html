@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo-square.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="bg-gray-900" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+  <!--navbar-->
+  <nav id="navbar" class="relative z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5); width:100%;">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <img class="h-8 mr-2" id="logo" src="./logo.png">
+      <button class="text-xl tracking-tight">ET Help Platform</span>
+    </div>
+    <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+        <button id="userButton"></button>
+        <!--
+        <div id="userContent">
+          <a id="group"></a>
+          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
+		      </div>
+        </div>-->
+    </div>
+  </nav>
+
+  <script>
+    if (localStorage.getItem("et-username")===null){
+      gebi("userButton").innerHTML="Sign In";
+      gebi("userButton").onclick=function(){
+        window.location=window.location.origin+"/ethelp/signin/";
+      }
+    }else{
+      gebi("userButton").innerHTML=localStorage.getItem("et-username");
+    }
+  </script>
+
+  <style>
+    #user {
+      position:relative;
+      display:inline-block;
+      color:#00806f
+    }
+    /*
+    math 3d3bb9
+    sci 3e7e32
+    eng 864700
+    his b8a715
+    ss 620080
+    lang 00806f
+    
+    */
+    #userContent {
+      display:none;
+      position:absolute;
+      background-color:rgb(36, 36, 36);
+      min-width: 100px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      left: 50%;
+      right: auto;
+      text-align: center;
+      transform: translate(-50%, 0);
+    }
+    #userContent a {
+      font-size:12px;
+      text-decoration:none;
+      padding: 12px 16px;
+      display:block;
+    }
+    #user:hover #userContent {
+      display:block;
+    }
+    #user a:hover {
+      background-color:#383838;
+      cursor:pointer;
+    }
+    #logout{
+      color:red;
+    }
+    #logout:hover{
+      color:rgb(190, 0, 0);
+    }
+  </style>
+
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./hippooo.png')"></div>
+  
+  <!--margin-->
+  <div class="relative my-12 flex flex-col justify-center">
+    <p id="welcome"></p>
+  </div>
+  <script>
+    gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
+  </script>
+
+  <!--tutor panel-->
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:1000px;">
+    <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-bl p-6 from-blue-500 to-sky-300">Tutors</p>
+    <div id="tutorsBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto px-4 py-10" style="height:1000px"></div>
+  </div>
+  <script>
+    var req = new XMLHttpRequest();
+    var createTutor = function(tutor){
+      //username, first, last, grade, subjects
+      var c = document.createElement("div");
+      c.style.width="35px";
+      c.style.height="50px";
+      c.style.className="relative m-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-navy-600";
+
+      var name = document.createElement("h1");
+      name.className="relative w-full text-xl";
+      name.innerHTML=`${tutor.first} ${tutor.last.charAt(0)}.`;
+
+      var grade = document.createElement("p");
+      grade.className="relative w-full text-sm mt-1";
+      var gradeDisp="";
+      if (tutor.grade<9){
+        //middle school
+        grade.innerHTML=tutor.grade+"th grade";
+      }else if(tutor.grade<13){
+        switch(tutor.grade){
+          case 9: grade.innerHTML="Freshman (HS)";break;
+          case 10: grade.innerHTML="Sophomore (HS)";break;
+          case 11: grade.innerHTML="Junior (HS)";break;
+          case 12: grade.innerHTML="Senior (HS)";break;
+          default:console.log("bad grade");break;
+        }
+      }else{
+        switch(tutor.grade){
+          case 13: grade.innerHTML="Freshman (College)";break;
+          case 14: grade.innerHTML="Sophomore (College)";break;
+          case 15: grade.innerHTML="Junior (College)";break;
+          case 16: grade.innerHTML="Senior (College)";break;
+          default:console.log("bad grade");break;
+        }
+      }
+
+      var subjects = document.createElement("div");
+      //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
+      subjects.style.className="relative m-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl";
+
+      for (var i=0;i<tutor.subjects;i++){
+        var s = document.createElement("p");
+        s.style.className="relative m-3 h-auto text-center rounded-2xl";
+        s.style.border="2px black solid";
+        //set color
+        switch(tutor.subjects[i].topic){
+          case "Math":s.style.backgroundColor="#3d3bb9";break;
+          case "Science":s.style.backgroundColor="#3e7e32";break;
+          case "English":s.style.backgroundColor="#864700";break;
+          case "History":s.style.backgroundColor="#b8a715";break;
+          case "Social S.":s.style.backgroundColor="#620080";break;
+          case "Language":s.style.backgroundColor="#00806f";break;
+        }
+        s.innerHTML=tutor.subects[i].subject;
+        subjects.appendChild(s);
+      }
+
+      c.appendChild(name);
+      c.appendChild(grade);
+      c.appendChild(subjects);
+      gebi("tutorsBox").appendChild(c);
+    }
+    var tutors = [];
+    req.open("GET",window.location.origin+"/et-getTutors");
+    req.send();
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
+        tutors=body.tutors;
+        for (var i=0;i<tutors.length;i++){
+          createTutor(tutors[i]);
+        }
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+  </script>
+</body>
+</html>

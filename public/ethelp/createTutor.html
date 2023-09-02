@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="-z-10 bg-gray-200">
+	<!--CHANGE BG ??-->
+  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('')"></div>
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
+    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Create tutor</h1>
+    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>First Name</label>
+    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Last Name</label>
+    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Grade</label>
+    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>School</label>
+    <div class="dropdown">
+      <div id="myDropdown" class="dropdown-content" onmouseleave="hideDrop()">
+        <input type="text" placeholder="Search.." id="myInput" onmouseenter="showDrop()" onkeyup="filterFunction()">
+        <div id="subjectsDropdown" style="display:none">
+          <a>Algebra I</a>
+          <a>Geometry</a>
+          <a>Algebra II</a>
+          <a>Precalculus</a>
+          <a>Calculus</a>
+          <a>Biology</a>
+          <a>Chemistry</a>
+          <a>Environmental Science</a>
+          <a>Physics</a>
+          <a>Biology</a>
+          <a>English: Grammar</a>
+          <a>English: Essay</a>
+          <a>US History I</a>
+          <a>US History II</a>
+          <a>World History</a>
+          <a>European History</a>
+          <a>Macroeconomics</a>
+          <a>Microeconomics</a>
+          <a>Psychology</a>
+          <a>English</a>
+          <a>French</a>
+          <a>Spanish</a>
+          <a>Latin</a>
+          <a>Chinese</a>
+        </div>
+      </div>
+    </div>
+    <style>
+      #myInput {
+        box-sizing: border-box;
+        background-image: url('searchicon.png');
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 16px;
+        padding: 14px 20px 12px 45px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+      }
+      #myInput:focus {outline: 3px solid #ddd;}
+      
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        padding-top:10px;
+      }
+      
+      .dropdown-content {
+        background-color: #f6f6f6;
+        min-width: 230px;
+        overflow: auto;
+        border: 1px solid #ddd;
+      }
+      
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      
+      .dropdown a:hover {background-color: #ddd;}
+      
+      .show {display: block;}
+    </style>
+    <script>
+      function showDrop(){
+        gebi("subjectsDropdown").style.display="";
+      }
+      function hideDrop(){
+        gebi("subjectsDropdown").style.display="none";
+      }
+      function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+          txtValue = a[i].textContent || a[i].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          a[i].style.display = "";
+          } else {
+          a[i].style.display = "none";
+          }
+        }
+      }
+    </script>
+	<button id="login" class="main mt-6 px-3 py-2">Go! >></button>
+  </div>
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <style>
+    #login{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #login:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
+  <script>
+    var s = [];
+    var updateList = function(subject){
+
+    }
+    var subjects = gebi("subjectsDropdown").children;
+    for (var i=0;i<subjects.length;i++){
+      subjects[i].addEventListener("click",function(){
+        //add border on click
+        //update list
+      })
+    }
+    gebi("login").addEventListener("click",function(){
+      var user = gebi("name").value+"_";
+      for (var i=0;i<3;i++){
+        var random = Math.floor(Math.random()*36);
+        var abcs = "abcdefghijklmnopqrstuvwxyz";
+        if (random>=10){
+          random=abcs.charAt(random-10);
+        }
+        user+=random;
+      }
+      localStorage.setItem("et-user",user);
+      localStorage.setItem("et-first",gebi("name").value);
+      introMsg(gebi("name").value,user);
+    })
+  </script>
+</body>
+</html>

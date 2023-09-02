@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="bg-gray-900" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+  <!--navbar-->
+  <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <img class="h-8 mr-2" id="logo" src="./logo.png">
+      <button class="text-xl tracking-tight">Hippo Hack</span>
+    </div>
+    <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/hippohack/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
+      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/hippohack/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+        <button id="userButton"></button>
+        <div id="userContent">
+          <a id="group"></a>
+          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    //check for account presence
+    if (localStorage.getItem("hh-username")==null){
+      alert("Sign in to your Hippo Hack account with the username on your badge to access the platform!\n\nHit OK to proceed...");
+      window.location=window.location.origin+"/hippohack/signin/"
+    }else{
+      gebi("userButton").innerHTML="Hi "+localStorage.getItem("hh-first")+"!";
+    }
+    if (localStorage.getItem("group")==null){
+      gebi("group").innerHTML="Join your group";
+      gebi("group").onclick=function(){window.location=window.location.origin+'/hippohack/group/'}
+    }else{
+      gebi("group").innerHTML=localStorage.getItem("group");
+    }
+    var now = new Date().getTime();
+    if (now>1693249200000){
+      //show proj submit
+      gebi("myProjectButton").style.display="";
+    }
+    if (now>1693263600000){
+      //hide proj submit after deadline
+      gebi("myProjectButton").style.display="none";
+    }
+    if (now>1693265400000){
+      gebi("myProjectButton").style.display="";
+      gebi("voteButton").style.display="";
+    }
+    function unregisterGroup(){
+      if (localStorage.getItem("group")!==null){
+        //group exists, remove them from it
+        var req = new XMLHttpRequest();
+        var body = {
+          user:localStorage.getItem("hh-username"),
+          group:localStorage.getItem("group")
+        }
+        req.open("POST",window.location.origin+"/hh-removeGroup");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
+    }
+  </script>
+  <style>
+    #user {
+      position:relative;
+      display:inline-block;
+    }
+    #userContent {
+      display:none;
+      position:absolute;
+      background-color:rgb(36, 36, 36);
+      min-width: 100px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      left: 50%;
+      right: auto;
+      text-align: center;
+      transform: translate(-50%, 0);
+    }
+    #userContent a {
+      font-size:12px;
+      text-decoration:none;
+      padding: 12px 16px;
+      display:block;
+    }
+    #user:hover #userContent {
+      display:block;
+    }
+    #user a:hover {
+      background-color:#383838;
+      cursor:pointer;
+    }
+    #logout{
+      color:red;
+    }
+    #logout:hover{
+      color:rgb(190, 0, 0);
+    }
+  </style>
+
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./hippooo.png')"></div>
+  <!--event topics -->
+  <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Hippo Hack 2023</p>
+      </div>
+    </div>
+  </div>
+
+  <!--announcements-->
+  <div class="relative flex flex-col justify-start items-center" style="height:1000px;">
+    <p class="font-bold text-5xl text-white mt-8 rounded-lg bg-gradient-to-bl p-6 from-blue-500 to-sky-300">Announcements</p>
+    <div id="annoBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto py-10" style="height:1000px"></div>
+  </div>
+  <script>
+    var createAnno = function(title,date,body){
+      var anno = document.createElement("div");
+      anno.className="relative w-10/12 pl-3 py-3 mb-6 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
+      var annos = JSON.parse(localStorage.getItem("annos")).annos;
+
+      var titleE = document.createElement("h1");
+      titleE.className="relative w-full text-2xl";
+      var created=false;
+      for (var i=0;i<annos.length;i++){
+        if (annos[i].date==date){ //if the localstorage time = mongodb time
+          created=true;
+        }
+      }
+      if (created){
+        //created before; don't add new
+        titleE.innerHTML=title;
+      }else{
+        //new anno; add new, add to localstorage
+        titleE.innerHTML="✨NEW✨ "+title;
+        var newAnno = {
+          title:title,
+          date:date,
+          body,body
+        }
+        annos.push(newAnno);
+      }
+
+      var dateE = document.createElement("p");
+      var date_date = new Date(date);
+      dateE.className="relative w-full text-sm mt-1 text-gray-600";
+      var display = "Posted ";
+      if ((new Date()).getHours()-hrs>24){
+        display+="on "+date_date.getMonth()+" "+date_date.getDate()+", "+date_date.getFullYear()+" ";
+      }
+      var hrs = date_date.getHours();
+      var AM = true;
+      if (hrs>12){
+        AM=false;
+        hrs-=12;
+      }
+      var min = date_date.getMinutes();
+      if (min<10){
+        min="0"+min;
+      }
+      display+="at "+hrs+":"+min+(AM?"AM":"PM");
+      dateE.innerHTML=display;
+
+      var bodyE = document.createElement("p");
+      bodyE.className="relative w-full text-lg mt-4";
+      bodyE.innerHTML=body;
+
+      anno.appendChild(titleE);
+      anno.appendChild(dateE);
+      anno.appendChild(bodyE);
+      gebi("annoBox").appendChild(anno);
+      
+      var annosLS = {
+        annos:annos
+      }
+      localStorage.setItem("annos",JSON.stringify(annosLS));
+    }
+    if (localStorage.getItem("annos")==null){
+      localStorage.setItem("annos",JSON.stringify({annos:[]}));
+    }
+
+    var updateNotis = function(){
+      gebi("annoBox").innerHTML="";
+      var req = new XMLHttpRequest();
+      var db_annos = [];
+      req.open("GET",window.location.origin+"/hh-getAnnos");
+      req.send();
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          db_annos = body.annos;
+          for (var i=db_annos.length-1;i>=0;i--){
+            createAnno(db_annos[i].title,db_annos[i].date,db_annos[i].body);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    }
+    updateNotis()
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      console.log(event.data.msg)
+      updateNotis();
+    });
+    //include another schematic for doing async notification pushing
+  </script>
+
+  <script>   //this is all dedicated to web worker support
+    const check = () => {
+      if (!('serviceWorker' in navigator)) {
+        throw new Error('No Service Worker support!')
+      }
+      if (!('PushManager' in window)) {
+        throw new Error('No Push API Support!')
+      }
+    }
+    const registerServiceWorker = async () => {
+      const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("hh-username")}`); //notice the file name
+      return swRegistration;
+    }
+    const requestNotificationPermission = async () => {
+      const permission = await window.Notification.requestPermission();
+      // value of permission can be 'granted', 'default', 'denied'
+      // granted: user has accepted the request
+      // default: user has dismissed the notification permission popup by clicking on x
+      // denied: user has denied the request.
+      if(permission !== 'granted'){
+          throw new Error('Permission not granted for Notification');
+      }
+    }
+    const main = async () => {
+        check()
+        await registerServiceWorker()
+        await requestNotificationPermission()
+    }
+    main();
+  
+  </script>
+
+  <!-- day's schedule-->
+  <div class="relative flex flex-col justify-start items-center mt-36" style="height:700px;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Schedule</p>
+      </div>
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FNew_York&showPrint=0&showTabs=0&showCalendars=0&showTz=1&mode=AGENDA&src=MTM0OGNkYTRjNDNlOWQyMTIzMGQ0YWY3OWI3MDhhZDVlODkxZjEwODA1Mjc5NjgxYzA2MDRkMjI1NDliYzRiMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23B39DDB" style="border-width:0" width="600" height="400" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="relative mt-12">
+      <!--make a table using table tag and stuff-->
+    </div>
+  </div>
+
+  <!--
+    what if i made a feature that showed people serving foods who had what allergies, what food they wanted
+    then use web workers to post data w/o refreshing so kids can submit easily
+  -->
+</body>
+</html>

@@ -424,6 +424,52 @@ app.post("/hh-proj", async (req,res)=>{
 	}
 })
 
+//ET help
+
+app.post("/et-tutor",async(req,res)=>{
+	var msg = {}
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
+			const currContent = await db.findOne();
+			const filter = {title:"annos"}
+			const updateDoc = {
+				$set: {
+					annos:submit
+				}
+			}
+			await db_annos.updateOne(filter,updateDoc);
+		})().then(async function(){
+			await client.close()
+			res.send(JSON.stringify(msg));
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+app.get("/et-getTutors",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
+			const currContent = await db.findOne();
+			var msg = {
+				tutors:currContent.tutors
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close()
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+
+//Hippo Hack
+
 const vapidKeys = {
 	publicKey: 'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk',
 	privateKey: 'qMGFVirZJSr5GyPScdP26bbQkBSwXo2YVc2QZ651no8',

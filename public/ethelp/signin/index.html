@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="-z-10 bg-gray-200">
+	<!--CHANGE BG ??-->
+  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('')"></div>
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
+    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login to the ET Help Platform!</h1>
+    <label>First name: </label><input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
+    <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
+  </div>
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <style>
+    #login{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #login:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
+  <script>
+    if (localStorage.getItem("et-username")!==null){
+      //alr logged in??? but ok
+      introMsg(localStorage.getItem("et-first"),localStorage.getItem("et-user"));
+    }
+
+    var introMsg = function(first,user){
+      var message = document.createElement("p");
+      message.style.backgroundColor="white"
+      message.style.position = "absolute";
+      message.style.top = window.innerHeight*0.3+"px";
+      message.style.fontSize = "30px";
+      message.id="welcome";
+      document.body.appendChild(message);
+      message.style.zIndex="20";
+      
+      gebi("dim").style.display="";
+
+      gebi("welcome").innerHTML=`Welcome ${first}! Your username is ${user}`;
+      gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
+      setTimeout(()=>{
+        gebi("welcome").innerHTML="Hang tight - redirecting you in 3..."
+        gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
+        setTimeout(()=>{
+          gebi("welcome").innerHTML="Hang tight - redirecting you in 2..."
+          gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
+          setTimeout(()=>{
+            gebi("welcome").innerHTML="Hang tight - redirecting you in 1..."
+            gebi("welcome").style.left = (window.innerWidth*0.5-message.offsetWidth*0.5)+"px";
+            setTimeout(()=>{
+
+              var iter=0;
+              var interval = setInterval(()=>{
+                if (iter<=70){
+                  document.getElementById("welcome").style.opacity= 100-iter* 100/70 + "%";
+                  iter++;
+                } else {
+                  clearInterval(interval);
+                  window.location=window.location.origin+"/hippohack/"
+                }
+              },10)
+
+            },1000)
+          },1000)
+        },1000)
+      },2000)
+    }
+    gebi("login").addEventListener("click",function(){
+      var user = gebi("name").value+"_";
+      for (var i=0;i<3;i++){
+        var random = Math.floor(Math.random()*36);
+        var abcs = "abcdefghijklmnopqrstuvwxyz";
+        if (random>=10){
+          random=abcs.charAt(random-10);
+        }
+        user+=random;
+      }
+      localStorage.setItem("et-user",user);
+      localStorage.setItem("et-first",gebi("name").value);
+      introMsg(gebi("name").value,user);
+    })
+  </script>
+</body>
+</html>
