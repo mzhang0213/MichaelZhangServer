@@ -55,10 +55,23 @@
   <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('')"></div>
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
     <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Create tutor</h1>
-    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>First Name</label>
-    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Last Name</label>
-    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Grade</label>
-    <input id="name" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>School</label>
+    <input id="first" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>First Name</label>
+    <input id="last" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Last Name</label>
+    <input id="grade" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Grade</label>
+    <input id="school" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>School</label>
+    <input id="pfp" type="file" accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PNG" class="text-center mt-12" ><label>Profile Pic :D</label>
+    <img id="prev" style="position:absolute;right:0;top:20px;width:300px;">
+    <p id="prevDetails" style="position:absolute;right:0;font-size:15px;">
+    <script>
+      gebi("pfp").onchange=function(){
+        var fr = new FileReader();
+        fr.onload=function(e){
+          gebi("prev").src=e.target.result;
+          gebi("prevDetails").innerHTML=(gebi("pfp").files[0].size/1000)+"KB";
+        }
+        fr.readAsDataURL(gebi("pfp").files[0]);
+      }
+    </script>
     <div class="dropdown">
       <div id="myDropdown" class="dropdown-content" onmouseleave="hideDrop()">
         <input type="text" placeholder="Search.." id="myInput" onmouseenter="showDrop()" onkeyup="filterFunction()">
@@ -72,7 +85,6 @@
           <a>Chemistry</a>
           <a>Environmental Science</a>
           <a>Physics</a>
-          <a>Biology</a>
           <a>English: Grammar</a>
           <a>English: Essay</a>
           <a>US History I</a>
@@ -172,17 +184,36 @@
   <script>
     var s = [];
     var updateList = function(subject){
-
+      var found=-1;
+      for (var i=0;i<s.length;i++){
+        if (s[i]===subject.innerHTML){
+          found=i;
+        }
+      }
+      if (found!==-1){
+        //delete
+        var newList = []
+        for (var i=0;i<s.length;i++){
+          if (i!==found){
+            newList.push(s[i]);
+          }
+        }
+        s=newList;
+        subject.style.border=""
+      }else{
+        //add to list
+        s.push(subject.innerHTML);
+        subject.style.border="2px solid gold"
+      }
     }
     var subjects = gebi("subjectsDropdown").children;
     for (var i=0;i<subjects.length;i++){
       subjects[i].addEventListener("click",function(){
-        //add border on click
-        //update list
+        updateList(this);
       })
     }
     gebi("login").addEventListener("click",function(){
-      var user = gebi("name").value+"_";
+      var user = gebi("first").value+gebi("last").value.charAt(0)+"_";
       for (var i=0;i<3;i++){
         var random = Math.floor(Math.random()*36);
         var abcs = "abcdefghijklmnopqrstuvwxyz";
@@ -191,9 +222,66 @@
         }
         user+=random;
       }
-      localStorage.setItem("et-user",user);
-      localStorage.setItem("et-first",gebi("name").value);
-      introMsg(gebi("name").value,user);
+      localStorage.setItem("et-tutor",user);
+      localStorage.setItem("et-first",gebi("first").value);
+      localStorage.setItem("et-last",gebi("last").value);
+      for (var i=0;i<s.length;i++){
+        var topic = "";
+        switch(s[i]){
+          case "Algebra I":topic="Math";break;
+          case "Geometry":topic="Math";break;
+          case "Algebra II":topic="Math";break;
+          case "Precalculus":topic="Math";break;
+          case "Calculus":topic="Math";break;
+          case "Biology":topic="Science";break;
+          case "Chemistry":topic="Science";break;
+          case "Environmental Science":topic="Science";break;
+          case "Physics":topic="Science";break;
+          case "English: Grammar":topic="English";break;
+          case "English: Essay":topic="English";break;
+          case "US History I":topic="History";break;
+          case "US History II":topic="History";break;
+          case "World History":topic="History";break;
+          case "European History":topic="History";break;
+          case "Macroeconomics":topic="Social Studies";break;
+          case "Microeconomics":topic="Social Studies";break;
+          case "Psychology":topic="Social Studies";break;
+          case "English":topic="Language";break;
+          case "French":topic="Language";break;
+          case "Spanish":topic="Language";break;
+          case "Latin":topic="Language";break;
+          case "Chinese":topic="Language";break;
+          default: console.log(s[i]);break;
+        }
+        s[i]={
+          topic:topic,
+          subject:s[i]
+        }
+      }
+      var body = {
+        user:user,
+        first:gebi("first").value,
+        last:gebi("last").value,
+        grade:parseInt(gebi("grade").value),
+        school:gebi("school").value,
+        subjects:s
+      }
+      var req = new XMLHttpRequest();
+      req.open("POST",window.location.origin+"/et-tutor");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          if (body.error==0){
+            alert("success!!");
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+      alert("registered pog");
     })
   </script>
 </body>

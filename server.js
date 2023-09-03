@@ -432,14 +432,25 @@ app.post("/et-tutor",async(req,res)=>{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("tutors");
-			const currContent = await db.findOne();
-			const filter = {title:"annos"}
-			const updateDoc = {
-				$set: {
-					annos:submit
+			/* GET FROM DB
+			var docs = [];
+			const cursor = db.find();
+			(async function(){
+				for await (var doc of cursor){
+					docs.push(doc);
 				}
+			})().then()
+			*/
+			var doc = {
+				user:req.body.user,
+				first:req.body.first,
+				last:req.body.last,
+				grade:req.body.grade,
+				school:req.body.school,
+				image:req.body.image,
+				subjects:req.body.subjects
 			}
-			await db_annos.updateOne(filter,updateDoc);
+			await db.insertOne(filter,updateDoc);
 		})().then(async function(){
 			await client.close()
 			res.send(JSON.stringify(msg));
