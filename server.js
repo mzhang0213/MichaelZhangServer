@@ -83,7 +83,7 @@ app.post("/et-tutorLogin", async (req,res)=>{
 				}
 			})().then(async function(){
 				var found=false;
-				var msg = {
+				msg = {
 					error:0
 				}
 				for (var i=0;i<docs.length;i++){
