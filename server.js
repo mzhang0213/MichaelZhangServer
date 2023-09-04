@@ -15,7 +15,7 @@ var {Client} = require("pg");
 */
 const PORT = process.env.PORT || "12232";
 var app = express();
-app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser()).use(bodyParser.json());
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser()).use(bodyParser.json({limit:"50mb"}));
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
