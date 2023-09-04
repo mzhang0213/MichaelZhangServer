@@ -69,6 +69,7 @@ app.post("/et-tutor",async(req,res)=>{
 })
 
 app.get("/et-getTutors",async (req,res)=>{
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -79,7 +80,9 @@ app.get("/et-getTutors",async (req,res)=>{
 				for await (var doc of cursor){
 					docs.push(doc);
 				}
-			})()
+			})().then(function(){
+				msg.tutors=docs;
+			})
 		})().then(async function(){
 			await client.close()
 			res.send(JSON.stringify(msg));
