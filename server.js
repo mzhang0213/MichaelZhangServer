@@ -117,7 +117,8 @@ app.get("/et-getTutors",async (req,res)=>{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("online");
-			var online = await db.findOne();
+			var currContent = await db.findOne();
+			var online = currContent.online;
 			msg.online=online.online;
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
@@ -177,7 +178,8 @@ app.post("/et-online",async (req,res)=>{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("online");
-			var online = await db.findOne().online;
+			var currContent = await db.findOne();
+			var online = currContent.online;
 			online.push(req.body.user);
 			const filter = {title:"online"}
 			const updateDoc = {
@@ -214,7 +216,8 @@ app.post("/et-offline",async (req,res)=>{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("online");
-			var online = await db.findOne().online;
+			var currContent = await db.findOne();
+			var online = currContent.online;
 			var newOnline = [];
 			for (var i=0;i<online.length;i++){
 				if (online[i]!==req.body.user){
