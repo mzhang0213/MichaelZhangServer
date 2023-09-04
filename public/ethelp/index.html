@@ -66,23 +66,25 @@
       <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" style="color:lightgray;"></button>
-        <!--
         <div id="userContent">
+          <!--
           <a id="group"></a>
-          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
+          -->
+          <a id="logout" onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout" style="display:none;">Logout</a>
 		      </div>
-        </div>-->
+        </div>
     </div>
   </nav>
 
   <script>
-    if (localStorage.getItem("et-username")===null){
+    if (localStorage.getItem("et-user")===null){
       gebi("userButton").innerHTML="Sign In";
       gebi("userButton").onclick=function(){
         window.location=window.location.origin+"/ethelp/signin/";
       }
     }else{
-      gebi("userButton").innerHTML=localStorage.getItem("et-username");
+      gebi("userButton").innerHTML=localStorage.getItem("et-user");
+      gebi("logout").style.display="";
     }
   </script>
 

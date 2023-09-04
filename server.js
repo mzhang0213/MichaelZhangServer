@@ -129,6 +129,64 @@ app.get("/et-getTutors",async (req,res)=>{
 	}
 })
 
+app.post("/et-online",async (req,res)=>{
+	var msg = {};
+	try{
+		//req.body.user is the username submitted
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("online");
+			var online = await db.findOne().online;
+			online.push(req.body.user);
+			const filter = {title:"online"}
+			const updateDoc = {
+				$set: {
+					online:online
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			res.send(JSON.stringify({error:0}))
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(error);
+	}
+})
+
+app.post("/et-offline",async (req,res)=>{
+	var msg = {};
+	try{
+		//req.body.user is the username submitted
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("online");
+			var online = await db.findOne().online;
+			var newOnline = [];
+			for (var i=0;i<online.length;i++){
+				if (online[i]!==req.body.user){
+					newOnline.push(online[i]);
+				}else{
+					console.log("found and destroyed offline person MWAHAHAHA jk thats mean user: "+req.body.user);
+				}
+			}
+			const filter = {title:"online"}
+			const updateDoc = {
+				$set: {
+					online:newOnline
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			res.send(JSON.stringify({error:0}))
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(error);
+	}
+})
 
 // HIPPO HACK
 

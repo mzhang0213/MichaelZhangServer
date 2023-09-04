@@ -40,3 +40,29 @@ var o = [
 	"tutor2",
 	"tutor3"
 ]
+
+//student request
+var stuReq = {
+	first:"",
+	user:"",
+	msg:"", //this is the init message
+	date:1234567890, //date requested
+	subjects:["subjects that student needs help in"]
+}
+
+/*
+
+Tutor online flowchart:
+
+Tutor signs in > username stored on localstorage > post to server username that is online
+> update online arr in mongodb >  tell all service workers to update their clients' online tutors
+
+sw receives msg to update onlinetutors > post to client to do that > client getTutors <that are online>
+OR
+sw receives msg to update onlinetutors WITH THE CURR ONLINE TUTORS > sw post client > client updates
+
+Tutor is online, pings post msg to /et-online
+window.onbeforeunload post msg to /et-offline
+
+
+*/

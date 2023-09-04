@@ -76,7 +76,7 @@
     }
   </style>
   <script>
-    if (localStorage.getItem("et-username")!==null){
+    if (localStorage.getItem("et-user")!==null){
       //alr logged in??? but ok
       introMsg(localStorage.getItem("et-first"),localStorage.getItem("et-user"));
     }
@@ -113,7 +113,7 @@
                   iter++;
                 } else {
                   clearInterval(interval);
-                  window.location=window.location.origin+"/hippohack/"
+                  window.location=window.location.origin+"/ethelp/"
                 }
               },10)
 
