@@ -98,10 +98,10 @@ app.post("/et-tutorLogin", async (req,res)=>{
 					console.log("toast");
 				}
 				res.send(JSON.stringify(msg))
+			}).then(async function(){
+				await client.close();
 			})
-		})().then(async function(){
-			await client.close();
-		})
+		})()
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
 		console.log(error);
