@@ -31,90 +31,67 @@ const client = new MongoClient(uri, {
 });
 
 
-app.get("/accounts", async (req,res)=>{
+//ET help
+
+app.post("/et-tutor",async(req,res)=>{
+	var msg = {}
 	try{
-		await client.connect();
-		const dbTracking = client.db("spotifyYt").collection("timeTrack");
-		const result = await dbTracking.findOne();
-		res.send(result);
-	}finally{
-		await client.close();
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
+			/* GET FROM DB
+			var docs = [];
+			const cursor = db.find();
+			(async function(){
+				for await (var doc of cursor){
+					docs.push(doc);
+				}
+			})().then()
+			*/
+			var doc = {
+				user:req.body.user,
+				first:req.body.first,
+				last:req.body.last,
+				grade:req.body.grade,
+				school:req.body.school,
+				image:req.body.image,
+				subjects:req.body.subjects
+			}
+			msg.error=0;
+			await db.insertOne(filter,updateDoc);
+		})().then(async function(){
+			await client.close()
+			res.send(JSON.stringify(msg));
+		})
+	}catch (e){
+		console.log(e);
 	}
 })
 
-const year = new Date().getUTCFullYear();
-app.post("/updateTime", async (req,res)=>{
-	try{ //find if im creating a whole new account and then if in a) old acc new device or not and b) new acc new device
-		await client.connect();
-		var theName = req.body.name;
-		var theUpdatedDevice = req.body.updatedDevice;
-		const dbTracking = client.db("spotifyYt").collection("timeTrack");
-		const currContent = await dbTracking.findOne();
-		const currAccs = currContent.accs;
-		var submit = []
-		var newAcc = true;
-		console.log(currAccs,theName,theUpdatedDevice);
-		for (var i=0;i<currAccs.length;i++){
-			console.log("acc below")
-			console.log(currAccs[i])
-			if (theName===currAccs[i].name){
-				//found old account that we are trying to update
-				console.log("found old acc");
-				var submitDevices = [];
-				var newDevice = true;
-				for (var j=0;j<currAccs[i].devices.length;j++){ //find if device alr exists >> old device being updated
-					if (currAccs[i].devices[j].name===theUpdatedDevice.name){
-						//device that is being updated
-						console.log("found old acc and updating device");
-						submitDevices.push(theUpdatedDevice);
-						newDevice = false;
-					}else{
-						submitDevices.push(currAccs[i].devices[j]);
-					}
+app.get("/et-getTutors",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
+			var docs = [];
+			const cursor = db.find();
+			(async function(){
+				for await (var doc of cursor){
+					docs.push(doc);
 				}
-				if (newDevice){
-					console.log("new device")
-					submitDevices.push(theUpdatedDevice); //will be zeros
-				}
-				submit.push({
-					name:theName,
-					devices:submitDevices
-				})
-				newAcc=false;
-			}else{
-				submit.push(currAccs[i]);
-			}
-		}
-		if (newAcc){
-			//create new
-			console.log("completely new acc")
-			var devs = []
-			devs.push(theUpdatedDevice);
-			submit.push({
-				name:theName,
-				devices:devs //will be filled with zeros
-			})
-		}
-		console.log("submit")
-		console.log(submit)
-		const filter = {title:"accounts"}
-		const updateDoc = {
-			$set: {
-				accs:submit
-			}
-		}
-		await dbTracking.updateOne(filter,updateDoc);
-		var sendMsg = {
-			accs:submit
-		}
-		res.send(JSON.stringify(sendMsg));
-	}finally{
-		await client.close();
+			})()
+		})().then(async function(){
+			await client.close()
+			res.send(JSON.stringify(msg));
+		})
+	}catch (e){
+		console.log(e);
 	}
 })
 
 
 // HIPPO HACK
+
 
 app.post("/hh-login", async (req,res)=>{
 	try{
@@ -424,63 +401,6 @@ app.post("/hh-proj", async (req,res)=>{
 	}
 })
 
-//ET help
-
-app.post("/et-tutor",async(req,res)=>{
-	var msg = {}
-	try{
-		(async function(){
-			await client.connect();
-			const db = client.db("ethelp").collection("tutors");
-			/* GET FROM DB
-			var docs = [];
-			const cursor = db.find();
-			(async function(){
-				for await (var doc of cursor){
-					docs.push(doc);
-				}
-			})().then()
-			*/
-			var doc = {
-				user:req.body.user,
-				first:req.body.first,
-				last:req.body.last,
-				grade:req.body.grade,
-				school:req.body.school,
-				image:req.body.image,
-				subjects:req.body.subjects
-			}
-			await db.insertOne(filter,updateDoc);
-		})().then(async function(){
-			await client.close()
-			res.send(JSON.stringify(msg));
-		})
-	}catch (e){
-		console.log(e);
-	}
-})
-
-app.get("/et-getTutors",async (req,res)=>{
-	try{
-		(async function(){
-			await client.connect();
-			const db = client.db("ethelp").collection("tutors");
-			const currContent = await db.findOne();
-			var msg = {
-				tutors:currContent.tutors
-			}
-			res.send(JSON.stringify(msg));
-		})().then(async function(){
-			await client.close()
-		})
-	}catch (e){
-		console.log(e);
-	}
-})
-
-
-//Hippo Hack
-
 const vapidKeys = {
 	publicKey: 'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk',
 	privateKey: 'qMGFVirZJSr5GyPScdP26bbQkBSwXo2YVc2QZ651no8',
@@ -702,6 +622,87 @@ app.get("/hh-getProjects",async (req,res)=>{
 // SPOTIFY
 
 
+app.get("/accounts", async (req,res)=>{
+	try{
+		await client.connect();
+		const dbTracking = client.db("spotifyYt").collection("timeTrack");
+		const result = await dbTracking.findOne();
+		res.send(result);
+	}finally{
+		await client.close();
+	}
+})
+
+const year = new Date().getUTCFullYear();
+app.post("/updateTime", async (req,res)=>{
+	try{ //find if im creating a whole new account and then if in a) old acc new device or not and b) new acc new device
+		await client.connect();
+		var theName = req.body.name;
+		var theUpdatedDevice = req.body.updatedDevice;
+		const dbTracking = client.db("spotifyYt").collection("timeTrack");
+		const currContent = await dbTracking.findOne();
+		const currAccs = currContent.accs;
+		var submit = []
+		var newAcc = true;
+		console.log(currAccs,theName,theUpdatedDevice);
+		for (var i=0;i<currAccs.length;i++){
+			console.log("acc below")
+			console.log(currAccs[i])
+			if (theName===currAccs[i].name){
+				//found old account that we are trying to update
+				console.log("found old acc");
+				var submitDevices = [];
+				var newDevice = true;
+				for (var j=0;j<currAccs[i].devices.length;j++){ //find if device alr exists >> old device being updated
+					if (currAccs[i].devices[j].name===theUpdatedDevice.name){
+						//device that is being updated
+						console.log("found old acc and updating device");
+						submitDevices.push(theUpdatedDevice);
+						newDevice = false;
+					}else{
+						submitDevices.push(currAccs[i].devices[j]);
+					}
+				}
+				if (newDevice){
+					console.log("new device")
+					submitDevices.push(theUpdatedDevice); //will be zeros
+				}
+				submit.push({
+					name:theName,
+					devices:submitDevices
+				})
+				newAcc=false;
+			}else{
+				submit.push(currAccs[i]);
+			}
+		}
+		if (newAcc){
+			//create new
+			console.log("completely new acc")
+			var devs = []
+			devs.push(theUpdatedDevice);
+			submit.push({
+				name:theName,
+				devices:devs //will be filled with zeros
+			})
+		}
+		console.log("submit")
+		console.log(submit)
+		const filter = {title:"accounts"}
+		const updateDoc = {
+			$set: {
+				accs:submit
+			}
+		}
+		await dbTracking.updateOne(filter,updateDoc);
+		var sendMsg = {
+			accs:submit
+		}
+		res.send(JSON.stringify(sendMsg));
+	}finally{
+		await client.close();
+	}
+})
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
