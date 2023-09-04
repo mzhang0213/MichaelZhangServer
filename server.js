@@ -68,6 +68,46 @@ app.post("/et-tutor",async(req,res)=>{
 	}
 })
 
+app.post("/et-tutorLogin", async (req,res)=>{
+	var msg = {};
+	try{
+		//req.body.user is the username submitted
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
+			var docs = [];
+			const cursor = db.find();
+			(async function(){
+				for await (var doc of cursor){
+					docs.push(doc);
+				}
+			})().then(async function(){
+				var found=false;
+				var msg = {
+					error:0
+				}
+				for (var i=0;i<docs.length;i++){
+					if (req.body.user==docs[i].user){
+						//usernames[i] is the correct registered username
+						msg.tutor=docs[i];
+						found=true;
+					}
+				}
+				if (!found){
+					msg.error=1;
+					console.log("toast");
+				}
+				res.send(JSON.stringify(msg))
+			})
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(error);
+	}
+})
+
 app.get("/et-getTutors",async (req,res)=>{
 	var msg = {
 		docs:[]
@@ -76,10 +116,8 @@ app.get("/et-getTutors",async (req,res)=>{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("tutors");
-			var docs = [];
 			const cursor = db.find();
 			for await (var doc of cursor){
-				console.log(doc);
 				msg.docs.push(doc);
 			}
 			res.send(JSON.stringify(msg));

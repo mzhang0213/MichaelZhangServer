@@ -23,6 +23,7 @@ var db = {
 				topic:"Math"
 			}
 		]
+		//tutors have a username, first, last, grade, school, image link, subjects
 		//all pos subjects under "Math": Alg I, Geo, Alg II, Precalc, Calc, AP Calc AB, AP Calc BC
 		//all pos subjects under "Science": Bio, Chem, Env Sci, Physics, + AP ...
 		//all pos subjects under "English": Eng
