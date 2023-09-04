@@ -58,7 +58,7 @@ app.post("/et-tutor",async(req,res)=>{
 				subjects:req.body.subjects
 			}
 			msg.error=0;
-			await db.insertOne(filter,updateDoc);
+			await db.insertOne(doc);
 		})().then(async function(){
 			await client.close()
 			res.send(JSON.stringify(msg));
