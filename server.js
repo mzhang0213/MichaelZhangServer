@@ -119,7 +119,7 @@ app.get("/et-getTutors",async (req,res)=>{
 			const db = client.db("ethelp").collection("online");
 			var currContent = await db.findOne();
 			var online = currContent.online;
-			msg.online=online.online;
+			msg.online=online;
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
