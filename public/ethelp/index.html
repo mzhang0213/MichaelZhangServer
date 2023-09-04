@@ -65,7 +65,7 @@
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
-        <button id="userButton"></button>
+        <button id="userButton" style="color:lightgray;"></button>
         <!--
         <div id="userContent">
           <a id="group"></a>
@@ -142,7 +142,11 @@
     <p id="welcome"></p>
   </div>
   <script>
-    gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
+    if (localStorage.getItem("et-first")==null){
+      gebi("welcome").innerHTML="Browsing as guest, sign in ↗! (or not 😀)"
+    }else{
+      gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
+    }
   </script>
 
   <!--tutor panel-->
@@ -219,7 +223,7 @@
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
         var body = JSON.parse(req.responseText);
-        tutors=body.tutors;
+        tutors=body.docs;
         for (var i=0;i<tutors.length;i++){
           createTutor(tutors[i]);
         }
