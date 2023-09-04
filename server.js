@@ -108,9 +108,32 @@ app.post("/et-tutorLogin", async (req,res)=>{
 	}
 })
 
+
 app.get("/et-getTutors",async (req,res)=>{
 	var msg = {
-		docs:[]
+		online:[]
+	};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("online");
+			var online = await db.findOne().online;
+			msg.online=online;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+app.post("/et-getTutor",async (req,res)=>{
+	//tutor username at req.body.user, position of total online tutors is at req.body.i
+	//BUG: TUTOR USERNAME IS LEADKED
+	//soln: client asks for online tutors starting at i=0, we find the first one and then give to them along with req.body.i +1 .  make this return tutor's data but not their username.
+	var msg = {
+		tutor:{}
 	};
 	try{
 		(async function(){
@@ -118,7 +141,10 @@ app.get("/et-getTutors",async (req,res)=>{
 			const db = client.db("ethelp").collection("tutors");
 			const cursor = db.find();
 			for await (var doc of cursor){
-				msg.docs.push(doc);
+				if (doc.user===req.body.user){
+					msg.tutor=doc;
+					break;
+				}
 			}
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
@@ -128,6 +154,21 @@ app.get("/et-getTutors",async (req,res)=>{
 		console.log(e);
 	}
 })
+
+const vapidKeys = {
+	publicKey: 'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA',
+	privateKey: 'O1h0LxLpV2GHPGEe9-OzdkYTF_c8u36FumMUWNqNZXs',
+}
+//setting our previously generated VAPID keys
+webpush.setVapidDetails(
+	'mailto:mzhang0213@gmail.com',
+	vapidKeys.publicKey,
+	vapidKeys.privateKey
+)
+//function to send the notification to the subscribed device
+const sendNotification = (subscription, dataToSend) => {
+	webpush.sendNotification(subscription, JSON.stringify(dataToSend))
+}
 
 app.post("/et-online",async (req,res)=>{
 	var msg = {};
@@ -145,6 +186,17 @@ app.post("/et-online",async (req,res)=>{
 				}
 			}
 			await db.updateOne(filter,updateDoc);
+
+			const db_subs = client.db("ethelp").collection("subs");
+			const currContent_subs = await db_subs.findOne();
+			var subs_content = currContent_subs.subsUsers;
+			var message = {
+				online:online
+			};
+			for (var i=0;i<subs_content.length;i++){
+				//for each subscription, send noti
+				sendNotification(subs_content[i].sub,message);
+			}
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
 			await client.close();
@@ -178,6 +230,17 @@ app.post("/et-offline",async (req,res)=>{
 				}
 			}
 			await db.updateOne(filter,updateDoc);
+
+			const db_subs = client.db("ethelp").collection("subs");
+			const currContent_subs = await db_subs.findOne();
+			var subs_content = currContent_subs.subsUsers;
+			var message = {
+				online:newOnline
+			};
+			for (var i=0;i<subs_content.length;i++){
+				//for each subscription, send noti
+				sendNotification(subs_content[i].sub,message);
+			}
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
 			await client.close();
@@ -185,6 +248,129 @@ app.post("/et-offline",async (req,res)=>{
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
 		console.log(error);
+	}
+})
+
+app.post("/et-save-sub",async(req,res)=>{
+	try{
+		//data: req.body.user req.body.sub
+		await client.connect();
+		const db = client.db("ethelp").collection("subs");
+		const currContent = await db.findOne();
+		var db_subs = currContent.subsUsers;
+		var submit = [];
+		for (var i=0;i<db_subs.length;i++){
+			//found a sub that alr has a user
+			//dont push the old sub back, update the it instead
+			if (db_subs[i].user!==req.body.user){
+				submit.push(db_subs[i]);
+			}
+		}
+		var currSub = {
+			user:req.body.user,
+			sub:req.body.sub
+		}
+		submit.push(currSub);
+		const filter = {title:"subs"}
+		const updateDoc = {
+			$set: {
+				subsUsers:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		var msg = {
+			"msg":"yay"
+		}
+		res.send(JSON.stringify(msg))
+	}finally{
+		await client.close();
+	}
+})
+
+app.post("/et-unregister",async(req,res)=>{
+	try{
+		//data: req.body.user req.body.type
+		await client.connect();
+		const db = client.db("ethelp").collection("subs");
+		const currContent = await db.findOne();
+		var db_subs = [];
+		if (req.body.type==="user"){
+			db_subs=currContent.subsUsers;
+		}else if (req.body.type==="tutor"){
+			db_subs=currContent.subsTutors;
+		}
+		var submit = [];
+		for (var i=0;i<db_subs.length;i++){
+			//found a sub that alr has a user
+			//dont push the old sub back, update the it instead
+			if (db_subs[i].user!==req.body.user){
+				submit.push(db_subs[i]);
+			}
+		}
+		const filter = {title:"subs"}
+		const updateDoc = {
+			$set: {
+				subsUsers:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		var msg = {
+			"msg":"yay"
+		}
+		res.send(JSON.stringify(msg))
+	}finally{
+		await client.close();
+	}
+})
+
+app.post("/et-anno", async(req,res)=>{
+	try {
+		
+		await client.connect();
+		const db_annos = client.db("hippohack2023").collection("annos");
+		const currContent_annos = await db_annos.findOne();
+		var annos_content = currContent_annos.annos;
+		var submit = [];
+		for (var i=0;i<annos_content.length;i++){
+			submit.push(annos_content[i]);
+		}
+		var currAnno = {
+			title:req.body.title,
+			date:Date.now(),
+			body:req.body.body
+		}
+		submit.push(currAnno);
+
+		const filter = {title:"annos"}
+		const updateDoc = {
+			$set: {
+				annos:submit
+			}
+		}
+		await db_annos.updateOne(filter,updateDoc);
+		var msg = {
+			body:req.body.body
+		}
+
+		//service worker time
+		// payload @ req.body.title req.body.body
+		const db_subs = client.db("hippohack2023").collection("subs");
+		const currContent_subs = await db_subs.findOne();
+		var subs_content = currContent_subs.subs;
+		var message = {
+			title:req.body.title,
+			body:req.body.body
+		};
+		for (var i=0;i<subs_content.length;i++){
+			//for each subscription, send noti
+			sendNotification(subs_content[i].sub,message);
+		}
+
+		res.send(JSON.stringify(msg))
+
+	} finally {
+		// Ensures that the client will close when you finish/error
+		await client.close();
 	}
 })
 
@@ -499,20 +685,7 @@ app.post("/hh-proj", async (req,res)=>{
 	}
 })
 
-const vapidKeys = {
-	publicKey: 'BMB_y56I13CAajXJJWVdLFJebSmyYkBXQxYZoNyPy8gyj5rEfkOZPCHki88NGlZsmKMij7CzGzOhTkw2jYtxrHk',
-	privateKey: 'qMGFVirZJSr5GyPScdP26bbQkBSwXo2YVc2QZ651no8',
-}
-//setting our previously generated VAPID keys
-webpush.setVapidDetails(
-	'mailto:mzhang0213@gmail.com',
-	vapidKeys.publicKey,
-	vapidKeys.privateKey
-)
-//function to send the notification to the subscribed device
-const sendNotification = (subscription, dataToSend) => {
-	webpush.sendNotification(subscription, JSON.stringify(dataToSend))
-}
+//NOTE: WEBPUSH DETAILS DEFINED ABOVE EALIER
 
 app.post("/hh-anno", async(req,res)=>{
 	try {

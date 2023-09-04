@@ -57,12 +57,13 @@ Tutor online flowchart:
 Tutor signs in > username stored on localstorage > post to server username that is online
 > update online arr in mongodb >  tell all service workers to update their clients' online tutors
 
-sw receives msg to update onlinetutors > post to client to do that > client getTutors <that are online>
-OR
-sw receives msg to update onlinetutors WITH THE CURR ONLINE TUTORS > sw post client > client updates
+sw receives msg to update onlinetutors WITH THE CURR ONLINE TUTORS > sw post online tutors to client
+> [^] client goes thru online tutors and one-by-one gets their data and loads in the body
+[^] Note: does it one-by-one cuz if done same time the images (ie pfps) over post req would be too large
 
 Tutor is online, pings post msg to /et-online
 window.onbeforeunload post msg to /et-offline
+
 
 
 */

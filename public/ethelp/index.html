@@ -70,7 +70,7 @@
           <!--
           <a id="group"></a>
           -->
-          <a id="logout" onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout" style="display:none;">Logout</a>
+          <a id="logout" onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
 		      </div>
         </div>
     </div>
@@ -78,31 +78,93 @@
 
   <script>
     if (localStorage.getItem("et-user")===null){
-      gebi("userButton").innerHTML="Sign In";
-      gebi("userButton").onclick=function(){
-        window.location=window.location.origin+"/ethelp/signin/";
-      }
+      alert("Sign in to use the help app!");
+      window.location=window.location.origin+"/ethelp/signin/";
     }else{
       gebi("userButton").innerHTML=localStorage.getItem("et-user");
-      gebi("logout").style.display="";
     }
+    var unregisterSw = function(){
+      var req = new XMLHttpRequest();
+      var body = {
+        user:localStorage.getItem("et-user"),
+        type:"user"
+      }
+      req.open("POST",window.location.origin+"/et-unregister");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          window.location.reload();
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    }
+  </script>
+
+  <script>   //this is all dedicated to web worker support
+    const check = () => {
+      if (!('serviceWorker' in navigator)) {
+        throw new Error('No Service Worker support!')
+      }
+      if (!('PushManager' in window)) {
+        throw new Error('No Push API Support!')
+      }
+    }
+    const registerServiceWorker = async () => {
+      const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
+      return swRegistration;
+    }
+    const requestNotificationPermission = async () => {
+      const permission = await window.Notification.requestPermission();
+      // value of permission can be 'granted', 'default', 'denied'
+      // granted: user has accepted the request
+      // default: user has dismissed the notification permission popup by clicking on x
+      // denied: user has denied the request.
+      if(permission !== 'granted'){
+          throw new Error('Permission not granted for Notification');
+      }
+    }
+    const main = async () => {
+        check()
+        await registerServiceWorker()
+        await requestNotificationPermission()
+    }
+    main();
+
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      //data from event.data.online
+      for (var i=0;i<event.data.online.length;i++){
+        gebi("tutorsBox").innerHTML="";
+        var req = new XMLHttpRequest();
+        var body = {
+          user:event.data.online[i]
+        }
+        req.open("POST",window.location.origin+"/et-getTutor");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+            //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+            createTutor(body.tutor);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
+    });
+  
   </script>
 
   <style>
     #user {
       position:relative;
       display:inline-block;
-      color:#00806f
     }
-    /*
-    math 3d3bb9
-    sci 3e7e32
-    eng 864700
-    his b8a715
-    ss 620080
-    lang 00806f
-    
-    */
     #userContent {
       display:none;
       position:absolute;
@@ -157,7 +219,6 @@
     <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
-    var req = new XMLHttpRequest();
     var createTutor = function(tutor){
       //username, first, last, grade, subjects
       var c = document.createElement("div");
@@ -256,15 +317,33 @@
       c.appendChild(subjects);
       gebi("tutorsBox").appendChild(c);
     }
-    var tutors = [];
+
+    var req = new XMLHttpRequest();
     req.open("GET",window.location.origin+"/et-getTutors");
     req.send();
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
+        //receive list of tutors at body.online
         var body = JSON.parse(req.responseText);
-        tutors=body.docs;
-        for (var i=0;i<tutors.length;i++){
-          createTutor(tutors[i]);
+        for (var i=0;i<body.online.length;i++){
+          //for every tutor, get their data and create put in the tutorsbox
+          var reqTutor = new XMLHttpRequest();
+          var bodyTutor = {
+            user:body.online[i]
+          }
+          reqTutor.open("POST",window.location.origin+"/et-getTutor");
+          reqTutor.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+          reqTutor.send(JSON.stringify(bodyTutor));
+          reqTutor.addEventListener("readystatechange", ()=>{
+            if (reqTutor.status === 200 && reqTutor.readyState === 4) {
+              var body = JSON.parse(reqTutor.responseText);
+              //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+              createTutor(body.tutor);
+            } else if (reqTutor.readyState === 4){
+              console.log("reeeeeeee err new acc creation: "+reqTutor.responseText);
+              alert("please ask michael for help oh noes")
+            }
+          })
         }
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);

@@ -70,18 +70,18 @@
           <!--
           <a id="group"></a>
           -->
-          <a onclick="(function(){localStorage.removeItem('et-username');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){localStorage.removeItem('et-user');window.location.reload();})()" id="logout">Logout</a>
 		      </div>
         </div>
     </div>
   </nav>
 
   <script>
-    if (localStorage.getItem("et-username")===null){
-      alert("Sign in as tutor!");
-      window.location=window.location.origin+"/ethelp/signin/tutor/";
+    if (localStorage.getItem("et-user")===null){
+      alert("Sign in to use the help app!");
+      window.location=window.location.origin+"/ettutor/signin/";
     }else{
-      gebi("userButton").innerHTML=localStorage.getItem("et-username");
+      gebi("userButton").innerHTML=localStorage.getItem("et-user");
     }
   </script>
 
@@ -89,17 +89,7 @@
     #user {
       position:relative;
       display:inline-block;
-      color:#00806f
     }
-    /*
-    math 3d3bb9
-    sci 3e7e32
-    eng 864700
-    his b8a715
-    ss 620080
-    lang 00806f
-    
-    */
     #userContent {
       display:none;
       position:absolute;
@@ -141,11 +131,7 @@
     <p id="welcome" class="relative ml-4 text-white text-lg font-bold"></p>
   </div>
   <script>
-    if (localStorage.getItem("et-first")==null){
-      gebi("welcome").innerHTML="Browsing as guest, sign in ↗! (or not 😀)"
-    }else{
-      gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
-    }
+    gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
   </script>
 
   <!--tutor panel-->
@@ -208,7 +194,7 @@
 
     var req = new XMLHttpRequest();
     var body = {
-      user:localStorage.getItem("et-username")
+      user:localStorage.getItem("et-user")
     }
     req.open("POST",window.location.origin+"/et-online");
     req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -217,7 +203,7 @@
     window.onbeforeunload = function(){
       var req = new XMLHttpRequest();
       var body = {
-        user:localStorage.getItem("et-username")
+        user:localStorage.getItem("et-user")
       }
       req.open("POST",window.location.origin+"/et-offline");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')

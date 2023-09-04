@@ -76,7 +76,7 @@
     }
   </style>
   <script>
-    if (localStorage.getItem("et-username")!==null){
+    if (localStorage.getItem("et-user")!==null){
       //alr logged in??? but ok
       introMsg(localStorage.getItem("et-first"),localStorage.getItem("et-user"));
     }
@@ -142,7 +142,7 @@
             //code 0: success
             //all tutor-user data is sent back: username, first, last, grade, school, image link, subjects
             console.log("acc signin success");
-            localStorage.setItem("et-username",body.user);
+            localStorage.setItem("et-user",body.user);
             introMsg(body.tutor.first,body.tutor.last);
           }
         } else if (req.readyState === 4){
