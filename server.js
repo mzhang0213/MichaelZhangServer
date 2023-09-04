@@ -69,23 +69,22 @@ app.post("/et-tutor",async(req,res)=>{
 })
 
 app.get("/et-getTutors",async (req,res)=>{
-	var msg = {};
+	var msg = {
+		docs:[]
+	};
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("tutors");
 			var docs = [];
 			const cursor = db.find();
-			(async function(){
-				for await (var doc of cursor){
-					docs.push(doc);
-				}
-			})().then(function(){
-				msg.tutors=docs;
-			})
-		})().then(async function(){
-			await client.close()
+			for await (var doc of cursor){
+				console.log(doc);
+				msg.docs.push(doc);
+			}
 			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
 		})
 	}catch (e){
 		console.log(e);
