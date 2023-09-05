@@ -223,7 +223,9 @@ app.post("/et-offline",async (req,res)=>{
 				console.log(online[i]);
 				if (online[i]!==req.body.user){
 					newOnline.push(online[i]);
-					console.log("same good");
+					newOnline.push(req.body.user);
+					newOnline.push(online[i]===req.body.user);
+					console.log("not the same = good");
 				}else{
 					console.log("found and destroyed offline person MWAHAHAHA jk thats mean user: "+req.body.user);
 				}
