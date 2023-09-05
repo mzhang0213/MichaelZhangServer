@@ -29,12 +29,6 @@ const urlB64ToUint8Array = base64String => {
 	return response
   }
   
-  const tutorOnline = async (online)=>{
-	self.clients.matchAll().then(clients => {
-	  clients.forEach(client => client.postMessage({online:online}));
-	})
-  }
-  
   self.addEventListener('activate', async (event) => {
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
@@ -57,12 +51,18 @@ const urlB64ToUint8Array = base64String => {
 	}
 	console.log(response)
   })
+
+  const tutorOnline = async (online)=>{
+	self.clients.matchAll().then(clients => {
+	  clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
+	})
+  }
   
   self.addEventListener("push", function(event) {
 	if (event.data) {
 	  var b = (event.data.json())
 	  //showLocalNotification(b.title, b.body, self.registration);
-	  tutorOnline(b.online);
+	  tutorOnline(b.updatedUser);
 	} else {
 	  console.log("Push event but no data");
 	}

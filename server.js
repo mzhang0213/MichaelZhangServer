@@ -57,8 +57,24 @@ app.post("/et-tutor",async(req,res)=>{
 				image:req.body.image,
 				subjects:req.body.subjects
 			}
-			msg.error=0;
 			await db.insertOne(doc);
+
+			const db_online = client.db("ethelp").collection("online");
+			var currContent = await db_online.findOne();
+			var online = currContent.online;
+			online.push({
+				user:req.body.user,
+				date:0
+			});
+			const filter = {title:"online"}
+			const updateDoc = {
+				$set: {
+					online:online
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+
+			msg.error=0;
 		})().then(async function(){
 			await client.close()
 			res.send(JSON.stringify(msg));
@@ -177,10 +193,16 @@ app.post("/et-online",async (req,res)=>{
 		//req.body.user is the username submitted
 		(async function(){
 			await client.connect();
-			const db = client.db("ethelp").collection("online");
-			var currContent = await db.findOne();
+			const db_online = client.db("ethelp").collection("online");
+			var currContent = await db_online.findOne();
 			var online = currContent.online;
-			online.push(req.body.user);
+			var updatedUser=-1;
+			for (var i=0;i<online.length;i++){
+				if (online[i].user===req.body.user){
+					online[i].date=Date.now();
+					updatedUser=i;
+				}
+			}
 			const filter = {title:"online"}
 			const updateDoc = {
 				$set: {
@@ -193,7 +215,7 @@ app.post("/et-online",async (req,res)=>{
 			const currContent_subs = await db_subs.findOne();
 			var subs_content = currContent_subs.subsUsers;
 			var message = {
-				online:online
+				updatedUser:online[updatedUser]
 			};
 			for (var i=0;i<subs_content.length;i++){
 				//for each subscription, send noti
@@ -209,6 +231,7 @@ app.post("/et-online",async (req,res)=>{
 	}
 })
 
+/*
 app.post("/et-offline",async (req,res)=>{
 	var msg = {};
 	try{
@@ -253,6 +276,7 @@ app.post("/et-offline",async (req,res)=>{
 		console.log(error);
 	}
 })
+*/
 
 app.post("/et-save-sub",async(req,res)=>{
 	try{

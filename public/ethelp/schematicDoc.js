@@ -35,11 +35,15 @@ var db = {
 	tutor3:{yet:"another document"}
 }
 //db:online
-var o = [
-	"tutor1",
-	"tutor2",
-	"tutor3"
-]
+var o = {
+	title:"online",
+	online:[
+		{
+			user:"MichaelZ_123",
+			date:0 //last Date.now() they were online. on page ethelp, if Date.now-date>15secs, they are offline
+		}
+	]
+}
 
 //student request
 var stuReq = {
@@ -51,6 +55,8 @@ var stuReq = {
 }
 
 /*
+
+when new tutor is created, create a copy of them in online
 
 Tutor online flowchart:
 
