@@ -137,7 +137,7 @@
 
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.online
-      console.log("yo a tutor just got online wtf");
+      console.log("yo tutors status changed wtf");
       console.log(event.data);
       gebi("tutorsBox").innerHTML="";
       for (var i=0;i<event.data.online.length;i++){
