@@ -136,6 +136,8 @@
             //all tutor-user data is sent back: username, first, last, grade, school, image link, subjects
             console.log("acc signin success");
             localStorage.setItem("et-user",body.tutor.user);
+            localStorage.setItem("et-first",body.tutor.first);
+            localStorage.setItem("et-last",body.tutor.last);
             introMsg(body.tutor.first,body.tutor.last);
           }
         } else if (req.readyState === 4){
