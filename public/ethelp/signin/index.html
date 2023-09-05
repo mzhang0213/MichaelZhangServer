@@ -19,7 +19,6 @@
     }
   </script>
   <script>
-    var navMenuShown = false;
     var gebi = function(e){return document.getElementById(e)};
     var resize = function(){
       if (window.innerWidth<700){
@@ -34,12 +33,6 @@
     window.onload=function(){
       if (window.innerWidth<700){
         //small
-        document.getElementById("navItemContainer").style.display="none"
-        document.getElementById("menuToggle").addEventListener("click",function(){
-          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
-          else document.getElementById("navItemContainer").style.display="";
-          navMenuShown=!navMenuShown;
-        })
       }
       resize();
     }

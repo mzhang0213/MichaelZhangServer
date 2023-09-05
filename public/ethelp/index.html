@@ -70,7 +70,7 @@
           <!--
           <a id="group"></a>
           -->
-          <a id="logout" onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
+          <a id="logout" onclick="(function(){localStorage.removeItem('et-user');localStorage.removeItem('et-first');localStorage.removeItem('et-last');localStorage.removeItem('group');unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
 		      </div>
         </div>
     </div>
@@ -115,6 +115,7 @@
     }
     const registerServiceWorker = async () => {
       const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
+      localStorage.setItem("et-sw",swRegistration);
       return swRegistration;
     }
     const requestNotificationPermission = async () => {
@@ -128,14 +129,17 @@
       }
     }
     const main = async () => {
-        check()
-        await registerServiceWorker()
-        await requestNotificationPermission()
+      check()
+      await registerServiceWorker()
+      await requestNotificationPermission()
     }
     main();
 
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.online
+      console.log("yo a tutor just got online wtf");
+      console.log(event.data);
+      gebi("tutorsBox").innerHTML="";
       for (var i=0;i<event.data.online.length;i++){
         gebi("tutorsBox").innerHTML="";
         var req = new XMLHttpRequest();

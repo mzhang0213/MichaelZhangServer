@@ -220,8 +220,10 @@ app.post("/et-offline",async (req,res)=>{
 			var online = currContent.online;
 			var newOnline = [];
 			for (var i=0;i<online.length;i++){
+				console.log(online[i]);
 				if (online[i]!==req.body.user){
 					newOnline.push(online[i]);
+					console.log("same good");
 				}else{
 					console.log("found and destroyed offline person MWAHAHAHA jk thats mean user: "+req.body.user);
 				}
