@@ -63,25 +63,25 @@
       </button>
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
-      <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/ettutor/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" style="color:lightgray;"></button>
         <div id="userContent">
           <!--
           <a id="group"></a>
           -->
-          <a onclick="(function(){localStorage.removeItem('et-user');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){localStorage.removeItem('et-tutor');localStorage.removeItem('et-first-tutor');localStorage.removeItem('et-last-tutor');window.location.reload();})()" id="logout">Logout</a>
 		      </div>
         </div>
     </div>
   </nav>
 
   <script>
-    if (localStorage.getItem("et-user")===null){
+    if (localStorage.getItem("et-tutor")===null){
       alert("Sign in to use the help app!");
       window.location=window.location.origin+"/ettutor/signin/";
     }else{
-      gebi("userButton").innerHTML=localStorage.getItem("et-user");
+      gebi("userButton").innerHTML=localStorage.getItem("et-tutor");
     }
   </script>
 
@@ -131,7 +131,7 @@
     <p id="welcome" class="relative ml-4 text-white text-lg font-bold"></p>
   </div>
   <script>
-    gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first")}!`
+    gebi("welcome").innerHTML=`Hi, ${localStorage.getItem("et-first-tutor")}!`
   </script>
 
   <!--tutor panel-->
@@ -194,7 +194,7 @@
 
     setInterval(function(){
       var body = {
-        user:localStorage.getItem("et-user")
+        user:localStorage.getItem("et-tutor")
       }
       var req = new XMLHttpRequest();
       req.open("POST",window.location.origin+"/et-online");
