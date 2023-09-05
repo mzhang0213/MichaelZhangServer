@@ -52,7 +52,7 @@ const urlB64ToUint8Array = base64String => {
 	console.log(response)
   })
 
-  const tutorOnline = async (online)=>{
+  const tutorOnline = async (updatedUser)=>{
 	self.clients.matchAll().then(clients => {
 	  clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
 	})
