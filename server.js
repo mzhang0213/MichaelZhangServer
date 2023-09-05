@@ -209,7 +209,7 @@ app.post("/et-online",async (req,res)=>{
 					online:online
 				}
 			}
-			await db.updateOne(filter,updateDoc);
+			await db_online.updateOne(filter,updateDoc);
 
 			const db_subs = client.db("ethelp").collection("subs");
 			const currContent_subs = await db_subs.findOne();
