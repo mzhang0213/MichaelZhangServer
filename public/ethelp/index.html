@@ -150,7 +150,7 @@
     setInterval(function(){
       gebi("tutorsBox").innerHTML="";
       for (var i=0;i<tutors.length;i++){
-        if (Date.now()-tutors[i].date<=15*1000){
+        if (Date.now()-tutors[i].date<=20*1000){
           var req = new XMLHttpRequest();
           var body = {
             user:tutors[i].user
@@ -170,7 +170,7 @@
           })
         }
       }
-    },15*1000)
+    },10*1000)
   
   </script>
 
@@ -338,7 +338,7 @@
         tutors=body.online;
         for (var i=0;i<body.online.length;i++){
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
-          if (Date.now()-body.online[i].date<=15*1000){
+          if (Date.now()-body.online[i].date<=20*1000){
             //still online
             var reqTutor = new XMLHttpRequest();
             var bodyTutor = {
