@@ -70,7 +70,7 @@
           <!--
           <a id="group"></a>
           -->
-          <a id="logout" onclick="(function(){localStorage.removeItem('et-user');localStorage.removeItem('et-first');localStorage.removeItem('et-last');localStorage.removeItem('group');unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
+          <a id="logout" onclick="(function(){localStorage.removeItem('et-user');localStorage.removeItem('et-first');localStorage.removeItem('et-last');localStorage.removeItem('et-sw');localStorage.removeItem('group');unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
 		      </div>
         </div>
     </div>
@@ -115,7 +115,7 @@
     }
     const registerServiceWorker = async () => {
       const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
-      localStorage.setItem("et-sw",swRegistration);
+      localStorage.setItem("et-sw",JSON.stringify(swRegistration));
       return swRegistration;
     }
     const requestNotificationPermission = async () => {

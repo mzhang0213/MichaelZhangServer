@@ -295,6 +295,7 @@ app.post("/et-save-sub",async(req,res)=>{
 
 app.post("/et-unregister",async(req,res)=>{
 	try{
+		console.log(req.body);
 		//data: req.body.user req.body.type
 		await client.connect();
 		const db = client.db("ethelp").collection("subs");
