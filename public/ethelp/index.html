@@ -70,7 +70,7 @@
           <!--
           <a id="group"></a>
           -->
-          <a id="logout" onclick="(function(){localStorage.removeItem('et-user');localStorage.removeItem('et-first');localStorage.removeItem('et-last');localStorage.removeItem('et-sw');localStorage.removeItem('group');unregisterSw();})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
+          <a id="logout" onclick="(function(){unregisterSw();localStorage.removeItem('et-user');localStorage.removeItem('et-first');localStorage.removeItem('et-last');localStorage.removeItem('et-sw');localStorage.removeItem('group');})()">Logout</a> <!--NOTE THAT WINDOW RELOAD IS IN THE UNREGISTER FUNCTION-->
 		      </div>
         </div>
     </div>

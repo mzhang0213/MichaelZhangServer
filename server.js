@@ -220,9 +220,6 @@ app.post("/et-offline",async (req,res)=>{
 			var online = currContent.online;
 			var newOnline = [];
 			for (var i=0;i<online.length;i++){
-				console.log(online[i]);
-				console.log(req.body);
-				console.log(online[i]===req.body.user);
 				if (online[i]!==req.body.user){
 					console.log("not the same = good");
 				}else{
