@@ -63,7 +63,7 @@
       </button>
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
-      <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/ethelp/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" style="color:lightgray;"></button>
         <div id="userContent">
@@ -150,25 +150,27 @@
     setInterval(function(){
       gebi("tutorsBox").innerHTML="";
       for (var i=0;i<tutors.length;i++){
-        var req = new XMLHttpRequest();
-        var body = {
-          user:tutors[i].user
-        }
-        req.open("POST",window.location.origin+"/et-getTutor");
-        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-        req.send(JSON.stringify(body));
-        req.addEventListener("readystatechange", ()=>{
-          if (req.status === 200 && req.readyState === 4) {
-            var body = JSON.parse(req.responseText);
-            //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
-            createTutor(body.tutor);
-          } else if (req.readyState === 4){
-            console.log("reeeeeeee err new acc creation: "+req.responseText);
-            alert("please ask michael for help oh noes")
+        if (Date.now()-tutors[i].date<=20*1000){
+          var req = new XMLHttpRequest();
+          var body = {
+            user:tutors[i].user
           }
-        })
+          req.open("POST",window.location.origin+"/et-getTutor");
+          req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+          req.send(JSON.stringify(body));
+          req.addEventListener("readystatechange", ()=>{
+            if (req.status === 200 && req.readyState === 4) {
+              var body = JSON.parse(req.responseText);
+              //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+              createTutor(body.tutor);
+            } else if (req.readyState === 4){
+              console.log("reeeeeeee err new acc creation: "+req.responseText);
+              alert("please ask michael for help oh noes")
+            }
+          })
+        }
       }
-    },15*1000)
+    },10*1000)
   
   </script>
 
@@ -333,11 +335,11 @@
       if (req.status === 200 && req.readyState === 4) {
         //receive list of tutors at body.online
         var body = JSON.parse(req.responseText);
+        tutors=body.online;
         for (var i=0;i<body.online.length;i++){
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
-          if (Date.now()-body.online[i].date<=15*1000){
+          if (Date.now()-body.online[i].date<=20*1000){
             //still online
-            tutors.push(body.online[i]);
             var reqTutor = new XMLHttpRequest();
             var bodyTutor = {
               user:body.online[i].user
