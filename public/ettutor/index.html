@@ -201,6 +201,13 @@
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
     },15*1000)
+    var body = {
+      user:localStorage.getItem("et-tutor")
+    }
+    var req = new XMLHttpRequest();
+    req.open("POST",window.location.origin+"/et-online");
+    req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    req.send(JSON.stringify(body));
   </script>
 </body>
 </html>
