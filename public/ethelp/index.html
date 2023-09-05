@@ -138,40 +138,13 @@
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.updatedUser > .user, .date
-      console.log(event.data.updatedUser.user+" is sitll online");
-      console.log(event.data);
       for (var i=0;i<tutors.length;i++){
         if (tutors[i].user===event.data.updatedUser.user){
+          tutors[i].refreshed=true;
           tutors[i].date=event.data.updatedUser.date;
         }
       }
     });
-
-    setInterval(function(){
-      gebi("tutorsBox").innerHTML="";
-      for (var i=0;i<tutors.length;i++){
-        if (Date.now()-tutors[i].date<=20*1000){
-          var req = new XMLHttpRequest();
-          var body = {
-            user:tutors[i].user
-          }
-          req.open("POST",window.location.origin+"/et-getTutor");
-          req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-          req.send(JSON.stringify(body));
-          req.addEventListener("readystatechange", ()=>{
-            if (req.status === 200 && req.readyState === 4) {
-              var body = JSON.parse(req.responseText);
-              //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
-              createTutor(body.tutor);
-            } else if (req.readyState === 4){
-              console.log("reeeeeeee err new acc creation: "+req.responseText);
-              alert("please ask michael for help oh noes")
-            }
-          })
-        }
-      }
-    },10*1000)
-  
   </script>
 
   <style>
@@ -229,11 +202,12 @@
     <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
-    var createTutor = function(tutor){
+    var createTutor = function(tutor,id){
       //username, first, last, grade, subjects
       var c = document.createElement("div");
       c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
       c.style.padding="3px;"
+      c.id=id;
 
       var pfp = document.createElement("img");
       pfp.src=tutor.image;
@@ -328,15 +302,19 @@
       gebi("tutorsBox").appendChild(c);
     }
 
+    //tutors' times are in the DB. if a tutor got online and then a user right after, find those alr online ones and display them.
+    //also throw all tutors in array anyways
     var req = new XMLHttpRequest();
+    var count=0;
     req.open("GET",window.location.origin+"/et-getTutors");
     req.send();
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
         //receive list of tutors at body.online
         var body = JSON.parse(req.responseText);
-        tutors=body.online;
         for (var i=0;i<body.online.length;i++){
+          body.online[i].refreshed=false;
+          body.online[i].id=count++;
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
           if (Date.now()-body.online[i].date<=20*1000){
             //still online
@@ -351,7 +329,7 @@
               if (reqTutor.status === 200 && reqTutor.readyState === 4) {
                 var body = JSON.parse(reqTutor.responseText);
                 //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
-                createTutor(body.tutor);
+                createTutor(body.tutor,body.online[i].id);
               } else if (reqTutor.readyState === 4){
                 console.log("reeeeeeee err new acc creation: "+reqTutor.responseText);
                 alert("please ask michael for help oh noes")
@@ -359,11 +337,69 @@
             })
           }
         }
+
+        tutors=body.online; //put here for adding refreshed and id properties
+
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
         alert("please ask michael for help oh noes")
       }
     })
+
+    setInterval(function(){
+      for (var i=0;i<tutors.length;i++){
+        if (tutors[i].refreshed){
+          //they have been personally cleared by the sw!
+          //two more cases: either are on the body or not
+          if (gebi(tutors[i].id)===null){
+            //not on the body, just came online
+            var req = new XMLHttpRequest();
+            var body = {
+              user:tutors[i].user
+            }
+            req.open("POST",window.location.origin+"/et-getTutor");
+            req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            req.send(JSON.stringify(body));
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                var body = JSON.parse(req.responseText);
+                //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+                createTutor(body.tutor,tutors[i].id);
+              } else if (req.readyState === 4){
+                console.log("reeeeeeee err new acc creation: "+req.responseText);
+                alert("please ask michael for help oh noes")
+              }
+            })
+          }
+        }else{
+          //this means that they are (either are currently or just went) offline and SHOULD BE DESTRYOED ok thats mean but yeah
+          if (gebi(tutors[i].id)!==null){
+            //just went offline
+            gebi(tutors[i].id).remove();
+          }
+        }
+        tutors[i].refreshed=false;
+      }
+    },20*1000)
+    /*
+    var req = new XMLHttpRequest();
+          var body = {
+            user:tutors[i].user
+          }
+          req.open("POST",window.location.origin+"/et-getTutor");
+          req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+          req.send(JSON.stringify(body));
+          req.addEventListener("readystatechange", ()=>{
+            if (req.status === 200 && req.readyState === 4) {
+              var body = JSON.parse(req.responseText);
+              //body.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+              createTutor(body.tutor);
+            } else if (req.readyState === 4){
+              console.log("reeeeeeee err new acc creation: "+req.responseText);
+              alert("please ask michael for help oh noes")
+            }
+          })
+    */
   </script>
 </body>
 </html>
