@@ -222,9 +222,9 @@ app.post("/et-offline",async (req,res)=>{
 			for (var i=0;i<online.length;i++){
 				console.log(online[i]);
 				if (online[i]!==req.body.user){
-					newOnline.push(online[i]);
-					newOnline.push(req.body.user);
-					newOnline.push(online[i]===req.body.user);
+					console.log(online[i]);
+					console.log(req.body.user);
+					console.log(online[i]===req.body.user);
 					console.log("not the same = good");
 				}else{
 					console.log("found and destroyed offline person MWAHAHAHA jk thats mean user: "+req.body.user);
