@@ -314,7 +314,7 @@
         var body = JSON.parse(req.responseText);
         for (var i=0;i<body.online.length;i++){
           body.online[i].refreshed=false;
-          body.online[i].id=count++;
+          body.online[i].id="tutor"+(count++);
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
           if (Date.now()-body.online[i].date<=20*1000){
             //still online
