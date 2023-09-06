@@ -213,18 +213,20 @@
       outer.id=id;
       
       var c = document.createElement("div");
-      outer.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
+      c.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
       c.style.padding="3px;"
       c.id=id;
-      c.addEventListener("click",function(){
-        if (!expanded){
+      outer.addEventListener("click",function(event){
+        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA"){
           gebi("dimScreen").display="";
           var newSide = document.createElement("div");
           newSide.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
           newSide.style.padding="3px;"
 
           var newSubjects = document.createElement("div");
+          newSubjects.className="relative w-fit h-fit flex flex-row justify-center items-start text-center";
           //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
+          
           var seen = {Math:[],Science:[],History:[],"Social Studies":[],Language:[]}
           var totalTopics = 0;
           for (var i=0;i<tutor.subjects.length;i++){
@@ -235,16 +237,57 @@
             if (seen[keys[i]].length>0){
               var topicDiv = document.createElement("div");
               topicDiv.className = "relative flex flex-col justify-center items-start";
-              if (seen[keys[i]].length>=4){
-                //make them short
-                for (var j=0;j<seen[keys[i]].length;i++){
-                  //create bubble and append in topicDiv
+              var topicTitle = document.createElement("p");
+              topicTitle.className = "relative text-lg underline";
+              topicTitle.innerHTML=keys[i];
+              for (var j=0;j<seen[keys[i]].length;i++){
+                var s = document.createElement("div");
+                s.className="relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+                s.style.border="2px black solid";
+                //set color
+                switch(keys[i]){
+                  case "Math":s.style.backgroundColor="#3d3bb9";break;
+                  case "Science":s.style.backgroundColor="#3e7e32";break;
+                  case "English":s.style.backgroundColor="#864700";break;
+                  case "History":s.style.backgroundColor="#b8a715";break;
+                  case "Social S.":s.style.backgroundColor="#620080";break;
+                  case "Language":s.style.backgroundColor="#00806f";break;
                 }
-              }else{
-                for (var j=0;j<seen[keys[i]].length;i++){
-                  //create bubble and append in topicDiv
+                if (seen[keys[i]].length>=4){
+                  var thisSubject = ""
+                  switch(seen[keys[i]][i]){
+                    case "Algebra I":thisSubject="Alg I";break;
+                    case "Geometry":thisSubject="Geo";break;
+                    case "Algebra II":thisSubject="Alg II";break;
+                    case "Precalculus":thisSubject="Precalc";break;
+                    case "Calculus":thisSubject="Calc";break;
+                    case "Biology":thisSubject="Bio";break;
+                    case "Chemistry":thisSubject="Chem";break;
+                    case "Environmental Science":thisSubject="Env Sci";break;
+                    case "Physics":thisSubject="Phys";break;
+                    case "English: Grammar":thisSubject="Eng: G";break;
+                    case "English: Essay":thisSubject="Eng: E";break;
+                    case "US History I":thisSubject="US I";break;
+                    case "US History II":thisSubject="US II";break;
+                    case "World History":thisSubject="World";break;
+                    case "European History":thisSubject="Euro";break;
+                    case "Macroeconomics":thisSubject="Macro";break;
+                    case "Microeconomics":thisSubject="Micro";break;
+                    case "Psychology":thisSubject="Psych";break;
+                    case "English":thisSubject="Eng";break;
+                    case "French":thisSubject="Fr";break;
+                    case "Spanish":thisSubject="Esp";break;
+                    case "Latin":thisSubject="Lat";break;
+                    case "Chinese":thisSubject="Zh";break;
+                    default: console.log(seen[keys[i]][i]);break;
+                  }
+                  s.innerHTML=thisSubject;
+                }else{
+                  s.innerHTML=seen[keys[i]][i];
                 }
+                topicDiv.appendChild(s);
               }
+              newSubjects.appendChild(topicDiv);
             }
           }
           if (totalTopics===1) newSubjects.className="relative grid grid-cols-1 text-white";
@@ -253,52 +296,33 @@
           else if (totalTopics===4) newSubjects.className="relative grid grid-cols-4 text-white";
           else alert("setting grid-cols went wrong");
 
-    
-          for (var i=0;i<tutor.subjects.length;i++){
-            var s = document.createElement("div");
-            s.className="relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
-            s.style.border="2px black solid";
-            //set color
-            switch(tutor.subjects[i].topic){
-              case "Math":s.style.backgroundColor="#3d3bb9";break;
-              case "Science":s.style.backgroundColor="#3e7e32";break;
-              case "English":s.style.backgroundColor="#864700";break;
-              case "History":s.style.backgroundColor="#b8a715";break;
-              case "Social S.":s.style.backgroundColor="#620080";break;
-              case "Language":s.style.backgroundColor="#00806f";break;
-            }
-            var thisSubject = ""
-            switch(tutor.subjects[i].subject){
-              case "Algebra I":thisSubject="Alg I";break;
-              case "Geometry":thisSubject="Geo";break;
-              case "Algebra II":thisSubject="Alg II";break;
-              case "Precalculus":thisSubject="Precalc";break;
-              case "Calculus":thisSubject="Calc";break;
-              case "Biology":thisSubject="Bio";break;
-              case "Chemistry":thisSubject="Chem";break;
-              case "Environmental Science":thisSubject="Env Sci";break;
-              case "Physics":thisSubject="Phys";break;
-              case "English: Grammar":thisSubject="Eng: G";break;
-              case "English: Essay":thisSubject="Eng: E";break;
-              case "US History I":thisSubject="US I";break;
-              case "US History II":thisSubject="US II";break;
-              case "World History":thisSubject="World";break;
-              case "European History":thisSubject="Euro";break;
-              case "Macroeconomics":thisSubject="Macro";break;
-              case "Microeconomics":thisSubject="Micro";break;
-              case "Psychology":thisSubject="Psych";break;
-              case "English":thisSubject="Eng";break;
-              case "French":thisSubject="Fr";break;
-              case "Spanish":thisSubject="Esp";break;
-              case "Latin":thisSubject="Lat";break;
-              case "Chinese":thisSubject="Zh";break;
-              default: console.log(s[i]);break;
-            }
-            s.innerHTML=thisSubject;
-            subjects.appendChild(s);
-          }
+          var msgBox = document.createElement("textarea");
+          msgBox.className="relative mt-4";
+          msgBox.style.height="40px;"
+          msgBox.style.fontSize="22px;"
+          msgBox.placeholder="I need help with...";
+          msgBox.style.border="1px solid black";
+          msgBox.style.resize="none";
+          //need to format this
+
+          var connect = document.createElement("button");
+          connect.className="relative mt-8 p-3 text-lg";
+          connect.style.marginLeft="75%";
+          connect.style.backgroundColor="rgb(117, 234, 117)";
+          connect.innerHTML="Connect! >>";
           
+          newSide.appendChild(newSubjects);
+          newSide.appendChild(msgBox);
+          newSide.appendChild(connect);
           outer.appendChild(newSide);
+
+          connect.addEventListener("click",function(){
+            
+          })
+          expanded=true;
+        }else{
+          //alr expanded, shrink back down
+          expanded=false;
         }
       })
 
