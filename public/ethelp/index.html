@@ -230,7 +230,7 @@
           var seen = {Math:[],Science:[],History:[],"Social Studies":[],Language:[]}
           var totalTopics = 0;
           for (var i=0;i<tutor.subjects.length;i++){
-            seen.[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
+            seen[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
           }
           var keys = seen.keys();
           for (var i=0;i<keys.length;i++){
@@ -317,7 +317,34 @@
           outer.appendChild(newSide);
 
           connect.addEventListener("click",function(){
-            
+            var pos=-1;
+            var parent = this.parentElement;
+            for (var i=0;i<parent.children.length;i++){
+              if (parent.children[i].tagName==="TEXTAREA"){
+                pos=i;
+              }
+            }
+            var req = new XMLHttpRequest();
+            var bodyTutor = {
+              user:localStorage.getItem("et-user"),
+              message:this.parentElement.children[pos].value
+            }
+            req.open("POST",window.location.origin+"/et-connect");
+            req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            req.send(JSON.stringify(bodyTutor));
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                var nobody = JSON.parse(req.responseText);
+                //nobody.tutor is
+
+                //CHANGE SCHEMATIC, CHANGE UI TO INCORORATE CHOOSING SUBJECTS THAT NEED HELP IN
+
+                createTutor(nobody.tutor,nobody.id);
+              } else if (req.readyState === 4){
+                console.log("reeeeeeee err new acc creation: "+req.responseText);
+                alert("please ask michael for help oh noes")
+              }
+            })
           })
           expanded=true;
         }else{
