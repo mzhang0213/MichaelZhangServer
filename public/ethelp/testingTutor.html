@@ -1,0 +1,312 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo-square.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="bg-gray-900" onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+<!--tutor panel-->
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:1000px;">
+    <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-violet-500 p-6">Online Tutors</p>
+    <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
+</div>
+<script>
+    var expanded = false;
+    var tutors = [];
+    var helpSubjects=[];
+    var createTutor = function(tutor,id){
+      //username, first, last, grade, subjects
+      var outer = document.createElement("div");
+      outer.className="relative z-20 mx-5 my-3 p-3 w-fit h-fit flex flex-row justify-start text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
+      outer.id=id;
+      
+      var c = document.createElement("div");
+      c.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
+      c.style.padding="3px;"
+      c.id=id;
+      outer.addEventListener("click",function(event){
+        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
+          gebi("dimScreen").display="";
+          var newSide = document.createElement("div");
+          newSide.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
+          newSide.style.padding="3px;"
+
+          var showAll = document.createElement("div");
+          showAll.className="absolute flex flex-row justify-end right-0 top-0 w-fit";
+
+          var showAllLabel = document.createElement("label");
+          showAllLabel.innerHTML="Show All"
+          showAllLabel.style.marginRight="3px";
+
+          var showAllCheck = document.createElement("input");
+          showAllCheck.type="checkbox";
+
+          showAll.appendChild(showAllLabel);
+          showAll.appendChild(showAllCheck);
+
+          var newSubjects = document.createElement("div");
+          newSubjects.className="relative w-fit h-fit flex flex-row justify-center items-start text-center";
+          //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
+          
+          var seen = {Math:[],Science:[],History:[],"Social Studies":[],Language:[]}
+          var totalTopics = 0;
+          for (var i=0;i<tutor.subjects.length;i++){
+            seen[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
+          }
+          var keys = seen.keys();
+          for (var i=0;i<keys.length;i++){
+            if (seen[keys[i]].length>0){
+              var topicDiv = document.createElement("div");
+              topicDiv.className = "relative flex flex-col justify-center items-start";
+              var topicTitle = document.createElement("p");
+              topicTitle.className = "relative text-lg underline";
+              topicTitle.innerHTML=keys[i];
+              for (var j=0;j<seen[keys[i]].length;i++){
+                var s = document.createElement("div");
+                s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+                s.style.border="2px black solid";
+                //set color
+                switch(keys[i]){
+                  case "Math":s.style.backgroundColor="#3d3bb9";break;
+                  case "Science":s.style.backgroundColor="#3e7e32";break;
+                  case "English":s.style.backgroundColor="#864700";break;
+                  case "History":s.style.backgroundColor="#b8a715";break;
+                  case "Social S.":s.style.backgroundColor="#620080";break;
+                  case "Language":s.style.backgroundColor="#00806f";break;
+                }
+                if (seen[keys[i]].length>=4){
+                  var thisSubject = ""
+                  switch(seen[keys[i]][i]){
+                    case "Algebra I":thisSubject="Alg I";break;
+                    case "Geometry":thisSubject="Geo";break;
+                    case "Algebra II":thisSubject="Alg II";break;
+                    case "Precalculus":thisSubject="Precalc";break;
+                    case "Calculus":thisSubject="Calc";break;
+                    case "Biology":thisSubject="Bio";break;
+                    case "Chemistry":thisSubject="Chem";break;
+                    case "Environmental Science":thisSubject="Env Sci";break;
+                    case "Physics":thisSubject="Phys";break;
+                    case "English: Grammar":thisSubject="Eng: G";break;
+                    case "English: Essay":thisSubject="Eng: E";break;
+                    case "US History I":thisSubject="US I";break;
+                    case "US History II":thisSubject="US II";break;
+                    case "World History":thisSubject="World";break;
+                    case "European History":thisSubject="Euro";break;
+                    case "Macroeconomics":thisSubject="Macro";break;
+                    case "Microeconomics":thisSubject="Micro";break;
+                    case "Psychology":thisSubject="Psych";break;
+                    case "English":thisSubject="Eng";break;
+                    case "French":thisSubject="Fr";break;
+                    case "Spanish":thisSubject="Esp";break;
+                    case "Latin":thisSubject="Lat";break;
+                    case "Chinese":thisSubject="Zh";break;
+                    default: console.log(seen[keys[i]][i]);break;
+                  }
+                  s.innerHTML=thisSubject;
+                }else{
+                  s.innerHTML=seen[keys[i]][i];
+                }
+                s.addEventListener("click",function(){
+                  var found=-1;
+                  for (var j=0;j<helpSubjects.length;j++){
+                    if (helpSubjects[j]===this.innerHTML){
+                      found=j;
+                    }
+                  }
+                  if (found!==-1){
+                    //delete
+                    var newList = []
+                    for (var j=0;j<helpSubjects.length;j++){
+                      if (j!==found){
+                        newList.push(helpSubjects[j]);
+                      }
+                    }
+                    helpSubjects=newList;
+                    this.style.border=""
+                  }else{
+                    //add to list
+                    helpSubjects.push(this.innerHTML);
+                    this.style.border="2px solid gold";
+                  }
+                })
+                topicDiv.appendChild(s);
+              }
+              newSubjects.appendChild(topicDiv);
+            }
+          }
+          if (totalTopics===1) newSubjects.className="relative grid grid-cols-1 text-white";
+          else if (totalTopics===2) newSubjects.className="relative grid grid-cols-2 text-white";
+          else if (totalTopics===3) newSubjects.className="relative grid grid-cols-3 text-white";
+          else if (totalTopics===4) newSubjects.className="relative grid grid-cols-4 text-white";
+          else alert("setting grid-cols went wrong");
+
+          var msgBox = document.createElement("textarea");
+          msgBox.className="relative mt-4";
+          msgBox.style.height="40px;"
+          msgBox.style.fontSize="22px;"
+          msgBox.placeholder="I need help with...";
+          msgBox.style.border="1px solid black";
+          msgBox.style.resize="none";
+          //need to format this
+
+          var connect = document.createElement("button");
+          connect.className="relative mt-8 p-3 text-lg";
+          connect.style.marginLeft="75%";
+          connect.style.backgroundColor="rgb(117, 234, 117)";
+          connect.innerHTML="Connect! >>";
+          
+          newSide.appendChild(newSubjects);
+          newSide.appendChild(msgBox);
+          newSide.appendChild(connect);
+          outer.appendChild(newSide);
+
+          connect.addEventListener("click",function(){
+            var pos=-1;
+            var parent = this.parentElement;
+            for (var i=0;i<parent.children.length;i++){
+              if (parent.children[i].tagName==="TEXTAREA"){
+                pos=i;
+              }
+            }
+            alert("attempting to connect");
+          })
+          expanded=true;
+        }else{
+          //alr expanded, shrink back down
+          expanded=false;
+        }
+      })
+
+      var pfp = document.createElement("img");
+      pfp.src=tutor.image;
+      pfp.style.width="120px";
+      pfp.className="relative mb-2 rounded-lg"
+
+      var name = document.createElement("h1");
+      name.className="relative w-full text-xl font-bold";
+      name.innerHTML=`${tutor.first} ${tutor.last.charAt(0)}.`;
+
+      var grade = document.createElement("p");
+      grade.className="relative w-full text-sm mt-1";
+      var gradeDisp="";
+      if (tutor.grade<9){
+        //middle school
+        grade.innerHTML=tutor.grade+"th grade";
+      }else if(tutor.grade<13){
+        switch(tutor.grade){
+          case 9: grade.innerHTML="Freshman (HS)";break;
+          case 10: grade.innerHTML="Sophomore (HS)";break;
+          case 11: grade.innerHTML="Junior (HS)";break;
+          case 12: grade.innerHTML="Senior (HS)";break;
+          default:console.log("bad grade");break;
+        }
+      }else{
+        switch(tutor.grade){
+          case 13: grade.innerHTML="Freshman (College)";break;
+          case 14: grade.innerHTML="Sophomore (College)";break;
+          case 15: grade.innerHTML="Junior (College)";break;
+          case 16: grade.innerHTML="Senior (College)";break;
+          default:console.log("bad grade");break;
+        }
+      }
+
+      var school = document.createElement("p");
+      school.className="relative w-full text-sm mt-1 mb-2";
+      school.innerHTML=tutor.school;
+
+      var subjects = document.createElement("div");
+      //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
+      subjects.className="relative grid grid-cols-2 text-white";
+
+      for (var i=0;i<tutor.subjects.length;i++){
+        var s = document.createElement("div");
+        s.className="relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+        s.style.border="2px black solid";
+        //set color
+        switch(tutor.subjects[i].topic){
+          case "Math":s.style.backgroundColor="#3d3bb9";break;
+          case "Science":s.style.backgroundColor="#3e7e32";break;
+          case "English":s.style.backgroundColor="#864700";break;
+          case "History":s.style.backgroundColor="#b8a715";break;
+          case "Social S.":s.style.backgroundColor="#620080";break;
+          case "Language":s.style.backgroundColor="#00806f";break;
+        }
+        var thisSubject = ""
+        switch(tutor.subjects[i].subject){
+          case "Algebra I":thisSubject="Alg I";break;
+          case "Geometry":thisSubject="Geo";break;
+          case "Algebra II":thisSubject="Alg II";break;
+          case "Precalculus":thisSubject="Precalc";break;
+          case "Calculus":thisSubject="Calc";break;
+          case "Biology":thisSubject="Bio";break;
+          case "Chemistry":thisSubject="Chem";break;
+          case "Environmental Science":thisSubject="Env Sci";break;
+          case "Physics":thisSubject="Phys";break;
+          case "English: Grammar":thisSubject="Eng: G";break;
+          case "English: Essay":thisSubject="Eng: E";break;
+          case "US History I":thisSubject="US I";break;
+          case "US History II":thisSubject="US II";break;
+          case "World History":thisSubject="World";break;
+          case "European History":thisSubject="Euro";break;
+          case "Macroeconomics":thisSubject="Macro";break;
+          case "Microeconomics":thisSubject="Micro";break;
+          case "Psychology":thisSubject="Psych";break;
+          case "English":thisSubject="Eng";break;
+          case "French":thisSubject="Fr";break;
+          case "Spanish":thisSubject="Esp";break;
+          case "Latin":thisSubject="Lat";break;
+          case "Chinese":thisSubject="Zh";break;
+          default: console.log(s[i]);break;
+        }
+        s.innerHTML=thisSubject;
+        subjects.appendChild(s);
+      }
+
+      c.appendChild(pfp);
+      c.appendChild(name);
+      c.appendChild(grade);
+      c.appendChild(school);
+      c.appendChild(subjects);
+      outer.appendChild(c);
+      gebi("tutorsBox").appendChild(outer);
+    }
+
+    
+    tutors.push({
+        user:"MichaelZ_nda",
+        first:"Michael",
+        last:"Zhang",
+        school:"ABRHS",
+        grade:12,
+        subjects:[
+            {topic:"Math",subject:"Geometry"},
+            {topic:"Math",subject:"Algebra II"},
+            {topic:"Math",subject:"Precalculus"},
+            {topic:"Science",subject:"Biology"},
+            {topic:"Science",subject:"Chemistry"}
+        ]
+    })
+    createTutor(tutors[i]);
+  </script>
+</body>
+</html>
