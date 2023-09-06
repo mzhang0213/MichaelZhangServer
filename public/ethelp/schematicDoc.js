@@ -69,3 +69,19 @@ sw receives msg to update onlinetutors WITH ONE CURR ONLINE TUTOR > sw post THE 
 [^] Note: does it one-by-one cuz if done same time the images (ie pfps) over post req would be too large
 
 */
+
+/*
+
+choosing subjects i need help with:
+-tutor's subjects are loaded
+show all subjects off to the side
+	NOTE: Make the load subjects function as its own function
+on check, show all subjects with all cols
+	Note: make the non-primary subjects faded (opacity or prob just choose lighter colors)
+
+on click subject, border highlight gold, maybe try to do a double layer border? idk
+
+
+todo: finalize and change name of social studies
+
+*/

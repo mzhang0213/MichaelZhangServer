@@ -206,6 +206,7 @@
   </div>
   <script>
     var expanded = false;
+    var helpSubjects=[];
     var createTutor = function(tutor,id){
       //username, first, last, grade, subjects
       var outer = document.createElement("div");
@@ -217,11 +218,24 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA"){
+        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
           gebi("dimScreen").display="";
           var newSide = document.createElement("div");
           newSide.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
           newSide.style.padding="3px;"
+
+          var showAll = document.createElement("div");
+          showAll.className="absolute flex flex-row justify-end right-0 top-0 w-fit";
+
+          var showAllLabel = document.createElement("label");
+          showAllLabel.innerHTML="Show All"
+          showAllLabel.style.marginRight="3px";
+
+          var showAllCheck = document.createElement("input");
+          showAllCheck.type="checkbox";
+
+          showAll.appendChild(showAllLabel);
+          showAll.appendChild(showAllCheck);
 
           var newSubjects = document.createElement("div");
           newSubjects.className="relative w-fit h-fit flex flex-row justify-center items-start text-center";
@@ -242,7 +256,7 @@
               topicTitle.innerHTML=keys[i];
               for (var j=0;j<seen[keys[i]].length;i++){
                 var s = document.createElement("div");
-                s.className="relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+                s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
                 s.style.border="2px black solid";
                 //set color
                 switch(keys[i]){
@@ -285,6 +299,29 @@
                 }else{
                   s.innerHTML=seen[keys[i]][i];
                 }
+                s.addEventListener("click",function(){
+                  var found=-1;
+                  for (var j=0;j<helpSubjects.length;j++){
+                    if (helpSubjects[j]===this.innerHTML){
+                      found=j;
+                    }
+                  }
+                  if (found!==-1){
+                    //delete
+                    var newList = []
+                    for (var j=0;j<helpSubjects.length;j++){
+                      if (j!==found){
+                        newList.push(helpSubjects[j]);
+                      }
+                    }
+                    helpSubjects=newList;
+                    this.style.border=""
+                  }else{
+                    //add to list
+                    helpSubjects.push(this.innerHTML);
+                    this.style.border="2px solid gold";
+                  }
+                })
                 topicDiv.appendChild(s);
               }
               newSubjects.appendChild(topicDiv);
