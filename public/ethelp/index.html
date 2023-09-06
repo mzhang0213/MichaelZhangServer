@@ -313,12 +313,10 @@
         //receive list of tutors at body.online
         var body = JSON.parse(req.responseText);
         for (var i=0;i<body.online.length;i++){
-          console.log(body.online.length);
-          console.log(i,body.online[i]);
           body.online[i].refreshed=false;
           body.online[i].id="tutor"+(count++);
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
-          if (Date.now()-body.online[i].date<=20*1000){
+          if (Date.now()-body.online[i].date<=10*1000){
             //still online
             var reqTutor = new XMLHttpRequest();
             var bodyTutor = {
@@ -384,7 +382,7 @@
         }
         tutors[i].refreshed=false;
       }
-    },20*1000)
+    },9*1000)
     /*
     var req = new XMLHttpRequest();
           var body = {
