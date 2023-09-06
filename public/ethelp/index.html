@@ -62,6 +62,7 @@
         <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
       </button>
     </div>
+    <div id="dimScreen" class="absolute z-10 left-0 top-0 bg-black opacity-70" style="display:none;width:100%;height:100%;"></div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/ethelp/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
@@ -204,12 +205,101 @@
     <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
+    var expanded = false;
     var createTutor = function(tutor,id){
       //username, first, last, grade, subjects
+      var outer = document.createElement("div");
+      outer.className="relative z-20 mx-5 my-3 p-3 w-fit h-fit flex flex-row justify-start text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
+      outer.id=id;
+      
       var c = document.createElement("div");
-      c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
+      outer.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
       c.style.padding="3px;"
       c.id=id;
+      c.addEventListener("click",function(){
+        if (!expanded){
+          gebi("dimScreen").display="";
+          var newSide = document.createElement("div");
+          newSide.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
+          newSide.style.padding="3px;"
+
+          var newSubjects = document.createElement("div");
+          //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
+          var seen = {Math:[],Science:[],History:[],"Social Studies":[],Language:[]}
+          var totalTopics = 0;
+          for (var i=0;i<tutor.subjects.length;i++){
+            seen.[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
+          }
+          var keys = seen.keys();
+          for (var i=0;i<keys.length;i++){
+            if (seen[keys[i]].length>0){
+              var topicDiv = document.createElement("div");
+              topicDiv.className = "relative flex flex-col justify-center items-start";
+              if (seen[keys[i]].length>=4){
+                //make them short
+                for (var j=0;j<seen[keys[i]].length;i++){
+                  //create bubble and append in topicDiv
+                }
+              }
+              for (var j=0;j<seen[keys[i]].length;i++){
+                //create bubble and append in topicDiv
+              }
+            }
+          }
+          if (totalTopics===1) newSubjects.className="relative grid grid-cols-1 text-white";
+          else if (totalTopics===2) newSubjects.className="relative grid grid-cols-2 text-white";
+          else if (totalTopics===3) newSubjects.className="relative grid grid-cols-3 text-white";
+          else if (totalTopics===4) newSubjects.className="relative grid grid-cols-4 text-white";
+          else alert("setting grid-cols went wrong");
+
+    
+          for (var i=0;i<tutor.subjects.length;i++){
+            var s = document.createElement("div");
+            s.className="relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+            s.style.border="2px black solid";
+            //set color
+            switch(tutor.subjects[i].topic){
+              case "Math":s.style.backgroundColor="#3d3bb9";break;
+              case "Science":s.style.backgroundColor="#3e7e32";break;
+              case "English":s.style.backgroundColor="#864700";break;
+              case "History":s.style.backgroundColor="#b8a715";break;
+              case "Social S.":s.style.backgroundColor="#620080";break;
+              case "Language":s.style.backgroundColor="#00806f";break;
+            }
+            var thisSubject = ""
+            switch(tutor.subjects[i].subject){
+              case "Algebra I":thisSubject="Alg I";break;
+              case "Geometry":thisSubject="Geo";break;
+              case "Algebra II":thisSubject="Alg II";break;
+              case "Precalculus":thisSubject="Precalc";break;
+              case "Calculus":thisSubject="Calc";break;
+              case "Biology":thisSubject="Bio";break;
+              case "Chemistry":thisSubject="Chem";break;
+              case "Environmental Science":thisSubject="Env Sci";break;
+              case "Physics":thisSubject="Phys";break;
+              case "English: Grammar":thisSubject="Eng: G";break;
+              case "English: Essay":thisSubject="Eng: E";break;
+              case "US History I":thisSubject="US I";break;
+              case "US History II":thisSubject="US II";break;
+              case "World History":thisSubject="World";break;
+              case "European History":thisSubject="Euro";break;
+              case "Macroeconomics":thisSubject="Macro";break;
+              case "Microeconomics":thisSubject="Micro";break;
+              case "Psychology":thisSubject="Psych";break;
+              case "English":thisSubject="Eng";break;
+              case "French":thisSubject="Fr";break;
+              case "Spanish":thisSubject="Esp";break;
+              case "Latin":thisSubject="Lat";break;
+              case "Chinese":thisSubject="Zh";break;
+              default: console.log(s[i]);break;
+            }
+            s.innerHTML=thisSubject;
+            subjects.appendChild(s);
+          }
+          
+          outer.appendChild(newSide);
+        }
+      })
 
       var pfp = document.createElement("img");
       pfp.src=tutor.image;
@@ -301,7 +391,8 @@
       c.appendChild(grade);
       c.appendChild(school);
       c.appendChild(subjects);
-      gebi("tutorsBox").appendChild(c);
+      outer.appendChild(c);
+      gebi("tutorsBox").appendChild(outer);
     }
 
     //tutors' times are in the DB. if a tutor got online and then a user right after, find those alr online ones and display them.
