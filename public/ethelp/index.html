@@ -350,6 +350,7 @@
     })
 
     setInterval(function(){
+      console.log("checking for DC'd tutors")
       for (var i=0;i<tutors.length;i++){
         if (tutors[i].refreshed){
           //they have been personally cleared by the sw!
