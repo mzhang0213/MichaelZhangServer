@@ -138,6 +138,8 @@
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.updatedUser > .user, .date
+      console.log("Tutor got updated!! ");
+      console.log(event.data);
       for (var i=0;i<tutors.length;i++){
         if (tutors[i].user===event.data.updatedUser.user){
           tutors[i].refreshed=true;
