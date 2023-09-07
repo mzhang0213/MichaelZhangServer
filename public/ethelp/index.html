@@ -204,6 +204,21 @@
     <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-violet-500 p-6">Online Tutors</p>
     <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
+<style>
+    #connect{
+      background-color:rgb(78, 182, 78);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #connect:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #connect:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
   <script>
     var expanded = false;
     var helpSubjects=[];
@@ -218,11 +233,12 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
-          gebi("dimScreen").display="";
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble" && !expanded){
+          gebi("dimScreen").style.display="";
           var newSide = document.createElement("div");
-          newSide.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
+          newSide.className="relative w-fit h-fit ml-4 flex flex-col justify-center items-center text-left";
           newSide.style.padding="3px;"
+          newSide.id="newSide";
 
           var showAll = document.createElement("div");
           showAll.className="absolute flex flex-row justify-end right-0 top-0 w-fit";
@@ -230,6 +246,7 @@
           var showAllLabel = document.createElement("label");
           showAllLabel.innerHTML="Show All"
           showAllLabel.style.marginRight="3px";
+          showAllLabel.style.fontSize="7px";
 
           var showAllCheck = document.createElement("input");
           showAllCheck.type="checkbox";
@@ -249,14 +266,18 @@
           var keys = Object.keys(seen);
           for (var i=0;i<keys.length;i++){
             if (seen[keys[i]].length>0){
+              totalTopics++;
               var topicDiv = document.createElement("div");
               topicDiv.className = "relative flex flex-col justify-center items-start";
+
               var topicTitle = document.createElement("p");
               topicTitle.className = "relative text-lg underline";
               topicTitle.innerHTML=keys[i];
+                topicDiv.appendChild(topicTitle);
+
               for (var j=0;j<seen[keys[i]].length;i++){
                 var s = document.createElement("div");
-                s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl";
+                s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl text-white";
                 s.style.border="2px black solid";
                 //set color
                 switch(keys[i]){
@@ -315,7 +336,7 @@
                       }
                     }
                     helpSubjects=newList;
-                    this.style.border=""
+                    this.style.border="2px solid black"
                   }else{
                     //add to list
                     helpSubjects.push(this.innerHTML);
@@ -335,24 +356,24 @@
 
           var msgBox = document.createElement("textarea");
           msgBox.className="relative mt-4";
-          msgBox.style.height="40px;"
-          msgBox.style.fontSize="22px;"
+          msgBox.style.width="350px";
+          msgBox.style.height="40px";
+          msgBox.style.fontSize="22px";
           msgBox.placeholder="I need help with...";
           msgBox.style.border="1px solid black";
           msgBox.style.resize="none";
           //need to format this
 
-          var connect = document.createElement("button");
-          connect.className="relative mt-8 p-3 text-lg";
-          connect.style.marginLeft="75%";
-          connect.style.backgroundColor="rgb(117, 234, 117)";
-          connect.innerHTML="Connect! >>";
-          
-          newSide.appendChild(newSubjects);
-          newSide.appendChild(msgBox);
-          newSide.appendChild(connect);
-          outer.appendChild(newSide);
+          var connectC = document.createElement("div");
+          connectC.style.width="100%";
+          connectC.className="relative mt-8 p-2 flex flex-row justify-end";
 
+          var connect = document.createElement("button");
+          connect.className="relative text-sm";
+          connect.id="connect";
+          connect.innerHTML="Connect! >>";
+          connectC.appendChild(connect);
+          
           connect.addEventListener("click",function(){
             var pos=-1;
             var parent = this.parentElement;
@@ -383,9 +404,17 @@
               }
             })
           })
+
+          newSide.appendChild(showAll);
+          newSide.appendChild(newSubjects);
+          newSide.appendChild(msgBox);
+          newSide.appendChild(connectC);
+          outer.appendChild(newSide);
           expanded=true;
         }else{
           //alr expanded, shrink back down
+          gebi("newSide").remove();
+          gebi("dimScreen").style.display="none";
           expanded=false;
         }
       })
@@ -483,6 +512,12 @@
       outer.appendChild(c);
       gebi("tutorsBox").appendChild(outer);
     }
+
+    gebi("dimScreen").addEventListener("click",function(){
+      gebi("newSide").remove();
+      gebi("dimScreen").style.display="none";
+      expanded=false;
+    })
 
     //tutors' times are in the DB. if a tutor got online and then a user right after, find those alr online ones and display them.
     //also throw all tutors in array anyways

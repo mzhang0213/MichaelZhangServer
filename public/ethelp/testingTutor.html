@@ -36,7 +36,6 @@
       background-color:rgb(78, 182, 78);
       border-radius:8px;
       border:2px solid #000000;
-      font-size:20px;
       font-family:'Cabin';
       outline:none;
     }
@@ -63,7 +62,7 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (!expanded && event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble" && !expanded){
           gebi("dimScreen").style.display="";
           var newSide = document.createElement("div");
           newSide.className="relative w-fit h-fit ml-4 flex flex-col justify-center items-center text-left";
@@ -76,9 +75,18 @@
           var showAllLabel = document.createElement("label");
           showAllLabel.innerHTML="Show All"
           showAllLabel.style.marginRight="3px";
+          showAllLabel.style.fontSize="7px";
 
           var showAllCheck = document.createElement("input");
           showAllCheck.type="checkbox";
+
+          showAllCheck.addEventListener("click",function(){
+            if (showAllCheck.checked){
+
+            }else{
+              
+            }
+          })
 
           showAll.appendChild(showAllLabel);
           showAll.appendChild(showAllCheck);
@@ -93,6 +101,8 @@
             seen[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
           }
           var keys = Object.keys(seen);
+          console.log(seen);
+          console.log(keys);
           for (var i=0;i<keys.length;i++){
             if (seen[keys[i]].length>0){
               totalTopics++;
@@ -185,7 +195,7 @@
 
           var msgBox = document.createElement("textarea");
           msgBox.className="relative mt-4";
-          msgBox.style.width="200px";
+          msgBox.style.width="350px";
           msgBox.style.height="40px";
           msgBox.style.fontSize="22px";
           msgBox.placeholder="I need help with...";
@@ -198,7 +208,7 @@
           connectC.className="relative mt-8 p-2 flex flex-row justify-end";
 
           var connect = document.createElement("button");
-          connect.className="relative text-md";
+          connect.className="relative text-sm";
           connect.id="connect";
           connect.innerHTML="Connect! >>";
           connectC.appendChild(connect);
