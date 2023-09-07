@@ -332,6 +332,12 @@
       gebi("tutorsBox").appendChild(outer);
     }
 
+    gebi("dimScreen").addEventListener("click",function(){
+      gebi("newSide").remove();
+      gebi("dimScreen").style.display="none";
+      expanded=false;
+    })
+
     
     tutors.push({
         user:"MichaelZ_nda",
