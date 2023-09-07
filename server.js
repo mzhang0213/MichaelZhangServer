@@ -403,6 +403,35 @@ app.post("/et-anno", async(req,res)=>{
 	}
 })
 
+app.post("/et-connect",async (req,res)=>{
+	//posting tutor want to connect: req.body.tutor
+	//posting message data: req.body.user, req.body.message, req.body.subjects  <<user data
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_tutors = currContent.subsTutors;
+			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
+			for (var i=0;i<db_tutors.length;i++){
+				if (db_tutors[i].user===req.body.tutor){
+					//found the tutor to push sub to
+					var request = {
+						user:req.body.user,
+						message:req.body.message,
+						subjects:req.body.subjects
+					}
+					sendNotification(db_tutors[i].sub,request);
+				}
+			}
+			var submit = [];
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+
 // HIPPO HACK
 
 
