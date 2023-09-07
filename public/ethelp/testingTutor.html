@@ -33,7 +33,7 @@
   </div>
   <style>
     #connect{
-      background-color:rgb(127, 216, 127);
+      background-color:rgb(102, 207, 102);
       border-radius:8px;
       border:2px solid #000000;
       font-family:'Cabin';
@@ -62,11 +62,11 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble" && event.target.tagName!=="INPUT"){
           if(!expanded){
             gebi("dimScreen").style.display="";
             var newSide = document.createElement("div");
-            newSide.className="relative w-fit h-fit ml-4 flex flex-col justify-center items-center text-left";
+            newSide.className="relative w-fit h-fit ml-6 flex flex-col justify-center items-center text-left";
             newSide.style.padding="3px;"
             newSide.id="newSide";
 
@@ -115,7 +115,7 @@
                 topicTitle.innerHTML=keys[i];
                 topicDiv.appendChild(topicTitle);
 
-                for (var j=0;j<seen[keys[i]].length;i++){
+                for (var j=0;j<seen[keys[i]].length;j++){
                   var s = document.createElement("div");
                   s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl text-white";
                   s.style.border="2px black solid";
@@ -130,7 +130,7 @@
                   }
                   if (seen[keys[i]].length>=4){
                     var thisSubject = ""
-                    switch(seen[keys[i]][i]){
+                    switch(seen[keys[i]][j]){
                       case "Algebra I":thisSubject="Alg I";break;
                       case "Geometry":thisSubject="Geo";break;
                       case "Algebra II":thisSubject="Alg II";break;
@@ -154,25 +154,25 @@
                       case "Spanish":thisSubject="Esp";break;
                       case "Latin":thisSubject="Lat";break;
                       case "Chinese":thisSubject="Zh";break;
-                      default: console.log(seen[keys[i]][i]);break;
+                      default: console.log(seen[keys[i]][j]);break;
                     }
                     s.innerHTML=thisSubject;
                   }else{
-                    s.innerHTML=seen[keys[i]][i];
+                    s.innerHTML=seen[keys[i]][j];
                   }
                   s.addEventListener("click",function(){
                     var found=-1;
-                    for (var j=0;j<helpSubjects.length;j++){
-                      if (helpSubjects[j]===this.innerHTML){
-                        found=j;
+                    for (var k=0;k<helpSubjects.length;k++){
+                      if (helpSubjects[k]===this.innerHTML){
+                        found=k;
                       }
                     }
                     if (found!==-1){
                       //delete
                       var newList = []
-                      for (var j=0;j<helpSubjects.length;j++){
-                        if (j!==found){
-                          newList.push(helpSubjects[j]);
+                      for (var k=0;k<helpSubjects.length;k++){
+                        if (k!==found){
+                          newList.push(helpSubjects[k]);
                         }
                       }
                       helpSubjects=newList;
@@ -196,8 +196,8 @@
 
             var msgBox = document.createElement("textarea");
             msgBox.className="relative mt-4 text-md";
-            msgBox.style.width="350px";
-            msgBox.style.height="50px";
+            msgBox.style.width="275px;";
+            msgBox.style.height="70px";
             msgBox.placeholder="I need help with...";
             msgBox.style.border="1px solid black";
             msgBox.style.resize="none";
@@ -208,7 +208,7 @@
             connectC.className="relative mt-8 flex flex-row justify-end";
 
             var connect = document.createElement("button");
-            connect.className="relative p-2 text-md";
+            connect.className="relative p-1 text-md";
             connect.id="connect";
             connect.innerHTML="Connect! >>";
             connectC.appendChild(connect);
