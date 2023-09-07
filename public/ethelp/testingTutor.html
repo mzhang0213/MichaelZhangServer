@@ -71,7 +71,7 @@
         for (var i=0;i<elemClassList.length;i++){
           if(elemClassList[i]==="bubble") foundBubb=true;
         }
-        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && !foundBubb){
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && event.target.tagName!=="LABEL" && !foundBubb){
           if(!expanded){
             gebi("subjects").style.display="none";
             gebi("dimScreen").style.display="";
@@ -88,8 +88,13 @@
             showAllLabel.style.marginRight="3px";
             showAllLabel.style.fontSize="12px";
 
+            showAllLabel.addEventListener("click",function(){
+              gebi("showAllCheck").dispatchEvent(new Event("click"));
+            })
+
             var showAllCheck = document.createElement("input");
             showAllCheck.type="checkbox";
+            showAllCheck.id="showAllCheck";
 
             showAllCheck.addEventListener("click",function(){
               if (showAllCheck.checked){
@@ -227,13 +232,13 @@
 
             connect.addEventListener("click",function(){
               var pos=-1;
-              var parent = this.parentElement;
+              var parent = this.parentElement.parentElement;
               for (var i=0;i<parent.children.length;i++){
                 if (parent.children[i].tagName==="TEXTAREA"){
                   pos=i;
                 }
               }
-              alert("attempting to connect, msg data: "+this.parentElement.children[pos].value);
+              alert("attempting to connect, msg data: "+this.parentElement.parentElement.children[pos].value);
             })
 
             newSide.appendChild(showAll);
