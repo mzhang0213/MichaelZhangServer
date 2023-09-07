@@ -49,6 +49,10 @@
       user-select: none;
       -moz-user-select: none;
     }
+    #showAllLabel{
+      user-select: none;
+      -moz-user-select: none;
+    }
   </style>
   <script>
     var gebi = function(e){return document.getElementById(e)};
@@ -87,8 +91,10 @@
             showAllLabel.innerHTML="Show All"
             showAllLabel.style.marginRight="3px";
             showAllLabel.style.fontSize="12px";
+            showAllCheck.id="showAllCheck";
 
             showAllLabel.addEventListener("click",function(){
+              gebi("showAllCheck").checked=!gebi("showAllCheck").checked;
               gebi("showAllCheck").dispatchEvent(new Event("click"));
             })
 
@@ -117,8 +123,6 @@
               seen[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
             }
             var keys = Object.keys(seen);
-            console.log(seen);
-            console.log(keys);
             for (var i=0;i<keys.length;i++){
               if (seen[keys[i]].length>0){
                 totalTopics++;
@@ -231,11 +235,12 @@
             connectC.appendChild(connect);
 
             connect.addEventListener("click",function(){
-              var pos=-1;
+              var val="";
               var parent = this.parentElement.parentElement;
               for (var i=0;i<parent.children.length;i++){
                 if (parent.children[i].tagName==="TEXTAREA"){
-                  pos=i;
+                  val=parent.children[i].value;
+                  break;
                 }
               }
               alert("attempting to connect, msg data: "+this.parentElement.parentElement.children[pos].value);

@@ -206,7 +206,7 @@
   </div>
 <style>
     #connect{
-      background-color:rgb(78, 182, 78);
+      background-color:rgb(102, 207, 102);
       border-radius:8px;
       border:2px solid #000000;
       font-family:'Cabin';
@@ -217,6 +217,14 @@
     }
     #connect:hover{
       background-color:rgb(48, 194, 48);
+    }
+    .bubble{
+      user-select: none;
+      -moz-user-select: none;
+    }
+    #showAllLabel{
+      user-select: none;
+      -moz-user-select: none;
     }
   </style>
   <script>
@@ -233,24 +241,37 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble"){
+        var elemClassList = event.target.classList;
+        var foundBubb=false;
+        for (var i=0;i<elemClassList.length;i++){
+          if(elemClassList[i]==="bubble") foundBubb=true;
+        }
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && event.target.tagName!=="LABEL" && !foundBubb){
           if(!expanded){
+            gebi("subjects").style.display="none";
             gebi("dimScreen").style.display="";
             var newSide = document.createElement("div");
-            newSide.className="relative w-fit h-fit ml-4 flex flex-col justify-center items-center text-left";
+            newSide.className="relative w-fit h-fit ml-6 flex flex-col justify-center items-center text-left";
             newSide.style.padding="3px;"
             newSide.id="newSide";
 
             var showAll = document.createElement("div");
-            showAll.className="absolute flex flex-row justify-end right-0 top-0 w-fit";
+            showAll.className="absolute flex flex-row justify-end right-0 -top-3 w-fit";
 
             var showAllLabel = document.createElement("label");
             showAllLabel.innerHTML="Show All"
             showAllLabel.style.marginRight="3px";
-            showAllLabel.style.fontSize="7px";
+            showAllLabel.style.fontSize="12px";
+            showAllCheck.id="showAllCheck";
+
+            showAllLabel.addEventListener("click",function(){
+              gebi("showAllCheck").checked=!gebi("showAllCheck").checked;
+              gebi("showAllCheck").dispatchEvent(new Event("click"));
+            })
 
             var showAllCheck = document.createElement("input");
             showAllCheck.type="checkbox";
+            showAllCheck.id="showAllCheck";
 
               showAllCheck.addEventListener("click",function(){
                 if (showAllCheck.checked){
@@ -277,14 +298,14 @@
               if (seen[keys[i]].length>0){
                 totalTopics++;
                 var topicDiv = document.createElement("div");
-                topicDiv.className = "relative flex flex-col justify-center items-start";
+                topicDiv.className = "relative flex flex-col justify-start items-center";
 
                 var topicTitle = document.createElement("p");
                 topicTitle.className = "relative text-lg underline";
                 topicTitle.innerHTML=keys[i];
                   topicDiv.appendChild(topicTitle);
 
-                for (var j=0;j<seen[keys[i]].length;i++){
+                for (var j=0;j<seen[keys[i]].length;j++){
                   var s = document.createElement("div");
                   s.className="bubble relative m-1 px-1 py-1 text-center text-sm rounded-2xl text-white";
                   s.style.border="2px black solid";
@@ -299,7 +320,7 @@
                   }
                   if (seen[keys[i]].length>=4){
                     var thisSubject = ""
-                    switch(seen[keys[i]][i]){
+                    switch(seen[keys[i]][j]){
                       case "Algebra I":thisSubject="Alg I";break;
                       case "Geometry":thisSubject="Geo";break;
                       case "Algebra II":thisSubject="Alg II";break;
@@ -323,25 +344,25 @@
                       case "Spanish":thisSubject="Esp";break;
                       case "Latin":thisSubject="Lat";break;
                       case "Chinese":thisSubject="Zh";break;
-                      default: console.log(seen[keys[i]][i]);break;
+                      default: console.log(seen[keys[i]][j]);break;
                     }
                     s.innerHTML=thisSubject;
                   }else{
-                    s.innerHTML=seen[keys[i]][i];
+                    s.innerHTML=seen[keys[i]][j];
                   }
                   s.addEventListener("click",function(){
                     var found=-1;
-                    for (var j=0;j<helpSubjects.length;j++){
-                      if (helpSubjects[j]===this.innerHTML){
-                        found=j;
+                    for (var k=0;k<helpSubjects.length;k++){
+                      if (helpSubjects[k]===this.innerHTML){
+                        found=k;
                       }
                     }
                     if (found!==-1){
                       //delete
                       var newList = []
-                      for (var j=0;j<helpSubjects.length;j++){
-                        if (j!==found){
-                          newList.push(helpSubjects[j]);
+                      for (var k=0;k<helpSubjects.length;k++){
+                        if (k!==found){
+                          newList.push(helpSubjects[k]);
                         }
                       }
                       helpSubjects=newList;
@@ -364,37 +385,39 @@
             else alert("setting grid-cols went wrong");
 
             var msgBox = document.createElement("textarea");
-            msgBox.className="relative mt-4";
-            msgBox.style.width="350px";
-            msgBox.style.height="40px";
-            msgBox.style.fontSize="22px";
+            msgBox.className="relative mt-4 p-2 rounded-xl";
+            msgBox.style.fontSize="12px";
+            msgBox.style.width="325px";
+            msgBox.style.height="70px";
             msgBox.placeholder="I need help with...";
-            msgBox.style.border="1px solid black";
             msgBox.style.resize="none";
+            msgBox.style.outline="none";
+            msgBox.style.border="none";
             //need to format this
 
             var connectC = document.createElement("div");
             connectC.style.width="100%";
-            connectC.className="relative mt-8 p-2 flex flex-row justify-end";
+            connectC.className="relative mt-8 flex flex-row justify-end";
 
             var connect = document.createElement("button");
-            connect.className="relative text-sm";
+            connect.className="relative p-1 text-md";
             connect.id="connect";
             connect.innerHTML="Connect! >>";
             connectC.appendChild(connect);
             
             connect.addEventListener("click",function(){
-              var pos=-1;
-              var parent = this.parentElement;
+              var val="";
+              var parent = this.parentElement.parentElement;
               for (var i=0;i<parent.children.length;i++){
                 if (parent.children[i].tagName==="TEXTAREA"){
-                  pos=i;
+                  val=parent.children[i].value;
+                  break;
                 }
               }
               var req = new XMLHttpRequest();
               var bodyTutor = {
                 user:localStorage.getItem("et-user"),
-                message:this.parentElement.children[pos].value
+                message:val
               }
               req.open("POST",window.location.origin+"/et-connect");
               req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -524,8 +547,10 @@
     }
 
     gebi("dimScreen").addEventListener("click",function(){
+      helpSubjects=[];
       gebi("newSide").remove();
       gebi("dimScreen").style.display="none";
+      gebi("subjects").style.display="";
       expanded=false;
     })
 
