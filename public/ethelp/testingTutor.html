@@ -51,6 +51,9 @@
     var expanded = false;
     var tutors = [];
     var helpSubjects=[];
+    var showPreviewClasses = function(){
+
+    }
     var createTutor = function(tutor,id){
       //username, first, last, grade, subjects
       var outer = document.createElement("div");
@@ -62,7 +65,12 @@
       c.style.padding="3px;"
       c.id=id;
       outer.addEventListener("click",function(event){
-        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.className!=="bubble" && event.target.tagName!=="INPUT"){
+        var elemClassList = event.target.classList;
+        var foundBubb=false;
+        for (var i=0;i<elemClassList.length;i++){
+          if(elemClassList[i]==="bubble") foundBubb=true;
+        }
+        if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && !foundBubb){
           if(!expanded){
             gebi("dimScreen").style.display="";
             var newSide = document.createElement("div");
@@ -71,7 +79,7 @@
             newSide.id="newSide";
 
             var showAll = document.createElement("div");
-            showAll.className="absolute flex flex-row justify-end right-0 top-0 w-fit";
+            showAll.className="absolute flex flex-row justify-end right-0 -top-3 w-fit";
 
             var showAllLabel = document.createElement("label");
             showAllLabel.innerHTML="Show All"
@@ -108,7 +116,7 @@
               if (seen[keys[i]].length>0){
                 totalTopics++;
                 var topicDiv = document.createElement("div");
-                topicDiv.className = "relative flex flex-col justify-center items-start";
+                topicDiv.className = "relative flex flex-col justify-start items-center";
 
                 var topicTitle = document.createElement("p");
                 topicTitle.className = "relative text-lg underline";
@@ -195,8 +203,9 @@
             else alert("setting grid-cols went wrong");
 
             var msgBox = document.createElement("textarea");
-            msgBox.className="relative mt-4 text-md";
-            msgBox.style.width="275px;";
+            msgBox.className="relative mt-4";
+            msgBox.style.fontSize="12px";
+            msgBox.style.width="325px";
             msgBox.style.height="70px";
             msgBox.placeholder="I need help with...";
             msgBox.style.border="1px solid black";
@@ -221,7 +230,7 @@
                   pos=i;
                 }
               }
-              alert("attempting to connect");
+              alert("attempting to connect, msg data: "+this.parentElement.children[pos].value);
             })
 
             newSide.appendChild(showAll);
