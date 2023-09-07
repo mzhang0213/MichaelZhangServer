@@ -281,129 +281,102 @@ app.post("/et-offline",async (req,res)=>{
 
 app.post("/et-save-sub",async(req,res)=>{
 	try{
-		//data: req.body.user req.body.sub
-		await client.connect();
-		const db = client.db("ethelp").collection("subs");
-		const currContent = await db.findOne();
-		var db_subs = currContent.subsUsers;
-		var submit = [];
-		for (var i=0;i<db_subs.length;i++){
-			//found a sub that alr has a user
-			//dont push the old sub back, update the it instead
-			if (db_subs[i].user!==req.body.user){
-				submit.push(db_subs[i]);
+		(async function(){
+			//data: req.body.user req.body.sub
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_subs = "";
+			if (req.body.type==="user"){
+				db_subs = currContent.subsUsers;
+			}else{
+				db_subs = currContent.subsTutors;
 			}
-		}
-		var currSub = {
-			user:req.body.user,
-			sub:req.body.sub
-		}
-		submit.push(currSub);
-		const filter = {title:"subs"}
-		const updateDoc = {
-			$set: {
-				subsUsers:submit
+			var submit = [];
+			for (var i=0;i<db_subs.length;i++){
+				//found a sub that alr has a user
+				//dont push the old sub back, update the it instead
+				if (db_subs[i].user!==req.body.user){
+					submit.push(db_subs[i]);
+				}
 			}
-		}
-		await db.updateOne(filter,updateDoc);
-		var msg = {
-			"msg":"yay"
-		}
-		res.send(JSON.stringify(msg))
-	}finally{
-		await client.close();
+			var currSub = {
+				user:req.body.user,
+				sub:req.body.sub
+			}
+			submit.push(currSub);
+			const filter = {title:"subs"}
+			var updateDoc = {};
+			if (req.body.type==="user"){
+				updateDoc = {
+					$set: {
+						subsUsers:submit
+					}
+				}
+			}else{
+				updateDoc = {
+					$set: {
+						subsTutors:submit
+					}
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (e){
+		console.log(e);
 	}
 })
 
 app.post("/et-unregister",async(req,res)=>{
 	try{
-		console.log(req.body);
-		//data: req.body.user req.body.type
-		await client.connect();
-		const db = client.db("ethelp").collection("subs");
-		const currContent = await db.findOne();
-		var db_subs = [];
-		if (req.body.type==="user"){
-			db_subs=currContent.subsUsers;
-		}else if (req.body.type==="tutor"){
-			db_subs=currContent.subsTutors;
-		}
-		var submit = [];
-		for (var i=0;i<db_subs.length;i++){
-			//found a sub that alr has a user
-			//dont push the old sub back, update the it instead
-			if (db_subs[i].user!==req.body.user){
-				submit.push(db_subs[i]);
+		(async function(){
+
+			console.log(req.body);
+			//data: req.body.user req.body.type
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_subs = [];
+			if (req.body.type==="user"){
+				db_subs=currContent.subsUsers;
+			}else if (req.body.type==="tutor"){
+				db_subs=currContent.subsTutors;
 			}
-		}
-		const filter = {title:"subs"}
-		const updateDoc = {
-			$set: {
-				subsUsers:submit
+			var submit = [];
+			for (var i=0;i<db_subs.length;i++){
+				//found a sub that alr has a user
+				//dont push the old sub back, update the it instead
+				if (db_subs[i].user!==req.body.user){
+					submit.push(db_subs[i]);
+				}
 			}
-		}
-		await db.updateOne(filter,updateDoc);
-		var msg = {
-			"msg":"yay"
-		}
-		res.send(JSON.stringify(msg))
-	}finally{
-		await client.close();
-	}
-})
-
-app.post("/et-anno", async(req,res)=>{
-	try {
-		
-		await client.connect();
-		const db_annos = client.db("hippohack2023").collection("annos");
-		const currContent_annos = await db_annos.findOne();
-		var annos_content = currContent_annos.annos;
-		var submit = [];
-		for (var i=0;i<annos_content.length;i++){
-			submit.push(annos_content[i]);
-		}
-		var currAnno = {
-			title:req.body.title,
-			date:Date.now(),
-			body:req.body.body
-		}
-		submit.push(currAnno);
-
-		const filter = {title:"annos"}
-		const updateDoc = {
-			$set: {
-				annos:submit
+			const filter = {title:"subs"}
+			const updateDoc = {
+				$set: {
+					subsUsers:submit
+				}
 			}
-		}
-		await db_annos.updateOne(filter,updateDoc);
-		var msg = {
-			body:req.body.body
-		}
-
-		//service worker time
-		// payload @ req.body.title req.body.body
-		const db_subs = client.db("hippohack2023").collection("subs");
-		const currContent_subs = await db_subs.findOne();
-		var subs_content = currContent_subs.subs;
-		var message = {
-			title:req.body.title,
-			body:req.body.body
-		};
-		for (var i=0;i<subs_content.length;i++){
-			//for each subscription, send noti
-			sendNotification(subs_content[i].sub,message);
-		}
-
-		res.send(JSON.stringify(msg))
-
-	} finally {
-		// Ensures that the client will close when you finish/error
-		await client.close();
+			await db.updateOne(filter,updateDoc);
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (e){
+		console.log(e);
 	}
 })
 
 app.post("/et-connect",async (req,res)=>{
+	var msg = {};
 	//posting tutor want to connect: req.body.tutor
 	//posting message data: req.body.user, req.body.message, req.body.subjects  <<user data
 	try{
@@ -415,22 +388,59 @@ app.post("/et-connect",async (req,res)=>{
 			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
 			for (var i=0;i<db_tutors.length;i++){
 				if (db_tutors[i].user===req.body.tutor){
-					//found the tutor to push sub to
+					//found the tutor to push sub to that tutor's sw
 					var request = {
-						user:req.body.user,
-						message:req.body.message,
-						subjects:req.body.subjects
+						newRequest:{
+							user:req.body.user,
+							message:req.body.message,
+							subjects:req.body.subjects
+						}
 					}
+					msg.error=0;
 					sendNotification(db_tutors[i].sub,request);
+					break;
 				}
 			}
-			var submit = [];
+			if (msg.error===undefined){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
 		})
 	}catch (e){
 		console.log(e);
 	}
 })
 
+app.post("/et-confirm",async (req,res)=>{
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_tutors = currContent.subsTutors;
+			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
+			for (var i=0;i<db_tutors.length;i++){
+				if (db_tutors[i].user===req.body.tutor){
+					//found the tutor to push sub to that tutor's sw
+					var request = {
+						user:req.body.user,
+						message:req.body.message,
+						subjects:req.body.subjects
+					}
+					msg.error=0;
+					sendNotification(db_tutors[i].sub,request);
+				}
+			}
+			if (msg.error===undefined){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
 
 // HIPPO HACK
 

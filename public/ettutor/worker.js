@@ -21,7 +21,7 @@ const urlB64ToUint8Array = base64String => {
 	  },
 	  body: JSON.stringify({
 		user:username,
-		type:"user",
+		type:"tutor",
 		sub:subscription
 	  })
 	})
@@ -53,9 +53,10 @@ const urlB64ToUint8Array = base64String => {
 	console.log(response)
   })
 
-  const tutorOnline = async (updatedUser)=>{
+  const userRequest = async (newRequest)=>{
 	self.clients.matchAll().then(clients => {
-	  clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
+	  clients.forEach(client => client.postMessage({newRequest:newRequest}));
+	  //posting: {user:"person that needs",message:"i ned hep",subjects:["in des subj"]}
 	})
   }
   
@@ -63,7 +64,8 @@ const urlB64ToUint8Array = base64String => {
 	if (event.data) {
 	  var b = (event.data.json())
 	  //showLocalNotification(b.title, b.body, self.registration);
-	  tutorOnline(b.updatedUser);
+	  //data: b.user, b.message, b.subjects
+	  userRequest(b.newRequest);
 	} else {
 	  console.log("Push event but no data");
 	}

@@ -414,10 +414,20 @@
                   break;
                 }
               }
+              var tutorId=this.parentElement.parentElement.parentElement.id;
+              var tutorUser = "";
+              for (var i=0;i<tutors.length;i++){
+                if (tutors[i].id===tutorId){
+                  tutorUser=tutors[i].user;
+                }
+              }
+              if (tutorUser===""){alert("problem: could not find tutor id and thus tutor username")}
               var req = new XMLHttpRequest();
               var bodyTutor = {
                 user:localStorage.getItem("et-user"),
-                message:val
+                message:val,
+                tutor:tutorUser,
+                subjects:helpSubjects
               }
               req.open("POST",window.location.origin+"/et-connect");
               req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -425,11 +435,14 @@
               req.addEventListener("readystatechange", ()=>{
                 if (req.status === 200 && req.readyState === 4) {
                   var nobody = JSON.parse(req.responseText);
-                  //nobody.tutor is
-
-                  //CHANGE SCHEMATIC, CHANGE UI TO INCORORATE CHOOSING SUBJECTS THAT NEED HELP IN
-
-                  createTutor(nobody.tutor,nobody.id);
+                  if (body.error===0){
+                    console.log("request successfully sent! will be with you shortly");
+                    gebi("dimScreen").dispatchEvent(new Event("click"));
+                    //UPDATE THE BOX THAT SAYS OUTGOING REQUESTS
+                    //make the tutor's panel dimmed
+                  }else{
+                    alert("please ask michael for help oh noes")
+                  }
                 } else if (req.readyState === 4){
                   console.log("reeeeeeee err new acc creation: "+req.responseText);
                   alert("please ask michael for help oh noes")
