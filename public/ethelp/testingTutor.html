@@ -244,7 +244,7 @@
             expanded=true;
           }else{
             //alr expanded, shrink back down
-            var helpSubjects=[];
+            helpSubjects=[];
             gebi("newSide").remove();
             gebi("dimScreen").style.display="none";
             gebi("subjects").style.display="";
@@ -349,8 +349,10 @@
     }
 
     gebi("dimScreen").addEventListener("click",function(){
+      helpSubjects=[];
       gebi("newSide").remove();
       gebi("dimScreen").style.display="none";
+      gebi("subjects").style.display="";
       expanded=false;
     })
 
