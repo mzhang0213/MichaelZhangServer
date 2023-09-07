@@ -115,7 +115,6 @@
     }
     const registerServiceWorker = async () => {
       const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
-      localStorage.setItem("et-sw",JSON.stringify(swRegistration));
       return swRegistration;
     }
     const requestNotificationPermission = async () => {

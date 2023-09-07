@@ -81,7 +81,15 @@ on check, show all subjects with all cols
 
 on click subject, border highlight gold, maybe try to do a double layer border? idk
 
+*/
 
-todo: finalize and change name of social studies
+/*
+
+tutor get help pathway:
+1. client finds tutor online and hits connect
+2. msg gets sent dir to tutor, they get msg and it pops up
+3. tutor has 60s to hit connect with student button. while msg is being sent out and await, on client side mark outgoing requests
+	a. tutor hits yes, then post to /et-confirm directly to user's sw and take them to either i) external messaging site or ii) delete all elements on the body and start messaging lol idk
+	b. tutor does not hit anything for 60s. then post to /et-confirm that request expired, take the outgoing request on the client side off of the page and maybe tell them that request was denied sadge
 
 */
