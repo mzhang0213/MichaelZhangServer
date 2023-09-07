@@ -72,6 +72,7 @@
         }
         if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && !foundBubb){
           if(!expanded){
+            gebi("subjects").style.display="none";
             gebi("dimScreen").style.display="";
             var newSide = document.createElement("div");
             newSide.className="relative w-fit h-fit ml-6 flex flex-col justify-center items-center text-left";
@@ -243,6 +244,7 @@
             //alr expanded, shrink back down
             gebi("newSide").remove();
             gebi("dimScreen").style.display="none";
+            gebi("subjects").style.display="";
             expanded=false;
           }
         }
@@ -288,6 +290,7 @@
       var subjects = document.createElement("div");
       //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
       subjects.className="relative grid grid-cols-2 text-white";
+      subjects.id="subjects"
 
       for (var i=0;i<tutor.subjects.length;i++){
         var s = document.createElement("div");
