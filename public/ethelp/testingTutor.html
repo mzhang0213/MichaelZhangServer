@@ -45,15 +45,16 @@
     #connect:hover{
       background-color:rgb(48, 194, 48);
     }
+    .bubble{
+      user-select: none;
+      -moz-user-select: none;
+    }
   </style>
   <script>
     var gebi = function(e){return document.getElementById(e)};
     var expanded = false;
     var tutors = [];
     var helpSubjects=[];
-    var showPreviewClasses = function(){
-
-    }
     var createTutor = function(tutor,id){
       //username, first, last, grade, subjects
       var outer = document.createElement("div");
@@ -204,13 +205,14 @@
             else alert("setting grid-cols went wrong");
 
             var msgBox = document.createElement("textarea");
-            msgBox.className="relative mt-4";
+            msgBox.className="relative mt-4 p-2 rounded-xl";
             msgBox.style.fontSize="12px";
             msgBox.style.width="325px";
             msgBox.style.height="70px";
             msgBox.placeholder="I need help with...";
-            msgBox.style.border="1px solid black";
             msgBox.style.resize="none";
+            msgBox.style.outline="none";
+            msgBox.style.border="none";
             //need to format this
 
             var connectC = document.createElement("div");
@@ -242,6 +244,7 @@
             expanded=true;
           }else{
             //alr expanded, shrink back down
+            var helpSubjects=[];
             gebi("newSide").remove();
             gebi("dimScreen").style.display="none";
             gebi("subjects").style.display="";
@@ -256,7 +259,7 @@
       pfp.className="relative mb-2 rounded-lg"
 
       var name = document.createElement("h1");
-      name.className="relative w-full text-xl font-bold";
+      name.className="relative w-full text-2xl font-bold";
       name.innerHTML=`${tutor.first} ${tutor.last.charAt(0)}.`;
 
       var grade = document.createElement("p");
