@@ -445,8 +445,10 @@
             expanded=true;
           }else{
             //alr expanded, shrink back down
+            helpSubjects=[];
             gebi("newSide").remove();
             gebi("dimScreen").style.display="none";
+            gebi("subjects").style.display="";
             expanded=false;
           }
         }
@@ -458,7 +460,7 @@
       pfp.className="relative mb-2 rounded-lg"
 
       var name = document.createElement("h1");
-      name.className="relative w-full text-xl font-bold";
+      name.className="relative w-full text-2xl font-bold";
       name.innerHTML=`${tutor.first} ${tutor.last.charAt(0)}.`;
 
       var grade = document.createElement("p");
@@ -492,6 +494,7 @@
       var subjects = document.createElement("div");
       //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
       subjects.className="relative grid grid-cols-2 text-white";
+      subjects.id="subjects"
 
       for (var i=0;i<tutor.subjects.length;i++){
         var s = document.createElement("div");
