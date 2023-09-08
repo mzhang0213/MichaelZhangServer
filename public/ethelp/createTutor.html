@@ -214,7 +214,7 @@
       })
     }
     gebi("login").addEventListener("click",function(){
-      var user = gebi("first").value+gebi("last").value.charAt(0)+gebi("device")+"_";
+      var user = gebi("first").value+gebi("last").value.charAt(0)+gebi("device").value+"_";
       for (var i=0;i<3;i++){
         var random = Math.floor(Math.random()*36);
         var abcs = "abcdefghijklmnopqrstuvwxyz";
