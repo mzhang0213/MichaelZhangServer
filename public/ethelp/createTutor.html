@@ -59,6 +59,7 @@
     <input id="last" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Last Name</label>
     <input id="grade" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Grade</label>
     <input id="school" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>School</label>
+    <input id="device" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid"><label>Device #</label>
     <input id="pfp" type="file" accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PNG" class="text-center mt-12" ><label>Profile Pic :D</label>
     <img id="prev" style="position:absolute;right:0;top:20px;width:300px;">
     <p id="prevDetails" style="position:absolute;right:0;font-size:15px;">
@@ -213,7 +214,7 @@
       })
     }
     gebi("login").addEventListener("click",function(){
-      var user = gebi("first").value+gebi("last").value.charAt(0)+"_";
+      var user = gebi("first").value+gebi("last").value.charAt(0)+gebi("device")+"_";
       for (var i=0;i<3;i++){
         var random = Math.floor(Math.random()*36);
         var abcs = "abcdefghijklmnopqrstuvwxyz";
