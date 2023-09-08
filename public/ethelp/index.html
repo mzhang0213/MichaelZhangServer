@@ -86,7 +86,7 @@
     var unregisterSw = function(){
       if ("serviceworker" in navigator) navigator.serviceWorker.getRegistrations().then( 
         function(registrations){
-          console.log(registrations);
+          alert(registrations);
           for(let registration of registrations) {
             registration.unregister();
           }
