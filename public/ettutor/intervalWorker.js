@@ -1,6 +1,6 @@
 setInterval(function(){
 	var params = new URLSearchParams(self.location.search);
-	if (params.get("from")==="user"){
+	if (params.get("from")==="tutor"){
 		postMessage({"go":"do it"});
 	}
-},5.5*1000)
+},2.5*1000)
