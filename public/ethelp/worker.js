@@ -56,11 +56,6 @@ const urlB64ToUint8Array = base64String => {
 	console.log(response)
   })
 
-  const tutorOnline = async (updatedUser)=>{
-	self.clients.matchAll().then(clients => {
-	  clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
-	})
-  }
   const alertError = async ()=>{
 	const response = await fetch(self.location.origin+"/et-WEBPUSH-ERROR-WEBPUSH-ERROR-AHHHHH", {
 		method: 'get',
@@ -76,7 +71,6 @@ const urlB64ToUint8Array = base64String => {
 	if (event.data) {
 	  var b = (event.data.json())
 	  //showLocalNotification(b.title, b.body, self.registration);
-	  tutorOnline(b.updatedUser);
 	  self.clients.matchAll().then(clients => {
 		clients.forEach(client =>function(){
 			if (b.action==="online" && client.url==="/ethelp/"){
