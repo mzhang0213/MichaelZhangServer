@@ -84,12 +84,13 @@
       gebi("userButton").innerHTML=localStorage.getItem("et-tutor");
     }
     var unregisterSw = function(){
-      if ("serviceworker" in navigator) navigator.serviceWorker.getRegistrations().then( function(registrations) { for(let registration of registrations) { registration.unregister(); } }); 
-      var req = new XMLHttpRequest();
-      var body = {
-        user:localStorage.getItem("et-tutor"),
-        type:"tutor"
-      }
+      if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then( 
+        function(registrations){
+          alert(registrations);
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+      }); 
       req.open("POST",window.location.origin+"/et-unregister");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));

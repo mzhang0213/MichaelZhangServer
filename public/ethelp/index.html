@@ -84,7 +84,7 @@
       gebi("userButton").innerHTML=localStorage.getItem("et-user");
     }
     var unregisterSw = function(){
-      if ("serviceworker" in navigator) navigator.serviceWorker.getRegistrations().then( 
+      if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then( 
         function(registrations){
           alert(registrations);
           for(let registration of registrations) {
