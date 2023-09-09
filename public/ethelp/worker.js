@@ -75,6 +75,7 @@ const urlB64ToUint8Array = base64String => {
 	  //showLocalNotification(b.title, b.body, self.registration);
 	  self.clients.matchAll().then(clients => {
 		clients.forEach(client =>function(){
+			console.log("client url: " + client.url);
 			if (b.action==="online" && client.url==="/ethelp/"){
 				client.postMessage({updatedUser:b.updatedUser})
 			
