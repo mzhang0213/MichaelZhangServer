@@ -632,7 +632,10 @@
       }
     })
 
-    setInterval(function(){
+    //how this works: we register the intervalworker which will run the interval w/o interruptions since its thread is always online and whatnot and pog
+    //then whenever it reaches time it justs posts to the main page to JUST DO IT and update :)
+    var intervalWorker = new Worker(window.location.origin+"/ethelp/intervalWorker.js");
+    intervalWorker.addEventListener("message",function(e){
       console.log("checking for DC'd tutors")
       for (var i=0;i<tutors.length;i++){
         if (tutors[i].refreshed){
@@ -668,7 +671,7 @@
         }
         tutors[i].refreshed=false;
       }
-    },5.5*1000)
+    })
     /*
     var req = new XMLHttpRequest();
           var body = {

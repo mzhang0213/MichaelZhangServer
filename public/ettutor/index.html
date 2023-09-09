@@ -306,7 +306,8 @@
     })
     */
 
-    setInterval(function(){
+    var intervalWorker = new Worker(window.location.origin+"/ethelp/intervalWorker.js");
+    intervalWorker.addEventListener("message",function(e){
       var body = {
         user:localStorage.getItem("et-tutor")
       }
@@ -314,7 +315,8 @@
       req.open("POST",window.location.origin+"/et-online");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
-    },2.5*1000)
+    })
+
     var body = {
       user:localStorage.getItem("et-tutor")
     }
