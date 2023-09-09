@@ -21,7 +21,6 @@ const urlB64ToUint8Array = base64String => {
 	  },
 	  body: JSON.stringify({
 		user:username,
-		type:"user",
 		sub:subscription
 	  })
 	})
@@ -58,12 +57,40 @@ const urlB64ToUint8Array = base64String => {
 	  clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
 	})
   }
+  const alertError = async ()=>{
+	const response = await fetch(self.location.origin+"/et-WEBPUSH-ERROR-WEBPUSH-ERROR-AHHHHH", {
+		method: 'get',
+		headers: {
+		  'Content-Type': 'application/json',
+		},
+	  })
+	  console.log(response);
+	  console.log("posted");
+  }
   
   self.addEventListener("push", function(event) {
 	if (event.data) {
 	  var b = (event.data.json())
 	  //showLocalNotification(b.title, b.body, self.registration);
 	  tutorOnline(b.updatedUser);
+	  self.clients.matchAll().then(clients => {
+		console.log("from sw: these are the clients: "+clients);
+		clients.forEach(client =>function(){
+			if (b.action==="online" && client.url==="/ethelp/"){
+				client.postMessage({updatedUser:b.updatedUser})
+			
+			}else if (b.action==="connect" && client.url==="/ettutor/"){
+				client.postMessage({newMessage:b.newMessage});
+				
+			}else if (b.action==="confirm" && client.url==="/ethelp/"){
+				client.postMessage({}) //not finished
+			}else{
+				console.log("webpush action not coded in the sw or some BUG WTF");
+				alertError();
+			}
+		})
+		clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
+	  })
 	} else {
 	  console.log("Push event but no data");
 	}

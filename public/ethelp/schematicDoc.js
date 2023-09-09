@@ -54,6 +54,27 @@ var stuReq = {
 	subjects:["subjects that student needs help in"]
 }
 
+//subs
+var subs = {
+	title:"subs",
+	subs:[
+		{
+			user:"general username",
+			type:"",
+			registration:{sw:"sw reg"}
+		}
+	]
+}
+
+/*
+the most stupid thing ever is that i cant have 2 service workers, new schematic
+service worker registration with either tutor or client, its going to be the same code
+
+registration
+sw.register("/serviceworker's location ?user=whatever&type=tutor|user")
+
+*/
+
 /*
 
 when new tutor is created, create a copy of them in online

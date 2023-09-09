@@ -70,7 +70,7 @@
           <!--
           <a id="group"></a>
           -->
-          <a id="logout" onclick="(function(){unregisterSw();localStorage.removeItem('et-tutor');localStorage.removeItem('et-first-tutor');localStorage.removeItem('et-last-tutor');window.location.reload();})()">Logout</a>
+          <a id="logout" onclick="(function(){logout();})()">Logout</a>
 		      </div>
         </div>
     </div>
@@ -83,20 +83,33 @@
     }else{
       gebi("userButton").innerHTML=localStorage.getItem("et-tutor");
     }
-    var unregisterSw = function(){
+
+    
+    var logout = function(){
+      
       if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then( 
         function(registrations){
-          alert(registrations);
           for(let registration of registrations) {
             registration.unregister();
           }
-      }); 
+      });
+
+      var req = new XMLHttpRequest();
+      var body = {
+        user:localStorage.getItem("et-subType")==="user"?localStorage.getItem("et-user"):localStorage.getItem("et-tutor"),
+      }
       req.open("POST",window.location.origin+"/et-unregister");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
+          localStorage.removeItem("et-tutor");
+          localStorage.removeItem('et-first-tutor');
+          localStorage.removeItem('et-last-tutor');
+          localStorage.removeItem('et-user');
+          localStorage.removeItem('et-first');
+          localStorage.removeItem('et-last');
           window.location.reload();
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
@@ -116,7 +129,7 @@
       }
     }
     const registerServiceWorker = async () => {
-      const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("et-tutor")}`); //notice the file name
+      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-tutor")}`); //notice the file name
       return swRegistration;
     }
     const requestNotificationPermission = async () => {

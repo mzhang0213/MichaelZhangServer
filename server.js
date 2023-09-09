@@ -214,9 +214,10 @@ app.post("/et-online",async (req,res)=>{
 
 			const db_subs = client.db("ethelp").collection("subs");
 			const currContent_subs = await db_subs.findOne();
-			var subs_content = currContent_subs.subsUsers;
+			var subs_content = currContent_subs.subs;
 			var message = {
-				updatedUser:online[updatedUser]
+				updatedUser:online[updatedUser],
+				action:"online"
 			};
 			for (var i=0;i<subs_content.length;i++){
 				//for each subscription, send noti
@@ -286,12 +287,7 @@ app.post("/et-save-sub",async(req,res)=>{
 			await client.connect();
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
-			var db_subs = "";
-			if (req.body.type==="user"){
-				db_subs = currContent.subsUsers;
-			}else{
-				db_subs = currContent.subsTutors;
-			}
+			var db_subs = currContent.subs;
 			var submit = [];
 			for (var i=0;i<db_subs.length;i++){
 				//found a sub that alr has a user
@@ -306,18 +302,9 @@ app.post("/et-save-sub",async(req,res)=>{
 			}
 			submit.push(currSub);
 			const filter = {title:"subs"}
-			var updateDoc = {};
-			if (req.body.type==="user"){
-				updateDoc = {
-					$set: {
-						subsUsers:submit
-					}
-				}
-			}else{
-				updateDoc = {
-					$set: {
-						subsTutors:submit
-					}
+			const updateDoc = {
+				$set: {
+					subs:submit
 				}
 			}
 			await db.updateOne(filter,updateDoc);
@@ -338,16 +325,11 @@ app.post("/et-unregister",async(req,res)=>{
 		(async function(){
 
 			console.log(req.body);
-			//data: req.body.user req.body.type
+			//data: req.body.user
 			await client.connect();
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
-			var db_subs = [];
-			if (req.body.type==="user"){
-				db_subs=currContent.subsUsers;
-			}else if (req.body.type==="tutor"){
-				db_subs=currContent.subsTutors;
-			}
+			var db_subs = currContent.subs;
 			var submit = [];
 			for (var i=0;i<db_subs.length;i++){
 				//found a sub that alr has a user
@@ -359,7 +341,7 @@ app.post("/et-unregister",async(req,res)=>{
 			const filter = {title:"subs"}
 			const updateDoc = {
 				$set: {
-					subsUsers:submit
+					subs:submit
 				}
 			}
 			await db.updateOne(filter,updateDoc);
@@ -384,10 +366,10 @@ app.post("/et-connect",async (req,res)=>{
 			await client.connect();
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
-			var db_tutors = currContent.subsTutors;
+			var db_subs = currContent.subs;
 			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
-			for (var i=0;i<db_tutors.length;i++){
-				if (db_tutors[i].user===req.body.tutor){
+			for (var i=0;i<db_subs.length;i++){
+				if (db_subs[i].user===req.body.tutor){
 					//found the tutor to push sub to that tutor's sw
 					var request = {
 						newRequest:{
@@ -395,10 +377,11 @@ app.post("/et-connect",async (req,res)=>{
 							first:req.body.first,
 							message:req.body.message,
 							subjects:req.body.subjects
-						}
+						},
+						action:"connect"
 					}
 					msg.error=0;
-					sendNotification(db_tutors[i].sub,request);
+					sendNotification(db_subs[i].sub,request);
 					break;
 				}
 			}
@@ -414,23 +397,28 @@ app.post("/et-connect",async (req,res)=>{
 
 app.post("/et-confirm",async (req,res)=>{
 	var msg = {};
+	//posting tutor want to connect: req.body.tutor
+	//posting message data: req.body.user, req.body.message, req.body.subjects  <<user data
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
-			var db_tutors = currContent.subsTutors;
-			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
-			for (var i=0;i<db_tutors.length;i++){
-				if (db_tutors[i].user===req.body.tutor){
-					//found the tutor to push sub to that tutor's sw
+			var db_subs = currContent.subs;
+			for (var i=0;i<db_subs.length;i++){
+				if (db_subs[i].user===req.body.user){
 					var request = {
-						user:req.body.user,
-						message:req.body.message,
-						subjects:req.body.subjects
+						newRequest:{
+							user:req.body.user,
+							first:req.body.first,
+							message:req.body.message,
+							subjects:req.body.subjects
+						},
+						action:"connect"
 					}
 					msg.error=0;
-					sendNotification(db_tutors[i].sub,request);
+					sendNotification(db_subs[i].sub,request);
+					break;
 				}
 			}
 			if (msg.error===undefined){
