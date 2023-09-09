@@ -89,7 +89,6 @@ const urlB64ToUint8Array = base64String => {
 				alertError();
 			}
 		})
-		clients.forEach(client => client.postMessage({updatedUser:updatedUser}));
 	  })
 	} else {
 	  console.log("Push event but no data");
