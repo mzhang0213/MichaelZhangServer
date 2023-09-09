@@ -69,11 +69,6 @@
     }
   </style>
   <script>
-    if (localStorage.getItem("et-user")!==null){
-      //alr logged in??? but ok
-      introMsg(localStorage.getItem("et-first"),localStorage.getItem("et-user"));
-    }
-
     var introMsg = function(first,user){
       var message = document.createElement("p");
       message.style.backgroundColor="white"
@@ -115,6 +110,12 @@
         },1000)
       },2000)
     }
+
+    if (localStorage.getItem("et-user")!==null){
+      //alr logged in??? but ok
+      introMsg(localStorage.getItem("et-first"),localStorage.getItem("et-user"));
+    }
+
     gebi("login").addEventListener("click",function(){
       var user = gebi("name").value+"_";
       for (var i=0;i<3;i++){
