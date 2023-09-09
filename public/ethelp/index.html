@@ -307,7 +307,7 @@
             newSubjects.className="relative w-fit h-fit flex flex-row justify-center items-start text-center";
             //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
             
-            var seen = {Math:[],Science:[],History:[],"Social Studies":[],Language:[]}
+            var seen = {Math:[],Science:[],History:[],English:[],"Social Studies":[],Language:[]}
             var totalTopics = 0;
             for (var i=0;i<tutor.subjects.length;i++){
               seen[tutor.subjects[i].topic].push(tutor.subjects[i].subject);
@@ -334,7 +334,7 @@
                     case "Science":s.style.backgroundColor="#3e7e32";break;
                     case "English":s.style.backgroundColor="#864700";break;
                     case "History":s.style.backgroundColor="#b8a715";break;
-                    case "Social S.":s.style.backgroundColor="#620080";break;
+                    case "Social Studies":s.style.backgroundColor="#620080";break;
                     case "Language":s.style.backgroundColor="#00806f";break;
                   }
                   if (seen[keys[i]].length>=4){
@@ -540,7 +540,7 @@
           case "Science":s.style.backgroundColor="#3e7e32";break;
           case "English":s.style.backgroundColor="#864700";break;
           case "History":s.style.backgroundColor="#b8a715";break;
-          case "Social S.":s.style.backgroundColor="#620080";break;
+          case "Social Studies":s.style.backgroundColor="#620080";break;
           case "Language":s.style.backgroundColor="#00806f";break;
         }
         var thisSubject = ""
