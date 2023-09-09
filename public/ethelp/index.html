@@ -130,7 +130,11 @@
     }
     const registerServiceWorker = async () => {
       localStorage.setItem("et-subType","user")
-      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
+      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+        registration.addEventListener("updatefound",()=>{
+          registration.update();
+        })
+      });
       return swRegistration;
     }
     const requestNotificationPermission = async () => {
