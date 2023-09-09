@@ -129,13 +129,17 @@
       }
     }
     const registerServiceWorker = async () => {
-      localStorage.setItem("et-subType","user")
-      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-        registration.addEventListener("updatefound",()=>{
-          registration.update();
-        })
-      });
-      return swRegistration;
+      navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
+        if (registrations.length===0){
+          localStorage.setItem("et-subType","user")
+          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+            registration.addEventListener("updatefound",()=>{
+              registration.update();
+            })
+          });
+          return swRegistration;
+        }
+      })
     }
     const requestNotificationPermission = async () => {
       const permission = await window.Notification.requestPermission();
