@@ -137,9 +137,10 @@
 
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
-      //data from event.data.newRequest > .user, .,message, .subjects
-      console.log("New tutor request!! ");
+      //data from event.data.newRequest > .user, .first, .,message, .subjects
+      console.log("New tutor request!!");
       console.log(event.data);
+      createRequest(event.data.newRequest);
     });
   </script>
 
@@ -246,7 +247,7 @@
       //FINISH THIS
       connect.addEventListener("click",function(){
         req.open("POST",window.location.origin+"/et-confirm");
-        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         req.send(JSON.stringify(bodyTutor));
         req.addEventListener("readystatechange", ()=>{
           if (req.status === 200 && req.readyState === 4) {
@@ -260,8 +261,8 @@
       //this autoremove
       setTimeout(function(){
         //FIX FIX
-        
-      },60*1000)
+        //no fucking idea how to self-destruct
+      },60*1000);
       cc.appendChild(connect);
 
       c.appendChild(name);
@@ -293,7 +294,7 @@
       req.open("POST",window.location.origin+"/et-online");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
-    },3*1000)
+    },2.5*1000)
     var body = {
       user:localStorage.getItem("et-tutor")
     }

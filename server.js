@@ -392,6 +392,7 @@ app.post("/et-connect",async (req,res)=>{
 					var request = {
 						newRequest:{
 							user:req.body.user,
+							first:req.body.first,
 							message:req.body.message,
 							subjects:req.body.subjects
 						}
