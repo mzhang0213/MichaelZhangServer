@@ -70,6 +70,8 @@ const urlB64ToUint8Array = base64String => {
   self.addEventListener("push", function(event) {
 	if (event.data) {
 	  var b = (event.data.json())
+	  console.log("got push message, data:");
+	  console.log(b);
 	  //showLocalNotification(b.title, b.body, self.registration);
 	  self.clients.matchAll().then(clients => {
 		clients.forEach(client =>function(){
