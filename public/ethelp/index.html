@@ -109,6 +109,7 @@
           localStorage.removeItem('et-user');
           localStorage.removeItem('et-first');
           localStorage.removeItem('et-last');
+          localStorage.removeItem("et-fullSw");
           localStorage.removeItem('et-subType');
           window.location.reload();
         } else if (req.readyState === 4){
@@ -138,6 +139,19 @@
             })
           });
           return swRegistration;
+        }else{
+          if (localStorage.getItem("et-subType")!=="user" && localStorage.getItem("et-fullSw")!=="true"){
+            //this means that tutor registered sw, lets add a our username to the sw
+            var reqAdd = new XMLHttpRequest();
+            var bodyAdd = {
+              u:localStorage.getItem("user"),
+              tutor:localStorage.getItem("tutor")
+            }
+            reqAdd.open("POST",window.location.origin+"/et-addSw");
+            reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            reqAdd.send(JSON.stringify(bodyAdd));
+            localStorage.setItem("et-fullSw","true");
+          }
         }
       })
     }
@@ -341,38 +355,7 @@
                     case "Social Studies":s.style.backgroundColor="#620080";break;
                     case "Language":s.style.backgroundColor="#00806f";break;
                   }
-                  if (seen[keys[i]].length>=4){
-                    var thisSubject = ""
-                    switch(seen[keys[i]][j]){
-                      case "Algebra I":thisSubject="Alg I";break;
-                      case "Geometry":thisSubject="Geo";break;
-                      case "Algebra II":thisSubject="Alg II";break;
-                      case "Precalculus":thisSubject="Precalc";break;
-                      case "Calculus":thisSubject="Calc";break;
-                      case "Biology":thisSubject="Bio";break;
-                      case "Chemistry":thisSubject="Chem";break;
-                      case "Environmental Science":thisSubject="Env Sci";break;
-                      case "Physics":thisSubject="Phys";break;
-                      case "English: Grammar":thisSubject="Eng: G";break;
-                      case "English: Essay":thisSubject="Eng: E";break;
-                      case "US History I":thisSubject="US I";break;
-                      case "US History II":thisSubject="US II";break;
-                      case "World History":thisSubject="World";break;
-                      case "European History":thisSubject="Euro";break;
-                      case "Macroeconomics":thisSubject="Macro";break;
-                      case "Microeconomics":thisSubject="Micro";break;
-                      case "Psychology":thisSubject="Psych";break;
-                      case "English":thisSubject="Eng";break;
-                      case "French":thisSubject="Fr";break;
-                      case "Spanish":thisSubject="Esp";break;
-                      case "Latin":thisSubject="Lat";break;
-                      case "Chinese":thisSubject="Zh";break;
-                      default: console.log(seen[keys[i]][j]);break;
-                    }
-                    s.innerHTML=thisSubject;
-                  }else{
-                    s.innerHTML=seen[keys[i]][j];
-                  }
+                  s.innerHTML=seen[keys[i]][j];
                   s.addEventListener("click",function(){
                     var found=-1;
                     for (var k=0;k<helpSubjects.length;k++){

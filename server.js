@@ -369,7 +369,7 @@ app.post("/et-connect",async (req,res)=>{
 			var db_subs = currContent.subs;
 			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
 			for (var i=0;i<db_subs.length;i++){
-				if (db_subs[i].user===req.body.tutor){
+				if (db_subs[i].user===req.body.tutor || db_subs[i].tutor===req.body.tutor){
 					//found the tutor to push sub to that tutor's sw
 					var request = {
 						newRequest:{
@@ -424,6 +424,43 @@ app.post("/et-confirm",async (req,res)=>{
 			if (msg.error===undefined){
 				msg.error=1;
 			}
+			res.send(JSON.stringify(msg));
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+app.post("/et-addSw",async (req,res)=>{
+	var msg = {};
+	//updating sw registration at req.body.oldUser, adding in req.body.user
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_subs = currContent.subs;
+			for (var i=0;i<db_subs.length;i++){
+				if (db_subs[i].user===req.body.u){
+					if (req.body.user!==undefined){
+						db_subs[i].user=req.body.user;
+						db_subs[i].tutor=req.body.u;
+					}else if (req.body.tutor!==undefined){
+						db_subs[i].user=req.body.u;
+						db_subs[i].tutor=req.body.user;
+					}else{
+						console.log("wtf just happened")
+					}
+				}
+			}
+			msg.yay="woo";
+			const filter = {title:"subs"}
+			const updateDoc = {
+				$set: {
+					subs:db_subs
+				}
+			}
+			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
 		})
 	}catch (e){
