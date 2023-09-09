@@ -310,7 +310,7 @@
     })
     */
 
-    var intervalWorker = new Worker(window.location.origin+"/ettutor/intervalWorker.js");
+    var intervalWorker = new Worker(window.location.origin+"/ettutor/intervalWorker.js?from=tutor");
     intervalWorker.addEventListener("message",function(e){
       var body = {
         user:localStorage.getItem("et-tutor")
