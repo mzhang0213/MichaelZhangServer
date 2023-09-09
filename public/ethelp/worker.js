@@ -77,13 +77,13 @@ const urlB64ToUint8Array = base64String => {
 		console.log("clients " + clients);
 		clients.forEach((client) => {
 			console.log("client url: " + client.url);
-			if (b.action==="online" && client.url==="/ethelp/"){
+			if (b.action==="online" && client.url===self.location.origin+"/ethelp/"){
 				client.postMessage({updatedUser:b.updatedUser})
 			
-			}else if (b.action==="connect" && client.url==="/ettutor/"){
+			}else if (b.action==="connect" && client.url===self.location.origin+"/ettutor/"){
 				client.postMessage({newMessage:b.newMessage});
 				
-			}else if (b.action==="confirm" && client.url==="/ethelp/"){
+			}else if (b.action==="confirm" && client.url===self.location.origin+"/ethelp/"){
 				client.postMessage({}) //not finished
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
