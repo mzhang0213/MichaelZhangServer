@@ -129,6 +129,7 @@
       }
     }
     const registerServiceWorker = async () => {
+      localStorage.setItem("et-subType","user")
       const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`); //notice the file name
       return swRegistration;
     }
@@ -440,7 +441,6 @@
               console.log("sending req");
               var bodyConnect = {
                 user:localStorage.getItem("et-user"),
-                subType:localStorage.getItem("et-subType"),
                 first:localStorage.getItem("et-first"),
                 message:val,
                 tutor:tutorUser,

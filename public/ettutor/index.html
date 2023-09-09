@@ -96,7 +96,7 @@
 
       var req = new XMLHttpRequest();
       var body = {
-        user:localStorage.getItem("et-subType")==="user"?localStorage.getItem("et-user"):localStorage.getItem("et-tutor"),
+        user:localStorage.getItem("et-subType")==="user"?localStorage.getItem("et-user"):localStorage.getItem("et-tutor")
       }
       req.open("POST",window.location.origin+"/et-unregister");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -110,6 +110,7 @@
           localStorage.removeItem('et-user');
           localStorage.removeItem('et-first');
           localStorage.removeItem('et-last');
+          localStorage.removeItem('et-subType');
           window.location.reload();
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
@@ -129,6 +130,7 @@
       }
     }
     const registerServiceWorker = async () => {
+      localStorage.setItem("et-subType","tutor")
       const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-tutor")}`); //notice the file name
       return swRegistration;
     }
@@ -260,14 +262,18 @@
 
       //FINISH THIS
       connect.addEventListener("click",function(){
-        req.open("POST",window.location.origin+"/et-confirm");
-        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        req.send(JSON.stringify(bodyTutor));
-        req.addEventListener("readystatechange", ()=>{
-          if (req.status === 200 && req.readyState === 4) {
-            var nobody = JSON.parse(req.responseText);
-          } else if (req.readyState === 4){
-            console.log("reeeeeeee err new acc creation: "+req.responseText);
+        var confirmReq = new XMLHttpRequest();
+        var bodyConfirm = {
+        
+        }
+        confirmReq.open("POST",window.location.origin+"/et-confirm");
+        confirmReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        confirmReq.send(JSON.stringify(bodyConfirm));
+        confirmReq.addEventListener("readystatechange", ()=>{
+          if (confirmReq.status === 200 && confirmReq.readyState === 4) {
+            var body = JSON.parse(confirmReq.responseText);
+          } else if (confirmReq.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+confirmReq.responseText);
             alert("please ask michael for help oh noes")
           }
         })
