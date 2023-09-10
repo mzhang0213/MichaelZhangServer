@@ -266,15 +266,15 @@
 
       var time = document.createElement("p");
       time.className="relative w-full text-sm mt-1 mb-2";
-      time.innerHTML=student.school;
+      time.innerHTML=student.time;
 
       var message = document.createElement("p");
       message.className="relative w-full text-lg mt-1 mb-2";
-      message.innerHTML=student.school;
+      message.innerHTML=student.message;
 
       var cc = document.createElement("div"); //connectContainer
       c.className="relative mt-2 h-fit flex flex-row justify-end text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
-      c.style.width="80%";
+      cc.style.width="80%";
 
       var connect = document.createElement("button");
       connect.className="relative px-2 py-1 text-center text-md";
