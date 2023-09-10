@@ -334,7 +334,7 @@ app.post("/et-unregister",async(req,res)=>{
 			for (var i=0;i<db_subs.length;i++){
 				//found a sub that alr has a user
 				//dont push the old sub back, update the it instead
-				if (db_subs[i].user!==req.body.user||db_subs[i].user!==req.body.tutor){
+				if (db_subs[i].user!==req.body.user && db_subs[i].user!==req.body.tutor){
 					submit.push(db_subs[i]);
 				}
 			}
