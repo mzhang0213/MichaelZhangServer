@@ -53,6 +53,11 @@ const urlB64ToUint8Array = base64String => {
 	} catch (err) {
 	  console.log('(2) save sub Error', err)
 	}
+	try{
+		event.waitUntil(clients.claim());
+	  } catch (err) {
+		console.log('(3) client claim error', err)
+	  }
 	console.log(response)
   })
 
