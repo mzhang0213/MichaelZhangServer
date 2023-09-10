@@ -95,7 +95,8 @@
 
       var req = new XMLHttpRequest();
       var body = {
-        user:localStorage.getItem("et-subType")==="user"?localStorage.getItem("et-user"):localStorage.getItem("et-tutor")
+        user:localStorage.getItem("et-user"),
+        tutor:localStorage.getItem("et-tutor")
       }
       req.open("POST",window.location.origin+"/et-unregister");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
