@@ -389,6 +389,8 @@ app.post("/et-connect",async (req,res)=>{
 				msg.error=1;
 			}
 			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
 		})
 	}catch (e){
 		console.log(e);
@@ -425,6 +427,8 @@ app.post("/et-confirm",async (req,res)=>{
 				msg.error=1;
 			}
 			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
 		})
 	}catch (e){
 		console.log(e);
@@ -462,6 +466,8 @@ app.post("/et-addSw",async (req,res)=>{
 			}
 			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
 		})
 	}catch (e){
 		console.log(e);
