@@ -54,7 +54,7 @@ const urlB64ToUint8Array = base64String => {
 	  console.log('(2) save sub Error', err)
 	}
 	try{
-		event.waitUntil(clients.claim());
+		clients.claim();
 	  } catch (err) {
 		console.log('(3) client claim error', err)
 	  }
@@ -71,6 +71,11 @@ const urlB64ToUint8Array = base64String => {
 	  console.log(response);
 	  console.log("posted");
   }
+
+  self.addEventListener("message",function(event){
+	event.waitUntil(clients.claim());
+	console.log("claimed bitc");
+  })
   
   self.addEventListener("push", function(event) {
 	if (event.data) {
