@@ -151,17 +151,6 @@
             reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
             reqAdd.send(JSON.stringify(bodyAdd));
             localStorage.setItem("et-fullSw","true");
-          } else if (localStorage.getItem("et-subType")!=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
-            //this means that user registered sw, lets add a our username to the sw
-            var reqAdd = new XMLHttpRequest();
-            var bodyAdd = {
-              u:localStorage.getItem("tutor"),
-              user:localStorage.getItem("user")
-            }
-            reqAdd.open("POST",window.location.origin+"/et-addSw");
-            reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-            reqAdd.send(JSON.stringify(bodyAdd));
-            localStorage.setItem("et-fullSw","true");
           }
         }
       })
