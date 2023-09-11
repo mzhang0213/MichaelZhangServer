@@ -142,14 +142,14 @@
               })
             });
             return swRegistration;
-          }else{
-            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-              registration.addEventListener("updatefound",()=>{
-                registration.update();
-              })
-            });
-            return swRegistration;
           }
+        }else{
+          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+            registration.addEventListener("updatefound",()=>{
+              registration.update();
+            })
+          });
+          return swRegistration;
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){

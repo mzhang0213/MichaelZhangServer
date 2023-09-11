@@ -137,20 +137,22 @@
             }
           }
           if (found){
-            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
+            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
               registration.addEventListener("updatefound",()=>{
                 registration.update();
               })
             });
             return swRegistration;
-          }else{
-            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
-              registration.addEventListener("updatefound",()=>{
-                registration.update();
-              })
-            });
           }
-        }/*else{
+        }else{
+          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
+            registration.addEventListener("updatefound",()=>{
+              registration.update();
+            })
+          });
+        }
+        
+        /*else{
           if (localStorage.getItem("et-subType")=="user" && localStorage.getItem("et-fullSw")!=="true"){
             //this means that user registered sw, lets add a our username to the sw
             var reqAdd = new XMLHttpRequest();
