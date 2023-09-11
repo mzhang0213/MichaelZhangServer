@@ -97,7 +97,6 @@ const urlB64ToUint8Array = base64String => {
 				client.postMessage({}) //not finished
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
-				alertError();
 			}
 		})
 	  })
