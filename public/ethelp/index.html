@@ -95,8 +95,7 @@
 
       var req = new XMLHttpRequest();
       var body = {
-        user:localStorage.getItem("et-user"),
-        tutor:localStorage.getItem("et-tutor")
+        user:localStorage.getItem("et-user")
       }
       req.open("POST",window.location.origin+"/et-unregister");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -104,14 +103,10 @@
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
-          localStorage.removeItem("et-tutor");
-          localStorage.removeItem('et-first-tutor');
-          localStorage.removeItem('et-last-tutor');
           localStorage.removeItem('et-user');
           localStorage.removeItem('et-first');
           localStorage.removeItem('et-last');
           localStorage.removeItem("et-fullSw");
-          localStorage.removeItem('et-subType');
           window.location.reload();
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
@@ -133,14 +128,14 @@
     const registerServiceWorker = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length===0){
-          localStorage.setItem("et-subType","user")
           const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
             registration.addEventListener("updatefound",()=>{
               registration.update();
             })
           });
           return swRegistration;
-        }else{
+        }
+        /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
             //this means that tutor registered sw, lets add a our username to the sw
             var reqAdd = new XMLHttpRequest();
@@ -153,7 +148,7 @@
             reqAdd.send(JSON.stringify(bodyAdd));
             localStorage.setItem("et-fullSw","true");
           }
-        }
+        }*/
       })
     }
     const requestNotificationPermission = async () => {
@@ -182,7 +177,7 @@
         if (tutors[i].user===event.data.updatedUser.user){
           tutors[i].refreshed=true;
           tutors[i].date=event.data.updatedUser.date;
-        }
+        }{}
       }
     });
   </script>

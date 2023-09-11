@@ -369,7 +369,7 @@ app.post("/et-connect",async (req,res)=>{
 			var db_subs = currContent.subs;
 			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
 			for (var i=0;i<db_subs.length;i++){
-				if (db_subs[i].user===req.body.tutor || db_subs[i].tutor===req.body.tutor){
+				if (db_subs[i].tutor===req.body.tutor){
 					//found the tutor to push sub to that tutor's sw
 					var request = {
 						newRequest:{
@@ -434,7 +434,7 @@ app.post("/et-confirm",async (req,res)=>{
 		console.log(e);
 	}
 })
-
+/*
 app.post("/et-addSw",async (req,res)=>{
 	var msg = {};
 	//updating sw registration at req.body.oldUser, adding in req.body.user
@@ -472,7 +472,7 @@ app.post("/et-addSw",async (req,res)=>{
 	}catch (e){
 		console.log(e);
 	}
-})
+})*/
 
 // HIPPO HACK
 

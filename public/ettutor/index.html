@@ -96,7 +96,6 @@
 
       var req = new XMLHttpRequest();
       var body = {
-        user:localStorage.getItem("et-user"),
         tutor:localStorage.getItem("et-tutor")
       }
       req.open("POST",window.location.origin+"/et-unregister");
@@ -108,11 +107,7 @@
           localStorage.removeItem("et-tutor");
           localStorage.removeItem('et-first-tutor');
           localStorage.removeItem('et-last-tutor');
-          localStorage.removeItem('et-user');
-          localStorage.removeItem('et-first');
-          localStorage.removeItem('et-last');
           localStorage.removeItem("et-fullSw");
-          localStorage.removeItem('et-subType');
           window.location.reload();
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
@@ -134,14 +129,13 @@
     const registerServiceWorker = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length===0){
-          localStorage.setItem("et-subType","tutor")
           const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
             registration.addEventListener("updatefound",()=>{
               registration.update();
             })
           });
           return swRegistration;
-        }else{
+        }/*else{
           if (localStorage.getItem("et-subType")=="user" && localStorage.getItem("et-fullSw")!=="true"){
             //this means that user registered sw, lets add a our username to the sw
             var reqAdd = new XMLHttpRequest();
@@ -154,7 +148,7 @@
             reqAdd.send(JSON.stringify(bodyAdd));
             localStorage.setItem("et-fullSw","true");
           }
-        }
+        }*/
       })
     }
     const requestNotificationPermission = async () => {
