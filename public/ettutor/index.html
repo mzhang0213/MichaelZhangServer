@@ -248,39 +248,54 @@
   <!--tutor panel-->
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:1000px;">
     <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-violet-500 p-6">Requests</p>
-    <div id="requestsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
+    <div id="requestsBox" class="relative flex flex-center items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
     var totalRequests=0;
     var createRequest = function(student){
       //username, first, last, grade, subjects
       var c = document.createElement("div");
-      c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-pink-500 to-violet-500";
-      c.style.width="80%";
+      c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-pink-300 to-violet-400";
+      c.style.width="90%";
       c.style.padding="3px;"
       c.id="request"+(totalRequests++);
 
       var name = document.createElement("h1");
-      name.className="relative w-full text-xl font-bold";
+      name.className="relative w-full text-2xl font-bold";
       name.innerHTML=`${student.first}`;
 
       var time = document.createElement("p");
-      time.className="relative w-full text-sm mt-1 mb-2";
-      time.innerHTML=student.time;
+      time.className="relative w-full text-sm mt-1 opacity-60";
+      var currTime = new Date();
+      time.innerHTML=((currTime.getMonth())+"/"+(currTime.getDate())+"/"+(currTime.getFullYear()).toString().substring(2)) + " - " + (currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
+
+      var ago = document.createElement("p");
+      ago.className="relative w-full text-sm italic mt-1 opacity-60";
+      ago.innerHTML="request sent 0 seconds ago";
+      
+      setInterval(function(){
+        var secs = (parseInt(ago.innerHTML.substring(13,ago.innerHTML.length-11))+1);
+        if (secs>60){
+          //delete!
+          c.remove();
+        }else{
+          ago.innerHTML="request sent " + secs + " seconds ago";
+        }
+      },1000)
 
       var message = document.createElement("p");
       message.className="relative w-full text-lg mt-1 mb-2";
       message.innerHTML=student.message;
 
       var cc = document.createElement("div"); //connectContainer
-      c.className="relative mt-2 h-fit flex flex-row justify-end text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
-      cc.style.width="80%";
+      cc.style.width="100%";
+      cc.className="relative mt-4 flex flex-row justify-end";
 
       var connect = document.createElement("button");
-      connect.className="relative px-2 py-1 text-center text-md";
+      connect.className="relative p-1 text-center text-md";
       connect.id="connect";
       connect.style.borderRadius="8px";
-      connect.style.border="1px solid black";
+      connect.style.border="2px solid black";
       connect.innerHTML="Connect!"
 
       //FINISH THIS
@@ -301,15 +316,11 @@
           }
         })
       })
-      //this autoremove
-      setTimeout(function(){
-        //FIX FIX
-        //no fucking idea how to self-destruct
-      },60*1000);
       cc.appendChild(connect);
 
       c.appendChild(name);
       c.appendChild(time);
+      c.appendChild(ago);
       c.appendChild(message);
       c.appendChild(cc);
       gebi("requestsBox").appendChild(c);
