@@ -127,20 +127,29 @@
     }
     const registerServiceWorker = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
-        var found = false;
-        for (var i=0;i<registrations.length;i++){
-          if (registrations[i].scope===window.location.origin+"/ettutor/"){
-            //this one has not been registered yet
-            found = true;
+        if (registrations.length>0){
+          var found = false;
+          for (var i=0;i<registrations.length;i++){
+            if (registrations[i].scope!==window.location.origin+"/ethelp/"){
+              //this one has not been registered yet
+              found = true;
+            }
           }
-        }
-        if (found){
-          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-            registration.addEventListener("updatefound",()=>{
-              registration.update();
-            })
-          });
-          return swRegistration;
+          if (found){
+            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+              registration.addEventListener("updatefound",()=>{
+                registration.update();
+              })
+            });
+            return swRegistration;
+          }else{
+            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+              registration.addEventListener("updatefound",()=>{
+                registration.update();
+              })
+            });
+            return swRegistration;
+          }
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
