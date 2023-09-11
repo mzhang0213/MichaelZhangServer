@@ -128,8 +128,15 @@
     }
     const registerServiceWorker = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
-        if (registrations.length===0){
-          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
+        var found = false;
+        for (var i=0;i<registrations.length;i++){
+          if (registrations[i].scope===window.location.origin+"/ethelp/"){
+            //this one has not been registered yet
+            found = true;
+          }
+        }
+        if (found){
+          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
             registration.addEventListener("updatefound",()=>{
               registration.update();
             })
