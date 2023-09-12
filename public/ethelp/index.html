@@ -449,13 +449,14 @@
                 tutor:tutorUser,
                 subjects:helpSubjects
               }
+              console.log(bodyConnect)
               connectReq.open("POST",window.location.origin+"/et-connect");
               connectReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
               connectReq.send(JSON.stringify(bodyConnect));
               connectReq.addEventListener("readystatechange", ()=>{
                 if (connectReq.status === 200 && connectReq.readyState === 4) {
                   var nobody = JSON.parse(connectReq.responseText);
-                  if (body.error===0){
+                  if (nobody.error===0){
                     alert("request successfully sent! tutor will be with you shortly");
                     gebi("dimScreen").dispatchEvent(new Event("click"));
                     //UPDATE THE BOX THAT SAYS OUTGOING REQUESTS

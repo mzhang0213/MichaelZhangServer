@@ -80,21 +80,15 @@ const urlB64ToUint8Array = base64String => {
   self.addEventListener("push", function(event) {
 	if (event.data) {
 	  var b = (event.data.json())
-	  console.log("got push message, data:");
-	  console.log(b);
 	  //showLocalNotification(b.title, b.body, self.registration);
 	  self.clients.matchAll().then((clients) => {
-		console.log("clients " + clients);
+		console.log("clients"+clients.length);
 		clients.forEach((client) => {
 			console.log("client url: " + client.url);
-			if (b.action==="online" && client.url===self.location.origin+"/ethelp/"){
-				client.postMessage({updatedUser:b.updatedUser})
-			
-			}else if (b.action==="connect" && client.url===self.location.origin+"/ettutor/"){
+			if (b.action==="connect" && client.url===self.location.origin+"/ettutor/"){
 				client.postMessage({newRequest:b.newRequest});
+				console.log(b);
 				
-			}else if (b.action==="confirm" && client.url===self.location.origin+"/ethelp/"){
-				client.postMessage({}) //not finished
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
 			}
