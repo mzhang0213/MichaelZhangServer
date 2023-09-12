@@ -91,7 +91,7 @@ const urlB64ToUint8Array = base64String => {
 
 			}else if (b.action==="confirm" && client.url===self.location.origin+"/ethelp/"){
 				console.log(b);
-				client.postMessage({}) //not finished
+				client.postMessage({confirm:b.confirm}) //not finished
 
 			}else{
 				console.log("webpush action not coded in the sw which is fine");

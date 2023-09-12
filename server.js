@@ -381,6 +381,7 @@ app.post("/et-connect",async (req,res)=>{
 							user:req.body.user,
 							first:req.body.first,
 							message:req.body.message,
+							time:req.body.time,
 							subjects:req.body.subjects
 						},
 						action:"connect"
@@ -415,10 +416,11 @@ app.post("/et-confirm",async (req,res)=>{
 			for (var i=0;i<db_subs.length;i++){
 				if (db_subs[i].user===req.body.user){
 					var request = {
-						newRequest:{
+						confirm:{
 							user:req.body.user,
 							first:req.body.first,
 							message:req.body.message,
+							time:req.body.time,
 							subjects:req.body.subjects
 						},
 						action:"connect"

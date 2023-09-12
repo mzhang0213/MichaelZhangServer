@@ -188,12 +188,28 @@
     }
     main();
 
-    var tutors = [];
+    var requests = [];
+    var requests = [];
+    var totalRequests=0;
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.newRequest > .user, .first, .,message, .subjects
       console.log("New tutor request!!");
       console.log(event.data);
-      createRequest(event.data.newRequest);
+      var found=-1;
+      for (var i=0;i<requests.length;i++){
+        if (requests[i].user===event.data.newRequest.user){
+          //same, just replace
+          found=i;
+        }
+      }
+      if (found<0){
+        event.data.newRequest.id="request"+totalRequests++;
+        requests.push(event.data.newRequest);
+        createRequest(event.data.newRequest,event.data.newRequest.id);
+      }else{
+          requests[found]=event.data.newRequest;
+        createRequest(event.data.newRequest,requests[found].id);
+      }
     });
   </script>
 
@@ -265,14 +281,13 @@
     <div id="requestsBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
-    var totalRequests=0;
-    var createRequest = function(student){
+    var createRequest = function(student,id){
       //username, first, last, grade, subjects
       var c = document.createElement("div");
       c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-pink-300 to-violet-400";
       c.style.width="90%";
       c.style.padding="3px;"
-      c.id="request"+(totalRequests++);
+      c.id=id;
 
       var name = document.createElement("h1");
       name.className="relative w-full text-2xl font-bold";
@@ -280,7 +295,7 @@
 
       var time = document.createElement("p");
       time.className="relative w-full text-sm mt-1 opacity-60";
-      var currTime = new Date();
+      var currTime = new Date(student.time);
       time.innerHTML=((currTime.getMonth()+1)+"/"+(currTime.getDate())+"/"+(currTime.getFullYear()).toString().substring(2)) + " - " + (currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
 
       var ago = document.createElement("p");
@@ -314,16 +329,25 @@
 
       //FINISH THIS
       connect.addEventListener("click",function(){
-        var confirmReq = new XMLHttpRequest();
-        var bodyConfirm = {
-        
+        var userId=this.parentElement.parentElement.id;
+        var bodyConfirm = {}
+        for (var i=0;i<requests.length;i++){
+          if (requests[i].id===userId){
+            bodyConfirm=requests[i];
+          }
         }
+        if (bodyConfirm.user===undefined)alert("could not find user some sort of error\n")
+        var confirmReq = new XMLHttpRequest();
         confirmReq.open("POST",window.location.origin+"/et-confirm");
         confirmReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         confirmReq.send(JSON.stringify(bodyConfirm));
         confirmReq.addEventListener("readystatechange", ()=>{
           if (confirmReq.status === 200 && confirmReq.readyState === 4) {
             var body = JSON.parse(confirmReq.responseText);
+            alert("confirmed! sending you to the chat room, student will be there shortly :)");
+
+            //DO THE FREAKING CHAT ROOM HERE
+
           } else if (confirmReq.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+confirmReq.responseText);
             alert("please ask michael for help oh noes")
