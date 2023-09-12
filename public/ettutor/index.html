@@ -262,7 +262,7 @@
   <!--tutor panel-->
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:1000px;">
     <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-violet-500 p-6">Requests</p>
-    <div id="requestsBox" class="relative flex flex-center items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
+    <div id="requestsBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
   </div>
   <script>
     var totalRequests=0;
@@ -281,7 +281,7 @@
       var time = document.createElement("p");
       time.className="relative w-full text-sm mt-1 opacity-60";
       var currTime = new Date();
-      time.innerHTML=((currTime.getMonth())+"/"+(currTime.getDate())+"/"+(currTime.getFullYear()).toString().substring(2)) + " - " + (currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
+      time.innerHTML=((currTime.getMonth()+1)+"/"+(currTime.getDate())+"/"+(currTime.getFullYear()).toString().substring(2)) + " - " + (currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
 
       var ago = document.createElement("p");
       ago.className="relative w-full text-sm italic mt-1 opacity-60";
