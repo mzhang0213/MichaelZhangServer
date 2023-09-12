@@ -374,7 +374,7 @@ app.post("/et-connect",async (req,res)=>{
 			var db_subs = currContent.subs;
 			//for all of the tutor sw subs, see which one is online and push to their worker that req has come in
 			for (var i=0;i<db_subs.length;i++){
-				if (db_subs[i].tutor===req.body.tutor){
+				if (db_subs[i].user===req.body.tutor){
 					//found the tutor to push sub to that tutor's sw
 					var request = {
 						newRequest:{
