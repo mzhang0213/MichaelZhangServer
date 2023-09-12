@@ -456,7 +456,7 @@
                 if (connectReq.status === 200 && connectReq.readyState === 4) {
                   var nobody = JSON.parse(connectReq.responseText);
                   if (body.error===0){
-                    console.log("request successfully sent! will be with you shortly");
+                    alert("request successfully sent! tutor will be with you shortly");
                     gebi("dimScreen").dispatchEvent(new Event("click"));
                     //UPDATE THE BOX THAT SAYS OUTGOING REQUESTS
                     //make the tutor's panel dimmed
