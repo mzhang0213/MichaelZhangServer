@@ -30,6 +30,11 @@ const client = new MongoClient(uri, {
   }
 });
 
+const imDone = async function(){
+	setTimeout(async function(){
+		await client.close();
+	},5000)
+}
 
 //ET help
 
@@ -75,9 +80,9 @@ app.post("/et-tutor",async(req,res)=>{
 			await db_online.updateOne(filter,updateDoc);
 
 			msg.error=0;
-		})().then(async function(){
-			await client.close()
 			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone()
 		})
 	}catch (e){
 		console.log(e);
@@ -115,7 +120,7 @@ app.post("/et-tutorLogin", async (req,res)=>{
 				}
 				res.send(JSON.stringify(msg))
 			}).then(async function(){
-				await client.close();
+				imDone();
 			})
 		})()
 	} catch(error) {
@@ -138,7 +143,7 @@ app.get("/et-getTutors",async (req,res)=>{
 			msg.online=online;
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -166,7 +171,7 @@ app.post("/et-getTutor",async (req,res)=>{
 			}
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -225,7 +230,7 @@ app.post("/et-online",async (req,res)=>{
 			}
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
@@ -271,7 +276,7 @@ app.post("/et-offline",async (req,res)=>{
 			}
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	} catch(error) {
 		// Ensures that the client will close when you finish/error
@@ -313,7 +318,7 @@ app.post("/et-save-sub",async(req,res)=>{
 			}
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -350,7 +355,7 @@ app.post("/et-unregister",async(req,res)=>{
 			}
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -390,7 +395,7 @@ app.post("/et-connect",async (req,res)=>{
 			}
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -428,7 +433,7 @@ app.post("/et-confirm",async (req,res)=>{
 			}
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
@@ -467,7 +472,7 @@ app.post("/et-addSw",async (req,res)=>{
 			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
-			await client.close();
+			imDone();
 		})
 	}catch (e){
 		console.log(e);
