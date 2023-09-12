@@ -33,7 +33,7 @@ const client = new MongoClient(uri, {
 const imDone = async function(){
 	setTimeout(async function(){
 		await client.close();
-	},5000)
+	},1000)
 }
 
 //ET help
