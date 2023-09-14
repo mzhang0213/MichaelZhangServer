@@ -250,7 +250,7 @@
   <!--margin-->
   <div class="relative my-12 flex flex-row items-center" width="100%;">
     <p id="welcome" class="relative ml-4 text-white text-lg font-bold w-6/12"></p>
-    <div id="outgoingBox" class="relative flex flex-col items-center mr-4 w-5/12 rounded-xl bg-gray-600" style="height:150px;">
+    <div class="relative flex flex-col items-center mr-4 w-5/12 p-4 rounded-xl bg-gray-600" style="height:150px;">
       <p class="relative text-xl text-gray-100 font-bold w-full">Outgoing Requests</p>
       <div id="outgoingBox" class="relative flex flex-col bg-gray-300 text-white w-full rounded-2xl"></div>
     </div>
@@ -601,6 +601,26 @@
 
     var createOutgoing = function(request){
       var c = document.createElement("div");
+      c.className="relative flex flex-col justify-start items-center";
+      
+      var title = document.createElement("p");
+      title.className="relative text-lg w-fit h-fit"
+
+      var desc = document.createElement("p");
+      desc.className="relative text-sm w-fit h-fit mb-3"
+
+      c.appendChild(title);
+      c.appendChild(desc);
+      gebi("outgoingBox").appendChild(c);
+    }
+
+    var test = {
+      user:"MZ_123",
+      first:"Michael",
+      message:"Pls gib hap",
+      tutor:"MichaelZ-Homem8h",
+      time:Date.now(),
+      subjects:["Precalculus","Algebra II"]
     }
 
     gebi("dimScreen").addEventListener("click",function(){
