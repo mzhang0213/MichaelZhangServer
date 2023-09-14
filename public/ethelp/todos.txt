@@ -1,0 +1,13 @@
+todos:
+
+-code notifications in the service workers for the accepted requests (ethelp client) / incoming requests (ettutor)
+
+-do better greetings than "hi xxx"
+	-come up with some and randomly choose :D
+
+-make enter submit form
+
+-dimscreen: on element remove due to timeout, check if tutor being selected w/ dimscreen on is getting removed, if ya then close dimscreen
+
+-for buttons and server-glitchable objects, do mouseup disable cuz i dont want no bozos shittin on my server
+	-logout, connect, connect (tutor)
