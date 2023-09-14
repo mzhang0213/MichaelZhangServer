@@ -249,10 +249,15 @@
   
   <!--margin-->
   <div class="relative my-12 flex flex-row items-center" width="100%;">
-    <p id="welcome" class="relative ml-4 text-white text-lg font-bold w-6/12"></p>
-    <div class="relative flex flex-col items-center mr-4 w-5/12 p-4 rounded-xl bg-gray-600" style="height:150px;">
-      <p class="relative text-xl text-gray-100 font-bold w-full">Outgoing Requests</p>
-      <div id="outgoingBox" class="relative flex flex-col bg-gray-300 text-white w-full rounded-2xl"></div>
+    <!--div struct to create 50/50 split and then children can flex to each side of screen ez-->
+    <div class="relative left-0 w-6/12 flex flex-row justify-start h-fit">
+      <p id="welcome" class="relative ml-4 text-white text-lg font-bold w-6/12"></p>
+    </div>
+    <div class="relative left-0 w-6/12 flex flex-row justify-end h-fit">
+      <div class="relative flex flex-col items-center mr-6 w-10/12 p-4 rounded-xl bg-gray-600" style="height:150px;">
+        <p class="relative text-xl text-gray-100 font-bold w-full mb-2">Outgoing Requests</p>
+        <div id="outgoingBox" class="relative flex flex-col text-white w-full rounded-2xl"></div>
+      </div>
     </div>
   </div>
   <script>
@@ -446,12 +451,20 @@
               }
               var tutorId=this.parentElement.parentElement.parentElement.id;
               var tutorUser = "";
+              var tutorName = "";
               for (var i=0;i<tutors.length;i++){
                 if (tutors[i].id===tutorId){
                   tutorUser=tutors[i].user;
                 }
               }
+              var containerChildren = this.parentElement.parentElement.parentElement.children;
+              for (var i=0;i<containerChildren.length;i++){
+                if (containerChildren[i].id!=="newSide"){
+                  tutorName = containerChildren[i].getElementsByTagName("h1")[0].innerHTML;
+                }
+              }
               if (tutorUser===""){alert("problem: could not find tutor id and thus tutor username")}
+              if (tutorUser===""){alert("problem: could not find tutor name")}
               var connectReq = new XMLHttpRequest();
               console.log("sending req");
               var bodyConnect = {
@@ -475,6 +488,7 @@
 
                     //UPDATE THE BOX THAT SAYS OUTGOING REQUESTS
                     //make the tutor's panel dimmed
+                    bodyConnect.tutorName=tutorName;
                     createOutgoing(bodyConnect);
                     
                   }else{
@@ -599,24 +613,58 @@
       gebi("tutorsBox").appendChild(outer);
     }
 
+    /*
+    user:localStorage.getItem("et-user"),
+    first:localStorage.getItem("et-first"),
+    message:val,
+    tutor:tutorUser,
+    time:Date.now(),
+    subjects:helpSubjects,
+    tutorName:tutor'sName
+    */
     var createOutgoing = function(request){
+      var main = document.createElement("div");
+      main.className="relative flex flex-col justify-start items-start mb-3 opacity-60 text-white";
+      
       var c = document.createElement("div");
-      c.className="relative flex flex-col justify-start items-center";
+      c.className="relative flex flex-row justify-start items-center";
       
       var title = document.createElement("p");
-      title.className="relative text-lg w-fit h-fit"
+      title.className="relative text-lg w-fit h-fit mr-3 font-bold"
+      title.innerHTML=request.tutorName;
 
       var desc = document.createElement("p");
-      desc.className="relative text-sm w-fit h-fit mb-3"
+      desc.className="relative text-sm w-fit h-fit italic"
+      desc.innerHTML=request.message;
+
+      var time = document.createElement("p");
+      time.className="relative text-sm w-fit h-fit"
+      time.innerHTML="requested 0s ago";
+
+      setInterval(function(){
+        var secs = (parseInt(time.innerHTML.substring(10,time.innerHTML.length-5))+1);
+        if (secs>60){
+          setTimeout(function(){
+            //PUT IF STATEMENT HERE: IF CONNECTION RESOLVED DONT SHOW THIS ALERT MESSAGE
+            main.remove();
+            alert("request for "+title.innerHTML+" timed out. sorry :( :(")
+          },5000)
+        }else{
+          time.innerHTML="requested "+secs+"s ago";
+        }
+      },1000)
 
       c.appendChild(title);
       c.appendChild(desc);
-      gebi("outgoingBox").appendChild(c);
+      main.appendChild(c);
+      main.appendChild(time);
+      gebi("outgoingBox").appendChild(main);
     }
 
     var test = {
       user:"MZ_123",
       first:"Michael",
+      tutorName:"Michael Z.",
       message:"Pls gib hap",
       tutor:"MichaelZ-Homem8h",
       time:Date.now(),
