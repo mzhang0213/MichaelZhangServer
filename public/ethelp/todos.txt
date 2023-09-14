@@ -11,3 +11,5 @@ todos:
 
 -for buttons and server-glitchable objects, do mouseup disable cuz i dont want no bozos shittin on my server
 	-logout, connect, connect (tutor)
+
+-make the chat id system work

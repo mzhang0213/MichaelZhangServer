@@ -423,7 +423,7 @@ app.post("/et-confirm",async (req,res)=>{
 							time:req.body.time,
 							subjects:req.body.subjects
 						},
-						action:"connect"
+						action:"confirm"
 					}
 					msg.error=0;
 					sendNotification(db_subs[i].sub,request);

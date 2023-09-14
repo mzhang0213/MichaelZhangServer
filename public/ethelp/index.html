@@ -641,7 +641,7 @@
       time.className="relative text-sm w-fit h-fit"
       time.innerHTML="requested 0s ago";
 
-      setInterval(function(){
+      var intv = setInterval(function(){
         var secs = (parseInt(time.innerHTML.substring(10,time.innerHTML.length-5))+1);
         if (secs>60){
           setTimeout(function(){
@@ -649,6 +649,7 @@
             main.remove();
             alert("request for "+title.innerHTML+" timed out. sorry :( :(")
           },5000)
+          clearInterval(intv);
         }else{
           time.innerHTML="requested "+secs+"s ago";
         }
