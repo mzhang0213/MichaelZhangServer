@@ -125,7 +125,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       if (reqTutor.status === 200 && reqTutor.readyState === 4) {
         var nobody = JSON.parse(reqTutor.responseText);
         //nobody.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
-        chatData.img=nobody.tutor.img;
+        chatData.img=nobody.tutor.image;
       } else if (reqTutor.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+reqTutor.responseText);
         alert("please ask michael for help oh noes")
@@ -239,7 +239,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
         div.style.justifyContent="end";
         pfp.style.marginLeft="5px";
         if (!lastTextMe) div.className+=" mt-6";
-        else div.className+="mt-1"
+        else div.className+=" mt-1"
         lastTextMe=true;
         div.appendChild(bubble);
         div.appendChild(pfp);
@@ -249,7 +249,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
         div.style.justifyContent="start";
         pfp.style.marginRight="5px";
         if (lastTextMe) div.className+=" mt-6";
-        else div.className+="mt-1"
+        else div.className+=" mt-1"
         lastTextMe=false;
         div.appendChild(pfp);
         div.appendChild(bubble);
