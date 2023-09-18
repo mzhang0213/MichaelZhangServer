@@ -281,11 +281,16 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
 
         var reqText = new XMLHttpRequest();
         var bodyText = {
-          text:inputText,
-          to:chatData.type
+          text:inputText
         }
-        if (chatData.type==="user") bodyText.user=chatData.user
-        else if (chatData.type==="tutor") bodyText.tutor=chatData.tutor
+        if (chatData.type==="user"){
+          bodyText.user=chatData.user
+          bodyText.to="tutor";
+        }
+        else if (chatData.type==="tutor"){
+          bodyText.tutor=chatData.tutor
+          bodyText.to="user";
+        }
         reqText.open("POST",window.location.origin+"/et-text");
         reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         reqText.send(JSON.stringify(bodyText));
