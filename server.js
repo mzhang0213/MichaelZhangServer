@@ -539,11 +539,11 @@ app.post("/et-text",async (req,res)=>{
 })
 
 app.get("/ethelp/chat/*",(req,res)=>{
-	res.sendFile(__dirname+"/ethelp/chat.html");
+	res.sendFile("/ethelp/chat.html");
 })
 
 app.get("/ettutor/chat/*",(req,res)=>{
-	res.sendFile(__dirname+"/ethelp/chat.html");
+	res.sendFile("/ethelp/chat.html");
 })
 
 
