@@ -229,9 +229,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       var pfp = document.createElement("img");
       pfp.className="rounded-xl"
       pfp.style.height="45px";
-      if (img==="default"){
-        pfp.src=window.location.origin+"/ethelp/default.png";
-      }
+      if (img==="default") pfp.src=window.location.origin+"/ethelp/default.png";
       else pfp.src=img;
     
       if (me){
@@ -283,13 +281,15 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
 
         var reqText = new XMLHttpRequest();
         var bodyText = {
-          text:inputText
+          text:inputText,
+          to:chatData.type
         }
         if (chatData.type==="user") bodyText.user=chatData.user
         else if (chatData.type==="tutor") bodyText.tutor=chatData.tutor
         reqText.open("POST",window.location.origin+"/et-text");
         reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         reqText.send(JSON.stringify(bodyText));
+        event.preventDefault();
       }
     })
 

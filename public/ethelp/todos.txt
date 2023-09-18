@@ -15,3 +15,5 @@ todos:
 -make the chat id system work
 
 -add exit session button
+
+-do some whitespace text processing

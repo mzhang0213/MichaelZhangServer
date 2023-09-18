@@ -503,7 +503,7 @@ app.post("/et-text",async (req,res)=>{
 			const currContent = await db.findOne();
 			var db_subs = currContent.subs;
 			for (var i=0;i<db_subs.length;i++){
-				if (db_subs[i].user===req.body.user){
+				if (req.body.to==="user"&&db_subs[i].user===req.body.user){
 					msg.error=0;
 					var request = {
 						text:{
@@ -514,11 +514,10 @@ app.post("/et-text",async (req,res)=>{
 					}
 					sendNotification(db_subs[i].sub,request);
 					break;
-				}else if (db_subs[i].user===req.body.tutor){
+				}else if (req.body.to==="tutor"&&db_subs[i].user===req.body.tutor){
 					msg.error=0;
 					var request = {
 						text:{
-							tutor:req.body.tutor,
 							text:req.body.text
 						},
 						action:"text"
