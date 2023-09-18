@@ -91,7 +91,7 @@ const urlB64ToUint8Array = base64String => {
 				
 			}else if (b.action==="text" && client.url.indexOf("ettutor/chat")!==0){
 				console.log(b);
-				client.postMessage({text:text});
+				client.postMessage({text:b.text});
 
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
