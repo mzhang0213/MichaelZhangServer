@@ -538,12 +538,14 @@ app.post("/et-text",async (req,res)=>{
 	}
 })
 
+var path = require("path");
+
 app.get("/ethelp/chat/*",(req,res)=>{
-	res.sendFile("/ethelp/chat.html");
+	res.sendFile(path.join(__dirname,"ethelp","chat.html"));
 })
 
 app.get("/ettutor/chat/*",(req,res)=>{
-	res.sendFile("/ethelp/chat.html");
+	res.sendFile(path.join(__dirname,"ethelp","chat.html"));
 })
 
 
