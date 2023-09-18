@@ -342,13 +342,14 @@
         confirmReq.send(JSON.stringify(bodyConfirm));
         confirmReq.addEventListener("readystatechange", ()=>{
           if (confirmReq.status === 200 && confirmReq.readyState === 4) {
-            var body = JSON.parse(confirmReq.responseText);
-            if (body.error===0){
-              requests[i].chatId=body.chatId;
+            var resBody = JSON.parse(confirmReq.responseText);
+            console.log(resBody);
+            if (resBody.error===0){
+              requests[i].chatId=resBody.chatId;
               requests[i].type="tutor";
               localStorage.setItem("et-chatData",JSON.stringify(requests[i]));
               alert("confirmed! sending you to the chat room, student will be there shortly :)");
-              window.location=window.location.origin+"/ettutor/chat/"+body.chatId;
+              window.location=window.location.origin+"/ettutor/chat/"+resBody.chatId;
             }else{
               alert("request confirmation failed");
             }

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <link id="favicon" rel="icon" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
@@ -57,7 +57,7 @@
     </div>
     <div class="relative left-0 w-6/12 flex flex-row justify-end">
       <!--right side-->
-      <img class="relative mr-3" src="./logo.png" style="width:80px;">
+      <img id="icon" class="relative mr-3" style="width:80px;">
     </div>
   </div>
 
@@ -66,7 +66,7 @@
       <p id="clockDate"></p>
       <p id="clockTime"></p>
     </div>
-    <img src="./clockIcon.png" style="width:100px;">
+    <img id="clockIcon" style="width:100px;">
   </div>
   <div class="relative z-10 flex flex-col items-center mb-8" style="width:100%; height:95vh;">
     <div class="relative flex flex-col items-center bg-gradient-to-tr from-blue-600 to-sky-300 rounded-xl h-fill overflow-auto" style="width:95%; height:80%; border:3px solid black">
@@ -74,7 +74,7 @@
       <div id="textsBox" class="relative flex flex-col justify-end w-full overflow-auto pl-28 pt-20 pr-28 pb-4" style="height:90%"></div>
       <div class="relative flex flex-row justify-center items-center w-full mb-4" style="min-height:10%">
         <p id="inputText" class="relative bg-white text-black w-11/12 p-1 ml-2 rounded-lg" contenteditable="true" role="textbox" spellcheck="true" style="overflow:auto;min-height:38px;max-height:70px;border:2px solid black;outline:none;resize:none; user-select: text; white-space: pre-wrap; word-break: break-word;"></p>
-        <img id="imgIcon" class="mr-2" src="./imgIcon.png" style="margin-left:10px; height:38px;">
+        <img id="imgIcon" class="mr-2" style="margin-left:10px; height:38px;">
       </div>
     </div>
   </div>
@@ -103,6 +103,10 @@
   </style>
 
   <script>
+    gebi("clockIcon").src=window.location.origin+"/ethelp/clockIcon.png";
+    gebi("imgIcon").src=window.location.origin+"/ethelp/imgIcon.png";
+    gebi("icon").src=window.location.origin+"/ethelp/icon.png";
+    gebi("favicon").href=window.location.origin+"/ethelp/logo.png";
     var chatData = JSON.parse(localStorage.getItem("et-chatData"));
 if (chatData.chatId!==window.location.href.substring(window.location.href.length-10,window.location.href.length)){
   gebi("clock").remove();
@@ -128,7 +132,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       }
     })
     gebi("title1").innerHTML="Chatting with "+chatData.tutorName;
-    gebi("title2").innerHTML="Chatting with "+chatData.message;
+    gebi("title2").innerHTML=chatData.message;
     if (chatData.subjects.length===0) gebi("subjectsBox").innerHTML="No specific subject help needed";
     else {
       gebi("subjectsBox").innerHTML="Subjects: ";

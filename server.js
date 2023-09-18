@@ -437,7 +437,7 @@ app.post("/et-confirm",async (req,res)=>{
 						action:"confirm"
 					}
 					msg.error=0;
-					msg.chatId=chatId
+					msg.chatId=chatId;
 					sendNotification(db_subs[i].sub,request);
 					break;
 				}
