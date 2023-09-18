@@ -284,11 +284,11 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
           text:inputText
         }
         if (chatData.type==="user"){
-          bodyText.user=chatData.user
+          bodyText.tutor=chatData.tutor
           bodyText.to="tutor";
         }
         else if (chatData.type==="tutor"){
-          bodyText.tutor=chatData.tutor
+          bodyText.user=chatData.user
           bodyText.to="user";
         }
         reqText.open("POST",window.location.origin+"/et-text");

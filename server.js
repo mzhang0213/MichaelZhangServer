@@ -507,7 +507,6 @@ app.post("/et-text",async (req,res)=>{
 					msg.error=0;
 					var request = {
 						text:{
-							user:req.body.user,
 							text:req.body.text
 						},
 						action:"text"
