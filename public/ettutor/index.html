@@ -189,7 +189,6 @@
     main();
 
     var requests = [];
-    var requests = [];
     var totalRequests=0;
     navigator.serviceWorker.addEventListener("message", (event) => {
       //data from event.data.newRequest > .user, .first, .,message, .subjects
@@ -207,7 +206,7 @@
         requests.push(event.data.newRequest);
         createRequest(event.data.newRequest,event.data.newRequest.id);
       }else{
-          requests[found]=event.data.newRequest;
+        requests[found]=event.data.newRequest;
         createRequest(event.data.newRequest,requests[found].id);
       }
     });
@@ -344,10 +343,15 @@
         confirmReq.addEventListener("readystatechange", ()=>{
           if (confirmReq.status === 200 && confirmReq.readyState === 4) {
             var body = JSON.parse(confirmReq.responseText);
-            alert("confirmed! sending you to the chat room, student will be there shortly :)");
-
-            //DO THE FREAKING CHAT ROOM HERE
-
+            if (body.error===0){
+              requests[i].chatId=body.chatId;
+              requests[i].type="tutor";
+              localStorage.setItem("et-chatData",JSON.stringify(requests[i]));
+              alert("confirmed! sending you to the chat room, student will be there shortly :)");
+              window.location=window.location.origin+"/ettutor/chat/"+body.chatId;
+            }else{
+              alert("request confirmation failed");
+            }
           } else if (confirmReq.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+confirmReq.responseText);
             alert("please ask michael for help oh noes")

@@ -200,9 +200,12 @@
           }
         }
       }else if (event.data.confirm){
-        
+        var data = event.data.confirm;
+        data.type="user";
+        localStorage.setItem("et-chatData",JSON.stringify(event.data.confirm));
+        alert(event.data.confirm.first+" has accepted your request! sending you to the chat room...");
+        window.location=window.location.origin+"/ethelp/chat/"+event.data.confirm.chatId;
       }
-      
     });
   </script>
 
@@ -472,6 +475,7 @@
                 first:localStorage.getItem("et-first"),
                 message:val,
                 tutor:tutorUser,
+                tutorName:tutorName,
                 time:Date.now(),
                 subjects:helpSubjects
               }

@@ -380,6 +380,8 @@ app.post("/et-connect",async (req,res)=>{
 						newRequest:{
 							user:req.body.user,
 							first:req.body.first,
+							tutor:req.body.tutor,
+							tutorName:req.body.tutorName,
 							message:req.body.message,
 							time:req.body.time,
 							subjects:req.body.subjects
@@ -403,6 +405,10 @@ app.post("/et-connect",async (req,res)=>{
 	}
 })
 
+var rndNum = (lo,hi)=>{
+	return Math.floor(Math.random()*(hi+1))+lo;
+}
+
 app.post("/et-confirm",async (req,res)=>{
 	var msg = {};
 	//posting tutor want to connect: req.body.tutor
@@ -415,17 +421,23 @@ app.post("/et-confirm",async (req,res)=>{
 			var db_subs = currContent.subs;
 			for (var i=0;i<db_subs.length;i++){
 				if (db_subs[i].user===req.body.user){
+					var chatId="";
+					for (var j=0;j<10;j++)chatId+=rndNum(0,9);
 					var request = {
 						confirm:{
 							user:req.body.user,
 							first:req.body.first,
+							tutor:req.body.tutor,
+							tutorName:req.body.tutorName,
 							message:req.body.message,
 							time:req.body.time,
-							subjects:req.body.subjects
+							subjects:req.body.subjects,
+							chatId:chatId
 						},
 						action:"confirm"
 					}
 					msg.error=0;
+					msg.chatId=chatId
 					sendNotification(db_subs[i].sub,request);
 					break;
 				}
@@ -481,7 +493,72 @@ app.post("/et-addSw",async (req,res)=>{
 	}
 })*/
 
+app.post("/et-text",async (req,res)=>{
+	//req.body.user || req.body.tutor , req.body.text
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_subs = currContent.subs;
+			for (var i=0;i<db_subs.length;i++){
+				if (db_subs[i].user===req.body.user){
+					msg.error=0;
+					var request = {
+						text:{
+							user:req.body.user,
+							text:req.body.text
+						},
+						action:"text"
+					}
+					sendNotification(db_subs[i].sub,request);
+					break;
+				}else if (db_subs[i].user===req.body.tutor){
+					msg.error=0;
+					var request = {
+						text:{
+							tutor:req.body.tutor,
+							text:req.body.text
+						},
+						action:"text"
+					}
+					sendNotification(db_subs[i].sub,request);
+					break;
+				}
+			}
+			if (msg.error===undefined){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+app.get("/ethelp/chat/*",(req,res)=>{
+	res.sendFile("./ethelp/chat.html");
+})
+
+app.get("/ettutor/chat/*",(req,res)=>{
+	res.sendFile("./ethelp/chat.html");
+})
+
+
+
+
+
+
+
 // HIPPO HACK
+
+
+
+
+
+
 
 
 app.post("/hh-login", async (req,res)=>{

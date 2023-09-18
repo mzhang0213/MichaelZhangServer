@@ -1,9 +1,372 @@
-<!--NOTE: DO I MAKE THE -->
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head></head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+        gebi("clock").remove()
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+        gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+      }else{
+        //lg++
+        gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+      }
+    }
+    window.onresize=resize;
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body>
+	<!--CHANGE BG ??-->
+  <div class="fixed left-0 top-0 bg-cover bg-gray-800" style="width:100%;height:100%;background-image:url('')"></div>
+  <div class="relative my-12 flex flex-row items-center" style="width:100%;">
+    <!--div struct to create 50/50 split and then children can flex to each side of screen ez-->
+    <div class="relative left-0 w-6/12 flex flex-row justify-start h-fill">
+      <div class="relative flex flex-col items-center ml-6 w-10/12 p-4 rounded-xl bg-gradient-to-b from-emerald-400 to-emerald-500">
+        <p id="title1" class="relative text-xl text-white font-bold w-full mb-2"></p>
+        <!--note: since i did not standardize subjects being json w/ topic defined as well, these cannot be bubbles. sadge.-->
+        <p id="subjectsBox" class="relative flex flex-row text-md text-white w-full rounded-2xl mb-4"></p>
+        <p id="title2" class="relative text-sm text-white w-full italic"></p>
+      </div>
+    </div>
+    <div class="relative left-0 w-6/12 flex flex-row justify-end">
+      <!--right side-->
+      <img class="relative mr-3" src="./logo.png" style="width:80px;">
+    </div>
+  </div>
 
-  </body>
+  <div id="clock" class="absolute top-0 flex flex-row items-center w-fill h-fill">
+    <div id="clockStats" class="relative flex flex-col p-2 rounded-xl w-fill h-fill bg-white" style="border:2px solid black">
+      <p id="clockDate"></p>
+      <p id="clockTime"></p>
+    </div>
+    <img src="./clockIcon.png" style="width:100px;">
+  </div>
+  <div class="relative z-10 flex flex-col items-center mb-8" style="width:100%; height:95vh;">
+    <div class="relative flex flex-col items-center bg-gradient-to-tr from-blue-600 to-sky-300 rounded-xl h-fill overflow-auto" style="width:95%; height:80%; border:3px solid black">
+      <!--actual chat section-->
+      <div id="textsBox" class="relative flex flex-col justify-end w-full overflow-auto pl-28 pt-20 pr-28 pb-4" style="height:90%"></div>
+      <div class="relative flex flex-row justify-center items-center w-full mb-4" style="min-height:10%">
+        <p id="inputText" class="relative bg-white text-black w-11/12 p-1 ml-2 rounded-lg" contenteditable="true" role="textbox" spellcheck="true" style="overflow:auto;min-height:38px;max-height:70px;border:2px solid black;outline:none;resize:none; user-select: text; white-space: pre-wrap; word-break: break-word;"></p>
+        <img id="imgIcon" class="mr-2" src="./imgIcon.png" style="margin-left:10px; height:38px;">
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    #login{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #login:hover{
+      background-color:rgb(48, 194, 48);
+    }
+    #imgIcon{
+      opacity:1;
+    }
+    #imgIcon:hover{
+      opacity:0.75;
+    }
+  </style>
+
+  <script>
+    var chatData = JSON.parse(localStorage.getItem("et-chatData"));
+if (chatData.chatId!==window.location.substring(window.location.length-10-1,window.location.length)){
+  gebi("clock").remove();
+  alert("you are not permitted to chat here");
+} else{
+
+    var reqTutor = new XMLHttpRequest();
+    var bodyTutor = {
+      user:chatData.tutor,
+      id:""
+    }
+    reqTutor.open("POST",window.location.origin+"/et-getTutor");
+    reqTutor.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    reqTutor.send(JSON.stringify(bodyTutor));
+    reqTutor.addEventListener("readystatechange", ()=>{
+      if (reqTutor.status === 200 && reqTutor.readyState === 4) {
+        var nobody = JSON.parse(reqTutor.responseText);
+        //nobody.tutor is the tutor and data (ie the mongodb doc that contains the tutor's data)
+        chatData.img=nobody.tutor.img;
+      } else if (reqTutor.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+reqTutor.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+    gebi("title1").innerHTML="Chatting with "+chatData.tutorName;
+    gebi("title2").innerHTML="Chatting with "+chatData.message;
+    if (chatData.subjects.length===0) gebi("subjectsBox").innerHTML="No specific subject help needed";
+    else {
+      gebi("subjectsBox").innerHTML="Subjects: ";
+      for(var j=0;j<chatData.subjects.length;j++){
+        gebi("subjectsBox").innerHTML+=chatData.subjects[j]+" ";
+      }
+    }
+
+    function getTop(elem) { // crossbrowser version
+      var box = elem.getBoundingClientRect();
+      var body = document.body;
+      var docEl = document.documentElement;
+    
+      var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+      var clientTop = docEl.clientTop || body.clientTop || 0;
+      var top  = box.top +  scrollTop - clientTop;
+      return Math.round(top);
+    }
+    function getLeft(elem) { // crossbrowser version
+      var box = elem.getBoundingClientRect();
+      var body = document.body;
+      var docEl = document.documentElement;
+    
+      var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+      var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+      var left = box.left + scrollLeft - clientLeft;
+      return Math.round(left);
+    }
+    var getActualMonth = function(num){
+      switch (num){ case 0:return "January"; break;case 1: return "February"; break;case 2: return "March"; break;case 3: return "April"; break;case 4: return "May"; break;case 5: return "June"; break;case 6: return "July"; break;case 7: return "August"; break;case 8: return "September"; break;case 9: return "October"; break;case 10: return "November"; break;case 11: return "December"; break; }
+    }
+    var getActualDay = function(num){
+      switch (num){ case 0:return "Sunday"; break;case 1: return "Monday"; break;case 2: return "Tuesday"; break;case 3: return "Wednesday"; break;case 4: return "Thursday"; break;case 5: return "Friday"; break;case 6: return "Saturday"; break; }
+    }
+    var updateTime = function(){
+      var currTime = new Date();
+      gebi("clockDate").innerHTML="The date is "+getActualDay(currTime.getDay())+", "+(getActualMonth(currTime.getMonth())+" "+(currTime.getDate())+", "+(currTime.getFullYear()));
+      gebi("clockTime").innerHTML="It is currently "+(currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
+    }
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+      }
+      resize();
+      updateTime();
+      gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
+      gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+      setInterval(function(){
+        updateTime();
+      },60*1000)
+      gebi("clock").addEventListener("mouseover",function(event){
+        if (!(event.target.id==="clockStats"||event.target.id==="clockDate"||event.target.id==="clockTime")){
+          var dist=-70;
+          var steps = 10;
+          var i = 0;
+          var intv = setInterval(function(){
+            gebi("clock").style.top=(parseInt(gebi("clock").style.top.substring(0,gebi("clock").style.top.length-2))+(dist/steps))+"px";
+            if (i++>steps){
+              clearInterval(intv);
+              gebi("clock").style.top=(getTop(gebi("textsBox"))-40-80)+"px";
+            }
+          },10)
+        }
+      })
+      gebi("clock").addEventListener("mouseleave",function(){
+        if (!(event.target.id==="clockStats"||event.target.id==="clockDate"||event.target.id==="clockTime")){
+          var dist=70;
+          var steps = 10;
+          var i = 0;
+          var intv = setInterval(function(){
+            gebi("clock").style.top=(parseInt(gebi("clock").style.top.substring(0,gebi("clock").style.top.length-2))+(dist/steps))+"px";
+            if (i++>steps){
+              clearInterval(intv);
+              gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
+            }
+          },10)
+        }
+      })
+    }
+
+    var lastTextMe = false;
+    var createText = function(me,text,img){
+      var div = document.createElement("div");
+      div.className="relative w-full h-fill flex flex-row items-center";
+    
+      var bubble = document.createElement("div");
+      bubble.className="relative m-1 px-1 text-center text-sm rounded-2xl text-white w-fill";
+      bubble.style.minWidth="50px"
+      bubble.style.minHeight="20px"
+      bubble.style.paddingTop="5px"
+      bubble.style.paddingBottom="5px"
+      bubble.innerHTML=text;
+    
+      var pfp = document.createElement("img");
+      pfp.className="rounded-xl"
+      pfp.style.height="45px";
+      if (img==="default"){
+        pfp.src=window.location.origin+"/ethelp/default.png";
+      }
+      else pfp.src=img;
+    
+      if (me){
+        //copy insta jk
+        //right side
+        bubble.style.backgroundColor="#23599e";
+        div.style.justifyContent="end";
+        pfp.style.marginLeft="5px";
+        if (!lastTextMe) div.className+=" mt-6";
+        else div.className+="mt-1"
+        lastTextMe=true;
+        div.appendChild(bubble);
+        div.appendChild(pfp);
+      }else{
+        //left side
+        bubble.style.backgroundColor="#3c8af0";
+        div.style.justifyContent="start";
+        pfp.style.marginRight="5px";
+        if (lastTextMe) div.className+=" mt-6";
+        else div.className+="mt-1"
+        lastTextMe=false;
+        div.appendChild(pfp);
+        div.appendChild(bubble);
+      }
+      gebi("textsBox").appendChild(div);
+    }
+
+    var parseInput = function(text){
+      for (var i=text.length-1;i>=0;i--){
+        if (text.charAt(i)==="<"){
+          if (text.charAt(i+1)==="/"){
+            //del
+            text=text.substring(0,i)+(i+6>=text.length?"":text.substring(i+6,text.length));
+          }else{
+            text=text.substring(0,i)+"<br>"+(i+5>=text.length?"":text.substring(i+5,text.length));
+          }
+        }
+      }
+      return text;
+    }
+
+    gebi("inputText").addEventListener("keydown",function(event){
+      if (event.key==="Enter"){
+        //2 things: add bubble on my side, and post to server
+        var inputText = parseInput(gebi("inputText").innerHTML);
+        if (chatData.type==="user") createText(true,inputText,"default");
+        else if (chatData.type==="tutor") createText(true,inputText,chatData.img);
+
+        var reqText = new XMLHttpRequest();
+        var bodyText = {
+          text:inputText
+        }
+        if (chatData.type==="user") bodyText.user=chatData.user
+        else if (chatData.type==="tutor") bodyText.tutor=chatData.tutor
+        reqText.open("POST",window.location.origin+"/et-text");
+        reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        reqText.send(JSON.stringify(bodyText));
+      }
+    })
+
+    const check = () => {
+      if (!('serviceWorker' in navigator)) {
+        throw new Error('No Service Worker support!')
+      }
+      if (!('PushManager' in window)) {
+        throw new Error('No Push API Support!')
+      }
+    }
+    const registerServiceWorker = async () => {
+      navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
+        if (registrations.length>0){
+          var found = false;
+          for (var i=0;i<registrations.length;i++){
+            if (registrations[i].scope!==window.location.origin+"/ethelp/"){
+              //this one has not been registered yet
+              found = true;
+            }
+          }
+          if (found){
+            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+              registration.addEventListener("updatefound",()=>{
+                registration.update();
+              })
+            });
+            return swRegistration;
+          }
+        }else{
+          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+            registration.addEventListener("updatefound",()=>{
+              registration.update();
+            })
+          });
+          return swRegistration;
+        }
+        /*else{
+          if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
+            //this means that tutor registered sw, lets add a our username to the sw
+            var reqAdd = new XMLHttpRequest();
+            var bodyAdd = {
+              u:localStorage.getItem("et-tutor"),
+              user:localStorage.getItem("et-user")
+            }
+            reqAdd.open("POST",window.location.origin+"/et-addSw");
+            reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            reqAdd.send(JSON.stringify(bodyAdd));
+            localStorage.setItem("et-fullSw","true");
+          }
+        }*/
+      })
+    }
+    const requestNotificationPermission = async () => {
+      const permission = await window.Notification.requestPermission();
+      // value of permission can be 'granted', 'default', 'denied'
+      // granted: user has accepted the request
+      // default: user has dismissed the notification permission popup by clicking on x
+      // denied: user has denied the request.
+      if(permission !== 'granted'){
+          throw new Error('Permission not granted for Notification');
+      }
+    }
+    const main = async () => {
+      check()
+      await registerServiceWorker()
+      await requestNotificationPermission()
+    }
+    main();
+    navigator.serviceWorker.addEventListener("message",function(event){
+      //data from event.data.text > .user, .date
+      if (event.data.text){
+        if (chatData.type==="user") createText(false,event.data.text.text,chatData.img);
+        else if (chatData.type==="tutor") createText(false,event.data.text.text,"default");
+      }
+    })
+}
+  </script>
+  <style>
+    #a{
+      color:#3c8af0
+    }
+  </style>
+</body>
 </html>

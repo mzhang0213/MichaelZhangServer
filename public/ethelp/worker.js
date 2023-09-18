@@ -93,6 +93,10 @@ const urlB64ToUint8Array = base64String => {
 				console.log(b);
 				client.postMessage({confirm:b.confirm}) //not finished
 
+			}else if (b.action==="text" && client.url.indexOf("ethelp/chat")!==0){
+				console.log(b);
+				client.postMessage({text:b.text});
+				
 			}else{
 				console.log("webpush action not coded in the sw which is fine");
 

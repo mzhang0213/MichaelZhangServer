@@ -13,3 +13,5 @@ todos:
 	-logout, connect, connect (tutor)
 
 -make the chat id system work
+
+-add exit session button
