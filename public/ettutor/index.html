@@ -330,9 +330,11 @@
       connect.addEventListener("click",function(){
         var userId=this.parentElement.parentElement.id;
         var bodyConfirm = {}
+        var thisRequest = -1;
         for (var i=0;i<requests.length;i++){
           if (requests[i].id===userId){
-            bodyConfirm=requests[i];
+            thisRequest=i;
+            bodyConfirm=requests[thisRequest];
           }
         }
         if (bodyConfirm.user===undefined)alert("could not find user some sort of error\n")
@@ -345,9 +347,9 @@
             var resBody = JSON.parse(confirmReq.responseText);
             console.log(resBody);
             if (resBody.error===0){
-              requests[i].chatId=resBody.chatId;
-              requests[i].type="tutor";
-              localStorage.setItem("et-chatData",JSON.stringify(requests[i]));
+              requests[thisRequest].chatId=resBody.chatId;
+              requests[thisRequest].type="tutor";
+              localStorage.setItem("et-chatData",JSON.stringify(requests[thisRequest]));
               alert("confirmed! sending you to the chat room, student will be there shortly :)");
               window.location=window.location.origin+"/ettutor/chat/"+resBody.chatId;
             }else{
