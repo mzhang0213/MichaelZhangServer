@@ -279,6 +279,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
         var inputText = parseInput(gebi("inputText").innerHTML);
         if (chatData.type==="user") createText(true,inputText,"default");
         else if (chatData.type==="tutor") createText(true,inputText,chatData.img);
+        gebi("inputText").innerHTML="";
 
         var reqText = new XMLHttpRequest();
         var bodyText = {

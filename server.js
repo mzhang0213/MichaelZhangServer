@@ -495,6 +495,7 @@ app.post("/et-addSw",async (req,res)=>{
 
 app.post("/et-text",async (req,res)=>{
 	//req.body.user || req.body.tutor , req.body.text
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
