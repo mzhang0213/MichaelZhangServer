@@ -17,3 +17,12 @@ todos:
 -add exit session button
 
 -do some whitespace text processing
+
+-make images select work
+
+-make chat submit cooldown
+
+-make shift enter work
+
+-implement texts to a chat id
+	-problem arise: if you have multiple sessions open, texts might push to all clients and texts will display that are not actaully from correct student
