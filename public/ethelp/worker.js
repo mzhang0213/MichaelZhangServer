@@ -40,21 +40,25 @@ const urlB64ToUint8Array = base64String => {
 	)
 	const options = { applicationServerKey, userVisibleOnly: true }
 	var subscription,params,response;
+	var tainted = false;
 	try {
 	  subscription = await self.registration.pushManager.subscribe(options);
 	} catch (err) {
 	  console.log('(1) sub Error', err)
+	  tainted=true;
 	}
-	console.log("subbed")
-	console.log(self.location,self.location.search)
-	params = new URLSearchParams(self.location.search);
-	try{
-	  response = await saveSubscription(params.get("user"),subscription)
-	} catch (err) {
-	  console.log('(2) save sub Error', err)
+	if (!tainted){
+		console.log("subbed")
+		params = new URLSearchParams(self.location.search);
+		try{
+		  response = await saveSubscription(params.get("user"),subscription)
+		} catch (err) {
+		  console.log('(2) save sub Error', err)
+		}
 	}
 	try{
 		self.clients.claim();
+		console.log("claimed hopefully");
 	  } catch (err) {
 		console.log('(3) client claim error', err)
 	  }
