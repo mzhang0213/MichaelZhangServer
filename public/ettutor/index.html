@@ -184,7 +184,25 @@
     const main = async () => {
       check()
       await registerServiceWorker()
-      await requestNotificationPermission()
+      await requestNotificationPermission().then(async function(){
+        if ("serviceWorker" in navigator) {
+          // Do a one-off check to see if a service worker's in control.
+          if (navigator.serviceWorker.controller) {
+            console.log(
+              `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
+            );
+          } else {
+            console.log("This page is not currently controlled by a service worker.");
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.active.postMessage({})
+              }
+            });
+          }
+        } else {
+          console.log("Service workers are not supported.");
+        }
+      })
     }
     main();
 
@@ -403,24 +421,6 @@
     req.open("POST",window.location.origin+"/et-online");
     req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     req.send(JSON.stringify(body));
-
-    if ("serviceWorker" in navigator) {
-      // Do a one-off check to see if a service worker's in control.
-      if (navigator.serviceWorker.controller) {
-        console.log(
-          `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
-        );
-      } else {
-        console.log("This page is not currently controlled by a service worker.");
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.active.postMessage({})
-          }
-        });
-      }
-    } else {
-      console.log("Service workers are not supported.");
-    }
   </script>
 </body>
 </html>
