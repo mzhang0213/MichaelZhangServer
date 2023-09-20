@@ -41,6 +41,13 @@ const urlB64ToUint8Array = base64String => {
 	const options = { applicationServerKey, userVisibleOnly: true }
 	var subscription,params,response;
 	var tainted = false;
+
+	try{
+		self.clients.claim();
+		console.log("claimed hopefully");
+	  } catch (err) {
+		console.log('(3) client claim error', err)
+	  }
 	try {
 	  subscription = await self.registration.pushManager.subscribe(options);
 	} catch (err) {
@@ -55,13 +62,7 @@ const urlB64ToUint8Array = base64String => {
 		} catch (err) {
 		  console.log('(2) save sub Error', err)
 		}
-	}
-	try{
-		self.clients.claim();
-		console.log("claimed hopefully");
-	  } catch (err) {
-		console.log('(3) client claim error', err)
-	  }
+	}else console.log("tainted rip");
 	console.log(response)
   })
 
