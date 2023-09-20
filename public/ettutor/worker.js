@@ -28,11 +28,11 @@ const urlB64ToUint8Array = base64String => {
 	console.log("posted")
 	return response
   }
-  
+  /*
   self.addEventListener("install", async (event)=>{
 	self.skipWaiting();
   })
-
+*/
   self.addEventListener('activate', async (event) => {
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
@@ -42,12 +42,6 @@ const urlB64ToUint8Array = base64String => {
 	var subscription,params,response;
 	var tainted = false;
 
-	try{
-		self.clients.claim();
-		console.log("claimed hopefully");
-	  } catch (err) {
-		console.log('(3) client claim error', err)
-	  }
 	try {
 	  subscription = await self.registration.pushManager.subscribe(options);
 	} catch (err) {
@@ -62,7 +56,9 @@ const urlB64ToUint8Array = base64String => {
 		} catch (err) {
 		  console.log('(2) save sub Error', err)
 		}
-	}else console.log("tainted rip");
+	}else {
+		console.log("tainted rip");
+	}
 	console.log(response)
   })
 

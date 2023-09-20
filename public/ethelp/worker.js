@@ -28,11 +28,11 @@ const urlB64ToUint8Array = base64String => {
 	console.log("posted")
 	return response
   }
-  
+  /*
   self.addEventListener("install", async (event)=>{
 	self.skipWaiting();
   })
-
+*/
   self.addEventListener('activate', async (event) => {
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
