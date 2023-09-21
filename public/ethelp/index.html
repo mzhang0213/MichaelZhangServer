@@ -177,7 +177,7 @@
         if (!tainted){
           console.log("subbed")
           try{
-            response = await saveSubscription(params.get("user"),subscription)
+            response = await saveSubscription(localStorage.getItem("et-user"),subscription)
           } catch (err) {
             console.log('(2) save sub Error', err)
           }
