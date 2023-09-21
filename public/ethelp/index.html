@@ -128,7 +128,23 @@
         throw new Error('No Push API Support!')
       }
     }
-    const registerServiceWorker = async () => {
+    const registerSW = async () =>{
+      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+        registration.addEventListener("updatefound",()=>{
+          registration.update();
+        });
+      });
+      navigator.serviceWorker.ready.then((reg) => {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            if (registration.scope===window.location.origin+"/ethelp/"){
+              registration.active.postMessage({"type":"sub"})
+            }
+          }
+        });
+      });      
+    }
+    const doRegistration = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length>0){
           var found = false;
@@ -139,20 +155,14 @@
             }
           }
           if (found){
-            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-              registration.addEventListener("updatefound",()=>{
-                registration.update();
-              })
-            });
-            return swRegistration;
+            var reg = await registerSW();
+            console.log("worked yay");
+            console.log(reg);
           }
         }else{
-          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-            registration.addEventListener("updatefound",()=>{
-              registration.update();
-            })
-          });
-          return swRegistration;
+          var reg = await registerSW();
+          console.log("worked yay");
+          console.log(reg);
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
@@ -182,26 +192,22 @@
     }
     const main = async () => {
       check()
-      await registerServiceWorker().then(async function() {await requestNotificationPermission()})
+      await doRegistration()
       .then(async function(){
-        if ("serviceWorker" in navigator) {
-          // Do a one-off check to see if a service worker's in control.
-          if (navigator.serviceWorker.controller) {
-            console.log(
-              `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
-            );
-          } else {
-            console.log("This page is not currently controlled by a service worker.");
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-              for(let registration of registrations) {
-                registration.active.postMessage({})
-              }
-            });
-          }
+        if (navigator.serviceWorker.controller) {
+          console.log(
+            `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
+          );
         } else {
-          console.log("Service workers are not supported.");
+          console.log("This page is not currently controlled by a service worker.");
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              registration.active.postMessage({"type":"claim"})
+            }
+          });
         }
       })
+      .then(async function() {await requestNotificationPermission()})
     }
     main();
 

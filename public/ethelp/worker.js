@@ -34,6 +34,7 @@ const urlB64ToUint8Array = base64String => {
   })
 
   self.addEventListener('activate', async (event) => {
+	/*
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
 	  'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
@@ -64,7 +65,7 @@ const urlB64ToUint8Array = base64String => {
 		}
 	}else console.log("tainted rip");
 	console.log(response)
-	console.log(subscription)
+	console.log(subscription)*/
   })
 
   const alertError = async ()=>{
@@ -78,9 +79,37 @@ const urlB64ToUint8Array = base64String => {
 	  console.log("posted");
   }
 
-  self.addEventListener("message",function(event){
-	event.waitUntil(self.clients.claim());
-	console.log("claimed bitc");
+  self.addEventListener("message",async function(event){
+	if (event.data.type==="claim"){
+		event.waitUntil(self.clients.claim());
+		console.log("claimed bitc");
+	}else if (event.data.type==="sub"){
+		// This will be called only once when the service worker is activated.
+		const applicationServerKey = urlB64ToUint8Array(
+			'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
+		)
+		const options = { applicationServerKey, userVisibleOnly: true }
+		var subscription,params,response;
+		var tainted = false;
+	
+		try {
+			subscription = await self.registration.pushManager.subscribe(options);
+		} catch (err) {
+			console.log('(1) sub Error', err)
+			tainted=true;
+		}
+		if (!tainted){
+			console.log("subbed")
+			params = new URLSearchParams(self.location.search);
+			try{
+				response = await saveSubscription(params.get("user"),subscription)
+			} catch (err) {
+				console.log('(2) save sub Error', err)
+			}
+		}else console.log("tainted rip");
+		console.log(response)
+		console.log(subscription)
+	}
   })
   
   self.addEventListener("push", function(event) {
