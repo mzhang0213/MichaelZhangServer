@@ -141,8 +141,7 @@
       reqAdd.open("POST",window.location.origin+"/et-save-sub");
       reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       reqAdd.send(JSON.stringify(bodyAdd));
-      console.log(response);
-      console.log("posted")
+      console.log("posted");
     }
     const check = () => {
       if (!('serviceWorker' in navigator)) {
@@ -165,7 +164,7 @@
           'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
         )
         const options = { applicationServerKey, userVisibleOnly: true }
-        var subscription,params,response;
+        var subscription,response;
         var tainted = false;
       
         try {
