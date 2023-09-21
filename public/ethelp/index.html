@@ -122,14 +122,21 @@
 
   <script>   //this is all dedicated to web worker support
     const check = () => {
+      
+    }
+    const registerServiceWorker = async () => {
+      
+    }
+    const requestNotificationPermission = async () => {
+      
+    }
+    const main = async function() {
       if (!('serviceWorker' in navigator)) {
         throw new Error('No Service Worker support!')
       }
       if (!('PushManager' in window)) {
         throw new Error('No Push API Support!')
       }
-    }
-    const registerServiceWorker = async () => {
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length>0){
           var found = false;
@@ -170,8 +177,6 @@
           }
         }*/
       })
-    }
-    const requestNotificationPermission = async () => {
       const permission = await window.Notification.requestPermission();
       // value of permission can be 'granted', 'default', 'denied'
       // granted: user has accepted the request
@@ -179,31 +184,28 @@
       // denied: user has denied the request.
       if(permission !== 'granted'){
         alert("please allow notifications, not spamming and essential to alerts for the page :)")
-      }
-    }
-    const main = async () => {
-      check()
+      }/*
       await registerServiceWorker().then(async function() {await requestNotificationPermission()})
       .then(async function(){
-        /*
-        if ("serviceWorker" in navigator) {
-          // Do a one-off check to see if a service worker's in control.
-          if (navigator.serviceWorker.controller) {
-            console.log(
-              `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
-            );
-          } else {
-            console.log("This page is not currently controlled by a service worker.");
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-              for(let registration of registrations) {
-                registration.active.postMessage({})
-              }
-            });
-          }
-        } else {
-          console.log("Service workers are not supported.");
-        }*/
       })
+      */
+      if ("serviceWorker" in navigator) {
+        // Do a one-off check to see if a service worker's in control.
+        if (navigator.serviceWorker.controller) {
+          console.log(
+            `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
+          );
+        } else {
+          console.log("This page is not currently controlled by a service worker.");
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              registration.active.postMessage({})
+            }
+          });
+        }
+      } else {
+        console.log("Service workers are not supported.");
+      }
     }
 
     window.onload=function(){
