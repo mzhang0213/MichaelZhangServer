@@ -135,6 +135,8 @@
         });
       });
       navigator.serviceWorker.ready.then((reg) => {
+        console.log("worked yay");
+        console.log(reg);
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for(let registration of registrations) {
             if (registration.scope===window.location.origin+"/ethelp/"){
@@ -156,13 +158,9 @@
           }
           if (found){
             var reg = await registerSW();
-            console.log("worked yay");
-            console.log(reg);
           }
         }else{
           var reg = await registerSW();
-          console.log("worked yay");
-          console.log(reg);
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
