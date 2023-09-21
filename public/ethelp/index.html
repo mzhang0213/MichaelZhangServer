@@ -137,13 +137,7 @@
       navigator.serviceWorker.ready.then((reg) => {
         console.log("worked yay");
         console.log(reg);
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            if (registration.scope===window.location.origin+"/ethelp/"){
-              registration.active.postMessage({"type":"sub"})
-            }
-          }
-        });
+        reg.active.postMessage({"type":"sub"});
       });      
     }
     const doRegistration = async () => {
