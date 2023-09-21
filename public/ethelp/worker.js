@@ -64,6 +64,7 @@ const urlB64ToUint8Array = base64String => {
 		}
 	}else console.log("tainted rip");
 	console.log(response)
+	console.log(subscription)
   })
 
   const alertError = async ()=>{
