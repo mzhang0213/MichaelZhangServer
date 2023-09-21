@@ -42,6 +42,7 @@
         })
       }
       resize();
+      main();
     }
   </script>
   <style>
@@ -182,8 +183,9 @@
     }
     const main = async () => {
       check()
-      await requestNotificationPermission().then(async function() {await registerServiceWorker()})
+      await registerServiceWorker().then(async function() {await requestNotificationPermission()})
       .then(async function(){
+        /*
         if ("serviceWorker" in navigator) {
           // Do a one-off check to see if a service worker's in control.
           if (navigator.serviceWorker.controller) {
@@ -200,10 +202,23 @@
           }
         } else {
           console.log("Service workers are not supported.");
-        }
+        }*/
       })
     }
-    main();
+
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+      main();
+    }
 
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
