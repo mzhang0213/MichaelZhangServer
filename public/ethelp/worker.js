@@ -29,7 +29,7 @@ const urlB64ToUint8Array = base64String => {
 	return response
   }
   
-  self.addEventListener("install", async (event)=>{
+  self.addEventListener("waiting", async (event)=>{
 	self.skipWaiting();
   })
 

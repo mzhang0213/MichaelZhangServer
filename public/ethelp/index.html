@@ -182,7 +182,7 @@
     }
     const main = async () => {
       check()
-      await requestNotificationPermission().then(async function() {await registerServiceWorker()})
+      await registerServiceWorker().then(async function() {await requestNotificationPermission()})
       .then(async function(){
         if ("serviceWorker" in navigator) {
           // Do a one-off check to see if a service worker's in control.
