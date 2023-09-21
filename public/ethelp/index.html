@@ -177,12 +177,12 @@
       // default: user has dismissed the notification permission popup by clicking on x
       // denied: user has denied the request.
       if(permission !== 'granted'){
-          alert("please allow notifications, not spamming and essential to alerts for the page :)")
+        alert("please allow notifications, not spamming and essential to alerts for the page :)")
       }
     }
     const main = async () => {
       check()
-      await registerServiceWorker().then(async function() {await requestNotificationPermission()})
+      await requestNotificationPermission().then(async function() {await registerServiceWorker()})
       .then(async function(){
         if ("serviceWorker" in navigator) {
           // Do a one-off check to see if a service worker's in control.
