@@ -89,7 +89,7 @@
   </div>
   
   <style>
-    #imgIcon{
+    #icon{
       -webkit-transition-duration: 1500ms;
       -moz-transition-duration: 1500ms;
       -o-transition-duration: 1500ms;
@@ -120,6 +120,12 @@
     }
     #login:hover{
       background-color:rgb(48, 194, 48);
+    }
+    #imgIcon{
+      opacity:1;
+    }
+    #icon:hover{
+      opacity:0.8;
     }
     #imgIcon:hover{
       opacity:0.75;
@@ -435,21 +441,21 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
     }
 
     var animated = false;
-    gebi("imgIcon").addEventListener("click",function(){
+    gebi("icon").addEventListener("click",function(){
       if (animated){
-        gebi("imgIcon").style.transform = "rotate(0deg)";
+        gebi("icon").style.transform = "rotate(0deg)";
         gebi("options").style.width=0;
         gebi("dimScreen").style.display="none";
         animated=false;
       }else{
-        gebi("imgIcon").style.transform = "rotate(360deg)";
+        gebi("icon").style.transform = "rotate(360deg)";
         gebi("options").style.width=(window.innerWidth/2-80-10)+"px";
         gebi("dimScreen").style.display="";
         animated=true;
       }
     })
     gebi("dimScreen").addEventListener("click",function(){
-      gebi("imgIcon").style.transform = "rotate(0deg)";
+      gebi("icon").style.transform = "rotate(0deg)";
       gebi("options").style.width=0;
       gebi("dimScreen").style.display="none";
       animated=false;
