@@ -57,11 +57,11 @@
     </div>
     <div id="right" class="relative left-0 flex flex-row justify-end">
       <!--right side-->
-      <div id="options" class="relative grid grid-cols-2" style="justify-items:center;">
-        <div class="relative flex flex-col justify-center w-1/2">
+      <div id="options" class="relative grid grid-cols-2 overflow-hidden" style="justify-items:center;">
+        <div class="relative flex flex-col justify-center overflow-hidden w-1/2">
           <button id="endSession" class="relative m-1 px-1 py-1 text-center text-md rounded-lg text-black" style="background-color:red;border:1px solid black;">End Session</button>
         </div>
-        <div class="relative flex flex-col justify-center w-1/2">
+        <div class="relative flex flex-col justify-center overflow-hidden w-1/2">
         </div>
       </div>
       <img id="icon" class="relative" style="width:80px;">
@@ -98,6 +98,7 @@
       -moz-transition-property: -moz-transform;
       -o-transition-property: -o-transform;
       transition-property: transform;
+      opacity:1;
     }
     #options{
       -webkit-transition-duration: 1500ms;
@@ -120,9 +121,6 @@
     #login:hover{
       background-color:rgb(48, 194, 48);
     }
-    #imgIcon{
-      opacity:1;
-    }
     #imgIcon:hover{
       opacity:0.75;
     }
@@ -132,7 +130,7 @@
     gebi("clockIcon").src=window.location.origin+"/ethelp/clockIcon.png";
     gebi("imgIcon").src=window.location.origin+"/ethelp/imgIcon.png";
     gebi("icon").src=window.location.origin+"/ethelp/logo.png";
-    gebi("favicon").href=window.location.origin+"/ethelp/logo.png";
+    gebi("favicon").href=window.location.origin+"/ethelp/logo-square.png";
     var chatData = JSON.parse(localStorage.getItem("et-chatData"));
 if (chatData.chatId!==window.location.href.substring(window.location.href.length-10,window.location.href.length)){
   gebi("clock").remove();
@@ -452,8 +450,8 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
     })
     gebi("dimScreen").addEventListener("click",function(){
       gebi("imgIcon").style.transform = "rotate(0deg)";
-        gebi("options").style.width=0;
-        gebi("dimScreen").style.display="none";
+      gebi("options").style.width=0;
+      gebi("dimScreen").style.display="none";
       animated=false;
     })
 
