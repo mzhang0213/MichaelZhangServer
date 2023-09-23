@@ -55,9 +55,16 @@
         <p id="title2" class="relative text-sm text-white w-full italic"></p>
       </div>
     </div>
-    <div class="relative left-0 w-6/12 flex flex-row justify-end">
+    <div id="right" class="relative left-0 flex flex-row justify-end">
       <!--right side-->
-      <img id="icon" class="relative mr-3" style="width:80px;">
+      <div id="options" class="relative grid grid-cols-2" style="justify-items:center;">
+        <div class="relative flex flex-col justify-center w-1/2">
+          <button id="endSession" class="relative m-1 px-1 py-1 text-center text-md rounded-lg text-black" style="background-color:red;border:1px solid black;">End Session</button>
+        </div>
+        <div class="relative flex flex-col justify-center w-1/2">
+        </div>
+      </div>
+      <img id="icon" class="relative" style="width:80px;">
     </div>
   </div>
 
@@ -68,6 +75,8 @@
     </div>
     <img id="clockIcon" style="width:100px;">
   </div>
+
+  <div id="dimScreen" class="fixed z-10 left-0 top-0 bg-black opacity-70" style="display:none;width:100%;height:100%;"></div>
   <div class="relative z-10 flex flex-col items-center mb-8" style="width:100%; height:95vh;">
     <div class="relative flex flex-col items-center bg-gradient-to-tr from-blue-600 to-sky-300 rounded-xl h-fill overflow-auto" style="width:95%; height:80%; border:3px solid black">
       <!--actual chat section-->
@@ -80,6 +89,23 @@
   </div>
   
   <style>
+    #imgIcon{
+      -webkit-transition-duration: 1500ms;
+      -moz-transition-duration: 1500ms;
+      -o-transition-duration: 1500ms;
+      transition-duration: 1500ms;
+      -webkit-transition-property: -webkit-transform;
+      -moz-transition-property: -moz-transform;
+      -o-transition-property: -o-transform;
+      transition-property: transform;
+    }
+    #options{
+      -webkit-transition-duration: 1500ms;
+      -moz-transition-duration: 1500ms;
+      -o-transition-duration: 1500ms;
+      transition-duration: 1500ms;
+      transition-property: width;
+    }
     #login{
       background-color:rgb(117, 234, 117);
       border-radius:8px;
@@ -173,6 +199,10 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       gebi("clockTime").innerHTML="It is currently "+(currTime.getHours()>12?currTime.getHours()-12:currTime.getHours())+":"+(currTime.getMinutes()<10?"0"+currTime.getMinutes():currTime.getMinutes())+(currTime.getHours()>12?"PM":"AM");
     }
     window.onload=function(){
+
+      gebi("options").style.width=0;
+      gebi("right").style.width=(window.innerWidth*0.45)+"px";
+
       if (window.innerWidth<700){
         //small
       }
@@ -369,8 +399,64 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       if (event.data.text){
         if (chatData.type==="user") createText(false,event.data.text.text,chatData.img);
         else if (chatData.type==="tutor") createText(false,event.data.text.text,"default");
+      }else if (event.data.endSession){
+        if (chatData.chatId===event.data.endSession.id){
+          //end the chat sesh
+          alert("session has been ended by tutor! hope to see you again :) :) :)")
+          localStorage.removeItem("et-chatData");
+          window.location=window.location.origin+"/ethelp";
+        }
       }
     })
+    
+    gebi("endSession").addEventListener("click",function(){
+      var reqEnd = new XMLHttpRequest();
+      var bodyEnd = {
+        user:chatData.user,
+        id:chatData.chatId
+      }
+      reqEnd.open("POST",window.location.origin+"/et-endSession");
+      reqEnd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      reqEnd.send(JSON.stringify(bodyEnd));
+      reqEnd.addEventListener("readystatechange", ()=>{
+        if (reqEnd.status === 200 && reqEnd.readyState === 4) {
+          var nobody = JSON.parse(reqEnd.responseText);
+          if (nobody.error===0){
+            alert("session ended! thanks for helping out :) :) :)")
+            localStorage.removeItem("et-chatData");
+            window.location=window.location.origin+"/ettutor";
+          }
+        } else if (reqEnd.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+reqEnd.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+    if (chatData.type==="user"){
+      gebi("endSession").remove();
+    }
+
+    var animated = false;
+    gebi("imgIcon").addEventListener("click",function(){
+      if (animated){
+        gebi("imgIcon").style.transform = "rotate(0deg)";
+        gebi("options").style.width=0;
+        gebi("dimScreen").style.display="none";
+        animated=false;
+      }else{
+        gebi("imgIcon").style.transform = "rotate(360deg)";
+        gebi("options").style.width=(window.innerWidth/2-80-10)+"px";
+        gebi("dimScreen").style.display="";
+        animated=true;
+      }
+    })
+    gebi("dimScreen").addEventListener("click",function(){
+      gebi("imgIcon").style.transform = "rotate(0deg)";
+        gebi("options").style.width=0;
+        gebi("dimScreen").style.display="none";
+      animated=false;
+    })
+
 }
   </script>
   <style>

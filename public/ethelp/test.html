@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body>
+		<div class="flex flex-row justify-end items-center w-11/12">
+			<div id="options" style="height:25px;border:2px solid black"></div>
+			<img id="imgIcon" style="width:80px;" id="icon" src="D:/michaelServer/public/ethelp/logo.png">
+		</div>
+		<style>
+			#imgIcon{
+				-webkit-transition-duration: 1500ms;
+				-moz-transition-duration: 1500ms;
+				-o-transition-duration: 1500ms;
+				transition-duration: 1500ms;
+				-webkit-transition-property: -webkit-transform;
+				-moz-transition-property: -moz-transform;
+				-o-transition-property: -o-transform;
+				transition-property: transform;
+			}
+			#options{
+				-webkit-transition-duration: 1500ms;
+				-moz-transition-duration: 1500ms;
+				-o-transition-duration: 1500ms;
+				transition-duration: 1500ms;
+				transition-property: width;
+			}
+		</style>
+		<script>
+			var gebi = function(e){return document.getElementById(e)};
+			var animated = false;
+			gebi("imgIcon").onclick=()=>{
+				if (animated){
+					gebi("imgIcon").style.transform = "rotate(0deg)";
+					gebi("options").style.width=0;
+					animated=false;
+				}else{
+					gebi("imgIcon").style.transform = "rotate(360deg)";
+					gebi("options").style.width=(window.innerWidth/2-80-10)+"px";
+					animated=true;
+				}
+			}
+			window.onload=function(){
+				gebi("options").style.width=0;
+			}
+		</script>
+	</body>
+</html>

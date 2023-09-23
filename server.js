@@ -537,6 +537,40 @@ app.post("/et-text",async (req,res)=>{
 	}
 })
 
+app.post("/et-endSession",async (req,res)=>{
+	//req.body.user || req.body.tutor , req.body.text
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("ethelp").collection("subs");
+			const currContent = await db.findOne();
+			var db_subs = currContent.subs;
+			for (var i=0;i<db_subs.length;i++){
+				if (req.body.to==="user"&&db_subs[i].user===req.body.user){
+					msg.error=0;
+					var request = {
+						endSession:{
+							id:req.body.chatId
+						},
+						action:"endSession"
+					}
+					sendNotification(db_subs[i].sub,request);
+					break;
+				}
+			}
+			if (msg.error===undefined){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
 var path = require("path");
 
 app.get("/ethelp/chat/*",(req,res)=>{
