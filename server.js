@@ -553,7 +553,7 @@ app.post("/et-img",async (req,res)=>{
 						img:{
 							img:req.body.img
 						},
-						action:"text"
+						action:"img"
 					}
 					sendNotification(db_subs[i].sub,request);
 					break;
