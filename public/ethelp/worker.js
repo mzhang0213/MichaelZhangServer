@@ -117,7 +117,7 @@ const urlB64ToUint8Array = base64String => {
 	  var b = (event.data.json())
 	  //showLocalNotification(b.title, b.body, self.registration);
 	  self.clients.matchAll().then((clients) => {
-		  console.log("clients"+clients.length);
+		  console.log("clients "+clients.length);
 		  clients.forEach((client) => {
 			  console.log("client url: " + client.url);
 			  if (b.action==="online" && client.url===self.location.origin+"/ethelp/"){
@@ -133,10 +133,10 @@ const urlB64ToUint8Array = base64String => {
 				client.postMessage({endSession:b.endSession});
 				
 			}else{
-				console.log(b);
 				console.log("webpush action not coded in the sw which is fine");
 
 			}
+			console.log(b);
 		})
 	  })
 	} else {
