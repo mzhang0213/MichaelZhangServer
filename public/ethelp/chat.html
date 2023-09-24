@@ -27,11 +27,11 @@
       }else if (700<=window.innerWidth && window.innerWidth<1200){
         //med
         gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
       }else{
         //lg++
         gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
       }
     }
     window.onresize=resize;
@@ -109,11 +109,12 @@
       transition-property: width;
     }
     #dimScreen{
-      -webkit-transition-duration: 500ms;
-      -moz-transition-duration: 500ms;
-      -o-transition-duration: 500ms;
-      transition-duration: 500ms;
-      transition-property: opacity;
+      transition-property: opacity, height;
+      -webkit-transition-duration: 500ms, 0ms;
+      -moz-transition-duration: 500ms, 0ms;
+      -o-transition-duration: 500ms, 0ms;
+      transition-duration: 500ms, 0ms;
+      transition-delay:0ms, 500ms;
     }
     #login{
       background-color:rgb(117, 234, 117);
@@ -224,7 +225,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       resize();
       updateTime();
       gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-      gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth-gebi("clock").offsetWidth-150)+"px";
+      gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
       setInterval(function(){
         updateTime();
       },60*1000)
@@ -459,19 +460,25 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       if (animated){
         gebi("icon").style.transform = "rotate(0deg)";
         gebi("options").style.width=0;
+        gebi("dimScreen").style.transitionDelay="0ms,500ms";
         gebi("dimScreen").style.opacity=0;
+        gebi("dimScreen").style.height=0;
         animated=false;
       }else{
         gebi("icon").style.transform = "rotate(360deg)";
         gebi("options").style.width=(window.innerWidth/2-80-10)+"px";
+        gebi("dimScreen").style.transitionDelay="500ms,0ms";
         gebi("dimScreen").style.opacity=0.7;
+        gebi("dimScreen").style.height="100%";
         animated=true;
       }
     })
     gebi("dimScreen").addEventListener("click",function(){
       gebi("icon").style.transform = "rotate(0deg)";
       gebi("options").style.width=0;
+      gebi("dimScreen").style.transitionDelay="0ms,500ms";
       gebi("dimScreen").style.opacity=0;
+      gebi("dimScreen").style.height=0;
       animated=false;
     })
 
