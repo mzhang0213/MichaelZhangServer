@@ -561,7 +561,7 @@ app.post("/et-img",async (req,res)=>{
 					img:submit
 				}
 			}
-			await db.updateOne(filter,updateDoc);
+			await db_img.updateOne(filter,updateDoc);
 
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
@@ -673,7 +673,7 @@ app.post("/et-endSession",async (req,res)=>{
 					img:submit
 				}
 			}
-			await db.updateOne(filter,updateDoc);
+			await db_img.updateOne(filter,updateDoc);
 			
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
