@@ -94,6 +94,10 @@ const urlB64ToUint8Array = base64String => {
 				console.log(b);
 				client.postMessage({text:b.text});
 
+			}else if (b.action==="img" && client.url.indexOf("ettutor/chat")!==0){
+				console.log(b);
+				client.postMessage({img:b.img});
+
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
 			}

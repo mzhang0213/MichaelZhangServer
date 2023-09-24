@@ -128,6 +128,9 @@ const urlB64ToUint8Array = base64String => {
 
 			}else if (b.action==="text" && client.url.indexOf("ethelp/chat")!==0){
 				client.postMessage({text:b.text});
+
+			}else if (b.action==="img" && client.url.indexOf("ethelp/chat")!==0){
+				client.postMessage({img:b.img});
 			
 			}else if (b.action==="endSession" && client.url.indexOf("ethelp/chat")!==0){
 				client.postMessage({endSession:b.endSession});

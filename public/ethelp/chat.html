@@ -267,7 +267,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     }
 
     var lastTextMe = false;
-    var createText = function(me,text,img){
+    var createText = function(me,text,img,isText){
       var div = document.createElement("div");
       div.className="relative w-full h-fill flex flex-row items-center";
     
@@ -277,7 +277,14 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
       bubble.style.minHeight="20px"
       bubble.style.paddingTop="5px"
       bubble.style.paddingBottom="5px"
-      bubble.innerHTML=text;
+      if (isText){
+        bubble.innerHTML=text;
+      }else{
+        var img = document.createElement("img");
+        img.src=text;
+        img.stylewidth="60px";
+        bubble.appendChild(img);
+      }
     
       var pfp = document.createElement("img");
       pfp.className="rounded-xl"
@@ -331,8 +338,8 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         if (keyBank.indexOf("Shift")==-1){
           //2 things: add bubble on my side, and post to server
           var inputText = parseInput(gebi("inputText").innerHTML);
-          if (chatData.type==="user") createText(true,inputText,"default");
-          else if (chatData.type==="tutor") createText(true,inputText,chatData.img);
+          if (chatData.type==="user") createText(true,inputText,"default",true);
+          else if (chatData.type==="tutor") createText(true,inputText,chatData.img,true);
           gebi("inputText").innerHTML="";
   
           var reqText = new XMLHttpRequest();
@@ -438,8 +445,11 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
       console.log("got msg");
       console.log(event.data);
       if (event.data.text){
-        if (chatData.type==="user") createText(false,event.data.text.text,chatData.img);
-        else if (chatData.type==="tutor") createText(false,event.data.text.text,"default");
+        if (chatData.type==="user") createText(false,event.data.text.text,chatData.img,true);
+        else if (chatData.type==="tutor") createText(false,event.data.text.text,"default",true);
+      }else if (event.data.img){
+        if (chatData.type==="user") createText(false,event.data.img.img,chatData.img,false);
+        else if (chatData.type==="tutor") createText(false,event.data.img.img,"default",false);
       }else if (event.data.endSession){
         if (chatData.chatId===event.data.endSession.id){
           //end the chat sesh
@@ -573,6 +583,42 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
             }
             x.addEventListener("click",function(){
               c.remove();
+            })
+            send.addEventListener("click",function(){
+              if (chatData.type==="user") createText(true,prev.src,"default",false);
+              else if (chatData.type==="tutor") createText(true,prev.src,chatData.img,false);
+              var reqImg = new XMLHttpRequest();
+              var bodyImg = {
+                img:prev.src
+              }
+              if (chatData.type==="user"){
+                bodyImg.tutor=chatData.tutor
+                bodyImg.to="tutor";
+              }
+              else if (chatData.type==="tutor"){
+                bodyImg.user=chatData.user
+                bodyImg.to="user";
+              }
+              reqImg.open("POST",window.location.origin+"/et-img");
+              reqImg.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+              reqImg.send(JSON.stringify(bodyImg));
+              reqImg.addEventListener("readystatechange", ()=>{
+                if (reqImg.status === 200 && reqImg.readyState === 4) {
+                  var nobody = JSON.parse(reqImg.responseText);
+                  if (nobody.error===0){
+                    send.style.backgroundColor="#53c44b";
+                    send.innerHTML="✔";
+                    setTimeout(function(){
+                      c.remove();
+                    },1500)
+                  }else{
+                    alert("image failed to send sorry :(");
+                  }
+                } else if (reqImg.readyState === 4){
+                  console.log("reeeeeeee img send err: "+reqImg.responseText);
+                  alert("please ask michael for help oh noes")
+                }
+              })
             })
           }
           fr.readAsDataURL(file.files[0]);
