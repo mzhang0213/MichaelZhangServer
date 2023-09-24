@@ -46,7 +46,7 @@
 	<!--CHANGE BG ??-->
   <div class="fixed left-0 top-0 bg-cover bg-gray-800" style="width:100%;height:100%;background-image:url('')"></div>
   
-  <div id="dimScreen" class="fixed z-20 left-0 top-0 bg-black opacity-0" style="width:100%;height:100%;"></div>
+  <div id="dimScreen" class="fixed z-20 left-0 top-0 bg-black opacity-0" style="width:100%;height:0%;"></div>
   <div class="relative my-12 flex flex-row items-center" style="width:100%;">
     <!--div struct to create 50/50 split and then children can flex to each side of screen ez-->
     <div class="relative left-0 w-6/12 flex flex-row justify-start h-fill">
@@ -81,7 +81,7 @@
   <div class="relative z-10 flex flex-col items-center mb-8" style="width:100%; height:95vh;">
     <div class="relative flex flex-col items-center bg-gradient-to-tr from-blue-600 to-sky-300 rounded-xl h-fill overflow-auto" style="width:95%; height:80%; border:3px solid black">
       <!--actual chat section-->
-      <div id="textsBox" class="relative flex flex-col justify-end w-full overflow-auto pl-28 pt-20 pr-28 pb-4" style="height:90%"></div>
+      <div id="textsBox" class="relative flex flex-col justify-start w-full overflow-auto pl-28 pt-20 pr-28 pb-4" style="height:90%"></div>
       <div class="relative flex flex-row justify-center items-center w-full mb-4" style="min-height:10%">
         <p id="inputText" class="relative bg-white text-black w-11/12 p-1 ml-2 rounded-lg" contenteditable="true" role="textbox" spellcheck="true" style="overflow:auto;min-height:38px;max-height:70px;border:2px solid black;outline:none;resize:none; user-select: text; white-space: pre-wrap; word-break: break-word;"></p>
         <img id="imgIcon" class="mr-2" style="margin-left:10px; height:38px;">
@@ -289,7 +289,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         bubble.innerHTML=text;
       }else{
         var imgElem = document.createElement("img");
-        imgElem.style.width="60px";
+        imgElem.style.height="40vh";
         if (isText===0){
           var reqImg = new XMLHttpRequest();
           var bodyImg = {
@@ -304,6 +304,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
               workingImages.push(nobody.img);
               imgElem.src=nobody.img.data;
               bubble.appendChild(imgElem);
+              gebi("textsBox").scrollTop=gebi("textsBox").scrollHeight;
             } else if (reqImg.readyState === 4){
               console.log("img get err: "+reqImg.responseText);
               alert("please ask michael for help oh noes")
@@ -344,6 +345,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         div.appendChild(bubble);
       }
       gebi("textsBox").appendChild(div);
+      gebi("textsBox").scrollTop=gebi("textsBox").scrollHeight;
     }
 
     var parseInput = function(text){
