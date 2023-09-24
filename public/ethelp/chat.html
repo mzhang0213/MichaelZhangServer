@@ -27,11 +27,11 @@
       }else if (700<=window.innerWidth && window.innerWidth<1200){
         //med
         gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/2/*-gebi("clock").offsetWidth-150*/)+"px";
       }else{
         //lg++
         gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
+        gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/2/*-gebi("clock").offsetWidth-150*/)+"px";
       }
     }
     window.onresize=resize;
@@ -225,7 +225,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
       resize();
       updateTime();
       gebi("clock").style.top=(getTop(gebi("textsBox"))-40)+"px";
-      gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/*-gebi("clock").offsetWidth-150*/)+"px";
+      gebi("clock").style.left=(getLeft(gebi("textsBox"))+gebi("textsBox").offsetWidth/2/*-gebi("clock").offsetWidth-150*/)+"px";
       setInterval(function(){
         updateTime();
       },60*1000)
@@ -468,7 +468,7 @@ if (chatData.chatId!==window.location.href.substring(window.location.href.length
         gebi("icon").style.transform = "rotate(360deg)";
         gebi("options").style.width=(window.innerWidth/2-80-10)+"px";
         gebi("dimScreen").style.transitionDelay="500ms,0ms";
-        gebi("dimScreen").style.opacity=0.7;
+        gebi("dimScreen").style.opacity=0.8;
         gebi("dimScreen").style.height="100%";
         animated=true;
       }
