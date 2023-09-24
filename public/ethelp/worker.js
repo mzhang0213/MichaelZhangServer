@@ -121,22 +121,19 @@ const urlB64ToUint8Array = base64String => {
 		  clients.forEach((client) => {
 			  console.log("client url: " + client.url);
 			  if (b.action==="online" && client.url===self.location.origin+"/ethelp/"){
-				console.log(b);
 				client.postMessage({updatedUser:b.updatedUser})
 
 			}else if (b.action==="confirm" && client.url===self.location.origin+"/ethelp/"){
-				console.log(b);
 				client.postMessage({confirm:b.confirm}) //not finished
 
 			}else if (b.action==="text" && client.url.indexOf("ethelp/chat")!==0){
-				console.log(b);
 				client.postMessage({text:b.text});
 			
 			}else if (b.action==="endSession" && client.url.indexOf("ethelp/chat")!==0){
-				console.log(b);
 				client.postMessage({endSession:b.endSession});
 				
 			}else{
+				console.log(b);
 				console.log("webpush action not coded in the sw which is fine");
 
 			}
