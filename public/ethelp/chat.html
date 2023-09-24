@@ -150,7 +150,7 @@
     gebi("icon").src=window.location.origin+"/ethelp/logo.png";
     gebi("favicon").href=window.location.origin+"/ethelp/logo-square.png";
     var chatData = JSON.parse(localStorage.getItem("et-chatData"));
-if (chatData.chatId!==window.location.href.substring(window.location.href.length-10,window.location.href.length)){
+if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.location.href.substring(window.location.href.length-10,window.location.href.length)){
   gebi("clock").remove();
   alert("you are not permitted to chat here");
 } else{

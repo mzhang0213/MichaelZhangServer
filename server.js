@@ -547,6 +547,8 @@ app.post("/et-endSession",async (req,res)=>{
 			const currContent = await db.findOne();
 			var db_subs = currContent.subs;
 			for (var i=0;i<db_subs.length;i++){
+				console.log(db_subs[i].user);
+				console.log("my targeT: "+req.body.user);
 				if (req.body.to==="user"&&db_subs[i].user===req.body.user){
 					msg.error=0;
 					var request = {
