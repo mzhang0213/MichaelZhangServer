@@ -435,6 +435,8 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     main();
     navigator.serviceWorker.addEventListener("message",function(event){
       //data from event.data.text > .user, .date
+      console.log("got msg");
+      console.log(event.data);
       if (event.data.text){
         if (chatData.type==="user") createText(false,event.data.text.text,chatData.img);
         else if (chatData.type==="tutor") createText(false,event.data.text.text,"default");
