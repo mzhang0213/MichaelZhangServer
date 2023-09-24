@@ -506,73 +506,77 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     })
 
     gebi("imgIcon").addEventListener("click",function(){
-      var file = document.createElement("input");
-      file.type="file";
-      file.id="imgInput";
-      file.style.display="none";
-      document.body.appendChild(file);
-      file.click();
-      file.onchange=function(){
-        if (file.files[0].size/1000/1000>2){
-          // greater than 2MB
-          alert("image too large! sorry :(");
+      if (geib("imgInput")!==null){
+        var file = document.createElement("input");
+        file.type="file";
+        file.id="imgInput";
+        file.style.display="none";
+        document.body.appendChild(file);
+        file.click();
+        file.onchange=function(){
+          if (file.files[0].size/1000/1000>2){
+            // greater than 2MB
+            alert("image too large! sorry :(");
+          }
+          var fr = new FileReader();
+          fr.onload=function(e){
+            var c = document.createElement("div");
+            c.className="absolute w-fill h-fill z-40";
+  
+            var x = document.createElement("div");
+            x.className="absolute z-10 rounded-2xl text-white text-center bg-red-600 right-0 top-0";
+            x.style.width="20px";
+            x.style.height="20px";
+            x.style.fontSize="12px";
+            x.innerHTML="X";
+            
+            var send = document.createElement("div");
+            send.className="absolute z-10 text-center bg-sky-200 rounded-xl";
+            send.style.width="30px";
+            send.style.height="30px";
+            send.innerHTML="✈";
+  
+            var prev = document.createElement("img");
+            prev.className="impImg relative rounded-xl";
+            prev.style.top="10px"
+            prev.style.right="10px"
+            prev.style.height="25vh";
+            prev.style.border="4px solid darkslateblue";
+            prev.style.backgroundColor="#528af1";
+            prev.style.padding="18px";
+            prev.src=e.target.result;
+  
+            c.appendChild(prev);
+            c.appendChild(x);
+            c.appendChild(send);
+            document.body.appendChild(c);
+            send.style.right="12px";
+            send.style.top=(prev.offsetHeight-send.offsetHeight)+"px";
+            c.style.left=getLeft(gebi("textsBox"))+"px";
+            c.style.top=getTop(gebi("textsBox"))+"px";
+            console.log((file.files[0].size/1000)+"KB");
+  
+            var initX = 0,initY=0;
+            c.ondragstart=(event)=>{
+              initX=event.clientX-c.offsetLeft;
+              initY=event.clientY-c.offsetTop;
+            }
+            c.ondrag=(event)=>{
+              c.style.left=event.clientX-initX+"px";
+              c.style.top=event.clientY-initY+"px";
+            }
+            c.ondragend=(event)=>{
+              c.style.left=event.clientX-initX+"px";
+              c.style.top=event.clientY-initY+"px";
+            }
+            x.addEventListener("click",function(){
+              c.remove();
+            })
+          }
+          fr.readAsDataURL(file.files[0]);
         }
-        var fr = new FileReader();
-        fr.onload=function(e){
-          var c = document.createElement("div");
-          c.className="absolute w-fill h-fill z-40";
-
-          var x = document.createElement("div");
-          x.className="absolute z-10 rounded-2xl text-white text-center bg-red-600 right-0 top-0";
-          x.style.width="20px";
-          x.style.height="20px";
-          x.style.fontSize="12px";
-          x.innerHTML="X";
-          
-          var send = document.createElement("div");
-          send.className="absolute z-10 text-center bg-sky-200 rounded-xl";
-          send.style.width="30px";
-          send.style.height="30px";
-          send.innerHTML="✈";
-
-          var prev = document.createElement("img");
-          prev.className="impImg relative rounded-xl";
-          prev.style.top="10px"
-          prev.style.right="10px"
-          prev.style.height="25vh";
-          prev.style.border="4px solid darkslateblue";
-          prev.style.backgroundColor="#528af1";
-          prev.style.padding="18px";
-          prev.src=e.target.result;
-
-          c.appendChild(prev);
-          c.appendChild(x);
-          c.appendChild(send);
-          document.body.appendChild(c);
-          send.style.right="12px";
-          send.style.top=(prev.offsetHeight-send.offsetHeight)+"px";
-          c.style.left=getLeft(gebi("textsBox"))+"px";
-          c.style.top=getTop(gebi("textsBox"))+"px";
-          console.log((file.files[0].size/1000)+"KB");
-
-          var initX = 0,initY=0;
-          c.ondragstart=(event)=>{
-            initX=event.clientX-c.offsetLeft;
-            initY=event.clientY-c.offsetTop;
-          }
-          c.ondrag=(event)=>{
-            c.style.left=event.clientX-initX+"px";
-            c.style.top=event.clientY-initY+"px";
-          }
-          c.ondragend=(event)=>{
-            c.style.left=event.clientX-initX+"px";
-            c.style.top=event.clientY-initY+"px";
-          }
-          x.addEventListener("click",function(){
-            c.remove();
-          })
-        }
-        fr.readAsDataURL(file.files[0]);
+      }else{
+        gebi("imgInput").click();
       }
     })
 
