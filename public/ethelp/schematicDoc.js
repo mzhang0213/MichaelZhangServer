@@ -75,6 +75,18 @@ var chat = {
 
 }
 
+//img db
+var img = {
+	title:"img",
+	img:[
+		{
+			id:"",
+			data:""
+		}
+	]
+}
+
+
 /*
 the most stupid thing ever is that i cant have 2 service workers, new schematic
 service worker registration with either tutor or client, its going to be the same code

@@ -543,6 +543,26 @@ app.post("/et-img",async (req,res)=>{
 	try{
 		(async function(){
 			await client.connect();
+			const db_img = client.db("ethelp").collection("img");
+			const currContent_img = await db_img.findOne();
+			var currImgs = currContent_img.img;
+			var submit = [];
+			for (var i of currImgs)submit.push(i);
+			var id="";
+			for (var j=0;j<10;j++)id+=rndNum(0,9);
+			var currImg = {
+				id:id,
+				data:req.body.img
+			}
+			submit.push(currImg);
+			const filter = {title:"img"}
+			const updateDoc = {
+				$set: {
+					img:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+
 			const db = client.db("ethelp").collection("subs");
 			const currContent = await db.findOne();
 			var db_subs = currContent.subs;
@@ -551,7 +571,7 @@ app.post("/et-img",async (req,res)=>{
 					msg.error=0;
 					var request = {
 						img:{
-							img:req.body.img
+							img:id
 						},
 						action:"img"
 					}
@@ -561,7 +581,7 @@ app.post("/et-img",async (req,res)=>{
 					msg.error=0;
 					var request = {
 						img:{
-							img:req.body.img
+							img:id
 						},
 						action:"img"
 					}
@@ -571,6 +591,32 @@ app.post("/et-img",async (req,res)=>{
 			}
 			if (msg.error===undefined){
 				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+app.post("/et-getImg",async (req,res)=>{
+	//tutor username at req.body.user, position of total online tutors is at req.body.i
+	//BUG: TUTOR USERNAME IS LEADKED
+	//soln: client asks for online tutors starting at i=0, we find the first one and then give to them along with req.body.i +1 .  make this return tutor's data but not their username.
+	var msg = {
+		img:-1
+	};
+	try{
+		(async function(){
+			const db_img = client.db("ethelp").collection("img");
+			const currContent_img = await db_img.findOne();
+			var currImgs = currContent_img.img;
+			for (var i of currImgs){
+				if (i.id===req.body.id){
+					msg.img=i;
+				}
 			}
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
@@ -608,6 +654,27 @@ app.post("/et-endSession",async (req,res)=>{
 			if (msg.error===undefined){
 				msg.error=1;
 			}
+
+			const db_img = client.db("ethelp").collection("img");
+			const currContent_img = await db_img.findOne();
+			var currImgs = currContent_img.img;
+			var submit = []
+			for (var i of currImgs){
+				for (var j of req.body.img){
+					if (i.id!==j){ //note: req.body.img contains img IDS
+						//remove i by not pushing it in
+						submit.push(i);
+					}
+				}
+			}
+			const filter = {title:"img"}
+			const updateDoc = {
+				$set: {
+					img:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			imDone();

@@ -196,10 +196,24 @@
             }
           }
           if (found){
-            var reg = await registerSW();
+            var reg = await registerSW()
+            .then(async function(){
+              navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                  registration.active.postMessage({"type":"claim"})
+                }
+              });
+            })
           }
         }else{
-          var reg = await registerSW();
+          var reg = await registerSW()
+          .then(async function(){
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.active.postMessage({"type":"claim"})
+              }
+            });
+          })
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){

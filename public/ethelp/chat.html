@@ -270,6 +270,11 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     }
 
     var lastTextMe = false;
+    var workingImages = [];
+    //me: t|f sending message by ME
+    //text: either text msg or: [data/image || img id]
+    //img: pfp image: data/image || "default"
+    //isText: true - text msg || 0:img id, 1: cleared, data/image
     var createText = function(me,text,img,isText){
       var div = document.createElement("div");
       div.className="relative w-full h-fill flex flex-row items-center";
@@ -283,10 +288,31 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
       if (isText){
         bubble.innerHTML=text;
       }else{
-        var img = document.createElement("img");
-        img.src=text;
-        img.style.width="60px";
-        bubble.appendChild(img);
+        var imgElem = document.createElement("img");
+        imgElem.style.width="60px";
+        if (isText===0){
+          var reqImg = new XMLHttpRequest();
+          var bodyImg = {
+            id:text
+          }
+          reqImg.open("POST",window.location.origin+"/et-getImg");
+          reqImg.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+          reqImg.send(JSON.stringify(bodyImg));
+          reqImg.addEventListener("readystatechange", ()=>{
+            if (reqImg.status === 200 && reqImg.readyState === 4) {
+              var nobody = JSON.parse(reqImg.responseText);
+              workingImages.push(nobody.img);
+              imgElem.src=nobody.img.data;
+              bubble.appendChild(imgElem);
+            } else if (reqImg.readyState === 4){
+              console.log("img get err: "+reqImg.responseText);
+              alert("please ask michael for help oh noes")
+            }
+          })
+        }else{
+          imgElem.src=text;
+          bubble.appendChild(imgElem);
+        }
       }
     
       var pfp = document.createElement("img");
@@ -451,8 +477,8 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         if (chatData.type==="user") createText(false,event.data.text.text,chatData.img,true);
         else if (chatData.type==="tutor") createText(false,event.data.text.text,"default",true);
       }else if (event.data.img){
-        if (chatData.type==="user") createText(false,event.data.img.img,chatData.img,false);
-        else if (chatData.type==="tutor") createText(false,event.data.img.img,"default",false);
+        if (chatData.type==="user") createText(false,event.data.img.img,chatData.img,0);
+        else if (chatData.type==="tutor") createText(false,event.data.img.img,"default",0);
       }else if (event.data.endSession){
         if (chatData.chatId===event.data.endSession.id){
           //end the chat sesh
@@ -464,11 +490,16 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     })
     
     gebi("endSession").addEventListener("click",function(){
+      var doneImgs = [];
+      for (var i of workingImages){
+        doneImgs.push(i.id);
+      }
       var reqEnd = new XMLHttpRequest();
       var bodyEnd = {
         user:chatData.user,
         to:"user",
-        id:chatData.chatId
+        id:chatData.chatId,
+        img:doneImgs
       }
       reqEnd.open("POST",window.location.origin+"/et-endSession");
       reqEnd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -588,8 +619,8 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
                 c.remove();
               })
               send.addEventListener("click",function(){
-                if (chatData.type==="user") createText(true,prev.src,"default",false);
-                else if (chatData.type==="tutor") createText(true,prev.src,chatData.img,false);
+                if (chatData.type==="user") createText(true,prev.src,"default",1);
+                else if (chatData.type==="tutor") createText(true,prev.src,chatData.img,1);
                 var reqImg = new XMLHttpRequest();
                 var bodyImg = {
                   img:prev.src

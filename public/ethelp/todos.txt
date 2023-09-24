@@ -7,19 +7,11 @@ todos:
 
 -for buttons and server-glitchable objects, do mouseup disable cuz i dont want no bozos shittin on my server
 	-logout, connect, connect (tutor)
-
--make the chat id system work
+	-dim tutor icon once connection rec sent in (in ethelp)
 
 -do some whitespace text processing
 
--make images select work
-
 -make chat submit cooldown
-
--dim tutor icon once connection rec sent in (in ethelp)
-
--implement texts to a chat id
-	-problem arise: if you have multiple sessions open, texts might push to all clients and texts will display that are not actaully from correct student
 
 -tracker to log how many kids get helped
 
