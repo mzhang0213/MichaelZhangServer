@@ -610,6 +610,7 @@ app.post("/et-getImg",async (req,res)=>{
 	};
 	try{
 		(async function(){
+			await client.connect();
 			const db_img = client.db("ethelp").collection("img");
 			const currContent_img = await db_img.findOne();
 			var currImgs = currContent_img.img;

@@ -88,19 +88,17 @@ const urlB64ToUint8Array = base64String => {
 			console.log("client url: " + client.url);
 			if (b.action==="connect" && client.url===self.location.origin+"/ettutor/"){
 				client.postMessage({newRequest:b.newRequest});
-				console.log(b);
 				
 			}else if (b.action==="text" && client.url.indexOf("ettutor/chat")!==0){
-				console.log(b);
 				client.postMessage({text:b.text});
 
 			}else if (b.action==="img" && client.url.indexOf("ettutor/chat")!==0){
-				console.log(b);
 				client.postMessage({img:b.img});
 
 			}else{
 				console.log("webpush action not coded in the sw or some BUG WTF");
 			}
+			console.log(b);
 		})
 	  })
 	} else {
