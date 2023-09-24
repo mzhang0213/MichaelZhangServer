@@ -90,6 +90,13 @@
   </div>
   
   <style>
+    .impImg{
+      -khtml-user-select: none;
+      -o-user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     #icon{
       -webkit-transition-duration: 500ms;
       -moz-transition-duration: 500ms;
@@ -528,7 +535,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
           send.innerHTML="✈";
 
           var prev = document.createElement("img");
-          prev.style.className="relative rounded-xl z-10";
+          prev.style.className="impImg relative rounded-xl z-10";
           prev.style.top="10px"
           prev.style.right="10px"
           prev.style.height="20vh";
