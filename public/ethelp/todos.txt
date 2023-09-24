@@ -5,16 +5,10 @@ todos:
 -do better greetings than "hi xxx"
 	-come up with some and randomly choose :D
 
--make enter submit form
-
--dimscreen: on element remove due to timeout, check if tutor being selected w/ dimscreen on is getting removed, if ya then close dimscreen
-
 -for buttons and server-glitchable objects, do mouseup disable cuz i dont want no bozos shittin on my server
 	-logout, connect, connect (tutor)
 
 -make the chat id system work
-
--add exit session button
 
 -do some whitespace text processing
 
@@ -22,7 +16,7 @@ todos:
 
 -make chat submit cooldown
 
--make shift enter work
+-dim tutor icon once connection rec sent in (in ethelp)
 
 -implement texts to a chat id
 	-problem arise: if you have multiple sessions open, texts might push to all clients and texts will display that are not actaully from correct student

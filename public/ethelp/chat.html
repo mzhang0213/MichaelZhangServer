@@ -317,30 +317,46 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
       return text;
     }
 
+    var keyBank = [];
+
     gebi("inputText").addEventListener("keydown",function(event){
       if (event.key==="Enter"){
-        //2 things: add bubble on my side, and post to server
-        var inputText = parseInput(gebi("inputText").innerHTML);
-        if (chatData.type==="user") createText(true,inputText,"default");
-        else if (chatData.type==="tutor") createText(true,inputText,chatData.img);
-        gebi("inputText").innerHTML="";
+        if (keyBank.indexOf("Shift")!==-1){
+          //2 things: add bubble on my side, and post to server
+          var inputText = parseInput(gebi("inputText").innerHTML);
+          if (chatData.type==="user") createText(true,inputText,"default");
+          else if (chatData.type==="tutor") createText(true,inputText,chatData.img);
+          gebi("inputText").innerHTML="";
+  
+          var reqText = new XMLHttpRequest();
+          var bodyText = {
+            text:inputText
+          }
+          if (chatData.type==="user"){
+            bodyText.tutor=chatData.tutor
+            bodyText.to="tutor";
+          }
+          else if (chatData.type==="tutor"){
+            bodyText.user=chatData.user
+            bodyText.to="user";
+          }
+          reqText.open("POST",window.location.origin+"/et-text");
+          reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+          reqText.send(JSON.stringify(bodyText));
+          event.preventDefault();
+        }
+      }else if (event.key==="Shift"&&keyBank.indexOf("Shift")==-1){
+        keyBank.push("Shift");
+      }
+    })
 
-        var reqText = new XMLHttpRequest();
-        var bodyText = {
-          text:inputText
+    gebi("inputText").addEventListener("keyup",function(){
+      if (event.key==="Shift"){
+        var newBank = [];
+        for (var i of keyBank){
+          if (i!=="Shift")newBank.push(i);
         }
-        if (chatData.type==="user"){
-          bodyText.tutor=chatData.tutor
-          bodyText.to="tutor";
-        }
-        else if (chatData.type==="tutor"){
-          bodyText.user=chatData.user
-          bodyText.to="user";
-        }
-        reqText.open("POST",window.location.origin+"/et-text");
-        reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-        reqText.send(JSON.stringify(bodyText));
-        event.preventDefault();
+        keyBank=newBank;
       }
     })
 
@@ -480,6 +496,71 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
       gebi("dimScreen").style.opacity=0;
       gebi("dimScreen").style.height=0;
       animated=false;
+    })
+
+    gebi("imgIcon").addEventListener("click",function(){
+      var file = document.createElement("input");
+      file.type="file";
+      file.id="imgInput";
+      file.style.display="none";
+      document.body.appendChild(file);
+      file.click();
+      file.onchange=function(){
+        if (file.files[0].size/1000/1000>2){
+          // greater than 2MB
+          alert("image too large! sorry :(");
+        }
+        var fr = new FileReader();
+        fr.onload=function(e){
+          var c = document.createElement("div");
+          c.className="absolute w-fill h-fill";
+
+          var x = document.createElement("div");
+          x.className="absolute rounded-2xl text-white bg-red-400 right-0 top-0";
+          x.style.width="15px";
+          x.style.height="15px";
+          x.innerHTML="X";
+          
+          var send = document.createElement("div");
+          send.className="absolute text-center bg-sky-200 rounded-2xl";
+          send.style.width="25px";
+          send.style.height="25px";
+          send.innerHTML="✈";
+
+          var prev = document.createElement("img");
+          prev.style.className="absolute rounded-xl";
+          prev.style.top="10px;"
+          prev.style.right="10px;"
+          prev.style.height="15%";
+          prev.style.border="4px solid darkslateblue";
+          prev.style.backgroundColor="#528af1";
+          prev.style.padding="18px";
+          prev.src=e.target.result;
+
+          c.appendChild(prev);
+          c.appendChild(x);
+          document.body.appendChild(c);
+          send.style.left=(prev.offsetWidth-send.offsetWidth)+"px";
+          send.style.top=(prev.offsetHeight-send.offsetHeight)+"px";
+          console.log((file.files[0].size/1000)+"KB");
+
+          var initX = 0,initY=0;
+          c.ondragstart=(event)=>{
+            initX=event.clientX-c.offsetLeft;
+            initY=event.clientY-c.offsetTop;
+          }
+          c.ondrag=(event)=>{
+            c.style.left=event.clientX-initX+"px";
+            c.style.top=event.clientY-initY+"px";
+          }
+          c.ondragend=(event)=>{
+            c.style.left=event.clientX-initX+"px";
+            c.style.top=event.clientY-initY+"px";
+          }
+          //INSERT SEND AND X OUT BUTTON
+        }
+        fr.readAsDataURL(file.files[0]);
+      }
     })
 
 }
