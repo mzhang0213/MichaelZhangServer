@@ -553,7 +553,7 @@ app.post("/et-endSession",async (req,res)=>{
 					msg.error=0;
 					var request = {
 						endSession:{
-							id:req.body.chatId
+							id:req.body.id
 						},
 						action:"endSession"
 					}
