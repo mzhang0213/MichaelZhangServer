@@ -226,9 +226,11 @@
         }else{
           navigator.serviceWorker.getRegistrations().then(async function(regs){
             for (var r of regs){
-              if (r.scope===window.location.origin+"/ethelp/"){
-                pushSub(r);
-              }
+              r.pushManager.getSubscription().then(function(s){
+                if (r.scope===window.location.origin+"/ethelp/" && s===null){
+                  pushSub(r);
+                }
+              })
             }
           })
         }
