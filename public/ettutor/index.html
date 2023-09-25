@@ -204,7 +204,7 @@
         });
       });
       navigator.serviceWorker.ready.then(async (reg) => {
-        pushSub(reg);
+        await pushSub(reg);
       });
     }
     const doRegistration = async () => {
@@ -224,10 +224,11 @@
           console.log(reg);
         }else{
           navigator.serviceWorker.getRegistrations().then(async function(regs){
+            console.log("retrying push registration on existing sw");
             for (var r of regs){
-              r.pushManager.getSubscription().then(function(s){
+              r.pushManager.getSubscription().then(async function(s){
                 if (r.scope===window.location.origin+"/ettutor/" && s===null){
-                  pushSub(r);
+                  await pushSub(r);
                 }
               })
             }
