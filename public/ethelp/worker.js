@@ -109,6 +109,9 @@ const urlB64ToUint8Array = base64String => {
 		}else console.log("tainted rip");
 		console.log(response)
 		console.log(subscription)
+	}else if (event.data.type==="noti"){
+		//event.data.options
+		showLocalNotification(event.data.options,self.registration);
 	}
   })
   
@@ -146,12 +149,7 @@ const urlB64ToUint8Array = base64String => {
 	  console.log("Push event but no data");
 	}
   });
-  const showLocalNotification = (title, body, swRegistration) => {
-	const options = {
-	  body:body,
-	  image:self.origin+"/hippohack/logo.png",
-	  title:""
-	  // here you can add more properties like icon, image, vibrate, etc.
-	};
-	swRegistration.showNotification(title, options);
+  //body icon lang silent tag timestamp
+  const showLocalNotification = (options,swRegistration) => {
+	swRegistration.showNotification(options.title, options);
   };

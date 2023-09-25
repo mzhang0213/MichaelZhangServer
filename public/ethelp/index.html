@@ -131,10 +131,9 @@
       msg.innerHTML="in order for this app to work properly, notification permissions are required.<br>its complicated and they provide the chatting capabilities i need for the app. its complicated and i didn't make the rules sorry :( :(";
       document.body.appendChild(msg);
       setTimeout(function(){
-        msg.style.transition="top 800ms"
+        msg.style.transition="top 800ms";
         msg.style.top="15vh";
       },100)
-      return msg;
     }
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -288,7 +287,8 @@
       // default: user has dismissed the notification permission popup by clicking on x
       // denied: user has denied the request.
       if(permission !== 'granted'){
-        alert("please allow notifications, not spamming and essential to alerts for the page :)")
+        //alert("please allow notifications, not spamming and essential to alerts for the page :)")
+        console.log("notifications denied");
       }
     }
     const main = async () => {

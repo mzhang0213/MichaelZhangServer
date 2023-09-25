@@ -84,14 +84,13 @@
       gebi("userButton").innerHTML=localStorage.getItem("et-tutor");
     }
 
-    
     var logout = function(){
       
       if ("serviceWorker" in navigator) navigator.serviceWorker.getRegistrations().then( 
         function(registrations){
           for(let registration of registrations) {
             if (registration.scope.indexOf("ettutor")!==-1){
-              //only unregsiter /ethelp sw
+              //only unregsiter /ettutor sw
               registration.unregister();
             }
           }
@@ -121,6 +120,21 @@
   </script>
 
   <script>   //this is all dedicated to web worker support
+    var disclaimer = function(){
+      gebi("dimScreen").style.display="";
+      var msg = document.createElement("p");
+      msg.className="absolute z-20 text-white font-bold text-center";
+      msg.style.top="100vh";
+      msg.style.left=0;
+      msg.style.fontSize="50px";
+      msg.id="disclaimer";
+      msg.innerHTML="in order for this app to work properly, notification permissions are required.<br>its complicated and they provide the chatting capabilities i need for the app. its complicated and i didn't make the rules sorry :( :(";
+      document.body.appendChild(msg);
+      setTimeout(function(){
+        msg.style.transition="top 800ms";
+        msg.style.top="15vh";
+      },100)
+    }
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
@@ -152,92 +166,80 @@
         throw new Error('No Push API Support!')
       }
     }
+    const pushSub = async (reg) =>{
+      disclaimer();
+      const applicationServerKey = urlB64ToUint8Array(
+        'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
+      )
+      const options = { applicationServerKey, userVisibleOnly: true }
+      var subscription,response;
+      var tainted = false;
+    
+      try {
+        subscription = await reg.pushManager.subscribe(options); //for some bullshit reason w3 made this prompt "notification perms" for push manager perms. wtf ???????????
+      } catch (err) {
+        console.log('(1) sub Error', err)
+        tainted=true;
+      }
+      if (!tainted){
+        console.log("subbed")
+        gebi("disclaimer").style.top="100vh";
+        setTimeout(function(){
+          gebi("dimScreen").style.display="none";
+          gebi("disclaimer").remove()
+        },800)
+        try{
+          response = await saveSubscription(localStorage.getItem("et-tutor"),subscription)
+        } catch (err) {
+          console.log('(2) save sub Error', err)
+        }
+      }else console.log("tainted rip");
+      console.log(response)
+      console.log(subscription)
+    }
     const registerSW = async () =>{
-      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
+      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-ettutor")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
           registration.update();
         });
       });
       navigator.serviceWorker.ready.then(async (reg) => {
-        console.log("worked yay");
-        console.log(reg);
-        const applicationServerKey = urlB64ToUint8Array(
-          'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
-        )
-        const options = { applicationServerKey, userVisibleOnly: true }
-        var subscription,response;
-        var tainted = false;
-      
-        try {
-          subscription = await reg.pushManager.subscribe(options);
-        } catch (err) {
-          console.log('(1) sub Error', err)
-          tainted=true;
-        }
-        if (!tainted){
-          console.log("subbed")
-          try{
-            response = await saveSubscription(localStorage.getItem("et-tutor"),subscription)
-          } catch (err) {
-            console.log('(2) save sub Error', err)
-          }
-          try{
-            if ("serviceWorker" in navigator) {
-              // Do a one-off check to see if a service worker's in control.
-              if (navigator.serviceWorker.controller) {
-                console.log(
-                  `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
-                );
-              } else {
-                console.log("This page is not currently controlled by a service worker.");
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                  for(let registration of registrations) {
-                    registration.active.postMessage({"type":"claim"})
-                  }
-                }).then(function(){
-                  if (navigator.serviceWorker.controller) {
-                    console.log(
-                      `Claim worked!!! ${navigator.serviceWorker.controller}`,
-                    );
-                  } else {
-                    console.log("sadge claim no work wtf");
-                  }
-                });
-              }
-            } else {
-              console.log("Service workers are not supported.");
-            }
-          }catch(err){
-            console.log("(3) client claim err: ",err);
-          }
-        }else console.log("tainted rip");
-        console.log(response)
-        console.log(subscription)
+        pushSub(reg);
       });
     }
     const doRegistration = async () => {
+      var found = false;
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length>0){
-          var found = false;
           for (var i=0;i<registrations.length;i++){
-            if (registrations[i].scope!==window.location.origin+"/ettutor/"){
-              //this one has not been registered yet
+            if (registrations[i].scope==window.location.origin+"/ettutor/"){
+              //this one has been registered yet
               found = true;
             }
           }
-          if (found){
-            var reg = await registerSW();
-          }
-        }else{
+        }
+        if (registrations.length===0||!found){
           var reg = await registerSW();
+          console.log("worked yay");
+          console.log(reg);
+        }else{
+          navigator.serviceWorker.getRegistrations().then(async function(regs){
+            for (var r of regs){
+              r.pushManager.getSubscription().then(function(s){
+                if (r.scope===window.location.origin+"/ettutor/" && s===null){
+                  pushSub(r);
+                }
+              })
+            }
+          })
         }
         /*else{
-          if (localStorage.getItem("et-subType")=="user" && localStorage.getItem("et-fullSw")!=="true"){
-            //this means that user registered sw, lets add a our username to the sw
+          if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
+            //this means that tutor registered sw, lets add a our username to the sw
             var reqAdd = new XMLHttpRequest();
             var bodyAdd = {
-              u:localStorage.getItem("et-user"),
-              tutor:localStorage.getItem("et-tutor")
+              u:localStorage.getItem("et-tutor"),
+              user:localStorage.getItem("et-user")
             }
             reqAdd.open("POST",window.location.origin+"/et-addSw");
             reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -247,6 +249,37 @@
         }*/
       })
     }
+    const claimClient = async () =>{
+      try{
+        if ("serviceWorker" in navigator) {
+          // Do a one-off check to see if a service worker's in control.
+          if (navigator.serviceWorker.controller) {
+            console.log(
+              `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
+            );
+          } else {
+            console.log("This page is not currently controlled by a service worker.");
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.active.postMessage({"type":"claim"})
+              }
+            }).then(function(){
+              if (navigator.serviceWorker.controller) {
+                console.log(
+                  `Claim worked!!! ${navigator.serviceWorker.controller}`,
+                );
+              } else {
+                console.log("sadge claim no work wtf");
+              }
+            });
+          }
+        } else {
+          console.log("Service workers are not supported.");
+        }
+      }catch(err){
+        console.log("(3) client claim err: ",err);
+      }
+    }
     const requestNotificationPermission = async () => {
       const permission = await window.Notification.requestPermission();
       // value of permission can be 'granted', 'default', 'denied'
@@ -254,13 +287,19 @@
       // default: user has dismissed the notification permission popup by clicking on x
       // denied: user has denied the request.
       if(permission !== 'granted'){
-        alert("please allow notifications, not spamming and essential to alerts for the page :)")
+        //alert("please allow notifications, not spamming and essential to alerts for the page :)")
+        console.log("notifications denied");
       }
     }
     const main = async () => {
       check()
       await doRegistration()
-      .then(async function() {await requestNotificationPermission()})
+      .then(async function(){
+        requestNotificationPermission();
+      })
+      .then(async function(){
+        claimClient()
+      })
     }
     main();
 
