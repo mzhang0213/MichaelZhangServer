@@ -135,6 +135,7 @@
         msg.style.top="15vh";
       },100)
     }
+    
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
@@ -145,6 +146,7 @@
       }
       return outputArray
     }
+
     // saveSubscription saves the subscription to the backend
     const saveSubscription = async (username, subscription) => {
       console.log("pushing to db");
@@ -158,6 +160,7 @@
       reqAdd.send(JSON.stringify(bodyAdd));
       console.log("posted");
     }
+
     const check = () => {
       if (!('serviceWorker' in navigator)) {
         throw new Error('No Service Worker support!')
@@ -166,6 +169,7 @@
         throw new Error('No Push API Support!')
       }
     }
+
     const pushSub = async (reg) =>{
       disclaimer();
       const applicationServerKey = urlB64ToUint8Array(
@@ -197,6 +201,7 @@
       console.log(response)
       console.log(subscription)
     }
+
     const registerSW = async () =>{
       await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-ettutor")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
