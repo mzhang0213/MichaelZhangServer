@@ -120,6 +120,22 @@
   </script>
 
   <script>   //this is all dedicated to web worker support
+    var disclaimer = function(){
+      gebi("dimScreen").style.display="";
+      var msg = document.createElement("p");
+      msg.className="absolute z-20 text-white font-bold text-center";
+      msg.style.top="100vh";
+      msg.style.left=0;
+      msg.style.fontSize="50px";
+      msg.id="disclaimer";
+      msg.innerHTML="in order for this app to work properly, notification permissions are required.<br>its complicated and they provide the chatting capabilities i need for the app. its complicated and i didn't make the rules sorry :( :(";
+      document.body.appendChild(msg);
+      setTimeout(function(){
+        msg.style.transition="top 800ms"
+        msg.style.top="15vh";
+      },100)
+      return msg;
+    }
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
@@ -151,6 +167,37 @@
         throw new Error('No Push API Support!')
       }
     }
+    const pushSub = async (reg) =>{
+      disclaimer();
+      const applicationServerKey = urlB64ToUint8Array(
+        'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
+      )
+      const options = { applicationServerKey, userVisibleOnly: true }
+      var subscription,response;
+      var tainted = false;
+    
+      try {
+        subscription = await reg.pushManager.subscribe(options); //for some bullshit reason w3 made this prompt "notification perms" for push manager perms. wtf ???????????
+      } catch (err) {
+        console.log('(1) sub Error', err)
+        tainted=true;
+      }
+      if (!tainted){
+        console.log("subbed")
+        gebi("disclaimer").style.top="100vh";
+        setTimeout(function(){
+          gebi("dimScreen").style.display="none";
+          gebi("disclaimer").remove()
+        },800)
+        try{
+          response = await saveSubscription(localStorage.getItem("et-user"),subscription)
+        } catch (err) {
+          console.log('(2) save sub Error', err)
+        }
+      }else console.log("tainted rip");
+      console.log(response)
+      console.log(subscription)
+    }
     const registerSW = async () =>{
       const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
@@ -158,48 +205,34 @@
         });
       });
       navigator.serviceWorker.ready.then(async (reg) => {
-        console.log("worked yay");
-        console.log(reg);
-        const applicationServerKey = urlB64ToUint8Array(
-          'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
-        )
-        const options = { applicationServerKey, userVisibleOnly: true }
-        var subscription,response;
-        var tainted = false;
-      
-        try {
-          subscription = await reg.pushManager.subscribe(options);
-        } catch (err) {
-          console.log('(1) sub Error', err)
-          tainted=true;
-        }
-        if (!tainted){
-          console.log("subbed")
-          try{
-            response = await saveSubscription(localStorage.getItem("et-user"),subscription)
-          } catch (err) {
-            console.log('(2) save sub Error', err)
-          }
-        }else console.log("tainted rip");
-        console.log(response)
-        console.log(subscription)
+        pushSub(reg);
       });
     }
     const doRegistration = async () => {
+      var found = false;
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
         if (registrations.length>0){
-          var found = false;
           for (var i=0;i<registrations.length;i++){
-            if (registrations[i].scope!==window.location.origin+"/ethelp/"){
-              //this one has not been registered yet
+            if (registrations[i].scope==window.location.origin+"/ethelp/"){
+              //this one has been registered yet
               found = true;
             }
           }
-          if (found){
-            var reg = await registerSW();
-          }
-        }else{
+        }
+        if (registrations.length===0||!found){
           var reg = await registerSW();
+          console.log("worked yay");
+          console.log(reg);
+        }else{
+          navigator.serviceWorker.getRegistrations().then(async function(regs){
+            for (var r of regs){
+              r.pushManager.permissionState().then(function(p){
+                if (r.scope===window.location.origin+"/ethelp/" && p!=="granted"){
+                  pushSub(r);
+                }
+              })
+            }
+          })
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
@@ -261,6 +294,9 @@
     const main = async () => {
       check()
       await doRegistration()
+      .then(async function(){
+        requestNotificationPermission();
+      })
       .then(async function(){
         claimClient()
       })
