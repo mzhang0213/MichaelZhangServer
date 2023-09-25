@@ -363,32 +363,38 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
     }
 
     var keyBank = [];
-
+    var lastSubmitted = 0;
     gebi("inputText").addEventListener("keydown",function(event){
       if (event.key==="Enter"){
-        if (keyBank.indexOf("Shift")==-1){
-          //2 things: add bubble on my side, and post to server
-          var inputText = parseInput(gebi("inputText").innerHTML);
-          if (chatData.type==="user") createText(true,inputText,"default",true);
-          else if (chatData.type==="tutor") createText(true,inputText,chatData.img,true);
-          gebi("inputText").innerHTML="";
-  
-          var reqText = new XMLHttpRequest();
-          var bodyText = {
-            text:inputText
+        if (Date.now()-lastSubmitted>800){
+          if (keyBank.indexOf("Shift")==-1){
+            lastSubmitted=Date.now();
+            var inputText = parseInput(gebi("inputText").innerHTML);
+            if (inputText.trim()===""){
+              gebi("inputText").innerHTML="";
+            }else{
+              if (chatData.type==="user") createText(true,inputText,"default",true);
+              else if (chatData.type==="tutor") createText(true,inputText,chatData.img,true);
+              gebi("inputText").innerHTML="";
+      
+              var reqText = new XMLHttpRequest();
+              var bodyText = {
+                text:inputText
+              }
+              if (chatData.type==="user"){
+                bodyText.tutor=chatData.tutor
+                bodyText.to="tutor";
+              }
+              else if (chatData.type==="tutor"){
+                bodyText.user=chatData.user
+                bodyText.to="user";
+              }
+              reqText.open("POST",window.location.origin+"/et-text");
+              reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+              reqText.send(JSON.stringify(bodyText));
+              event.preventDefault();
+            }
           }
-          if (chatData.type==="user"){
-            bodyText.tutor=chatData.tutor
-            bodyText.to="tutor";
-          }
-          else if (chatData.type==="tutor"){
-            bodyText.user=chatData.user
-            bodyText.to="user";
-          }
-          reqText.open("POST",window.location.origin+"/et-text");
-          reqText.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-          reqText.send(JSON.stringify(bodyText));
-          event.preventDefault();
         }
       }else if (event.key==="Shift"&&keyBank.indexOf("Shift")==-1){
         keyBank.push("Shift");
@@ -404,73 +410,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         keyBank=newBank;
       }
     })
-
-    const check = () => {
-      if (!('serviceWorker' in navigator)) {
-        throw new Error('No Service Worker support!')
-      }
-      if (!('PushManager' in window)) {
-        throw new Error('No Push API Support!')
-      }
-    }
-    const registerServiceWorker = async () => {
-      navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
-        if (registrations.length>0){
-          var found = false;
-          for (var i=0;i<registrations.length;i++){
-            if (registrations[i].scope!==window.location.origin+"/ethelp/"){
-              //this one has not been registered yet
-              found = true;
-            }
-          }
-          if (found){
-            const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-              registration.addEventListener("updatefound",()=>{
-                registration.update();
-              })
-            });
-            return swRegistration;
-          }
-        }else{
-          const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
-            registration.addEventListener("updatefound",()=>{
-              registration.update();
-            })
-          });
-          return swRegistration;
-        }
-        /*else{
-          if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
-            //this means that tutor registered sw, lets add a our username to the sw
-            var reqAdd = new XMLHttpRequest();
-            var bodyAdd = {
-              u:localStorage.getItem("et-tutor"),
-              user:localStorage.getItem("et-user")
-            }
-            reqAdd.open("POST",window.location.origin+"/et-addSw");
-            reqAdd.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-            reqAdd.send(JSON.stringify(bodyAdd));
-            localStorage.setItem("et-fullSw","true");
-          }
-        }*/
-      })
-    }
-    const requestNotificationPermission = async () => {
-      const permission = await window.Notification.requestPermission();
-      // value of permission can be 'granted', 'default', 'denied'
-      // granted: user has accepted the request
-      // default: user has dismissed the notification permission popup by clicking on x
-      // denied: user has denied the request.
-      if(permission !== 'granted'){
-          throw new Error('Permission not granted for Notification');
-      }
-    }
-    const main = async () => {
-      check()
-      await registerServiceWorker()
-      await requestNotificationPermission()
-    }
-    main();
+    
     navigator.serviceWorker.addEventListener("message",function(event){
       //data from event.data.text > .user, .date
       console.log("got msg");
