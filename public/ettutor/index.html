@@ -303,6 +303,14 @@
     }
     main();
 
+    var sendNoti = (opt)=>{
+      navigator.serviceWorker.getRegistrations().then((regs)=>{
+        for (var r of regs){
+          r.active.postMessage({"type":"noti","options":opt})
+        }
+      })
+    }
+
     var requests = [];
     var totalRequests=0;
     navigator.serviceWorker.addEventListener("message", (event) => {
@@ -397,6 +405,9 @@
   <script>
     var createRequest = function(student,id){
       //username, first, last, grade, subjects
+      
+      sendNoti({title:"New student request!",body:"Sent from "+student.first,"icon":window.location.origin+"/ethelp/logo-square.png",silent:true})
+
       var c = document.createElement("div");
       c.className="relative mx-5 my-3 p-3 h-fit flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-pink-300 to-violet-400";
       c.style.width="90%";

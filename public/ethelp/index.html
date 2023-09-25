@@ -303,7 +303,7 @@
     }
     main();
 
-    var testNoti = (opt)=>{
+    var sendNoti = (opt)=>{
       navigator.serviceWorker.getRegistrations().then((regs)=>{
         for (var r of regs){
           r.active.postMessage({"type":"noti","options":opt})
@@ -327,7 +327,7 @@
         var data = event.data.confirm;
         data.type="user";
         localStorage.setItem("et-chatData",JSON.stringify(event.data.confirm));
-        alert(event.data.confirm.first+" has accepted your request! sending you to the chat room...");
+        sendNoti({title:event.data.confirm.first+" has accepted your request!",body:"Sending you to the chat room...","icon":window.location.origin+"/ethelp/logo-square.png"})
         window.location=window.location.origin+"/ethelp/chat/"+event.data.confirm.chatId;
       }
     });
@@ -777,7 +777,7 @@
           setTimeout(function(){
             //PUT IF STATEMENT HERE: IF CONNECTION RESOLVED DONT SHOW THIS ALERT MESSAGE
             main.remove();
-            alert("request for "+title.innerHTML+" timed out. sorry :( :(")
+            sendNoti({title:"request for "+title.innerHTML+" timed out.",body:"sorry :( :(","icon":window.location.origin+"/ethelp/logo-square.png",silent:true})
           },5000)
           clearInterval(intv);
         }else{
