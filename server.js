@@ -1470,37 +1470,7 @@ app.get("/classroom/callback", (req,res)=>{
 		res.redirect("/classroom/app.html?"+querystring.stringify(token));
 	});
 });
-/*
-//does not work
-const saveToDatabase = async subscription => {
-	localStorage.setItem("savedSubscription",subscription);
-	console.log("saved sub: " + subscription);
-}
 
-app.post('/save-subscription', async (req, res) => {
-	const subscription = req.body;
-	await saveToDatabase(subscription) //Method to save the subscription to Database
-	res.json({ message: 'success' })
-})
-
-//setting our previously generated VAPID keys
-webpush.setVapidDetails(
-	'mailto:mzhang0213@gmail.com',
-	vapidKeys.publicKey,
-	vapidKeys.privateKey
-)
-//function to send the notification to the subscribed device
-const sendNotification = (subscription, dataToSend='') => {
-	webpush.sendNotification(subscription, dataToSend)
-}
-app.get('/send-notification', (req, res) => {
-	const subscription = localStorage.getItem("savedSubscription"); //get subscription from your databse here.
-	console.log("gotten sub: " + subscription);
-	const message = 'Hello World'
-	sendNotification(subscription, message)
-	res.json({ message: 'message sent' })
-})
-*/
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })

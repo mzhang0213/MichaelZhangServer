@@ -9,10 +9,6 @@ todos:
 	-logout, connect, connect (tutor)
 	-dim tutor icon once connection rec sent in (in ethelp)
 
--do some whitespace text processing
-
--make chat submit cooldown
-
 -tracker to log how many kids get helped
 
 -switch some of the confirmation alerts to notifications

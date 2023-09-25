@@ -180,35 +180,6 @@
           } catch (err) {
             console.log('(2) save sub Error', err)
           }
-          try{
-            if ("serviceWorker" in navigator) {
-              // Do a one-off check to see if a service worker's in control.
-              if (navigator.serviceWorker.controller) {
-                console.log(
-                  `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
-                );
-              } else {
-                console.log("This page is not currently controlled by a service worker.");
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                  for(let registration of registrations) {
-                    registration.active.postMessage({"type":"claim"})
-                  }
-                }).then(function(){
-                  if (navigator.serviceWorker.controller) {
-                    console.log(
-                      `Claim worked!!! ${navigator.serviceWorker.controller}`,
-                    );
-                  } else {
-                    console.log("sadge claim no work wtf");
-                  }
-                });
-              }
-            } else {
-              console.log("Service workers are not supported.");
-            }
-          }catch(err){
-            console.log("(3) client claim err: ",err);
-          }
         }else console.log("tainted rip");
         console.log(response)
         console.log(subscription)
@@ -246,6 +217,37 @@
         }*/
       })
     }
+    const claimClient = async () =>{
+      try{
+        if ("serviceWorker" in navigator) {
+          // Do a one-off check to see if a service worker's in control.
+          if (navigator.serviceWorker.controller) {
+            console.log(
+              `This page is currently controlled by: ${navigator.serviceWorker.controller}`,
+            );
+          } else {
+            console.log("This page is not currently controlled by a service worker.");
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.active.postMessage({"type":"claim"})
+              }
+            }).then(function(){
+              if (navigator.serviceWorker.controller) {
+                console.log(
+                  `Claim worked!!! ${navigator.serviceWorker.controller}`,
+                );
+              } else {
+                console.log("sadge claim no work wtf");
+              }
+            });
+          }
+        } else {
+          console.log("Service workers are not supported.");
+        }
+      }catch(err){
+        console.log("(3) client claim err: ",err);
+      }
+    }
     const requestNotificationPermission = async () => {
       const permission = await window.Notification.requestPermission();
       // value of permission can be 'granted', 'default', 'denied'
@@ -259,9 +261,19 @@
     const main = async () => {
       check()
       await doRegistration()
-      .then(async function() {await requestNotificationPermission()})
+      .then(async function(){
+        claimClient()
+      })
     }
     main();
+
+    var testNoti = (opt)=>{
+      navigator.serviceWorker.getRegistrations().then((regs)=>{
+        for (var r of regs){
+          r.active.postMessage({"type":"noti","options":opt})
+        }
+      })
+    }
 
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
