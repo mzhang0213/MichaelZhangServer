@@ -198,18 +198,20 @@
       console.log(subscription)
     }
     const registerSW = async () =>{
-      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-ettutor")}`).then((registration)=>{
+      await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-ettutor")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
           registration.update();
         });
       });
       navigator.serviceWorker.ready.then(async (reg) => {
+        console.log("service worker activated and ready to go!");
         await pushSub(reg);
       });
     }
     const doRegistration = async () => {
       var found = false;
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
+        console.log("NUMBER OF REGISTRATIONS: "+registrations.length);
         if (registrations.length>0){
           for (var i=0;i<registrations.length;i++){
             if (registrations[i].scope==window.location.origin+"/ettutor/"){
@@ -221,7 +223,6 @@
         if (registrations.length===0||!found){
           var reg = await registerSW();
           console.log("worked yay");
-          console.log(reg);
         }else{
           navigator.serviceWorker.getRegistrations().then(async function(regs){
             console.log("retrying push registration on existing sw");
