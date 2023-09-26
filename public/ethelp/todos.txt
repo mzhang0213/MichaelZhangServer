@@ -12,3 +12,10 @@ todos:
 -switch some of the confirmation alerts to notifications
 
 -bug: chat input processing not working since when you hit enter it puts a <br>
+
+
+eddie li:
+-more user friendly
+	-think about new user perspective in the home page
+	-use dim screen to adv.
+-indicate that the text box is a text box, make a small pop up pointing to the box below
