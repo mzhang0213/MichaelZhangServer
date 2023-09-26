@@ -111,14 +111,15 @@
       margin-top:auto !important;
     }
     #cd{
-      -webkit-transition-duration: 400ms;
-      -moz-transition-duration: 400ms;
-      -o-transition-duration: 400ms;
-      transition-duration: 400ms;
+      -webkit-transition-duration: 300ms;
+      -moz-transition-duration: 300ms;
+      -o-transition-duration: 300ms;
+      transition-duration: 300ms;
       -webkit-transition-property: -webkit-transform;
       -moz-transition-property: -moz-transform;
       -o-transition-property: -o-transform;
       transition-property: transform;
+      transition-timing-function:linear;
     }
     #icon{
       -webkit-transition-duration: 500ms;
@@ -355,12 +356,33 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
           expanded.src=this.src;
           document.body.appendChild(expanded);
           setTimeout(function(){
-            expanded.style.transition="top 800ms";
+            expanded.style.transition="top 400ms";
             expanded.style.top="5vh";
           },100)
-          expanded.onload=()=>{expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";}
+          expanded.onload=()=>{
+            if (expanded.offsetHeight>window.innerHeight){
+              expanded.style.height=(window.innerHeight*0.95)+"px";
+              if (expanded.offsetWidth>window.innerWidth){
+                //even after adjusting for height, width is too large
+                expanded.style.height="";
+                expanded.style.width=(window.innerWidth*0.95)+"px";
+              }
+            }else if (expanded.offsetWidth>window.innerWidth){
+              expanded.style.width=(window.innerWidth*0.95)+"px";
+              if (expanded.offsetHeight>window.innerHeight){
+                //even after adjusting for w, h is too large
+                expanded.style.width="";
+                expanded.style.height=(window.innerHeight*0.95)+"px";
+              }
+            }
+            expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";
+            expanded.style.top=((window.innerHeight-expanded.offsetHeight)/2)+"px";
+          }
           expanded.addEventListener("click",function(){
             var me = this;
+            gebi("lightScreen").style.transitionDelay="0ms,500ms";
+            gebi("lightScreen").style.opacity=0;
+            gebi("lightScreen").style.height=0;
             expanded.style.top="100vh";
             setTimeout(function(){
               me.remove();
@@ -457,7 +479,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
               //cd timer animation
               var animatedTimer = false;
               gebi("cd").style.width = "40px";
-              gebi("cd").style.transitionDuration="400ms";
+              gebi("cd").style.transitionDuration="300ms";
               gebi("cd").style.transform = "rotate(352deg)";
               setTimeout(function(){
                 gebi("cd").style.width = 0;
