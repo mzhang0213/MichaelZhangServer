@@ -336,7 +336,7 @@
         var data = event.data.confirm;
         data.type="user";
         localStorage.setItem("et-chatData",JSON.stringify(event.data.confirm));
-        sendNoti({title:event.data.confirm.first+" has accepted your request!",body:"Sending you to the chat room...","icon":window.location.origin+"/ethelp/logo-square.png"})
+        sendNoti({title:event.data.confirm.tutorName+" has accepted your request!",body:"Sending you to the chat room...","icon":window.location.origin+"/ethelp/logo-square.png"})
         window.location=window.location.origin+"/ethelp/chat/"+event.data.confirm.chatId;
       }
     });

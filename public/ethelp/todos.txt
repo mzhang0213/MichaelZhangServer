@@ -12,3 +12,8 @@ todos:
 -tracker to log how many kids get helped
 
 -switch some of the confirmation alerts to notifications
+
+-bug: chat input processing not working since when you hit enter it puts a <br>
+-bug: the first dry enter doesn't work
+
+-bug: input img allows other types oops
