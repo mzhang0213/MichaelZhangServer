@@ -348,7 +348,7 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
           gebi("lightScreen").style.opacity=0.75;
           gebi("lightScreen").style.height="100%";
           var expanded = document.createElement("img");
-          expanded.className="absolute z-50";
+          expanded.className="fixed z-50";
           expanded.style.top="100vh";
           expanded.style.left=0;
           expanded.id="expandedImg";
@@ -369,9 +369,9 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
         })
       }
       gebi("lightScreen").addEventListener("click",function(){
-        gebi("dimScreen").style.transitionDelay="0ms,500ms";
-        gebi("dimScreen").style.opacity=0;
-        gebi("dimScreen").style.height=0;
+        gebi("lightScreen").style.transitionDelay="0ms,500ms";
+        gebi("lightScreen").style.opacity=0;
+        gebi("lightScreen").style.height=0;
         gebi("expandedImg").style.top="100vh";
         setTimeout(function(){
           gebi("expandedImg").remove();
