@@ -135,6 +135,7 @@
         msg.style.top="15vh";
       },100)
     }
+
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
@@ -145,6 +146,7 @@
       }
       return outputArray
     }
+
     // saveSubscription saves the subscription to the backend
     const saveSubscription = async (username, subscription) => {
       console.log("pushing to db");
@@ -158,6 +160,7 @@
       reqAdd.send(JSON.stringify(bodyAdd));
       console.log("posted");
     }
+    
     const check = () => {
       if (!('serviceWorker' in navigator)) {
         throw new Error('No Service Worker support!')
@@ -166,6 +169,7 @@
         throw new Error('No Push API Support!')
       }
     }
+
     const pushSub = async (reg) =>{
       disclaimer();
       const applicationServerKey = urlB64ToUint8Array(
@@ -197,19 +201,24 @@
       console.log(response)
       console.log(subscription)
     }
+
     const registerSW = async () =>{
-      const swRegistration = await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
+      await navigator.serviceWorker.register(window.location.origin+`/ethelp/service.js?user=${localStorage.getItem("et-user")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
           registration.update();
         });
       });
       navigator.serviceWorker.ready.then(async (reg) => {
-        pushSub(reg);
+        console.log("service worker activated and ready to go!");
+        await pushSub(reg);
+        await claimClient();
       });
     }
+
     const doRegistration = async () => {
       var found = false;
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
+        console.log("NUMBER OF REGISTRATIONS: "+registrations.length);
         if (registrations.length>0){
           for (var i=0;i<registrations.length;i++){
             if (registrations[i].scope==window.location.origin+"/ethelp/"){
@@ -221,13 +230,13 @@
         if (registrations.length===0||!found){
           var reg = await registerSW();
           console.log("worked yay");
-          console.log(reg);
         }else{
           navigator.serviceWorker.getRegistrations().then(async function(regs){
+            console.log("retrying push registration on existing sw");
             for (var r of regs){
-              r.pushManager.getSubscription().then(function(s){
+              r.pushManager.getSubscription().then(async function(s){
                 if (r.scope===window.location.origin+"/ethelp/" && s===null){
-                  pushSub(r);
+                  await pushSub(r);
                 }
               })
             }

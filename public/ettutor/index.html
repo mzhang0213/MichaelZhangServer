@@ -203,7 +203,7 @@
     }
 
     const registerSW = async () =>{
-      await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-ettutor")}`).then((registration)=>{
+      await navigator.serviceWorker.register(window.location.origin+`/ettutor/service.js?user=${localStorage.getItem("et-tutor")}`).then((registration)=>{
         registration.addEventListener("updatefound",()=>{
           registration.update();
         });
@@ -211,8 +211,10 @@
       navigator.serviceWorker.ready.then(async (reg) => {
         console.log("service worker activated and ready to go!");
         await pushSub(reg);
+        await claimClient();
       });
     }
+
     const doRegistration = async () => {
       var found = false;
       navigator.serviceWorker.getRegistrations().then(async (registrations)=>{
