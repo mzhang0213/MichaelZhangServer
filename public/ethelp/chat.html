@@ -54,6 +54,7 @@
   
 
   <div id="dimScreen" class="fixed z-20 left-0 top-0 bg-black opacity-0" style="width:100%;height:0%;"></div>
+  <div id="lightScreen" class="fixed z-40 left-0 top-0 bg-white opacity-0" style="width:100%;height:0%;"></div>
   <img id="cd" style="position:fixed;z-index:30px;left:0;bottom:0;width:0px;" id="icon">
   
   <div class="relative my-12 flex flex-row items-center" style="width:100%;">
@@ -138,6 +139,14 @@
       transition-property: width;
     }
     #dimScreen{
+      transition-property: opacity, height;
+      -webkit-transition-duration: 500ms, 0ms;
+      -moz-transition-duration: 500ms, 0ms;
+      -o-transition-duration: 500ms, 0ms;
+      transition-duration: 500ms, 0ms;
+      transition-delay:0ms, 500ms;
+    }
+    #lightScreen{
       transition-property: opacity, height;
       -webkit-transition-duration: 500ms, 0ms;
       -moz-transition-duration: 500ms, 0ms;
@@ -325,6 +334,30 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
               imgElem.src=nobody.img.data;
               bubble.appendChild(imgElem);
               gebi("textsBox").scrollTop=gebi("textsBox").scrollHeight;
+              imgElem.addEventListener("click",function(){
+                gebi("lightScreen").style.transitionDelay="0ms,0ms";
+                gebi("lightScreen").style.opacity=0.75;
+                gebi("lightScreen").style.height="100%";
+                var expanded = document.createElement("img");
+                expanded.className="absolute z-50";
+                expanded.style.top="100vh";
+                expanded.style.left=0;
+                expanded.id="expandedImg";
+                expanded.src=$0.src;
+                document.body.appendChild(expanded);
+                setTimeout(function(){
+                  expanded.style.transition="top 800ms";
+                  expanded.style.top="5vh";
+                },100)
+                expanded.onload=()=>{expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";}
+                expanded.addEventListener("click",function(){
+                  var me = this;
+                  expanded.style.top="100vh";
+                  setTimeout(function(){
+                    me.remove();
+                  },800)
+                })
+              })
             } else if (reqImg.readyState === 4){
               console.log("img get err: "+reqImg.responseText);
               alert("please ask michael for help oh noes")
@@ -335,7 +368,15 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
           bubble.appendChild(imgElem);
         }
       }
-    
+      gebi("lightScreen").addEventListener("click",function(){
+        gebi("dimScreen").style.transitionDelay="0ms,500ms";
+        gebi("dimScreen").style.opacity=0;
+        gebi("dimScreen").style.height=0;
+        gebi("expandedImg").style.top="100vh";
+        setTimeout(function(){
+          gebi("expandedImg").remove();
+        },800)
+      })
       var pfp = document.createElement("img");
       pfp.className="rounded-xl"
       pfp.style.height="45px";
