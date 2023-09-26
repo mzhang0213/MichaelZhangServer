@@ -334,30 +334,6 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
               imgElem.src=nobody.img.data;
               bubble.appendChild(imgElem);
               gebi("textsBox").scrollTop=gebi("textsBox").scrollHeight;
-              imgElem.addEventListener("click",function(){
-                gebi("lightScreen").style.transitionDelay="0ms,0ms";
-                gebi("lightScreen").style.opacity=0.75;
-                gebi("lightScreen").style.height="100%";
-                var expanded = document.createElement("img");
-                expanded.className="absolute z-50";
-                expanded.style.top="100vh";
-                expanded.style.left=0;
-                expanded.id="expandedImg";
-                expanded.src=$0.src;
-                document.body.appendChild(expanded);
-                setTimeout(function(){
-                  expanded.style.transition="top 800ms";
-                  expanded.style.top="5vh";
-                },100)
-                expanded.onload=()=>{expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";}
-                expanded.addEventListener("click",function(){
-                  var me = this;
-                  expanded.style.top="100vh";
-                  setTimeout(function(){
-                    me.remove();
-                  },800)
-                })
-              })
             } else if (reqImg.readyState === 4){
               console.log("img get err: "+reqImg.responseText);
               alert("please ask michael for help oh noes")
@@ -367,6 +343,30 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
           imgElem.src=text;
           bubble.appendChild(imgElem);
         }
+        imgElem.addEventListener("click",function(){
+          gebi("lightScreen").style.transitionDelay="0ms,0ms";
+          gebi("lightScreen").style.opacity=0.75;
+          gebi("lightScreen").style.height="100%";
+          var expanded = document.createElement("img");
+          expanded.className="absolute z-50";
+          expanded.style.top="100vh";
+          expanded.style.left=0;
+          expanded.id="expandedImg";
+          expanded.src=this.src;
+          document.body.appendChild(expanded);
+          setTimeout(function(){
+            expanded.style.transition="top 800ms";
+            expanded.style.top="5vh";
+          },100)
+          expanded.onload=()=>{expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";}
+          expanded.addEventListener("click",function(){
+            var me = this;
+            expanded.style.top="100vh";
+            setTimeout(function(){
+              me.remove();
+            },800)
+          })
+        })
       }
       gebi("lightScreen").addEventListener("click",function(){
         gebi("dimScreen").style.transitionDelay="0ms,500ms";
