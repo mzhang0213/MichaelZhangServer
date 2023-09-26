@@ -1,7 +1,5 @@
 todos:
 
--code notifications in the service workers for the accepted requests (ethelp client) / incoming requests (ettutor)
-
 -do better greetings than "hi xxx"
 	-come up with some and randomly choose :D
 
@@ -14,6 +12,3 @@ todos:
 -switch some of the confirmation alerts to notifications
 
 -bug: chat input processing not working since when you hit enter it puts a <br>
--bug: the first dry enter doesn't work
-
--bug: input img allows other types oops
