@@ -633,6 +633,49 @@ if (localStorage.getItem("et-chatData")===null||chatData.chatId!==window.locatio
               prev.style.backgroundColor="#528af1";
               prev.style.padding="18px";
               prev.src=e.target.result;
+              
+              prev.addEventListener("click",function(){
+                gebi("lightScreen").style.transitionDelay="0ms,0ms";
+                gebi("lightScreen").style.opacity=0.75;
+                gebi("lightScreen").style.height="100%";
+                var expanded = document.createElement("img");
+                expanded.className="fixed z-50";
+                expanded.style.top="100vh";
+                expanded.style.left=0;
+                expanded.id="expandedImg";
+                expanded.src=this.src;
+                document.body.appendChild(expanded);
+                expanded.onload=()=>{
+                  expanded.style.transition="top 400ms";
+                  if (expanded.offsetHeight>window.innerHeight){
+                    expanded.style.height=(window.innerHeight*0.95)+"px";
+                    if (expanded.offsetWidth>window.innerWidth){
+                      //even after adjusting for height, width is too large
+                      expanded.style.height="";
+                      expanded.style.width=(window.innerWidth*0.95)+"px";
+                    }
+                  }else if (expanded.offsetWidth>window.innerWidth){
+                    expanded.style.width=(window.innerWidth*0.95)+"px";
+                    if (expanded.offsetHeight>window.innerHeight){
+                      //even after adjusting for w, h is too large
+                      expanded.style.width="";
+                      expanded.style.height=(window.innerHeight*0.95)+"px";
+                    }
+                  }
+                  expanded.style.left=((window.innerWidth-expanded.offsetWidth)/2)+"px";
+                  expanded.style.top=((window.innerHeight-expanded.offsetHeight)/2)+"px";
+                }
+                expanded.addEventListener("click",function(){
+                  var me = this;
+                  gebi("lightScreen").style.transitionDelay="0ms,500ms";
+                  gebi("lightScreen").style.opacity=0;
+                  gebi("lightScreen").style.height=0;
+                  expanded.style.top="100vh";
+                  setTimeout(function(){
+                    me.remove();
+                  },800)
+                })
+              })
     
               c.appendChild(prev);
               c.appendChild(x);
