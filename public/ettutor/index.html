@@ -9,7 +9,7 @@
   <script>
     if (window.location.origin.charAt(4)!=="s"){
       //not https
-      window.location="https://"+window.location.host;
+      window.location="https://"+window.location.href.substring(7);
     }
   </script>
   <script>
