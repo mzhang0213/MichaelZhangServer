@@ -34,6 +34,8 @@ const urlB64ToUint8Array = base64String => {
   })
 
   self.addEventListener('activate', async (event) => {
+	event.waitUntil(self.clients.claim());
+	console.log("claimed bitc");
 	/*
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
