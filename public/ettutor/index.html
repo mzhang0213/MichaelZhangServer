@@ -7,6 +7,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
   <script>
+    if (window.location.origin.charAt(4)!=="s"){
+      //not https
+      window.location="https://"+window.location.host;
+    }
+  </script>
+  <script>
     tailwind.config = {
       theme: {
         screens: {
