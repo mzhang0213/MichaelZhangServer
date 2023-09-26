@@ -211,7 +211,6 @@
       navigator.serviceWorker.ready.then(async (reg) => {
         console.log("service worker activated and ready to go!");
         await pushSub(reg);
-        await claimClient();
       });
     }
 
@@ -228,7 +227,7 @@
           }
         }
         if (registrations.length===0||!found){
-          var reg = await registerSW();
+          await registerSW();
           console.log("worked yay");
         }else{
           navigator.serviceWorker.getRegistrations().then(async function(regs){
@@ -241,6 +240,7 @@
               })
             }
           })
+          await claimClient();
         }
         /*else{
           if (localStorage.getItem("et-subType")=="tutor" && localStorage.getItem("et-fullSw")!=="true"){
@@ -305,9 +305,6 @@
       await doRegistration()
       .then(async function(){
         await requestNotificationPermission();
-      })
-      .then(async function(){
-        await claimClient()
       })
     }
     main();
