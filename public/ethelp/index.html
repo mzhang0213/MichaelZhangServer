@@ -295,13 +295,13 @@
       check()
       await doRegistration()
       .then(async function(){
-        requestNotificationPermission();
+        await requestNotificationPermission();
       })
       .then(async function(){
-        claimClient()
+        await claimClient()
       })
     }
-    main();
+    await main();
 
     var sendNoti = (opt)=>{
       navigator.serviceWorker.getRegistrations().then((regs)=>{

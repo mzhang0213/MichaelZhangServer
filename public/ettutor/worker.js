@@ -28,12 +28,13 @@ const urlB64ToUint8Array = base64String => {
 	console.log("posted")
 	return response
   }
-  /*
-  self.addEventListener("install", async (event)=>{
+  
+  self.addEventListener("waiting", async (event)=>{
 	self.skipWaiting();
   })
-*/
+
   self.addEventListener('activate', async (event) => {
+	/*
 	// This will be called only once when the service worker is activated.
 	const applicationServerKey = urlB64ToUint8Array(
 	  'BAgfYISTfBzr9lElR16BE2zQNkK5HImAZZuXyEwfkLkI1OipeQhKTjOeS8ExTr2eU2cLe9FLaNQssjcLbB29JtA'
@@ -42,6 +43,12 @@ const urlB64ToUint8Array = base64String => {
 	var subscription,params,response;
 	var tainted = false;
 
+	try{
+		self.clients.claim();
+		console.log("claimed hopefully");
+	  } catch (err) {
+		console.log('(3) client claim error', err)
+	  }
 	try {
 	  subscription = await self.registration.pushManager.subscribe(options);
 	} catch (err) {
@@ -56,10 +63,9 @@ const urlB64ToUint8Array = base64String => {
 		} catch (err) {
 		  console.log('(2) save sub Error', err)
 		}
-	}else {
-		console.log("tainted rip");
-	}
+	}else console.log("tainted rip");
 	console.log(response)
+	console.log(subscription)*/
   })
 
   const alertError = async ()=>{
@@ -74,8 +80,10 @@ const urlB64ToUint8Array = base64String => {
   }
 
   self.addEventListener("message",function(event){
-	event.waitUntil(self.clients.claim());
-	console.log("claimed bitc");
+	if (event.data.type==="claim"){
+		event.waitUntil(self.clients.claim());
+		console.log("claimed bitc");
+	}
   })
   
   self.addEventListener("push", function(event) {
@@ -105,12 +113,7 @@ const urlB64ToUint8Array = base64String => {
 	  console.log("Push event but no data");
 	}
   });
-  const showLocalNotification = (title, body, swRegistration) => {
-	const options = {
-	  body:body,
-	  image:self.origin+"/hippohack/logo.png",
-	  title:""
-	  // here you can add more properties like icon, image, vibrate, etc.
-	};
-	swRegistration.showNotification(title, options);
+  //body icon lang silent tag timestamp
+  const showLocalNotification = (options,swRegistration) => {
+	swRegistration.showNotification(options.title, options);
   };

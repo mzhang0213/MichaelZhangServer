@@ -135,7 +135,7 @@
         msg.style.top="15vh";
       },100)
     }
-    
+
     const urlB64ToUint8Array = base64String => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
@@ -302,13 +302,13 @@
       check()
       await doRegistration()
       .then(async function(){
-        requestNotificationPermission();
+        await requestNotificationPermission();
       })
       .then(async function(){
-        claimClient()
+        await claimClient()
       })
     }
-    main();
+    await main();
 
     var sendNoti = (opt)=>{
       navigator.serviceWorker.getRegistrations().then((regs)=>{
