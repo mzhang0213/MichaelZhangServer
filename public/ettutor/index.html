@@ -152,7 +152,7 @@
       console.log("pushing to db");
       var reqAdd = new XMLHttpRequest();
       var bodyAdd = {
-        tutor:localStorage.getItem("et-tutor"),
+        user:localStorage.getItem("et-tutor"),
         sub:subscription
       }
       reqAdd.open("POST",window.location.origin+"/et-save-sub");
