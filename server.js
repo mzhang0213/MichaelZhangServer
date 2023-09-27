@@ -144,7 +144,10 @@ app.get("/et-getTutors",async (req,res)=>{
 			const cursor = db.find();
 			(async function(){
 				for await (var doc of cursor){
-					tutors.push(doc.user);
+					var tutor = {
+						user:doc.user
+					}
+					tutors.push(tutor);
 				}
 			})().then(async function(){
 				msg.tutors=tutors;
