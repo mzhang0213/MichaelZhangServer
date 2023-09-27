@@ -328,14 +328,13 @@
 
     var tutors = [];
     navigator.serviceWorker.addEventListener("message", (event) => {
-      //data from event.data.updatedUser > .user, .date
+      //data from event.data.updatedUser > .user
       if (event.data.updatedUser){
         console.log("Tutor got updated!!");
         console.log(event.data);
         for (var i=0;i<tutors.length;i++){
           if (tutors[i].user===event.data.updatedUser.user){
             tutors[i].refreshed=true;
-            tutors[i].date=event.data.updatedUser.date;
           }
         }
       }else if (event.data.confirm){
@@ -833,13 +832,14 @@
     req.send();
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
-        //receive list of tutors at body.online
+        //receive list of tutors at body.tutors
         var body = JSON.parse(req.responseText);
         for (var i=0;i<body.online.length;i++){
-          body.online[i].refreshed=false;
-          body.online[i].id="tutor"+(count++);
+          body.tutors[i].refreshed=false;
+          body.tutors[i].id="tutor"+(count++);
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
-          if (Date.now()-body.online[i].date<=7*1000){
+          /*
+          if (Date.now()-body.tutors[i].date<=7*1000){
             //still online
             var reqTutor = new XMLHttpRequest();
             var bodyTutor = {
@@ -860,9 +860,10 @@
               }
             })
           }
+          */
         }
 
-        tutors=body.online; //put here for adding refreshed and id properties
+        tutors=body.tutors; //put here for adding refreshed and id properties
 
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);

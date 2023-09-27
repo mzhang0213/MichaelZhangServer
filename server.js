@@ -64,6 +64,7 @@ app.post("/et-tutor",async(req,res)=>{
 			}
 			await db.insertOne(doc);
 
+			/*
 			const db_online = client.db("ethelp").collection("online");
 			var currContent = await db_online.findOne();
 			var online = currContent.online;
@@ -78,6 +79,7 @@ app.post("/et-tutor",async(req,res)=>{
 				}
 			}
 			await db_online.updateOne(filter,updateDoc);
+			*/
 
 			msg.error=0;
 			res.send(JSON.stringify(msg));
@@ -132,16 +134,21 @@ app.post("/et-tutorLogin", async (req,res)=>{
 
 app.get("/et-getTutors",async (req,res)=>{
 	var msg = {
-		online:[]
+		tutors:[]
 	};
 	try{
 		(async function(){
 			await client.connect();
-			const db = client.db("ethelp").collection("online");
-			var currContent = await db.findOne();
-			var online = currContent.online;
-			msg.online=online;
-			res.send(JSON.stringify(msg));
+			var tutors = [];
+			const cursor = db.find();
+			(async function(){
+				for await (var doc of cursor){
+					tutors.push(doc.user);
+				}
+			})().then(async function(){
+				msg.tutors=tutors;
+				res.send(JSON.stringify(msg));
+			})
 		})().then(async function(){
 			imDone();
 		})
@@ -220,7 +227,7 @@ app.post("/et-online",async (req,res)=>{
 			*/
 			var updatedUser = {
 				user:req.body.user,
-				date:Date.now()
+				//date:Date.now()
 			}
 			const db_subs = client.db("ethelp").collection("subs");
 			const currContent_subs = await db_subs.findOne();
