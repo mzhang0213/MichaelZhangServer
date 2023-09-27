@@ -139,6 +139,7 @@ app.get("/et-getTutors",async (req,res)=>{
 	try{
 		(async function(){
 			await client.connect();
+			const db = client.db("ethelp").collection("tutors");
 			var tutors = [];
 			const cursor = db.find();
 			(async function(){
