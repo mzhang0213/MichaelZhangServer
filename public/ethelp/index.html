@@ -834,7 +834,7 @@
       if (req.status === 200 && req.readyState === 4) {
         //receive list of tutors at body.tutors
         var body = JSON.parse(req.responseText);
-        for (var i=0;i<body.online.length;i++){
+        for (var i=0;i<body.tutors.length;i++){
           body.tutors[i].refreshed=false;
           body.tutors[i].id="tutor"+(count++);
           //for every tutor, make sure they are online and get their data and create put in the tutorsbox
