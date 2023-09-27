@@ -199,6 +199,7 @@ app.post("/et-online",async (req,res)=>{
 		//req.body.user is the username submitted
 		(async function(){
 			await client.connect();
+			/*
 			const db_online = client.db("ethelp").collection("online");
 			var currContent = await db_online.findOne();
 			var online = currContent.online;
@@ -216,12 +217,16 @@ app.post("/et-online",async (req,res)=>{
 				}
 			}
 			await db_online.updateOne(filter,updateDoc);
-
+			*/
+			var updatedUser = {
+				user:req.body.user,
+				date:Date.now()
+			}
 			const db_subs = client.db("ethelp").collection("subs");
 			const currContent_subs = await db_subs.findOne();
 			var subs_content = currContent_subs.subs;
 			var message = {
-				updatedUser:online[updatedUser],
+				updatedUser:updatedUser,
 				action:"online"
 			};
 			for (var i=0;i<subs_content.length;i++){

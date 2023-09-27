@@ -34,6 +34,7 @@ var db = {
 	tutor2:{},
 	tutor3:{yet:"another document"}
 }
+
 //db:online
 var o = {
 	title:"online",
@@ -43,6 +44,12 @@ var o = {
 			date:0 //last Date.now() they were online. on page ethelp, if Date.now-date>15secs, they are offline
 		}
 	]
+}
+//NOTE: RETIRING THE ONLINE DB
+	//MAY SWTICH IT TO TUTORS[]
+var updatedUser = {
+	user:"tutor_username",
+	date:Date.now()
 }
 
 //student request
