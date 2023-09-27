@@ -129,7 +129,7 @@ const urlB64ToUint8Array = base64String => {
 				client.postMessage({updatedUser:b.updatedUser})
 
 			}else if (b.action==="confirm" && client.url===self.location.origin+"/ethelp/"){
-				client.postMessage({confirm:b.confirm}) //not finished
+				client.postMessage({confirm:b.confirm})
 
 			}else if (b.action==="text" && client.url.indexOf("ethelp/chat")!==0){
 				client.postMessage({text:b.text});
