@@ -446,20 +446,21 @@
       var c = document.createElement("div");
       c.className="relative w-fit h-fit flex flex-col justify-center items-center text-left";
       c.style.padding="3px;"
-      c.id=id;
+
       outer.addEventListener("click",function(event){
         var elemClassList = event.target.classList;
         var foundBubb=false;
         for (var i=0;i<elemClassList.length;i++){
           if(elemClassList[i]==="bubble") foundBubb=true;
         }
+        var subjectsDiv = this.children[0].getElementsByClassName("subjects");
         if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && event.target.tagName!=="LABEL" && !foundBubb){
           if(!expanded){
-            gebi("subjects").style.display="none";
+            subjectsDiv.style.display="none";
             gebi("dimScreen").style.display="";
             var newSide = document.createElement("div");
             newSide.className="relative w-fit h-fit ml-6 flex flex-col justify-center items-center text-left";
-            newSide.style.padding="3px;"
+            newSide.style.padding="3px;";
             newSide.id="newSide";
 
             var showAll = document.createElement("div");
@@ -701,7 +702,7 @@
 
       var subjects = document.createElement("div");
       //this is a grid with two columns. each cell has a color and a subject name (or short subj code idk what to do)
-      subjects.className="relative grid grid-cols-2 text-white";
+      subjects.className="subjects relative grid grid-cols-2 text-white";
       subjects.id="subjects"
 
       for (var i=0;i<tutor.subjects.length;i++){
@@ -906,6 +907,7 @@
           if (gebi(tutors[i].id)!==null){
             //just went offline
             gebi(tutors[i].id).remove();
+            gebi("dimScreen").style.display="none";
           }
         }
         tutors[i].refreshed=false;
