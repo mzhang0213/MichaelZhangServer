@@ -453,7 +453,7 @@
         for (var i=0;i<elemClassList.length;i++){
           if(elemClassList[i]==="bubble") foundBubb=true;
         }
-        var subjectsDiv = this.children[0].getElementsByClassName("subjects");
+        var subjectsDiv = this.children[0].getElementsByClassName("subjects")[0];
         if (event.target.tagName!=="BUTTON" && event.target.tagName!=="TEXTAREA" && event.target.tagName!=="INPUT" && event.target.tagName!=="LABEL" && !foundBubb){
           if(!expanded){
             subjectsDiv.style.display="none";
@@ -657,7 +657,7 @@
             helpSubjects=[];
             gebi("newSide").remove();
             gebi("dimScreen").style.display="none";
-            gebi("subjects").style.display="";
+            subjectsDiv.style.display="";
             expanded=false;
           }
         }
@@ -821,7 +821,10 @@
       helpSubjects=[];
       gebi("newSide").remove();
       gebi("dimScreen").style.display="none";
-      gebi("subjects").style.display="";
+      var allSDiv = document.getElementsByClassName("subjects");
+      for (var i of allSDiv){
+        i.style.display="";
+      }
       expanded=false;
     })
 
