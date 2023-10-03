@@ -240,10 +240,15 @@ app.post("/et-online",async (req,res)=>{
 				updatedUser:updatedUser,
 				action:"online"
 			};
-			for (var i=0;i<subs_content.length;i++){
-				//for each subscription, send noti
-				sendNotification(subs_content[i].sub,message);
-			}
+			//make a timed for loop because this is stupid
+			(function(ind,message){
+				if (ind<subs_content.length){
+					sendNotification(subs_content[ind].sub,message);
+					setTimeout(function(){
+						loop(ind+1,message);
+					},400);
+				}
+			})(0,message);
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
 			imDone();
