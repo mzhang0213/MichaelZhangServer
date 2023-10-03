@@ -241,14 +241,15 @@ app.post("/et-online",async (req,res)=>{
 				action:"online"
 			};
 			//make a timed for loop because this is stupid
-			(function(ind,message){
+			var loop = function(ind,message){
 				if (ind<subs_content.length){
 					sendNotification(subs_content[ind].sub,message);
 					setTimeout(function(){
 						loop(ind+1,message);
 					},400);
 				}
-			})(0,message);
+			}
+			loop(0,message);
 			res.send(JSON.stringify({error:0}))
 		})().then(async function(){
 			imDone();
