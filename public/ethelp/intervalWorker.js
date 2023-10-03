@@ -3,4 +3,4 @@ setInterval(function(){
 	if (params.get("from")==="user"){
 		postMessage({"go":"do it"});
 	}
-},5.5*1000)
+},5*1000)
