@@ -13,6 +13,10 @@ todos:
 
 -bug: chat input processing not working since when you hit enter it puts a <br>
 
+-for no pfp: use the default one
+
+-report username after tutor creation
+
 ** CRITICAL: CHECK MULTIPLE TUTORS ONLINE SIMUL && REVISIT ONLINE TUTOR SCHEMATIC - do i really need to post to db every time? should i have a db??
 
 ** CRITICAL: ONLOAD MULTIPLE TUTORS POPPING UP ??? **
