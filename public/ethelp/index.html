@@ -409,7 +409,7 @@
   <!--tutor panel-->
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:1000px;">
     <p class="w-11/12 text-left font-bold text-5xl text-white mt-8 rounded-2xl bg-gradient-to-r from-pink-500 to-violet-500 p-6">Online Tutors</p>
-    <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"></div>
+    <div id="tutorsBox" class="relative flex flex-row flex-wrap rounded-2xl w-11/12 bg-gray-700 overflow-auto p-4" style="height:1000px"><i class="text-gray-300 text-lg">Loading tutors, wait a sec...</i></div>
   </div>
   <style>
     #connect{
@@ -438,7 +438,11 @@
     var expanded = false;
     var helpSubjects=[];
     var createTutor = function(tutor,id){
-      //username, first, last, grade, subjects
+      //username, first, last, grade, subjects'
+      if ($0.children[0].tagName==="I"||$0.children[0].tagName==="P"){
+        //loading blurb or absent is still there t-t
+        gebi("tutorsBox").innerHTML="";
+      }
       var outer = document.createElement("div");
       outer.className="relative z-20 mx-5 my-3 p-3 w-fit h-fit flex flex-row justify-start text-left rounded-2xl shadow-2xl bg-gradient-to-bl from-blue-500 to-sky-300";
       outer.id=id;
@@ -880,8 +884,10 @@
     var intervalWorker = new Worker(window.location.origin+"/ethelp/intervalWorker.js?from=user");
     intervalWorker.addEventListener("message",function(e){
       console.log("checking for DC'd tutors")
+      var foundOne = false;
       for (var i=0;i<tutors.length;i++){
         if (tutors[i].refreshed){
+          foudnOne=true;
           //they have been personally cleared by the sw!
           //two more cases: either are on the body or not
           if (gebi(tutors[i].id)===null){
@@ -914,6 +920,16 @@
           }
         }
         tutors[i].refreshed=false;
+      }
+      if (!foundOne){
+        //throw up the message
+        setTimeout(function(){
+          gebi("tutorsBox").innerHTML="";
+          var msg = document.createElement("p");
+          msg.className = "text-gray-300 text-lg";
+          msg.innerHTML="No tutors are online / available ATM. Check the schedule and just wait a sec :)<br>If you still find no help feel free to contact enginuitytech@gmail.com";
+          gebi("tutorsBox").appendChild(msg);
+        },100)
       }
     })
     /*
