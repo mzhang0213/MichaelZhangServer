@@ -41,12 +41,6 @@ const imDone = async function(){
 //proxying
 
 
-const httpProxy = require('http-proxy');
-//
-// Create your proxy server and set the target in the options.
-//
-httpProxy.createProxyServer({target:'https://instagram.com/direct/inbox'}).listen(PORT);
-
 // include dependencies
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
