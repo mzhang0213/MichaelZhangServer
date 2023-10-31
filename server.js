@@ -45,26 +45,27 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 // proxy middleware options
 /** @type {import('http-proxy-middleware/dist/types').Options} */
 const options = {
-  target: 'https://instagram.com/direct/', // target host
-  changeOrigin: true, // needed for virtual hosted sites
+  target: 'https://instagram.com/direct/inbox/', // target host
+  changeOrigin: false, // needed for virtual hosted sites
   ws: true, // proxy websockets
+  ignorePath:true,
   /*
   pathRewrite: {
     '^/api/old-path': '/api/new-path', // rewrite path
     '^/api/remove/path': '/path', // remove base path
-  },*/
+  },
   router: {
     // when request.headers.host == 'dev.localhost:3000',
     // override target 'http://www.example.org' to 'http://localhost:8000'
-    'michaelzhangwebsite.herokuapp.com/prox': 'https://instagram.com/direct/',
-  }
+    'michaelzhangwebsite.herokuapp.com': 'https://instagram.com/direct/inbox',
+  }*/
 };
 
 // create the proxy (without context)
 const exampleProxy = createProxyMiddleware(options);
 
 // mount `exampleProxy` in web server
-app.use('/inbox', exampleProxy);
+app.use('/prox', exampleProxy);
 
 
 
