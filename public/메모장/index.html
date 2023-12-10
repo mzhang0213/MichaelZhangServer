@@ -54,8 +54,8 @@
         outline:none;
       }
       #saveStatus{
-        width:12px;
-        height:12px;
+        width:15px;
+        height:15px;
         background-color:lightblue;
       }
       .group {
@@ -182,11 +182,15 @@
         }
         if (keysDown.indexOf(17)!==-1&&e.key==="s"){
           //alr hit ctrl, just hit s
-          console.log("Saved");
+          console.log("Saved (from command)");
           e.preventDefault();
           saveFile();
         }
       });
+      gebi("saveStatus").addEventListener("click",function(){
+        console.log("Saved (from click)");
+        saveFile();
+      })
       
       input.addEventListener('keyup', e => {
         const index = keysDown.indexOf(e.keyCode);
