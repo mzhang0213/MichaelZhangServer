@@ -103,7 +103,7 @@ app.post("/mmj-update",async(req,res)=>{
 		console.log(e);
 	}
 })
-app.get("/mmj-getNote",async (req,res)=>{
+app.post("/mmj-getNote",async (req,res)=>{
 	var msg = {};
 	try{
 		(async function(){
