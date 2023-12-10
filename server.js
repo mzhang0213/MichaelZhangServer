@@ -111,6 +111,7 @@ app.post("/mmj-getNote",async (req,res)=>{
 			const db = client.db("mmj").collection("note");
 			const cursor = db.find();
 			for await (var doc of cursor){
+				console.log(doc);
 				if (doc.title===req.body.title){ //coded to allow multiple notes in the future
 					msg.note=doc.note;
 					msg.title=doc.title;
