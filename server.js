@@ -77,6 +77,59 @@ app.use('/prox', exampleProxy);
 
 
 
+//메모장
+
+app.post("/mmj-update",async(req,res)=>{
+	try{
+		(async function(){
+			//data: req.body.note
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const filter = {title:"note"}
+			const updateDoc = {
+				$set: {
+					note:req.body.note
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.get("/mmj-getNote",async (req,res)=>{
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const cursor = db.find();
+			for await (var doc of cursor){
+				if (doc.title===req.body.title){ //coded to allow multiple notes in the future
+					msg.note=doc.note;
+					msg.title=doc.title;
+					break;
+				}
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+
+
+
+
 
 
 //ET help

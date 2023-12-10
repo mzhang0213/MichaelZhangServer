@@ -1,0 +1,112 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel='icon' href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+          }
+        }
+      }
+    </script>
+    <script>
+      var navMenuShown = false;
+      var gebi = function(e){return document.getElementById(e)};
+      var resize = function(){
+        if (window.innerWidth<700){
+          //small
+        }else if (700<=window.innerWidth && window.innerWidth<1200){
+          //med
+        }else{
+          //lg++
+        }
+      }
+      window.onresize=resize;
+      window.onload=function(){
+        if (window.innerWidth<700){
+          //small
+          document.getElementById("navItemContainer").style.display="none"
+          document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+          })
+        }
+        resize();
+      }
+    </script>
+    <style>
+      html{
+        scroll-behavior:smooth;
+      }
+    </style>
+  </head>
+  <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+    <nav id="navbar" class="fixed left-0 top-0 z-50 flex items-center justify-between flex-wrap p-2 pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5); width:100%;">
+      <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <button class="text-xl tracking-tight">Title of NavBar</span>
+      </div>
+      <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+      </div>
+      <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <div class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+        <button class="groupButton" style="color:lightgray;">Group</button>
+        <div class="groupContent">
+          <a class="groupItem">An item in the group</a>
+        </div>
+      </div>
+    </nav>
+    <div class="mt-12">
+    </div>
+    <style>
+      .group {
+        position:relative;
+        display:inline-block;
+      }
+      .groupContent {
+        display:none;
+        position:absolute;
+        background-color:rgb(36, 36, 36);
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: 50%;
+        right: auto;
+        text-align: center;
+        transform: translate(-50%, 0);
+      }
+      .groupContent a {
+        font-size:12px;
+        text-decoration:none;
+        padding: 12px 16px;
+        display:block;
+      }
+      .group:hover .groupContent {
+        display:block;
+      }
+      .group a:hover {
+        background-color:#383838;
+        cursor:pointer;
+      }
+      .button_def {
+        font-size:14px;
+        border:1px solid black;
+        background-color:rgb(200,200,200);
+        border-radius:5px;
+        padding:4px;
+      }
+    </style>
+  </body>
+</html>
