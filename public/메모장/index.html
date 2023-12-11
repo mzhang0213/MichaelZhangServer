@@ -173,7 +173,7 @@
         }
       }
       input.addEventListener('keydown', e => {
-        if (e.location==0){
+        if (e.location==0||e.key.substring(0,5)!=="Arrow"){
           gebi("saveStatus").style.backgroundColor="orange";
         }
         
