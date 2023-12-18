@@ -18,9 +18,10 @@
   <body>
     <font style="font-family: 'Cabin';">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
+      <button id="logout" style="position:absolute;bottom:5px;right:5px;z-index:10;">Logout</button>
       <div id="one" style="overflow-y:auto;" class="sideBySide">
         <p id="tooFastAlert">Too fast! Wait </p>
-        <button id="logout" style="position:relative;top:10px;left:5px;z-index:10;">Logout</button>
+        <button id="myQueue" style="width:75%;position:relative;top:10px;left:5px;z-index:10;background-color:rgb(108, 233, 108);border:2px solid black;border-radius:5px;">My Queue</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
@@ -28,6 +29,7 @@
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
         <button id="nextId"> ⬇ </button>
         <button id="saveSong">Save</button>
+        <button id="addToMyQueue">Queue +</button>
         <div id="hidePlayer">
           <img id="openEye">
           <img id="closedEye">
@@ -116,6 +118,13 @@
         z-index:10;
       }
       #saveSong{
+        position:absolute;
+        left:0;
+        top:0;
+        font-size:12px;
+        z-index:10;
+      }
+      #addToMyQueue{
         position:absolute;
         left:0;
         top:0;
@@ -279,6 +288,8 @@
         gebi("player").height = window.innerHeight*0.47;
 
         gebi("saveSong").style.left=gebi("nextId").offsetWidth+"px";
+        
+        gebi("addToMyQueue").style.left=(gebi("saveSong").offsetWidth+gebi("nextId").offsetWidth)+"px";
 
         var eyeOffset = gebi("closedEye").style.display=="none"?gebi("openEye").offsetWidth:gebi("closedEye").offsetWidth;
         gebi("openEye").style.width=(100*0.3)+"px";
@@ -292,6 +303,7 @@
       gebi("prev").disabled=true;gebi("next").disabled=true;gebi("playPause").disabled=true;gebi("volumeUp").disabled=true;gebi("volumeDown").disabled=true;
       gebi("nextId").disabled=true;
       gebi("saveSong").disabled=true;
+      gebi("addToMyQueue").disabled=true;
       gebi("closedEye").style.display="none";
 
       gebi("openEye").src=window.location.origin+"/spotifyYt/openeye.png"
@@ -445,6 +457,23 @@
           return false;
         }
         var loadedSongs = JSON.parse(localStorage.getItem("savedSongs"));
+        for(var i=0;i<loadedSongs.items.length;i++){
+          if (loadedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
+            bad=true;
+          }
+        }
+        return bad;
+      }
+      function checkSongInQueueStorage(){
+        var bad=false;
+        if (localStorage.getItem("myQueue")===null||localStorage.getItem("myQueue")===undefined||localStorage.getItem("myQueue")===""||localStorage.getItem("myQueue")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("myQueue",JSON.stringify(loadedSongs));
+          return false;
+        } 
+        var loadedSongs = JSON.parse(localStorage.getItem("myQueue"));
         for(var i=0;i<loadedSongs.items.length;i++){
           if (loadedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
             bad=true;
@@ -735,6 +764,7 @@
                   gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
                   gebi("nextId").disabled=false;
                   gebi("saveSong").disabled=false;
+                  gebi("addToMyQueue").disabled=false;
                   
                   document.getElementById("documentTitle").innerHTML="";
                   document.getElementById("documentTitle").innerHTML=this.innerHTML;
@@ -1043,6 +1073,228 @@
       document.getElementById("logout").addEventListener("click", function(){
         alert("You will be redirected to the Spotify home page,\nbut you can return by going to the homepage :)");
         window.location = "https://spotify.com/logout/";
+      })
+      document.getElementById("addToMyQueue").addEventListener("click",function(){
+        var storedSongs = JSON.parse(localStorage.getItem("myQueue"));
+        if (localStorage.getItem("myQueue")===null||localStorage.getItem("myQueue")===undefined||localStorage.getItem("myQueue")===""||localStorage.getItem("myQueue")==="null"){
+          storedSongs={
+            items:[]
+          }
+          storedSongs.items.push(document.getElementById(playedSongs[currentPos]).innerHTML)
+        }else{
+          if (!checkSongInQueueStorage()){
+            storedSongs.items.push(document.getElementById(playedSongs[currentPos]).innerHTML)
+          }
+        }
+        localStorage.setItem("myQueue",JSON.stringify(storedSongs));
+        this.disabled=true;
+      })
+      document.getElementById("myQueue").addEventListener("click", function(){
+        var songsData = JSON.parse(localStorage.getItem("myQueue"));
+        /*
+        songsData = {
+          items:[
+            "search query"
+          ]
+        }
+        */
+        for (var k=0;k<songsData.items.length;k++){
+          var p = document.createElement("p");
+          var song = "";
+          song+=songsData.items[k];
+          p.append(song);
+          p.style.color = "lightgreen";
+          var idVal=0;
+          p.id="song"+idVal++;
+          p.className="songs";
+          p.addEventListener("click", function(){
+            if (!cooldown){
+              cooldown=true;
+              remainDur=Date.now();
+              if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                playedSongs.push(this.id);
+                currentPos++;
+              }
+              fromQueueAndPlay=false;
+              fromPrev=false;
+              fromRepeat=false;
+
+              //make sure the rest of the song titles lightgreen
+              resetSongColor();
+              this.style.color="green"; //this elem dark green
+              
+              //free me saronite chain gang
+              gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+              gebi("nextId").disabled=false;
+              gebi("saveSong").disabled=false;
+              
+              document.getElementById("documentTitle").innerHTML="";
+              document.getElementById("documentTitle").innerHTML=this.innerHTML;
+              
+              //append songDesc
+              document.getElementById("songDesc").innerHTML="";
+              var sdItalics = document.createElement("i");
+              var sdBlue = document.createElement("font");
+              sdBlue.style.color="#1284ff";
+              
+              sdItalics.append("Playing:  ");
+              sdBlue.append(htmlDecode(this.innerHTML));
+              document.getElementById("songDesc").appendChild(sdItalics);
+              document.getElementById("songDesc").appendChild(sdBlue);
+              
+              var searchQ=this.innerHTML;
+              if (document.getElementById("oaSliderCheckBox").checked){
+                searchQ+=" Official Audio";
+              }
+              if (document.getElementById("lyricModeSliderCheckBox").checked){
+                searchQ+=" Lyrics";
+              }
+              if (document.getElementById("ostModeSliderCheckBox").checked){
+                searchQ+=" ost";
+              }
+              
+              var rejectedIds = [
+                "ngd1Y_90PcY"
+              ]
+              var specialSongs = [
+                ["希望の唄","https://youtu.be/3NOMJ5CEeLo"],
+                ["Reol - 平面鏡","https://www.youtube.com/watch?v=xbXbEZY-IvE"],
+                ["YOASOBI - 夜に駆ける","https://www.youtube.com/watch?v=mJ1N7-HyH1A"],
+                ["MONGOL800 - 小さな恋のうた","https://www.youtube.com/watch?v=JoJ6lnF07U4"],
+                ["Always With Me_Youmi Kimura [Music Box] (Studio Ghibli Anime 'Spirited Away' Theme Song)","Always With Me Youmi Kimura [Music Box]"],
+                ["My Hair is Bad - 音楽家になりたくて","https://www.youtube.com/watch?v=oAlXNOyiyoA"],
+                ["back number - 高嶺の花子さん","https://www.youtube.com/watch?v=KisuZab-kEM"],
+                ["HoneyWorks - Kawaikutegomen","可愛くてごめん (feat. かぴ)／HoneyWorks"],
+                ["SawanoHiroyuki[nZk] - &amp;Z","https://www.youtube.com/watch?v=a23xMSlTTk4"],
+                ["Gen Hoshino - Doraemon","https://www.youtube.com/watch?v=dN5AX_W93dA"],
+                ["言って 鹿乃","https://www.youtube.com/watch?v=WIfleHqox_A"]
+              ]
+              for (var i=0;i<specialSongs.length;i++){
+                if (specialSongs[i][0]===this.innerHTML){
+                  searchQ=specialSongs[i][1];
+                }
+              }
+              console.log(searchQ);
+              
+              //youtube load
+              //avaliable keys:
+                //chrisProject: AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM
+                //michaelProject: AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
+                //spotifyYt: AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk
+              getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                        +"&key="+ "AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0"
+                        +"&q="+searchQ,
+                        undefined,
+                        (getYtErr,searchData)=>{
+                if (getYtErr){
+                  console.log("getYtErr: " + getYtErr+"\nInitializing second proj");
+
+                  getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                            +"&key="+ "AIzaSyBZ-Q5WsqbWBqP2lPE0TjpLZ2rAnPeapPM"
+                            +"&q="+searchQ,
+                            undefined,
+                            (getYtErrTwo,searchData)=>{
+                    if (getYtErrTwo){
+                      console.log("getYtErrTwo: " + getYtErrTwo+"\nInitializing third proj");
+
+                      getRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&format=5&type=video&videoEmbeddable=true"
+                                +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                                +"&q="+searchQ,
+                                undefined,
+                                (getYtErrThree,searchData)=>{
+                        if (getYtErrThree){
+                          console.log("getYtErrThree: " + getYtErrThree+"\nInitializing third proj");
+                        }else{
+                          console.log(searchData.items)
+                          currSongIds = searchData.items;
+                          currSongPos = 0;
+                          for (var o=0;o<searchData.items.length;o++){
+                            for (var p=0;p<rejectedIds.length;p++){
+                              if (currSongIds[o].id.videoId===rejectedIds[p]){
+                                currSongIds.splice(o,1);
+                              }
+                            }
+                          }
+                          if(currSongIds.length===0){
+                            console.log("undesired video load");
+                            var searchQParams = new URLSearchParams(searchQ);
+                            if (searchQParams.get("v")!==null){
+                              player.loadVideoById({videoId:searchQParams.get("v")});
+                            }else{
+                              setTimeout(function(){
+                                document.getElementById("next").dispatchEvent(new Event("click"));
+                              },1500)
+                            }
+                          }else{
+                            player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                          }
+                        }
+                      })
+                    }else{
+                      console.log(searchData.items)
+                      currSongIds = searchData.items;
+                      currSongPos = 0;
+                      for (var o=0;o<searchData.items.length;o++){
+                        for (var p=0;p<rejectedIds.length;p++){
+                          if (currSongIds[o].id.videoId===rejectedIds[p]){
+                            currSongIds.splice(o,1);
+                          }
+                        }
+                      }
+                      if(currSongIds.length===0){
+                        console.log("undesired video load");
+                        var searchQParams = new URLSearchParams(searchQ);
+                        if (searchQParams.get("v")!==null){
+                          player.loadVideoById({videoId:searchQParams.get("v")});
+                        }else{
+                          setTimeout(function(){
+                            document.getElementById("next").dispatchEvent(new Event("click"));
+                          },1500)
+                        }
+                      }else{
+                        player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                      }
+                    }
+                  })
+                }else{
+                  console.log(searchData.items)
+                  currSongIds = searchData.items;
+                  currSongPos = 0;
+                  for (var o=0;o<searchData.items.length;o++){
+                    for (var p=0;p<rejectedIds.length;p++){
+                      if (currSongIds[o].id.videoId===rejectedIds[p]){
+                        currSongIds.splice(o,1);
+                      }
+                    }
+                  }
+                  if(currSongIds.length===0){
+                    console.log("undesired video load");
+                    var searchQParams = new URLSearchParams(searchQ);
+                    if (searchQParams.get("v")!==null){
+                      player.loadVideoById({videoId:searchQParams.get("v")});
+                    }else{
+                      setTimeout(function(){
+                        document.getElementById("next").dispatchEvent(new Event("click"));
+                      },1500)
+                    }
+                  }else{
+                    player.loadVideoById({videoId:currSongIds[currSongPos].id.videoId});
+                  }
+                }
+              })
+              setTimeout(()=>{
+                console.log("GREEN")
+                cooldown=false;
+              },500)
+            }else{
+              document.getElementById("tooFastAlert").style.display="";
+              document.getElementById("tooFastAlert").innerHTML="";
+              document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
+              setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
+            }
+          })
+        }
+        
       })
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
