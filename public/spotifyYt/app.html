@@ -638,9 +638,8 @@
                       document.getElementById("playlists").appendChild(p);
                       p.append(playlistData.items[i].name);
                       p.style.color = "#94bdff";
-                      var thisId = "playlist"+(atoms+i);
-                      p.id=thisId;
-                      totalPlaylists.items[i]=playlistData.items[i];
+                      p.id="playlist"+(atoms+i);
+                      totalPlaylists.items[atoms+i]=playlistData.items[i];
                       p.className="playlists";
                       p.addEventListener("click", function(){
                         var lists = document.getElementsByClassName("playlists");
