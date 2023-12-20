@@ -609,6 +609,14 @@
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
+      var totalPlaylists = [];
+      var indexPlaylists = function(){
+        var lists = document.getElementsByClassName("playlists");
+        for(var a=0;a<lists.length;a++){
+          lists[a].id="playlist"+a;
+          totalPlaylists.push(lists[a]);
+        }
+      }
       var getPlaylists = function() {
         getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
           if (dogsErr){
@@ -626,14 +634,13 @@
                       document.getElementById("playlists").appendChild(p);
                       p.append(playlistData.items[i].name);
                       p.style.color = "#94bdff";
-                      p.id="playlist"+i+atoms;
                       p.className="playlists";
                       p.addEventListener("click", function(){
                         var lists = document.getElementsByClassName("playlists");
                         for(var a=0;a<lists.length;a++){
                           lists[a].style.color=this.style.color="#94bdff";
                         }
-                        getSongs(this.id.substring(8),playlistData);
+                        getSongs(this.id.substring(8),totalPlaylists);
                         gebi("playPause").disabled=false;
                         totalSongs=[];
                       })
@@ -648,6 +655,7 @@
               }
             }
             things(0);
+            indexPlaylists();
           }
         })
       }
