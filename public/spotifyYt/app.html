@@ -652,10 +652,12 @@
                     things(atoms+50);
                   }
                 })
+              }else{
+                //after async call finish
+                indexPlaylists();
               }
             }
             things(0);
-            indexPlaylists();
           }
         })
       }
