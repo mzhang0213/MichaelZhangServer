@@ -17,7 +17,7 @@
   </head>
   <body>
     <font style="font-family: 'Cabin';">
-      <img id="cd" style="position:fixed;z-index:30px;left:0;bottom:0;width:0px;" id="icon">
+      <img id="cd">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
       <button id="logout" style="position:absolute;bottom:5px;right:5px;z-index:10;">Logout</button>
       <div id="one" style="overflow-y:auto;" class="sideBySide">
@@ -108,15 +108,21 @@
     </font>
     <style>
       #cd{
-        -webkit-transition-duration: 1250ms;
-        -moz-transition-duration: 1250ms;
-        -o-transition-duration: 1250ms;
-        transition-duration: 1250ms;
+        -webkit-transition-duration: 750ms;
+        -moz-transition-duration: 750ms;
+        -o-transition-duration: 750ms;
+        transition-duration: 750ms;
         -webkit-transition-property: -webkit-transform;
         -moz-transition-property: -moz-transform;
         -o-transition-property: -o-transform;
         transition-property: transform;
         transition-timing-function:linear;
+        position:fixed;
+        z-index:20;
+        left:0;
+        bottom:0;
+        width:0px;
+        filter:brightness(0);
       }
       #myQueue{
         width:45%;
@@ -1118,6 +1124,7 @@
 
 
       var deletingHold = false;
+      var lastClicked = 0;
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
         /*
@@ -1191,19 +1198,20 @@
           p.className="songs";
           p.addEventListener("mousedown",function(e){
             deletingHold=true;
+            lastClicked=Date.now();
             gebi("cd").style.width = "40px"; //show
             gebi("cd").style.left = (e.clientX-gebi("cd").offsetWidth*1.5)+"px";
             gebi("cd").style.top = (e.clientX-gebi("cd").offsetHeight*0.5)+"px";
-            gebi("cd").style.transitionDuration="1250ms"; //set duration of rotation
+            gebi("cd").style.transitionDuration="750ms"; //set duration of rotation
             gebi("cd").style.transform = "rotate(352deg)"; //rotate
             setTimeout(function(){
               gebi("cd").style.width = 0; //hide
               gebi("cd").style.transitionDuration="0ms"; //reset duration
               gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
-            },1300)
+            },800)
           })
           p.addEventListener("mouseup",function(){
-            if (deletingHold){
+            if (deletingHold&&Date.now()-lastClicked===800){
               var oldSongs = JSON.parse(localStorage.getItem("myQueue")).items;
               var newSongs = {
                 items:[]
@@ -1215,7 +1223,9 @@
               }
               //update
               localStorage.setItem("myQueue",JSON.stringify(newSongs));
+              gebi("myQueue").click();
             }
+            lastClicked=Date.now();//safety
             deletingHold=false;
           })
           p.addEventListener("click", function(){
