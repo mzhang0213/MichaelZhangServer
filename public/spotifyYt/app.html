@@ -17,6 +17,7 @@
   </head>
   <body>
     <font style="font-family: 'Cabin';">
+      <img id="cd" style="position:fixed;z-index:30px;left:0;bottom:0;width:0px;" id="icon">
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
       <button id="logout" style="position:absolute;bottom:5px;right:5px;z-index:10;">Logout</button>
       <div id="one" style="overflow-y:auto;" class="sideBySide">
@@ -106,6 +107,17 @@
       <p id="playlistList"></p>
     </font>
     <style>
+      #cd{
+        -webkit-transition-duration: 1250ms;
+        -moz-transition-duration: 1250ms;
+        -o-transition-duration: 1250ms;
+        transition-duration: 1250ms;
+        -webkit-transition-property: -webkit-transform;
+        -moz-transition-property: -moz-transform;
+        -o-transition-property: -o-transform;
+        transition-property: transform;
+        transition-timing-function:linear;
+      }
       #myQueue{
         width:45%;
         position:relative;
@@ -258,6 +270,7 @@
     <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
+      gebi("cd").src=window.location.origin+"/ethelp/cd.png";
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
 
@@ -1104,7 +1117,7 @@
       })
 
 
-
+      var deletingHold = false;
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
         /*
@@ -1176,6 +1189,35 @@
           p.style.color = "lightgreen";
           p.id="song"+(k);
           p.className="songs";
+          p.addEventListener("mousedown",function(e){
+            deletingHold=true;
+            gebi("cd").style.width = "40px"; //show
+            gebi("cd").style.left = (e.clientX-gebi("cd").offsetWidth*1.5)+"px";
+            gebi("cd").style.top = (e.clientX-gebi("cd").offsetHeight*0.5)+"px";
+            gebi("cd").style.transitionDuration="1250ms"; //set duration of rotation
+            gebi("cd").style.transform = "rotate(352deg)"; //rotate
+            setTimeout(function(){
+              gebi("cd").style.width = 0; //hide
+              gebi("cd").style.transitionDuration="0ms"; //reset duration
+              gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
+            },1300)
+          })
+          p.addEventListener("mouseup",function(){
+            if (deletingHold){
+              var oldSongs = JSON.parse(localStorage.getItem("myQueue")).items;
+              var newSongs = {
+                items:[]
+              }
+              for (var a=0;a<oldSongs.length;a++){
+                if (oldSongs[a]!==this.innerHTML){
+                  newSongs.items.push(oldSongs[a]);
+                }
+              }
+              //update
+              localStorage.setItem("myQueue",JSON.stringify(newSongs));
+            }
+            deletingHold=false;
+          })
           p.addEventListener("click", function(){
             if (!cooldown){
               cooldown=true;
