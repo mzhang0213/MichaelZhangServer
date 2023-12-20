@@ -504,7 +504,7 @@
           }
           localStorage.setItem("myQueue",JSON.stringify(loadedSongs));
           return false;
-        } 
+        }
         var loadedSongs = JSON.parse(localStorage.getItem("myQueue"));
         for(var i=0;i<loadedSongs.items.length;i++){
           if (loadedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
@@ -616,36 +616,38 @@
           }else{
             playlistTotal=theStuffData.total;
             var things = function(atoms){
-              getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
-                if (playlistFetchErr){
-                  console.log("playlistFetchErr: " + playlistFetchErr);
-                } else {
-                  for (var i=0;i<playlistData.items.length;i++){
-                    var p = document.createElement("p");
-                    document.getElementById("playlists").appendChild(p);
-                    p.append(playlistData.items[i].name);
-                    p.style.color = "#94bdff";
-                    p.id="playlist"+i;
-                    p.className="playlists";
-                    p.addEventListener("click", function(){
-                      var lists = document.getElementsByClassName("playlists");
-                      for(var a=0;a<lists.length;a++){
-                        lists[a].style.color=this.style.color="#94bdff";
+              if (atoms<playlistTotal){
+                getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+                  if (playlistFetchErr){
+                    console.log("playlistFetchErr: " + playlistFetchErr);
+                  } else {
+                    for (var i=0;i<playlistData.items.length;i++){
+                      var p = document.createElement("p");
+                      document.getElementById("playlists").appendChild(p);
+                      p.append(playlistData.items[i].name);
+                      p.style.color = "#94bdff";
+                      p.id="playlist"+i+atoms;
+                      p.className="playlists";
+                      p.addEventListener("click", function(){
+                        var lists = document.getElementsByClassName("playlists");
+                        for(var a=0;a<lists.length;a++){
+                          lists[a].style.color=this.style.color="#94bdff";
+                        }
+                        getSongs(this.id.substring(8),playlistData);
+                        gebi("playPause").disabled=false;
+                        totalSongs=[];
+                      })
+                      if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                        p.click();
                       }
-                      getSongs(this.id.substring(8),playlistData);
-                      gebi("playPause").disabled=false;
-                      totalSongs=[];
-                    })
-                    if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-                      p.click();
                     }
+  
+                    things(atoms+50);
                   }
-                }
-              })
+                })
+              }
             }
-            for (var mz=0;mz<playlistTotal;mz+=50){
-              things(mz);
-            }
+            things(0);
           }
         })
       }
@@ -664,14 +666,14 @@
                 alert("Relogging you in :P\nGoing home...");
                 window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
               }
-              getPlaylists()
+              getPlaylists();
             }
-            req.send()
+            req.send();
           }else{
             console.log("fetching for bones err: "+dogsErr);
           }
         }else{
-          getPlaylists()
+          getPlaylists();
         }
       })
       
@@ -1221,9 +1223,10 @@
               clearCdAnimation();
             },1000)
           })
-          p.addEventListener("mouseup",function(){
+          p.addEventListener("mouseup",function(mue){
             clearCdAnimation();
             if (deletingHold&&Date.now()-lastClicked>=1000){
+              mue.preventDefault();
               var oldSongs = JSON.parse(localStorage.getItem("myQueue")).items;
               var newSongs = {
                 items:[]
