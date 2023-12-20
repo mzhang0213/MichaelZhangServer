@@ -21,7 +21,7 @@
       <button id="logout" style="position:absolute;bottom:5px;right:5px;z-index:10;">Logout</button>
       <div id="one" style="overflow-y:auto;" class="sideBySide">
         <p id="tooFastAlert">Too fast! Wait </p>
-        <button id="myQueue" style="width:49%;position:relative;top:5px;left:5px;z-index:10;background-color:rgb(108, 233, 108);border:2px solid black;border-radius:5px;">My Queue</button>
+        <button id="myQueue">My Queue</button>
         <br clear="all"><br>
         <div id="playlists" class="sideBySide"></div>
         <div id="songs" class="sideBySide"></div>
@@ -106,6 +106,19 @@
       <p id="playlistList"></p>
     </font>
     <style>
+      #myQueue{
+        width:49%;
+        position:relative;
+        top:5px;
+        left:5px;
+        z-index:10;
+        background-color:rgb(108, 233, 108);
+        border:2px solid black;
+        border-radius:5px;
+      }
+      #myQueue:hover{
+        background-color:rgb(65, 173, 65);
+      }
       #songDesc{
         position:relative;
         font-size:17px;
@@ -1098,11 +1111,65 @@
           ]
         }
         */
+        document.getElementById("songs").innerHTML="";
+        totalSongs = [];
+        var searchBox = document.createElement("input");
+        searchBox.placeholder="🔎 Search";
+        searchBox.id="searchBox";
+        searchBox.style.position="fixed";
+        document.getElementById("songs").appendChild(searchBox);
+        searchBox.addEventListener("input", function(){
+          document.getElementById("one").scrollTo(0,0);//scroll up
+          document.querySelectorAll(".songs").forEach(function(song){song.remove()});
+          for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
+          var queries = [];
+          var last = 0;
+          for (var a=0;a<searchBox.value.length-1;a++){
+            if (searchBox.value.charAt(a)==="&"&&searchBox.value.charAt(a+1)==="&"){
+              queries.push(searchBox.value.substring(last,a));
+              last=a+2;
+              a+=2;
+            }
+          }
+          if (searchBox.value.indexOf("&&")===-1){
+            queries.push(searchBox.value);
+          }else if (last<=searchBox.value.length-1){
+            queries.push(searchBox.value.substring(last,searchBox.value.length));
+          }
+          for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
+            var good = false;
+            for (var k=0;k<queries.length;k++){
+              for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-queries[k].length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
+                if (document.getElementById("songs").children[i].innerHTML.substring(j,j+queries[k].length).toLowerCase()===queries[k].toLowerCase()) { //and yes non case sensitive
+                  good = true
+                  break;
+                }
+              }
+              if (good)break;
+            }
+            if (!good&&document.getElementById("songs").children[i].id!=="offsetDiv"){
+              document.getElementById("songs").children[i].remove();
+            }
+          }
+          for (var i=2;i<document.getElementById("songs").children.length;i++){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
+            document.getElementById("songs").children[i].id="song"+(i-2);
+          }
+          currentPos=-1;
+          playedSongs=[];
+          resetSongColor();
+        })
+        var offsetDiv = document.createElement("div");
+        offsetDiv.id="offsetDiv"
+        offsetDiv.style.height="15px";
+        document.getElementById("songs").append(offsetDiv);
         for (var k=0;k<songsData.items.length;k++){
           var p = document.createElement("p");
+          totalSongs.push(p);
+          document.getElementById("songs").appendChild(p);
           var song = "";
           song+=songsData.items[k];
           p.append(song);
+
           p.style.color = "lightgreen";
           var idVal=0;
           p.id="song"+idVal++;
