@@ -1211,7 +1211,10 @@
             },800)
           })
           p.addEventListener("mouseup",function(){
-            if (deletingHold&&Date.now()-lastClicked===800){
+            gebi("cd").style.width = 0; //hide
+            gebi("cd").style.transitionDuration="0ms"; //reset duration
+            gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
+            if (deletingHold&&Date.now()-lastClicked>=800){
               var oldSongs = JSON.parse(localStorage.getItem("myQueue")).items;
               var newSongs = {
                 items:[]
