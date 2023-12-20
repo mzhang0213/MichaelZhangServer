@@ -609,12 +609,11 @@
       //get user's playlists
       //find the playlist total
       var playlistTotal = 0;
-      var totalPlaylists = [];
+      var totalPlaylists = {items:[]}
       var indexPlaylists = function(){
         var lists = document.getElementsByClassName("playlists");
         for(var a=0;a<lists.length;a++){
           lists[a].id="playlist"+a;
-          totalPlaylists.push(lists[a]);
         }
       }
       var getPlaylists = function() {
@@ -623,6 +622,11 @@
             console.log("dogs err line515");
           }else{
             playlistTotal=theStuffData.total;
+            totalPlaylists.items=[];
+            for (var i=0;i<totalPlaylists.items.length;i++){
+              totalPlaylists.items.push(0);
+            }
+            var collect = {}
             var things = function(atoms){
               if (atoms<playlistTotal){
                 getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
@@ -634,6 +638,9 @@
                       document.getElementById("playlists").appendChild(p);
                       p.append(playlistData.items[i].name);
                       p.style.color = "#94bdff";
+                      var thisId = "playlist"+(atoms+i);
+                      p.id=thisId;
+                      totalPlaylists.items[i]=playlistData.items[i];
                       p.className="playlists";
                       p.addEventListener("click", function(){
                         var lists = document.getElementsByClassName("playlists");
