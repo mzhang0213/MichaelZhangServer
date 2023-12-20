@@ -108,10 +108,10 @@
     </font>
     <style>
       #cd{
-        -webkit-transition-duration: 750ms;
-        -moz-transition-duration: 750ms;
-        -o-transition-duration: 750ms;
-        transition-duration: 750ms;
+        -webkit-transition-duration: 600ms;
+        -moz-transition-duration: 600ms;
+        -o-transition-duration: 600ms;
+        transition-duration: 600ms;
         -webkit-transition-property: -webkit-transform;
         -moz-transition-property: -moz-transform;
         -o-transition-property: -o-transform;
@@ -1125,6 +1125,18 @@
 
       var deletingHold = false;
       var lastClicked = 0;
+      var showCdAnimation = function(clientX,clientY){
+        gebi("cd").style.width = "40px"; //show
+        gebi("cd").style.left = (clientX-gebi("cd").offsetWidth*1.5)+"px";
+        gebi("cd").style.top = (clientY-gebi("cd").offsetHeight*0.5)+"px";
+        gebi("cd").style.transitionDuration="600ms"; //set duration of rotation
+        gebi("cd").style.transform = "rotate(352deg)"; //rotate
+      }
+      var clearCdAnimation = function(){
+        gebi("cd").style.width = 0; //hide
+        gebi("cd").style.transitionDuration="0ms"; //reset duration
+        gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
+      }
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
         /*
@@ -1196,25 +1208,22 @@
           p.style.color = "lightgreen";
           p.id="song"+(k);
           p.className="songs";
-          p.addEventListener("mousedown",function(e){
+          p.addEventListener("mousedown",function(mde){
             deletingHold=true;
             lastClicked=Date.now();
-            gebi("cd").style.width = "40px"; //show
-            gebi("cd").style.left = (e.clientX-gebi("cd").offsetWidth*1.5)+"px";
-            gebi("cd").style.top = (e.clientX-gebi("cd").offsetHeight*0.5)+"px";
-            gebi("cd").style.transitionDuration="750ms"; //set duration of rotation
-            gebi("cd").style.transform = "rotate(352deg)"; //rotate
+            //animation: wait for half a second, THEN if still holding show the animation
             setTimeout(function(){
-              gebi("cd").style.width = 0; //hide
-              gebi("cd").style.transitionDuration="0ms"; //reset duration
-              gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
-            },800)
+              if (deletingHold){
+                showCdAnimation(mde.clientX,mde.clientY);
+              }
+            },400)
+            setTimeout(function(){
+              clearCdAnimation();
+            },1000)
           })
           p.addEventListener("mouseup",function(){
-            gebi("cd").style.width = 0; //hide
-            gebi("cd").style.transitionDuration="0ms"; //reset duration
-            gebi("cd").style.transform = "rotate(0deg)"; //reset rotation
-            if (deletingHold&&Date.now()-lastClicked>=800){
+            clearCdAnimation();
+            if (deletingHold&&Date.now()-lastClicked>=1000){
               var oldSongs = JSON.parse(localStorage.getItem("myQueue")).items;
               var newSongs = {
                 items:[]
