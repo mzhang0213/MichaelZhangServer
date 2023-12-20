@@ -1102,6 +1102,9 @@
         localStorage.setItem("myQueue",JSON.stringify(storedSongs));
         this.disabled=true;
       })
+
+
+
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
         /*
@@ -1171,8 +1174,7 @@
           p.append(song);
 
           p.style.color = "lightgreen";
-          var idVal=0;
-          p.id="song"+idVal++;
+          p.id="song"+(k);
           p.className="songs";
           p.addEventListener("click", function(){
             if (!cooldown){
@@ -1361,7 +1363,6 @@
             }
           })
         }
-        
       })
       //test run for the youtube one: https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=Chris%20Pratt&type=video&videoEmbeddable=true&key=AIzaSyA_MYaZQJkf7MHj4O5KX_GJ-LWAOFDcnt0
     </script>
