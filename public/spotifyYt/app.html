@@ -21,10 +21,12 @@
       <!--set up two pane window: playlist list and list of songs in playlist on the left, media player on the right-->
       <button id="logout" style="position:absolute;bottom:5px;right:5px;z-index:10;">Logout</button>
       <div id="one" style="overflow-y:auto;" class="sideBySide">
+        <img id="ytButton" style="position:absolute;top:0px;right:5px;z-index:10;width:25px;">
         <p id="tooFastAlert">Too fast! Wait </p>
         <button id="myQueue">My Queue</button>
         <br clear="all"><br>
-        <div id="playlists" class="sideBySide"></div>
+        <div id="ytPlaylists" class="playlists"></div>
+        <div id="playlists" class="playlists"></div>
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
@@ -107,6 +109,10 @@
       <p id="playlistList"></p>
     </font>
     <style>
+      .playlistDiv{
+        position:relative;
+        left:0;
+      }
       #cd{
         -webkit-transition-duration: 600ms;
         -moz-transition-duration: 600ms;
@@ -276,7 +282,8 @@
     <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
-      gebi("cd").src=window.location.origin+"/ethelp/cd.png";
+      gebi("cd").src=window.location.origin+"/spotifyYt/cd.png";
+      gebi("cd").src=window.location.origin+"/spotifyY/ytLogo.png";
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
 
@@ -286,8 +293,7 @@
         gebi("one").style.height=window.innerHeight+"px";
         gebi("two").style.height=window.innerHeight+"px";
 
-        gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";gebi("playlists").style.height=(window.innerHeight-20)+"px";
-        gebi("playlists").style.top="20px";
+        gebi("playlists").style.width=(window.innerWidth*0.25-5)+"px";
         gebi("songs").style.width=(window.innerWidth*0.25-5)+"px";gebi("songs").style.height=window.innerHeight+"px";
         gebi("songs").style.left=(window.innerWidth*0.25-5)+"px";
         
@@ -1138,6 +1144,69 @@
         }
         localStorage.setItem("myQueue",JSON.stringify(storedSongs));
         this.disabled=true;
+      })
+      
+      
+      
+      //DO PINK-RED STANDING AND RED RED ONCLICK for color
+      var getPlaylists = function() {
+        getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
+          if (dogsErr){
+            console.log("dogs err line515");
+          }else{
+            playlistTotal=theStuffData.total;
+            totalPlaylists.items=[];
+            for (var i=0;i<playlistTotal;i++){
+              totalPlaylists.items.push(0);
+            }
+            var collect = {}
+            var things = function(atoms){
+              if (atoms<playlistTotal){
+                getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+                  if (playlistFetchErr){
+                    console.log("playlistFetchErr: " + playlistFetchErr);
+                  } else {
+                    for (var i=0;i<playlistData.items.length;i++){
+                      var p = document.createElement("p");
+                      document.getElementById("playlists").appendChild(p);
+                      p.append(playlistData.items[i].name);
+                      p.style.color = "#94bdff";
+                      p.id="playlist"+(atoms+i);
+                      totalPlaylists.items[atoms+i]=playlistData.items[i];
+                      p.className="playlists";
+                      p.addEventListener("click", function(){
+                        var lists = document.getElementsByClassName("playlists");
+                        for(var a=0;a<lists.length;a++){
+                          lists[a].style.color=this.style.color="#94bdff";
+                        }
+                        getSongs(this.id.substring(8),totalPlaylists);
+                        gebi("playPause").disabled=false;
+                        totalSongs=[];
+                      })
+                      if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                        p.click();
+                      }
+                    }
+  
+                    things(atoms+50);
+                  }
+                })
+              }else{
+                //after async call finish
+                indexPlaylists();
+              }
+            }
+            things(0);
+          }
+        })
+      }
+      document.getElementById("ytButton").addEventListener("click",function(){
+        //first pop up prompt msg asking for yt playlist link
+        //then check link validity / playlist validity
+        //then save to localstorage
+        //then reload using getYtPlaylists()
+
+        //actually load yt playlists in their own div situated above the spotify one
       })
 
 
