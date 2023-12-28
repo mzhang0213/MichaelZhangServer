@@ -25,8 +25,8 @@
         <p id="tooFastAlert">Too fast! Wait </p>
         <button id="myQueue">My Queue</button>
         <br clear="all"><br>
-        <div id="ytPlaylists" class="playlists"></div>
-        <div id="playlists" class="playlists"></div>
+        <div id="ytPlaylists" class="playlistDiv"></div>
+        <div id="playlists" class="playlistDiv"></div>
         <div id="songs" class="sideBySide"></div>
       </div>
       <div id="two" class="sideBySide" style="border-left:3px black solid;position:fixed;overflow-y:auto;">
@@ -283,7 +283,7 @@
     <script>
       const gebi = function(e){return document.getElementById(e)};
       gebi("cd").src=window.location.origin+"/spotifyYt/cd.png";
-      gebi("cd").src=window.location.origin+"/spotifyY/ytLogo.png";
+      gebi("ytButton").src=window.location.origin+"/spotifyY/ytLogo.png";
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
 
