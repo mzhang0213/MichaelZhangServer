@@ -529,7 +529,7 @@
         }
         var loadedSongs = JSON.parse(localStorage.getItem("savedYtPlaylists"));
         for(var i=0;i<loadedSongs.items.length;i++){
-          if (loadedSongs.items[i]==list){
+          if (loadedSongs.items[i].title==list.title){
             bad=true;
           }
         }
@@ -1345,12 +1345,13 @@
 
       //DO PINK-RED STANDING AND RED RED ONCLICK for color
       var getYtPlaylists = function() {
+        document.getElementById("ytPlaylists").innerHTML="";
         var playlistData = JSON.parse(localStorage.getItem("savedYtPlaylists"));
         currYtPlaylists = playlistData.items;
         for (var i=0;i<playlistData.items.length;i++){
           var p = document.createElement("p");
           document.getElementById("ytPlaylists").appendChild(p);
-          p.append(playlistData.items[i].name);
+          p.append(playlistData.items[i].title);
           p.style.color = "#94bdff";
           p.id="ytPlaylist"+(i);
           p.className="ytPlaylists";
@@ -1359,7 +1360,7 @@
             for(var a=0;a<lists.length;a++){
               lists[a].style.color=this.style.color="#94bdff";
             }
-            getYtSongs(currYtPlaylists[this.id.substring(10)]);
+            getYtSongs(currYtPlaylists[this.id.substring(10)].id);
             gebi("playPause").disabled=false;
             totalSongs=[];
           })
@@ -1403,21 +1404,41 @@
                 }else{
                   //완전 성공 우후우우우우우우우우
                   //save to local
-                  var storedLists = JSON.parse(localStorage.getItem("savedYtPlaylists"));
-                  if (localStorage.getItem("savedYtPlaylists")===null||localStorage.getItem("savedYtPlaylists")===undefined||localStorage.getItem("savedYtPlaylists")===""||localStorage.getItem("savedYtPlaylists")==="null"){
-                    storedLists={
-                      items:[]
+                  //first format the save
+                  var playlistReq = new XMLHttpRequest();
+                  playlistReq.open("GET",
+                    "https://www.googleapis.com/youtube/v3/playlists"
+                    +"?id="+playlistId
+                    +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                    +"&part=snippet"
+                  );
+                  playlistReq.send();
+                  playlistReq.addEventListener("readystatechange", ()=>{
+                    if (playlistReq.status === 200 && playlistReq.readyState === 4) {
+                      var thisPlaylistData = JSON.parse(req.responseText);
+                      var thisPlaylist = {
+                        id:playlistId,
+                        title:thisPlaylistData.items[0].snippet.title
+                      }
+                      var storedLists = JSON.parse(localStorage.getItem("savedYtPlaylists"));
+                      if (localStorage.getItem("savedYtPlaylists")===null||localStorage.getItem("savedYtPlaylists")===undefined||localStorage.getItem("savedYtPlaylists")===""||localStorage.getItem("savedYtPlaylists")==="null"){
+                        storedLists={
+                          items:[]
+                        }
+                        storedLists.items.push(thisPlaylist)
+                      }else{
+                        if (!checkListInStorage(thisPlaylist)){
+                          storedLists.items.push(thisPlaylist)
+                        }
+                      }
+                      localStorage.setItem("savedYtPlaylists",JSON.stringify(storedLists));
+                      getYtPlaylists();
+                    }else if(readyState===4){
+                      //idk some fail
                     }
-                    storedLists.items.push(playlistId)
-                  }else{
-                    if (!checkListInStorage(playlistId)){
-                      storedLists.items.push(playlistId)
-                    }
-                  }
-                  localStorage.setItem("savedYtPlaylists",JSON.stringify(storedLists));
-                  getYtPlaylists();
+                  })
                 }
-              } else if (req.readyState === 4){
+              } else if (playlistReq.readyState === 4){
                 //bad
                 alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
               }
