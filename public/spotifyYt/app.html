@@ -1353,14 +1353,14 @@
           p.append(playlistData.items[i].name);
           p.style.color = "#94bdff";
           p.id="ytPlaylist"+(i);
-          totalPlaylists.push(playlistData.items[i]);
+          currYtPlaylists.push(playlistData.items[i]);
           p.className="ytPlaylists";
           p.addEventListener("click", function(){
             var lists = document.getElementsByClassName("playlists");
             for(var a=0;a<lists.length;a++){
               lists[a].style.color=this.style.color="#94bdff";
             }
-            getYtSongs(totalPlaylists[this.id.substring(10)]);
+            getYtSongs(currYtPlaylists[this.id.substring(10)]);
             gebi("playPause").disabled=false;
             totalSongs=[];
           })
@@ -1368,58 +1368,8 @@
             p.click();
           }
         }
-        getYtPlaylists();
-
-        getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
-          if (dogsErr){
-            console.log("dogs err line515");
-          }else{
-            playlistTotal=theStuffData.total;
-            totalPlaylists.items=[];
-            for (var i=0;i<playlistTotal;i++){
-              totalPlaylists.items.push(0);
-            }
-            var collect = {}
-            var things = function(atoms){
-              if (atoms<playlistTotal){
-                getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
-                  if (playlistFetchErr){
-                    console.log("playlistFetchErr: " + playlistFetchErr);
-                  } else {
-                    for (var i=0;i<playlistData.items.length;i++){
-                      var p = document.createElement("p");
-                      document.getElementById("playlists").appendChild(p);
-                      p.append(playlistData.items[i].name);
-                      p.style.color = "#94bdff";
-                      p.id="playlist"+(atoms+i);
-                      totalPlaylists.items[atoms+i]=playlistData.items[i];
-                      p.className="playlists";
-                      p.addEventListener("click", function(){
-                        var lists = document.getElementsByClassName("playlists");
-                        for(var a=0;a<lists.length;a++){
-                          lists[a].style.color=this.style.color="#94bdff";
-                        }
-                        getSongs(this.id.substring(8),totalPlaylists);
-                        gebi("playPause").disabled=false;
-                        totalSongs=[];
-                      })
-                      if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-                        p.click();
-                      }
-                    }
-  
-                    things(atoms+50);
-                  }
-                })
-              }else{
-                //after async call finish
-                indexPlaylists();
-              }
-            }
-            things(0);
-          }
-        })
       }
+      getYtPlaylists();
       document.getElementById("ytButton").addEventListener("click",function(){
         //first pop up prompt msg asking for yt playlist link
         //then check link validity / playlist validity
