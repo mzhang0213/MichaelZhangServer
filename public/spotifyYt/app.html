@@ -1164,7 +1164,7 @@
       
       var currYtSongs = [];
       var currYtPlaylists = [];
-      var getYtSongs = function(playlistId){
+      var getYtSongs = function(index){
         document.getElementById("ytPlaylist"+index).style.color = "#4287f5";
         document.getElementById("songs").innerHTML="";
 
@@ -1230,7 +1230,7 @@
             //init run
             currPlaylistReq=(
               "https://www.googleapis.com/youtube/v3/playlistItems"
-            +"?playlistId="+playlistId
+            +"?playlistId="+currYtPlaylists[index].id
             +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
             +"&maxResults=50"
             +"&part=contentDetails"
@@ -1238,7 +1238,7 @@
           }else{
             currPlaylistReq=(
               "https://www.googleapis.com/youtube/v3/playlistItems"
-            +"?playlistId="+playlistId
+            +"?playlistId="+currYtPlaylists[index].id
             +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
             +"&maxResults=50"
             +"&part=contentDetails"
@@ -1366,7 +1366,7 @@
             for(var a=0;a<lists.length;a++){
               lists[a].style.color=this.style.color="#94bdff";
             }
-            getYtSongs(currYtPlaylists[this.id.substring(10)].id);
+            getYtSongs(this.id.substring(10));
             gebi("playPause").disabled=false;
             totalSongs=[];
           })
