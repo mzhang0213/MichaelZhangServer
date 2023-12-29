@@ -24,7 +24,6 @@
         <img id="ytButton" style="position:absolute;top:0px;right:5px;z-index:10;width:25px;">
         <p id="tooFastAlert">Too fast! Wait </p>
         <button id="myQueue">My Queue</button>
-        <br clear="all"><br>
         <div id="ytPlaylists" class="playlistDiv"></div>
         <div id="playlists" class="playlistDiv"></div>
         <div id="songs" class="sideBySide"></div>
@@ -283,7 +282,7 @@
     <script>
       const gebi = function(e){return document.getElementById(e)};
       gebi("cd").src=window.location.origin+"/spotifyYt/cd.png";
-      gebi("ytButton").src=window.location.origin+"/spotifyY/ytLogo.png";
+      gebi("ytButton").src=window.location.origin+"/spotifyYt/ytLogo.png";
       var resize = function() {
         var heightCalc=function(x){return 55*x+20}
 
@@ -514,6 +513,23 @@
         var loadedSongs = JSON.parse(localStorage.getItem("myQueue"));
         for(var i=0;i<loadedSongs.items.length;i++){
           if (loadedSongs.items[i]==document.getElementById(playedSongs[currentPos]).innerHTML){
+            bad=true;
+          }
+        }
+        return bad;
+      }
+      function checkListInStorage(list){
+        var bad=false;
+        if (localStorage.getItem("savedYtPlaylists")===null||localStorage.getItem("savedYtPlaylists")===undefined||localStorage.getItem("savedYtPlaylists")===""||localStorage.getItem("savedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("savedYtPlaylists",JSON.stringify(loadedSongs));
+          return false;
+        }
+        var loadedSongs = JSON.parse(localStorage.getItem("savedYtPlaylists"));
+        for(var i=0;i<loadedSongs.items.length;i++){
+          if (loadedSongs.items[i]==list){
             bad=true;
           }
         }
@@ -1146,10 +1162,214 @@
         this.disabled=true;
       })
       
+      var currYtSongs = [];
+      var currYtPlaylists = [];
+      var getYtSongs = function(playlistId){
+        document.getElementById("ytPlaylist"+index).style.color = "#4287f5";
+        document.getElementById("songs").innerHTML="";
+
+        var searchBox = document.createElement("input");
+        searchBox.placeholder="🔎 Search";
+        searchBox.id="searchBox";
+        searchBox.style.position="fixed";
+        document.getElementById("songs").appendChild(searchBox);
+        searchBox.addEventListener("input", function(){
+          document.getElementById("one").scrollTo(0,0);//scroll up
+          document.querySelectorAll(".songs").forEach(function(song){song.remove()});
+          for (var i=0;i<totalSongs.length;i++)document.getElementById("songs").append(totalSongs[i]);
+          var queries = [];
+          var last = 0;
+          for (var a=0;a<searchBox.value.length-1;a++){
+            if (searchBox.value.charAt(a)==="&"&&searchBox.value.charAt(a+1)==="&"){
+              queries.push(searchBox.value.substring(last,a));
+              last=a+2;
+              a+=2;
+            }
+          }
+          if (searchBox.value.indexOf("&&")===-1){
+            queries.push(searchBox.value);
+          }else if (last<=searchBox.value.length-1){
+            queries.push(searchBox.value.substring(last,searchBox.value.length));
+          }
+          for (var i=document.getElementById("songs").children.length-1;i>1;i--){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
+            var good = false;
+            for (var k=0;k<queries.length;k++){
+              for (var j=0;j<document.getElementById("songs").children[i].innerHTML.length-queries[k].length+1;j++){ //target word: "otm", searching phrase: "Yougotmailhey"  |  otm.length=3, phrase.length=13, for (var j=0;j<10;j++) phrase.length-target.length+1
+                if (document.getElementById("songs").children[i].innerHTML.substring(j,j+queries[k].length).toLowerCase()===queries[k].toLowerCase()) { //and yes non case sensitive
+                  good = true
+                  break;
+                }
+              }
+              if (good)break;
+            }
+            if (!good&&document.getElementById("songs").children[i].id!=="offsetDiv"){
+              document.getElementById("songs").children[i].remove();
+            }
+          }
+          for (var i=2;i<document.getElementById("songs").children.length;i++){ //i=2 since omit the input element itself and offset div (very unelegant idgaf)
+            document.getElementById("songs").children[i].id="song"+(i-2);
+          }
+          currentPos=-1;
+          playedSongs=[];
+          resetSongColor();
+        })
+        var offsetDiv = document.createElement("div");
+        offsetDiv.id="offsetDiv"
+        offsetDiv.style.height="15px";
+        document.getElementById("songs").append(offsetDiv);
+        //has to be nested function cuz reading variable of outer for loop is not working
+        var finishUp = function(){
+          var elements = document.getElementsByClassName("songs");
+          for (var i=0;i<elements.length;i++){
+            elements[i].id="song"+(i);
+          }
+        }
+        var stuff = function(nextPageToken){
+          var currPlaylistReq = "";
+          if (nextPageToken===0){
+            //init run
+            currPlaylistReq=(
+              "https://www.googleapis.com/youtube/v3/playlistItems"
+            +"?id="+playlistId
+            +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+            +"&maxResults=50"
+            +"&part=contentDetails"
+            )
+          }else{
+            currPlaylistReq=(
+              "https://www.googleapis.com/youtube/v3/playlistItems"
+            +"?id="+playlistId
+            +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+            +"&maxResults=50"
+            +"&part=contentDetails"
+            +"&pageToken="+nextPageToken
+            )
+          }
+          var req = new XMLHttpRequest();
+          req.open("GET",currPlaylistReq);
+          req.send();
+          req.addEventListener("readystatechange", ()=>{
+            if (req.status === 200 && req.readyState === 4) {
+              var currPlaylistData = JSON.parse(req.responseText).items;
+              
+              for (var i=0;i<currPlaylistData.length;i++){
+                var p = document.createElement("p");
+                document.getElementById("songs").appendChild(p);
+                totalSongs.push(p);
+  
+                var reqForSongInfo = new XMLHttpRequest();
+                reqForSongInfo.open("GET",
+                  "https://www.googleapis.com/youtube/v3/videos"
+                  +"?id="+currPlaylistData[i].contentDetails.videoId
+                  +"&part=snippet"
+                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                );
+                reqForSongInfo.send();
+                reqForSongInfo.addEventListener("readystatechange", ()=>{
+                  if (reqForSongInfo.status === 200 && reqForSongInfo.readyState === 4) {
+                    var songInfo = JSON.parse(reqForSongInfo.responseText).items[0].snippet;
+                    p.append(songInfo.title);
+                    p.style.color = "lightgreen";
+                    p.className="songs";
+                    p.addEventListener("click", function(){
+                      if (!cooldown){
+                        cooldown=true;
+                        remainDur=Date.now();
+                        if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                          playedSongs.push(this.id);
+                          currentPos++;
+                        }
+                        fromQueueAndPlay=false;
+                        fromPrev=false;
+                        fromRepeat=false;
       
-      
+                        //make sure the rest of the song titles lightgreen
+                        resetSongColor();
+                        this.style.color="green"; //this elem dark green
+                        
+                        //free me saronite chain gang
+                        gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                        gebi("nextId").disabled=false;
+                        gebi("saveSong").disabled=false;
+                        gebi("addToMyQueue").disabled=false;
+                        
+                        document.getElementById("documentTitle").innerHTML="";
+                        document.getElementById("documentTitle").innerHTML=this.innerHTML;
+                        
+                        //append songDesc
+                        document.getElementById("songDesc").innerHTML="";
+                        var sdItalics = document.createElement("i");
+                        var sdBlue = document.createElement("font");
+                        sdBlue.style.color="#1284ff";
+                        
+                        sdItalics.append("Playing:  ");
+                        sdBlue.append(htmlDecode(this.innerHTML));
+                        document.getElementById("songDesc").appendChild(sdItalics);
+                        document.getElementById("songDesc").appendChild(sdBlue);
+
+                        player.loadVideoById({videoId:currYtSongs[this.innerHTML.substring(4)]});
+                        
+                        setTimeout(()=>{
+                          console.log("GREEN")
+                          cooldown=false;
+                        },500)
+                      }else{
+                        document.getElementById("tooFastAlert").style.display="";
+                        document.getElementById("tooFastAlert").innerHTML="";
+                        document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
+                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
+                      }
+                    })
+                  }else if (reqForSongInfo.readyState===4){
+                    //fail
+                    alert("couldn't get song info rip")
+                  }
+                })
+              }
+              
+              if (!(currPlaylistData.nextPageToken===undefined||currPlaylistData.nextPageToken===null||currPlaylistData.nextPageToken==="")){
+                //if there is another page, gogogogogogo
+                stuff(currPlaylistData.nextPageToken);
+              }else{
+                finishUp();
+              }
+            } else if (req.readyState === 4){
+              //bad
+              alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+            }
+          })
+        }
+        stuff(0);
+        //finish up is in there and just is substitute for code here cuz of async shenannegains
+      }
+
       //DO PINK-RED STANDING AND RED RED ONCLICK for color
-      var getPlaylists = function() {
+      var getYtPlaylists = function() {
+        var playlistData = JSON.parse(localStorage.getItem("savedYtPlaylists"));
+        currYtPlaylists = playlistData.items;
+        for (var i=0;i<playlistData.items.length;i++){
+          var p = document.createElement("p");
+          document.getElementById("ytPlaylists").appendChild(p);
+          p.append(playlistData.items[i].name);
+          p.style.color = "#94bdff";
+          p.id="ytPlaylist"+(i);
+          totalPlaylists.push(playlistData.items[i]);
+          p.className="ytPlaylists";
+          p.addEventListener("click", function(){
+            var lists = document.getElementsByClassName("playlists");
+            for(var a=0;a<lists.length;a++){
+              lists[a].style.color=this.style.color="#94bdff";
+            }
+            getYtSongs(totalPlaylists[this.id.substring(10)]);
+            gebi("playPause").disabled=false;
+            totalSongs=[];
+          })
+          if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+            p.click();
+          }
+        }
+        getYtPlaylists();
+
         getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
           if (dogsErr){
             console.log("dogs err line515");
@@ -1207,6 +1427,57 @@
         //then reload using getYtPlaylists()
 
         //actually load yt playlists in their own div situated above the spotify one
+
+        var retLink = function(){
+          var playlistId = prompt("What is the playlist ID?\nIf you have the link to the playlist it is the stuff after the ?list= thing :)");
+          if (playlistId===null){
+            //cancel
+            return null;
+          }else if (playlistId.trim()===""){
+            alert("pls write something");
+            return retLink();
+          }else{
+            //test validity
+            var req = new XMLHttpRequest();
+            req.open("GET",
+              "https://www.googleapis.com/youtube/v3/playlistItems"
+              +"?id="+playlistId
+              +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+              +"&part=contentDetails"
+              +"&maxResults=1"
+            );
+            req.send();
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                //init 성공
+                var body = JSON.parse(req.responseText);
+                if (body.pageInfo.totalResults===0||body.pageInfo.totalResults==="0"){
+                  //실패 미안해
+                  alert("error: playlist has zero items bruh")
+                }else{
+                  //완전 성공 우후우우우우우우우우
+                  //save to local
+                  var storedLists = JSON.parse(localStorage.getItem("savedYtPlaylists"));
+                  if (localStorage.getItem("savedYtPlaylists")===null||localStorage.getItem("savedYtPlaylists")===undefined||localStorage.getItem("savedYtPlaylists")===""||localStorage.getItem("savedYtPlaylists")==="null"){
+                    storedLists={
+                      items:[]
+                    }
+                    storedLists.items.push(playlistId)
+                  }else{
+                    if (!checkListInStorage(playlistId)){
+                      storedLists.items.push(playlistId)
+                    }
+                  }
+                  localStorage.setItem("savedYtPlaylists",JSON.stringify(storedLists));
+                  getYtPlaylists();
+                }
+              } else if (req.readyState === 4){
+                //bad
+                alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+              }
+            })
+          }
+        }
       })
 
 
