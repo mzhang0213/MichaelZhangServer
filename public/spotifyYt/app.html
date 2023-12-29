@@ -1421,7 +1421,7 @@
                   playlistReq.send();
                   playlistReq.addEventListener("readystatechange", ()=>{
                     if (playlistReq.status === 200 && playlistReq.readyState === 4) {
-                      var thisPlaylistData = JSON.parse(req.responseText);
+                      var thisPlaylistData = JSON.parse(playlistReq.responseText);
                       var thisPlaylist = {
                         id:playlistId,
                         title:thisPlaylistData.items[0].snippet.title
