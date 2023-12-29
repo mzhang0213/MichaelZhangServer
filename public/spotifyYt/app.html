@@ -1230,7 +1230,7 @@
             //init run
             currPlaylistReq=(
               "https://www.googleapis.com/youtube/v3/playlistItems"
-            +"?id="+playlistId
+            +"?playlistId="+playlistId
             +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
             +"&maxResults=50"
             +"&part=contentDetails"
@@ -1238,7 +1238,7 @@
           }else{
             currPlaylistReq=(
               "https://www.googleapis.com/youtube/v3/playlistItems"
-            +"?id="+playlistId
+            +"?playlistId="+playlistId
             +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
             +"&maxResults=50"
             +"&part=contentDetails"
@@ -1441,7 +1441,7 @@
             var req = new XMLHttpRequest();
             req.open("GET",
               "https://www.googleapis.com/youtube/v3/playlistItems"
-              +"?id="+playlistId
+              +"?playlistId="+playlistId
               +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
               +"&part=contentDetails"
               +"&maxResults=1"
