@@ -1345,6 +1345,12 @@
 
       //DO PINK-RED STANDING AND RED RED ONCLICK for color
       var getYtPlaylists = function() {
+        if (localStorage.getItem("savedYtPlaylists")===null||localStorage.getItem("savedYtPlaylists")===undefined||localStorage.getItem("savedYtPlaylists")===""||localStorage.getItem("savedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("savedYtPlaylists",JSON.stringify(loadedSongs));
+        }
         document.getElementById("ytPlaylists").innerHTML="";
         var playlistData = JSON.parse(localStorage.getItem("savedYtPlaylists"));
         currYtPlaylists = playlistData.items;
