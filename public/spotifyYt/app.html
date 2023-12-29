@@ -1353,7 +1353,6 @@
           p.append(playlistData.items[i].name);
           p.style.color = "#94bdff";
           p.id="ytPlaylist"+(i);
-          currYtPlaylists.push(playlistData.items[i]);
           p.className="ytPlaylists";
           p.addEventListener("click", function(){
             var lists = document.getElementsByClassName("playlists");
@@ -1364,9 +1363,6 @@
             gebi("playPause").disabled=false;
             totalSongs=[];
           })
-          if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-            p.click();
-          }
         }
       }
       getYtPlaylists();
