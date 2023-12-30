@@ -1251,87 +1251,90 @@
           req.addEventListener("readystatechange", ()=>{
             if (req.status === 200 && req.readyState === 4) {
               var currPlaylistData = JSON.parse(req.responseText).items;
-              
-              for (var i=0;i<currPlaylistData.length;i++){
-                var p = document.createElement("p");
-                document.getElementById("songs").appendChild(p);
-                totalSongs.push(p);
+              var spawnSongLoop = function(ind){
+                if (!(ind<currPlaylistData.length)){
+                  var p = document.createElement("p");
+                  document.getElementById("songs").appendChild(p);
+                  totalSongs.push(p);
+    
+                  var reqForSongInfo = new XMLHttpRequest();
+                  reqForSongInfo.open("GET",
+                    "https://www.googleapis.com/youtube/v3/videos"
+                    +"?id="+currPlaylistData[i].contentDetails.videoId
+                    +"&part=snippet"
+                    +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                  );
+                  reqForSongInfo.send();
+                  reqForSongInfo.addEventListener("readystatechange", ()=>{
+                    if (reqForSongInfo.status === 200 && reqForSongInfo.readyState === 4) {
+                      var songInfo = JSON.parse(reqForSongInfo.responseText).items[0].snippet;
+                      p.append(songInfo.title);
+                      p.style.color = "lightgreen";
+                      p.className="songs";
+                      p.addEventListener("click", function(){
+                        if (!cooldown){
+                          cooldown=true;
+                          remainDur=Date.now();
+                          if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
+                            playedSongs.push(this.id);
+                            currentPos++;
+                          }
+                          fromQueueAndPlay=false;
+                          fromPrev=false;
+                          fromRepeat=false;
+        
+                          //make sure the rest of the song titles lightgreen
+                          resetSongColor();
+                          this.style.color="green"; //this elem dark green
+                          
+                          //free me saronite chain gang
+                          gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
+                          gebi("nextId").disabled=false;
+                          gebi("saveSong").disabled=false;
+                          gebi("addToMyQueue").disabled=false;
+                          
+                          document.getElementById("documentTitle").innerHTML="";
+                          document.getElementById("documentTitle").innerHTML=this.innerHTML;
+                          
+                          //append songDesc
+                          document.getElementById("songDesc").innerHTML="";
+                          var sdItalics = document.createElement("i");
+                          var sdBlue = document.createElement("font");
+                          sdBlue.style.color="#1284ff";
+                          
+                          sdItalics.append("Playing:  ");
+                          sdBlue.append(htmlDecode(this.innerHTML));
+                          document.getElementById("songDesc").appendChild(sdItalics);
+                          document.getElementById("songDesc").appendChild(sdBlue);
   
-                var reqForSongInfo = new XMLHttpRequest();
-                reqForSongInfo.open("GET",
-                  "https://www.googleapis.com/youtube/v3/videos"
-                  +"?id="+currPlaylistData[i].contentDetails.videoId
-                  +"&part=snippet"
-                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
-                );
-                reqForSongInfo.send();
-                reqForSongInfo.addEventListener("readystatechange", ()=>{
-                  if (reqForSongInfo.status === 200 && reqForSongInfo.readyState === 4) {
-                    var songInfo = JSON.parse(reqForSongInfo.responseText).items[0].snippet;
-                    p.append(songInfo.title);
-                    p.style.color = "lightgreen";
-                    p.className="songs";
-                    p.addEventListener("click", function(){
-                      if (!cooldown){
-                        cooldown=true;
-                        remainDur=Date.now();
-                        if(!fromQueueAndPlay&&!fromPrev&&!fromRepeat){
-                          playedSongs.push(this.id);
-                          currentPos++;
+                          player.loadVideoById({videoId:currYtSongs[this.innerHTML.substring(4)]});
+                          
+                          setTimeout(()=>{
+                            console.log("GREEN")
+                            cooldown=false;
+                          },500)
+                        }else{
+                          document.getElementById("tooFastAlert").style.display="";
+                          document.getElementById("tooFastAlert").innerHTML="";
+                          document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
+                          setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
                         }
-                        fromQueueAndPlay=false;
-                        fromPrev=false;
-                        fromRepeat=false;
-      
-                        //make sure the rest of the song titles lightgreen
-                        resetSongColor();
-                        this.style.color="green"; //this elem dark green
-                        
-                        //free me saronite chain gang
-                        gebi("prev").disabled=false;gebi("next").disabled=false;gebi("volumeUp").disabled=false;gebi("volumeDown").disabled=false;
-                        gebi("nextId").disabled=false;
-                        gebi("saveSong").disabled=false;
-                        gebi("addToMyQueue").disabled=false;
-                        
-                        document.getElementById("documentTitle").innerHTML="";
-                        document.getElementById("documentTitle").innerHTML=this.innerHTML;
-                        
-                        //append songDesc
-                        document.getElementById("songDesc").innerHTML="";
-                        var sdItalics = document.createElement("i");
-                        var sdBlue = document.createElement("font");
-                        sdBlue.style.color="#1284ff";
-                        
-                        sdItalics.append("Playing:  ");
-                        sdBlue.append(htmlDecode(this.innerHTML));
-                        document.getElementById("songDesc").appendChild(sdItalics);
-                        document.getElementById("songDesc").appendChild(sdBlue);
-
-                        player.loadVideoById({videoId:currYtSongs[this.innerHTML.substring(4)]});
-                        
-                        setTimeout(()=>{
-                          console.log("GREEN")
-                          cooldown=false;
-                        },500)
-                      }else{
-                        document.getElementById("tooFastAlert").style.display="";
-                        document.getElementById("tooFastAlert").innerHTML="";
-                        document.getElementById("tooFastAlert").innerHTML="Too fast! Wait "+((Date.now()-remainDur)/1000)+"secs";
-                        setTimeout(()=>$("#tooFastAlert").fadeOut(200),200);
-                      }
-                    })
-                  }else if (reqForSongInfo.readyState===4){
-                    //fail
-                    alert("couldn't get song info rip")
+                      })
+                      spawnSongLoop(ind+1);
+                    }else if (reqForSongInfo.readyState===4){
+                      //fail
+                      alert("couldn't get song info rip")
+                    }
+                  })  
+                }else{
+                  //all songs in this batch / page have been spawned
+                  if (!(currPlaylistData.nextPageToken===undefined||currPlaylistData.nextPageToken===null||currPlaylistData.nextPageToken==="")){
+                    //if there is another page, gogogogogogo
+                    stuff(currPlaylistData.nextPageToken);
+                  }else{
+                    finishUp();
                   }
-                })
-              }
-              
-              if (!(currPlaylistData.nextPageToken===undefined||currPlaylistData.nextPageToken===null||currPlaylistData.nextPageToken==="")){
-                //if there is another page, gogogogogogo
-                stuff(currPlaylistData.nextPageToken);
-              }else{
-                finishUp();
+                }
               }
             } else if (req.readyState === 4){
               //bad
@@ -1362,7 +1365,7 @@
           p.id="ytPlaylist"+(i);
           p.className="ytPlaylists";
           p.addEventListener("click", function(){
-            var lists = document.getElementsByClassName("playlists");
+            var lists = document.getElementsByClassName("ytPlaylists");
             for(var a=0;a<lists.length;a++){
               lists[a].style.color=this.style.color="#94bdff";
             }
@@ -1471,13 +1474,6 @@
       }
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
-        /*
-        songsData = {
-          items:[
-            "search query"
-          ]
-        }
-        */
         document.getElementById("songs").innerHTML="";
         totalSongs = [];
         var searchBox = document.createElement("input");
