@@ -1252,7 +1252,7 @@
             if (req.status === 200 && req.readyState === 4) {
               var currPlaylistData = JSON.parse(req.responseText).items;
               var spawnSongLoop = function(ind){
-                if (!(ind<currPlaylistData.length)){
+                if (ind<currPlaylistData.length){
                   var p = document.createElement("p");
                   document.getElementById("songs").appendChild(p);
                   totalSongs.push(p);
