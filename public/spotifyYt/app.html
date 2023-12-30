@@ -1320,9 +1320,9 @@
                   spawnSongLoop(ind+1);
                 }else{
                   //all songs in this batch / page have been spawned
-                  if (!(currPlaylistData.nextPageToken===undefined||currPlaylistData.nextPageToken===null||currPlaylistData.nextPageToken==="")){
+                  if (!(nextToken===undefined||nextToken===null||nextToken==="")){
                     //if there is another page, gogogogogogo
-                    stuff(currPlaylistData.nextPageToken);
+                    stuff(nextToken);
                   }else{
                     finishUp();
                   }
