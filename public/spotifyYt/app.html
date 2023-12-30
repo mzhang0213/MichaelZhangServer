@@ -1252,6 +1252,7 @@
           req.addEventListener("readystatechange", ()=>{
             if (req.status === 200 && req.readyState === 4) {
               var currPlaylistData = JSON.parse(req.responseText).items;
+              var nextToken = JSON.parse(req.responseText).nextPageToken;
               var spawnSongLoop = function(ind){
                 if (ind<currPlaylistData.length){
 
