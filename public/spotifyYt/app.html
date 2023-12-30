@@ -1166,7 +1166,7 @@
       var currYtPlaylists = [];
       var getYtSongs = function(index){
         currYtSongs=[];
-        document.getElementById("ytPlaylist"+index).style.color = "#4287f5";
+        document.getElementById("ytPlaylist"+index).style.color = "#e43434";
         document.getElementById("songs").innerHTML="";
 
         var searchBox = document.createElement("input");
@@ -1304,7 +1304,7 @@
                       document.getElementById("songDesc").appendChild(sdItalics);
                       document.getElementById("songDesc").appendChild(sdBlue);
 
-                      player.loadVideoById({videoId:currYtSongs[this.id.substring(4)]});
+                      player.loadVideoById({videoId:currYtSongs[this.id.substring(4)].id});
                       
                       setTimeout(()=>{
                         console.log("GREEN")
@@ -1355,13 +1355,13 @@
           var p = document.createElement("p");
           document.getElementById("ytPlaylists").appendChild(p);
           p.append(playlistData.items[i].title);
-          p.style.color = "#94bdff";
+          p.style.color = "#f57373";
           p.id="ytPlaylist"+(i);
           p.className="ytPlaylists";
           p.addEventListener("click", function(){
             var lists = document.getElementsByClassName("ytPlaylists");
             for(var a=0;a<lists.length;a++){
-              lists[a].style.color=this.style.color="#94bdff";
+              lists[a].style.color=this.style.color="#f57373";
             }
             getYtSongs(this.id.substring(10));
             gebi("playPause").disabled=false;
