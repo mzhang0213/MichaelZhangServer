@@ -38,6 +38,35 @@ const imDone = async function(){
 
 
 
+
+//websocketing
+
+
+//음악 퀴즈
+var dowebsocketstuff = function(){
+
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+io.on("connection", (socket) => {
+	console.log(`connected with transport ${socket.conn.transport.name}`);
+  
+	socket.conn.on("upgrade", (transport) => {
+	  console.log(`transport upgraded to ${transport.name}`);
+	});
+  
+	socket.on("disconnect", (reason) => {
+	  console.log(`disconnected due to ${reason}`);
+	});
+});
+
+}
+
+
+
+
+
 //proxying
 
 

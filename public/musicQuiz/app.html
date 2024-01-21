@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="./logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: '0px',
+            md: '700px',
+            lg: '1200px',
+            xl: '1600px'
+          }
+        }
+      }
+    </script>
+    <script>
+      var navMenuShown = false;
+      var gebi = function(e){return document.getElementById(e)};
+      var resize = function(){
+        if (window.innerWidth<700){
+          //small
+        }else if (700<=window.innerWidth && window.innerWidth<1200){
+          //med
+        }else{
+          //lg++
+        }
+      }
+      window.onresize=resize;
+    </script>
+    <style>
+      html{
+        scroll-behavior:smooth;
+      }
+    </style>
+  </head>
+  <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+    <!--navbar-->
+    <nav id="navbar" class="left-0 top-0 z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+      <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+        <button class="text-xl tracking-tight">Music Quiz</span>
+      </div>
+      <div class="block md:hidden">
+        <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+          <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+        </button>
+      </div>
+      <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+        <button onclick="(function(){window.location=window.location.origin})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+        <button onclick="(function(){window.location=window.location.origin+'/java/games/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Games</b></button>
+        <!--
+        <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+          <button id="userButton"></button>
+          <div id="userContent">
+            <a id="group"></a>
+            <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
+          </div>
+        </div>
+      </div>-->
+    </nav>
+    <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
+    <font style="font-family: 'Cabin';">
+    <div id="tabs" class="absolute -z-10 flex flex-row w-9/12 h-fit">
+      <div id="osg" class="rounded-xl">1秒</div>
+      <div id="lyrics" class="rounded-xl">Lyrics</div>
+    </div>
+    <center>
+      <p>Status: <span id="status">Disconnected</span></p>
+    <p>Transport: <span id="transport">N/A</span></p>
+      <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:80vh;">
+        <div id="osg">
+          <!--
+            choose either beginning or mid of song
+            then hit play
+            then do like 20 songs or something chosen
+            make it so that buzzers can be on keyboard or just general buzzer AND THEN DROPDOWN picker to give points to person
+            i can do play with MC on a live connection to server where they can approve and deny answers and see answers live hehehehe
+
+            note that you can buzz whenever, just disable buzzers until round starts
+            for each round:
+              say 음악 주세요 and then it will be fun
+              count down
+              auto play music
+              500ms
+              display question mark / indicator that it is time to buzz
+              on buzz: 6 seconds to start typing, +1 if text box len > 0.5(answer len)
+            make a buzzer system w/ keyboard and you can bind multiple keys, make sides of the screen light up when some player presses
+            also make underlying time limit before question answer window expires
+          -->
+        </div>
+        <div id="lyrics">
+          <!--
+            serve lyrics using some random ass api and then see if they can get song
+            time limit?
+            other way to do this game?
+          -->
+        </div>
+      </div>
+    </center>
+    </font>
+    <style>
+      #tabs div{
+        height:40px;
+        padding-left:7px;
+        padding-right:7px;
+        padding-top:3px;
+        padding-bottom:3px;
+        background-color:rgb(243 244 246); /*gray-100*/
+        user-select:none;
+        margin-right:7px;
+      }
+      #hearts img{
+        width:20px;
+      }
+      #promptBox{
+        display:flex;
+        height:fit-content;
+        width:fit-content;
+        flex-direction: row;
+        justify-content:space-between;
+      }
+      #hearts{
+        position:absolute;
+        top:5px;
+        left:5px;
+        display:flex;
+        height:fit-content;
+        width:fit-content;
+        flex-direction: column;
+      }
+      #score{
+        position:relative;
+        font-size:20px;
+      }
+      #submit{
+        background-image:linear-gradient(to bottom right, #79eefe,#293bc6);
+        font-size:18px;
+        border:2px solid black;
+      }
+      #submit:hover{
+        background-image:linear-gradient(to bottom right, #54c3d1,#12208f);
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const $status = document.getElementById("status");
+      const $transport = document.getElementById("transport");
+
+      const socket = io();
+
+      socket.on("connect", () => {
+        console.log(`connected with transport ${socket.io.engine.transport.name}`);
+
+        $status.innerText = "Connected";
+        $transport.innerText = socket.io.engine.transport.name;
+
+        socket.io.engine.on("upgrade", (transport) => {
+          console.log(`transport upgraded to ${transport.name}`);
+
+          $transport.innerText = transport.name;
+        });
+      });
+
+      socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log(`disconnect due to ${reason}`);
+
+        $status.innerText = "Disconnected";
+        $transport.innerText = "N/A";
+      });
+
+      //either: Math.floor(Math.random()*__)+__  Math.floor(Math.random()*__+__) OR (int) at beginning
+      var games = document.getElementsByClassName("tabs");
+      for (var i=0;i<games.length;i++){
+        games[i]=games[i].id;
+      }
+      
+      var hideAllGames = function(){
+        for (var i of games){
+          gebi(i).style.display="none";
+        }
+      }
+      var highlightTab = function(tab){
+        for (var i of games){
+          gebi(i+"Tab").style.backgroundColor="rgb(243 244 246)";
+        }
+        gebi(tab).style.backgroundColor="rgb(199, 200, 201)";
+      }
+      window.onload=function(){
+        if (window.innerWidth<700){
+          //small
+          document.getElementById("navItemContainer").style.display="none"
+          document.getElementById("menuToggle").addEventListener("click",function(){
+            if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+            else document.getElementById("navItemContainer").style.display="";
+            navMenuShown=!navMenuShown;
+          })
+        }
+        resize();
+        gebi("tabs").style.left=gebi("contentBox").offsetLeft+"px";
+        gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
+        highlightTab(games[0]+"Tab");
+        for (var i of games){
+          gebi(i+"Tab").addEventListener("click",function(event){
+            var eId = event.srcElement.id.substring(0,event.srcElement.id.length-3);
+            highlightTab(eId+"Tab");
+            hideAllGames();
+            gebi(eId).style.display="";
+          })
+        }
+      }
+      var tries = 0;
+      var decreaseVisualLife = function(heart){
+        setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none" }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+        tries++;
+      }
+      var resetLife = function(){
+        gebi("heart1").style.display="";
+        gebi("heart2").style.display="";
+        gebi("heart3").style.display="";
+        tries=0;
+      }
+      var advancePrompt = function(){
+        
+      }
+      var advanceLevel = function(){
+        hideLevelSquares();gebi("square5").style.display="";
+        //do level display ++
+        gebi("levelDisplay").innerHTML=gebi("levelDisplay").innerHTML.substring(0,7)+(++level);
+      }
+    </script>
+  </body>
+</html>
