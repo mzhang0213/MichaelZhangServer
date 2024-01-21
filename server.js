@@ -1625,3 +1625,5 @@ app.get("/classroom/callback", (req,res)=>{
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
+
+dowebsocketstuff();
