@@ -49,21 +49,8 @@ const { Server } = require("socket.io");
 
 var dowebsocketstuff = function(){
 
+console.log("doing web socket stuff");
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
-
-io.on("connection", (socket) => {
-	console.log(`connected with transport ${socket.conn.transport.name}`);
-  
-	socket.conn.on("upgrade", (transport) => {
-	  console.log(`transport upgraded to ${transport.name}`);
-	});
-  
-	socket.on("disconnect", (reason) => {
-	  console.log(`disconnected due to ${reason}`);
-	});
-});
 
 }
 
@@ -1622,8 +1609,28 @@ app.get("/classroom/callback", (req,res)=>{
 	});
 });
 
+/*
 app.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)
 })
+*/
 
 dowebsocketstuff();
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+io.on("connection", (socket) => {
+	console.log(`connected with transport ${socket.conn.transport.name}`);
+  
+	socket.conn.on("upgrade", (transport) => {
+	  console.log(`transport upgraded to ${transport.name}`);
+	});
+  
+	socket.on("disconnect", (reason) => {
+	  console.log(`disconnected due to ${reason}`);
+	});
+});
+
+httpServer.listen(PORT, ()=>{
+	console.log("listening asdfsdf " + PORT)
+});
