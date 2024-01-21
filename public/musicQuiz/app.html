@@ -178,6 +178,10 @@
         $transport.innerText = "N/A";
       });
 
+      var msg = function(msg){
+        socket.emit("yo",msg);
+      }
+
       //either: Math.floor(Math.random()*__)+__  Math.floor(Math.random()*__+__) OR (int) at beginning
       var games = document.getElementsByClassName("tabs");
       for (var i=0;i<games.length;i++){
