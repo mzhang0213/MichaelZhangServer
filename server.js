@@ -43,6 +43,10 @@ const imDone = async function(){
 
 
 //음악 퀴즈
+
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
 var dowebsocketstuff = function(){
 
 
