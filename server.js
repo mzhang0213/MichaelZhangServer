@@ -46,12 +46,14 @@ const imDone = async function(){
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+
 
 var dowebsocketstuff = function(){
 
 console.log("doing web socket stuff");
-const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
 
 io.on("connection", (socket) => {
 	console.log(`connected with transport ${socket.conn.transport.name}`);
