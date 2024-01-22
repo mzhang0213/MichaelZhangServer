@@ -275,6 +275,21 @@
         player.setVolume(50);//not rip headphones users immediately
       }
 
+      function finallyDo(){
+        //everything is in total playlists lets create the bubbles
+        /*
+        bubble plan:
+        -round but like not circles and not ellipse
+        -onclick massive border that has a gap appear and change color
+        -only have playlist title suspended, choose a small emough font size and just do ... on overflow, 
+        */
+        var createBubble = function(playlist){
+          var div = document.createElement("div");
+          var p = document.createElement("p");
+          div.className = "rounded-lg "
+        }
+      }
+
       var totalPlaylists = [];
       getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
         if (dogsErr){
@@ -306,7 +321,7 @@
               })
             }else{
               //after async call finish
-              indexPlaylists();
+              finallyDo();
             }
           }
           things(0);
