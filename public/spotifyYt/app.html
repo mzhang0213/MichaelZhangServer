@@ -610,13 +610,13 @@
       var tokenRefreshInterval = setInterval(function(){
         var oldToken = accessToken;
         var req = new XMLHttpRequest()
-        req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+        req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
         req.onload=()=>{
           accessToken=JSON.parse(req.responseText).access_token;
           console.log("new token: "+accessToken)
           if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
             alert("Relogging you in :P\nGoing home...");
-            window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+            window.location=window.location.origin+"/spotifyYt?exp=true";
           }else console.log("token refreshed")
         }
         req.send()

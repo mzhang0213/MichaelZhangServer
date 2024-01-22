@@ -220,6 +220,104 @@
         //do level display ++
         gebi("levelDisplay").innerHTML=gebi("levelDisplay").innerHTML.substring(0,7)+(++level);
       }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      var accessToken = urlParams.get("access_token");
+      const refreshToken = urlParams.get("refresh_token");
+      console.log(accessToken)
+      var getRequest = (apiLink, access_token, callback) => {
+        var req = new XMLHttpRequest();
+        req.open("GET", apiLink);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var arr = JSON.parse(req.responseText);
+            var type = "";
+            callback(undefined, arr); //undefined is basically null which means nothing
+          } else if (req.readyState === 4){
+            console.log("REEEEEEEEEEe", undefined)
+            callback(req.responseText, undefined)
+          }
+        })
+      }
+      //load youtube iframe
+      
+      //This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+      function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+      }
+
+      //This function creates an <iframe> (and YouTube player) after the API code downloads.
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          //videoId would go here
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+        resize();
+      }
+
+      function onPlayerReady(){
+        player.setVolume(50);//not rip headphones users immediately
+      }
+
+      var totalPlaylists = [];
+      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
+        if (dogsErr){
+          console.log("dogs err line515");
+        }else{
+          playlistTotal=theStuffData.total;
+          totalPlaylists=[];
+          for (var i=0;i<playlistTotal;i++){
+            totalPlaylists.push(0);
+          }
+          var collect = {}
+          var things = function(atoms){
+            if (atoms<playlistTotal){
+              getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+                if (playlistFetchErr){
+                  console.log("playlistFetchErr: " + playlistFetchErr);
+                } else {
+                  for (var i=0;i<playlistData.items.length;i++){
+                    totalPlaylists[atoms+i]=playlistData.items[i];
+                    //create playlist bubble item and add event listener (or dont)
+                      //maybe just highlihgting css onclick idk
+                      //oh and also like some attribute to indicate its highlighted - can add some classname idk maybe that is bad and just keep arr
+                    if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
+                      p.click();
+                    }
+                  }
+                  things(atoms+50);
+                }
+              })
+            }else{
+              //after async call finish
+              indexPlaylists();
+            }
+          }
+          things(0);
+        }
+      })
+      /*
+      make it display a grid of round buttons where you can choose playlists to play from
+      display liked songs first
+      store playlist data in total playlists, append playlists in order and sync index with the playlist data
+      ADD IN LIKED SONGS AS FIRST POS OF TOTALPLAYLISTS ARR
+      */
     </script>
   </body>
 </html>
