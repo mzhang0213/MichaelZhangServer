@@ -1526,7 +1526,7 @@ if (state === null || state !== storedState) {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 			code: code,
-			redirect_uri: redirect_uri,
+			redirect_uri: 'https://michaelzhangwebsite.herokuapp.com/spotifyYt/callback',
 			grant_type: 'authorization_code'
 		},
 		headers: {
@@ -1621,7 +1621,7 @@ if (state === null || state !== storedState) {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 			code: code,
-			redirect_uri: redirect_uri,
+			redirect_uri: 'https://michaelzhangwebsite.herokuapp.com/musicQuiz/callback',
 			grant_type: 'authorization_code'
 		},
 		headers: {
