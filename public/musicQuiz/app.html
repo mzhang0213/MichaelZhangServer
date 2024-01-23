@@ -70,12 +70,12 @@
             <div id="menu1" class="mt-4">
               <p class="font-4xl"><u>Song Guessing</u></p>
               <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
-              <button id="osgStartButton1" class="main  relative font-xl mt-4">Choose Playlists >></button>
+              <button id="osgStartButton1" class="main relative font-xl mt-12">Choose Playlists >></button>
             </div>
-            <div id="menu2" style="display:none">
+            <div id="menu2" style="display:none" class="mt-4">
               <div id="menu2Desc">
                 <p class="font-2xl"><b>Choose your playlists</b></p>
-                <img id="ytButton" class="mt-4" style="z-index:10;width:35px;">
+                <img id="ytButton" class="mt-8" style="z-index:10;width:35px;">
               </div>
               <div id="ytPlaylists" class="grid grid-cols-5" style="width:100%;display:none;"></div>
               <div id="playlistB" class="grid grid-cols-5" style="width:100%;display:none;"></div>
@@ -534,7 +534,7 @@
       })
     
       var showMenu = function(menu){
-        var menus = document.getElementsByClassName("osgStart");
+        var menus = gebi("osgStart").children;
         for (var i of menus){
           if (i.id.substring(4)===menu) i.style.display="";
           else i.style.display="none";
