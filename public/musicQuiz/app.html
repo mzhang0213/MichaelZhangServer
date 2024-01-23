@@ -67,7 +67,21 @@
       <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:80vh;">
         <div id="osg" class="relative flex flex-col justify-start items-center p-4" style="width:100%;height:100%">
           <div id="osgStart" style="width:100%">
-            <div id="playlistB" class="grid grid-cols-5" style="width:100%"></div>
+            <div id="menu1" class="mt-4">
+              <p class="font-lg"><u>Song Guessing</u></p>
+              <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
+              <button id="osgStartButton1" class="relative font-lg mt-4">Choose Playlists >></button>
+            </div>
+            <div id="menu2">
+              <div id="menu2Desc">
+                <p class="font-lg"><b>Choose your playlists</b></p>
+                <img id="ytButton" class="mt-4" style="z-index:10;width:35px;">
+              </div>
+              <div id="ytPlaylists" class="grid grid-cols-5" style="width:100%;display:none;"></div>
+              <div id="playlistB" class="grid grid-cols-5" style="width:100%;display:none;"></div>
+              <button id="osgStartButton2" class="main fixed font-md" style="display:none; bottom:10px; right:10px;">Play!</button>
+              <button id="osgBackButton2" class="main fixed font-md" style="display:none; bottom:10px; left:10px;">< Back</button>
+            </div>
           </div>
           <!--
             choose either beginning or mid of song
@@ -136,25 +150,20 @@
     </center>
     </font>
     <style>
+      /*
       #tabs div{
         height:40px;
         padding-left:7px;
         padding-right:7px;
         padding-top:3px;
         padding-bottom:3px;
-        background-color:rgb(243 244 246); /*gray-100*/
+        background-color:rgb(243 244 246); //gray-100
         user-select:none;
         margin-right:7px;
       }
+      */
       #hearts img{
         width:20px;
-      }
-      #promptBox{
-        display:flex;
-        height:fit-content;
-        width:fit-content;
-        flex-direction: row;
-        justify-content:space-between;
       }
       #hearts{
         position:absolute;
@@ -165,21 +174,37 @@
         width:fit-content;
         flex-direction: column;
       }
-      #score{
-        position:relative;
-        font-size:20px;
+      .main{ /*note: no font size*/
+        border-radius:8px;
+        border:2px solid #000000;
+        font-family:'Cabin';
+        outline:none;
+        padding:4px;
+        margin-bottom:20px; /* NOTE this is gap betw buttons */
       }
-      #submit{
-        background-image:linear-gradient(to bottom right, #79eefe,#293bc6);
-        font-size:18px;
-        border:2px solid black;
+      #osgStartButton1{
+        background-color:#4eb8ff;
       }
-      #submit:hover{
-        background-image:linear-gradient(to bottom right, #54c3d1,#12208f);
+      #osgStartButton1:disabled{
+        background-color:#bde5ff;
+      }
+      #osgStartButton1:hover{
+        background-color:#489ed8;
+      }
+      #osgStartButton2{
+        background-color:rgb(54, 219, 54);
+      }
+      #osgStartButton2:disabled{
+        background-color:rgb(170, 255, 170);
+      }
+      #osgStartButton2:hover{
+        background-color:rgb(48, 194, 48);
       }
     </style>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
+      gebi("ytButton").src=window.location.origin+"/musicQuiz/ytLogo.png";
+
       const socket = io();
 
       socket.on("connect", () => {
@@ -254,14 +279,6 @@
         gebi("heart3").style.display="";
         tries=0;
       }
-      var advancePrompt = function(){
-        
-      }
-      var advanceLevel = function(){
-        hideLevelSquares();gebi("square5").style.display="";
-        //do level display ++
-        gebi("levelDisplay").innerHTML=gebi("levelDisplay").innerHTML.substring(0,7)+(++level);
-      }
 
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
@@ -318,43 +335,46 @@
       }
 
       var totalPlaylists = [];
+      var currYtPlaylists = [];
       var selected = [];
-      function finallyDo(){
-        var createBubble = function(playlist){
-          var div = document.createElement("div");
-          var p = document.createElement("p");
-          div.className = "flex justify-center items-center rounded-xl"
-          div.style.border = "2px solid black";
-          div.style.height = "50px";
-          div.style.outlineOffset="-7px";
-          p.style.width="50%";
-          p.style.textOverflow="ellipsis";
-          p.style.overflow="hidden";
-          p.style.whiteSpace="nowrap";
-          p.innerHTML=playlist.name;
+      var createBubble = function(playlist,type){
+        var div = document.createElement("div");
+        var p = document.createElement("p");
+        div.className = "flex justify-center items-center rounded-xl"
+        if (type==="ls") div.style.border = "2px solid blue";
+        else if (type==="yt") div.style.border = "2px solid red"
+        else div.style.border = "2px solid black";
+        div.style.height = "50px";
+        div.style.outlineOffset="-7px";
+        p.style.width="50%";
+        p.style.textOverflow="ellipsis";
+        p.style.overflow="hidden";
+        p.style.whiteSpace="nowrap";
+        p.innerHTML=playlist.name;
 
-          div.addEventListener("click",function(){
-            //add outline offset -7px
-            var alrSelected = false;
-            for (var i=0;i<selected.length;i++){
-              if (selected[i]===this.children[0].innerHTML){ //ASSUMING THAT THE FIRST CHILD IS THE P ELEMENT!!
-                //deselect since it is alr selected
-                alrSelected=true;
-                selected.splice(i,1);
-                this.style.outline="";
-              }
+        div.addEventListener("click",function(){
+          //add outline offset -7px
+          var alrSelected = false;
+          for (var i=0;i<selected.length;i++){
+            if (selected[i]===this.children[0].innerHTML){ //ASSUMING THAT THE FIRST CHILD IS THE P ELEMENT!!
+              //deselect since it is alr selected
+              alrSelected=true;
+              selected.splice(i,1);
+              this.style.outline="";
             }
-            if (!alrSelected){
-              //so now select
-              selected.push(this.children[0].innerHTML);
-              this.style.outline="2px solid black";
-            }
-          })
-          div.appendChild(p);
-          gebi("playlistB").appendChild(div);
-        }
+          }
+          if (!alrSelected){
+            //so now select
+            selected.push(this.children[0].innerHTML);
+            this.style.outline="2px solid black";
+          }
+        })
+        div.appendChild(p);
+        gebi("playlistB").appendChild(div);
+      }
+      function finallyDo(){
         for (var i=0;i<totalPlaylists.length;i++){
-          createBubble(totalPlaylists[i])
+          createBubble(totalPlaylists[i],"df")
         }
       }
       getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
@@ -383,15 +403,149 @@
               finallyDo();
             }
           }
+          //put in liked songs first
+          totalPlaylists.push({"name":"Liked Songs"});
+          createBubble(totalPlaylists[0],"ls");
           things(0);
         }
       })
-      /*
-      make it display a grid of round buttons where you can choose playlists to play from
-      display liked songs first
-      store playlist data in total playlists, append playlists in order and sync index with the playlist data
-      ADD IN LIKED SONGS AS FIRST POS OF TOTALPLAYLISTS ARR
-      */
+
+
+      function checkListInStorage(list){
+        var bad=false;
+        if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(loadedSongs));
+          return false;
+        }
+        var loadedSongs = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+        for(var i=0;i<loadedSongs.items.length;i++){
+          if (loadedSongs.items[i].title==list.title){
+            bad=true;
+          }
+        }
+        return bad;
+      }
+      var getYtPlaylists = function() {
+        currYtPlaylists=[];
+        if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(loadedSongs));
+        }
+        document.getElementById("ytPlaylists").innerHTML="";
+        var playlistData = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+        currYtPlaylists = playlistData.items;
+        for (var i=0;i<playlistData.items.length;i++){
+          createBubble(playlistData.items[i],"yt");
+        }
+      }
+      getYtPlaylists();
+      document.getElementById("ytButton").addEventListener("click",function(){
+        //first pop up prompt msg asking for yt playlist link
+        //then check link validity / playlist validity
+        //then save to localstorage
+        //then reload using getYtPlaylists()
+
+        //actually load yt playlists in their own div situated above the spotify one
+
+        var retLink = function(){
+          var playlistId = prompt("What is the playlist ID or link?\nIf you have the link to the playlist it is the stuff after the ?list= thing :)");
+
+
+          //USE URL PARAMS TO PARSE LINK IF LINK DETECTED !!!
+
+
+          if (playlistId===null){
+            //cancel
+            return null;
+          }else if (playlistId.trim()===""){
+            alert("pls write something");
+            return retLink();
+          }else{
+            //test validity
+            var req = new XMLHttpRequest();
+            req.open("GET",
+              "https://www.googleapis.com/youtube/v3/playlistItems"
+              +"?playlistId="+playlistId
+              +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+              +"&part=contentDetails"
+              +"&maxResults=1"
+            );
+            req.send();
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                //init 성공
+                var body = JSON.parse(req.responseText);
+                if (body.pageInfo.totalResults===0||body.pageInfo.totalResults==="0"){
+                  //실패 미안해
+                  alert("error: playlist has zero items bruh")
+                }else{
+                  //완전 성공 우후우우우우우우우우
+                  //save to local
+                  //first format the save
+                  var playlistReq = new XMLHttpRequest();
+                  playlistReq.open("GET",
+                    "https://www.googleapis.com/youtube/v3/playlists"
+                    +"?id="+playlistId
+                    +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                    +"&part=snippet"
+                  );
+                  playlistReq.send();
+                  playlistReq.addEventListener("readystatechange", ()=>{
+                    if (playlistReq.status === 200 && playlistReq.readyState === 4) {
+                      var thisPlaylistData = JSON.parse(playlistReq.responseText);
+                      var thisPlaylist = {
+                        id:playlistId,
+                        name:thisPlaylistData.items[0].snippet.title
+                      }
+                      var storedLists = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+                      if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+                        storedLists={
+                          items:[]
+                        }
+                        storedLists.items.push(thisPlaylist)
+                      }else{
+                        if (!checkListInStorage(thisPlaylist)){
+                          storedLists.items.push(thisPlaylist)
+                        }
+                      }
+                      localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(storedLists));
+                      getYtPlaylists();
+                    }else if(playlistReq.readyState===4){
+                      //idk some fail
+                    }
+                  })
+                }
+              } else if (req.readyState === 4){
+                //bad
+                alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+              }
+            })
+          }
+        }
+        retLink();
+      })
+    
+      var showMenu = function(menu){
+        var menus = document.getElementsByClassName("osgStart");
+        for (var i of menus){
+          if (i.id.substring(4)===menu) i.style.display="";
+          else i.style.display="none";
+        }
+      }
+      gebi("osgStartButton1").addEventListener("click",function(){
+        showMenu("2");
+      })
+      gebi("osgBackButton2").addEventListener("click",function(){
+        showMenu("1");
+      })
+      gebi("osgStartButton2").addEventListener("click",function(){
+        //start the gameeee
+      })
     </script>
   </body>
 </html>
