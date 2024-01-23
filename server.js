@@ -1468,7 +1468,6 @@ app.post("/updateTime", async (req,res)=>{
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
 var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
-var redirect_uri = 'https://michaelzhangwebsite.herokuapp.com/spotifyYt/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -1501,7 +1500,7 @@ app.get('/spotifyYt/login', function(req, res) {
 			response_type: 'code',
 			client_id: client_id,
 			scope: scope,
-			redirect_uri: redirect_uri,
+			redirect_uri: 'https://michaelzhangwebsite.herokuapp.com/spotifyYt/callback',
 			state: state
 		})
 	);
@@ -1596,7 +1595,7 @@ app.get('/musicQuiz/login', function(req, res) {
 			response_type: 'code',
 			client_id: client_id,
 			scope: scope,
-			redirect_uri: redirect_uri,
+			redirect_uri: 'https://michaelzhangwebsite.herokuapp.com/musicQuiz/callback',
 			state: state
 		})
 	);
