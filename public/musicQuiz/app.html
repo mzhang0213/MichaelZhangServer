@@ -52,9 +52,9 @@
         </button>
       </div>
       <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm" style="height:100%">
-        <div onclick="(function(){window.location=window.location.origin+'/musicQuiz/'})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 text-gray-200 hover:text-white" style="height:100%">Home</div>
-        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%"><b>1秒 Game</b></div>
-        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%"><b>Lyric Game</b></div>
+        <div onclick="(function(){window.location=window.location.origin+'/musicQuiz/'})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;">Home</div>
+        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;"><b>1秒 Game</b></div>
+        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;"><b>Lyric Game</b></div>
       </div>
     </nav>
     <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
@@ -65,13 +65,18 @@
     </div>-->
     <center>
       <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:80vh;">
-        <div id="osg">
+        <div id="osg" class="relative flex flex-col justify-start items-center p-4" style="width:100%;height:100%">
+          <div id="osgStart" style="width:100%">
+            <div id="playlistB" class="grid grid-cols-5" style="width:100%"></div>
+          </div>
           <!--
             choose either beginning or mid of song
             then hit play
             then do like 20 songs or something chosen
             make it so that buzzers can be on keyboard or just general buzzer AND THEN DROPDOWN picker to give points to person
             i can do play with MC on a live connection to server where they can approve and deny answers and see answers live hehehehe
+
+            todo: add youtube and spotify playlist link import
 
             note that you can buzz whenever, just disable buzzers until round starts
             for each round:
@@ -83,6 +88,11 @@
               on buzz: 6 seconds to start typing, +1 if text box len > 0.5(answer len)
             make a buzzer system w/ keyboard and you can bind multiple keys, make sides of the screen light up when some player presses
             also make underlying time limit before question answer window expires
+          -->
+          <!--
+            also make image guessing game
+              figure person guessing game
+
           -->
         </div>
         <div id="lyrics">
@@ -172,12 +182,14 @@
           gebi(i).style.display="none";
         }
       }
+      /*
       var highlightTab = function(tab){
         for (var i of games){
           gebi(i+"Tab").style.backgroundColor="rgb(243 244 246)";
         }
         gebi(tab+"Tab").style.backgroundColor="rgb(199, 200, 201)";
       }
+      */
       window.onload=function(){
         if (window.innerWidth<700){
           //small
@@ -191,11 +203,11 @@
         resize();
         //gebi("tabs").style.left=gebi("contentBox").offsetLeft+"px";
         //gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
-        highlightTab(games[0]+"Tab");
+        //highlightTab(games[0]+"Tab");
         for (var i of games){
           gebi(i+"Tab").addEventListener("click",function(event){
             var eId = event.srcElement.id.substring(0,event.srcElement.id.length-3);
-            highlightTab(eId+"Tab");
+            //highlightTab(eId+"Tab");
             hideAllGames();
             gebi(eId).style.display="";
           })
@@ -275,22 +287,46 @@
         player.setVolume(50);//not rip headphones users immediately
       }
 
+      var totalPlaylists = [];
+      var selected = [];
       function finallyDo(){
-        //everything is in total playlists lets create the bubbles
-        /*
-        bubble plan:
-        -round but like not circles and not ellipse
-        -onclick massive border that has a gap appear and change color
-        -only have playlist title suspended, choose a small emough font size and just do ... on overflow, 
-        */
         var createBubble = function(playlist){
           var div = document.createElement("div");
           var p = document.createElement("p");
-          div.className = "rounded-lg "
+          div.className = "flex justify-center items-center rounded-xl"
+          div.style.border = "2px solid black";
+          div.style.height = "50px";
+          div.style.outlineOffset="-7px";
+          p.style.width="50%";
+          p.style.textOverflow="ellipsis";
+          p.style.overflow="hidden";
+          p.style.whiteSpace="nowrap";
+          p.innerHTML=playlist.name;
+
+          div.addEventListener("click",function(){
+            //add outline offset -7px
+            var alrSelected = false;
+            for (var i=0;i<selected.length;i++){
+              if (selected[i]===this.children[0].innerHTML){ //ASSUMING THAT THE FIRST CHILD IS THE P ELEMENT!!
+                //deselect since it is alr selected
+                alrSelected=true;
+                selected.splice(i,1);
+                this.style.outline="";
+              }
+            }
+            if (!alrSelected){
+              //so now select
+              selected.push(this.children[0].innerHTML);
+              this.style.outline="2px solid black";
+            }
+          })
+          div.appendChild(p);
+          gebi("playlistB").appendChild(div);
+        }
+        for (var i=0;i<totalPlaylists.length;i++){
+          createBubble(totalPlaylists[i])
         }
       }
-
-      var totalPlaylists = [];
       getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
         if (dogsErr){
           console.log("dogs err line515");
@@ -309,18 +345,11 @@
                 } else {
                   for (var i=0;i<playlistData.items.length;i++){
                     totalPlaylists[atoms+i]=playlistData.items[i];
-                    //create playlist bubble item and add event listener (or dont)
-                      //maybe just highlihgting css onclick idk
-                      //oh and also like some attribute to indicate its highlighted - can add some classname idk maybe that is bad and just keep arr
-                    if (urlParams.has("playlistInfo")&&playlistData.items[i].name===urlParams.get("playlistInfo")){
-                      p.click();
-                    }
                   }
                   things(atoms+50);
                 }
               })
             }else{
-              //after async call finish
               finallyDo();
             }
           }

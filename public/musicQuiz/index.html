@@ -1,428 +1,86 @@
 <!DOCTYPE html>
 <html>
-  <!-- This is SpotifyYt -->
-  
   <head>
-    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/sFavicon.png">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-      
-      gtag('config', 'UA-167496422-1');
-    </script>
+    <title></title>
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
-    <title>Cracked Spotify, By: Michael Zhang</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="./logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
     <script>
-      if (window.location.origin.charAt(4)!=="s"){
-        //not https!
-        window.location="https://"+window.location.href.substring(7);
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: '0px',
+            md: '700px',
+            lg: '1200px',
+            xl: '1600px'
+          }
+        }
       }
     </script>
-  </head>
-  <body style="background-color:#f2f2f2;">
-    <font style="font-family: 'Cabin';">
-      <div id="navContainer"></div>
-      <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-      <script>
-        const navBar = document.createElement("script");
-        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
-        document.body.appendChild(navBar);
-        const navBarStyle = document.createElement("link");
-        navBarStyle.rel="stylesheet";
-        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
-        document.body.appendChild(navBarStyle);
-      </script>
-      <center>
-        <br><br>
-        <button id="login" class="main">Login</button>
-        <div id="timeLoginContainer">
-          <div id="outside">
-            <div id="mainContent">
-              <p id="mainContentLabel" class="loginContainer" style="font-size:22px;"><b>Sign in to Wrapped!</b></h1>
-              <div id="loginFieldContainer" class="loginContainer" style="display:flex;align-items:flex-start;justify-content:center;">
-                <label>Username:</label>
-                <input id="timeLoginField" type="text">
-              </div>
-              <div id="buttonContainer" class="loginContainer" style="display:flex;align-items:center;justify-content:center;">
-                <button id="submitLogin" style="display:block">Login!</button>
-              </div>
-            </div>
-            <div id="createNewContainer" class="loginContainer" style="position:absolute;bottom:0;right:0;font-size:11px;color:rgb(154, 225, 255)">
-              <p id="createNew" style="display:block;margin:0;padding:0;">Create a new account!</p>
-            </div>
-            <br>
-            <p id="loggedInMsg"></p>
-            <button id="logout">Logout</button>
-          </div>
-        </div>
-      </center>
-      <style>
-        .main{
-          border-radius:8px;
-          border:2px solid #000000;
-          font-size:20px;
-          font-family:'Cabin';
-          outline:none;
-        }
-        .loginContainer{
-          width:200px;
-        }
-        #mainContent{
-          display:flex;
-          justify-content:center;
-          flex-wrap:wrap;
-          height:150px;
-        }
-        #timeLoginContainer{
-          z-index:10;
-          position:absolute;
-          top:20px;
-          right:20px;
-        }
-        #outside{
-          position:relative;
-          background-image:linear-gradient(to bottom right, #79eefe,#293bc6);
-          border: 2px solid black;
-          width:275px;
-          height:200px;
-        }
-        #login{
-          background-color:rgb(54, 219, 54);
-        }
-        #login:disabled{
-          background-color:rgb(170, 255, 170);
-        }
-        #login:hover{
-          background-color:rgb(48, 194, 48);
-        }
-        #wrapped{
-          background-color:#4eb8ff;
-        }
-        #wrapped:disabled{
-          background-color:#bde5ff;
-        }
-        #wrapped:hover{
-          background-color:#489ed8;
-        }
-        #cache{
-          background-color:#d984e6;
-        }
-        #cache:hover{
-          background-color:#a141b0;
-        }
-      </style>
-      <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const year = new Date().getUTCFullYear();
-        document.getElementById("login").addEventListener("click",()=>{
-          var redirect = "./login";
-          if (urlParams.has("playlistInfo")){
-            redirect+="?playlistInfo=" + urlParams.get("playlistInfo");
-          }
-          window.location=redirect;
-        })
-        document.getElementById("wrapped").addEventListener("click",()=>{
-          window.location=window.location.origin+"/wrapped/";
-        })
-        document.getElementById("cache").addEventListener("click",()=>{
-          window.location=window.location.origin+"/saved/";
-        })
-        
-        document.getElementById("loggedInMsg").style.display="none";
-        document.getElementById("logout").style.display="none";
-
-        var getAccs = new XMLHttpRequest();
-        var accs = [];
-        getAccs.open("GET",window.location.origin+"/accounts");
-        getAccs.send();
-        getAccs.addEventListener("readystatechange", ()=>{
-          if (getAccs.status === 200 && getAccs.readyState === 4) {
-            var body = JSON.parse(getAccs.responseText);
-            accs=body.accs;
-          } else if (getAccs.readyState === 4){
-            console.log("reeeeeeee err: "+getAccs.responseText)
-          }
-        })
-
-        if (
-            localStorage.getItem("savedTimeLogin")!==null&&localStorage.getItem("savedTimeLogin")!==undefined&&localStorage.getItem("savedTimeLogin").trim()!==""
-            &&
-            localStorage.getItem("savedDeviceLogin")!==null&&localStorage.getItem("savedDeviceLogin")!==undefined&&localStorage.getItem("savedDeviceLogin").trim()!==""
-        ){
-          //create new login input
-          document.getElementById("mainContent").style.display="none";
-          document.getElementById("createNewContainer").style.display="none";
-          document.getElementById("loggedInMsg").style.display="";
-          document.getElementById("logout").style.display="";
-          var white = document.createElement("font");
-          white.style.color="white";
-          white.append(localStorage.getItem("savedTimeLogin"));
-          document.getElementById("loggedInMsg").append("Logged in as: ");
-          document.getElementById("loggedInMsg").append(white);
-          document.getElementById("loggedInMsg").append(document.createElement("br"));
-          var white = document.createElement("font");
-          white.style.color="white";
-          white.append(localStorage.getItem("savedDeviceLogin"));
-          document.getElementById("loggedInMsg").append("on device ");
-          document.getElementById("loggedInMsg").append(white);
-          document.getElementById("loggedInMsg").append(document.createElement("br"));
+    <script>
+      var navMenuShown = false;
+      var gebi = function(e){return document.getElementById(e)};
+      var resize = function(){
+        if (window.innerWidth<700){
+          //small
+        }else if (700<=window.innerWidth && window.innerWidth<1200){
+          //med
         }else{
-          document.getElementById("login").disabled=true;
-          document.getElementById("wrapped").disabled=true;
+          //lg++
         }
-        //returns if device put into storage is new or not t/f (fresh account is -1, err -1)
-        var pickDevice = function(acc){
-          var newDevice = true;
-          var msg = "What device are you on? Or a new one?"
-          if (acc.devices.length>0){
-            msg+="\n"
-            for (var i=0;i<acc.devices.length-1;i++){
-              msg+="'"+acc.devices[i].name+"' ,  ";
-            }
-            msg+="'"+acc.devices[acc.devices.length-1].name+"'";
-            var device = prompt(msg);
-            for (var i=0;i<acc.devices.length;i++){
-              if (acc.devices[i].name===device){
-                if (confirm("Logging into saved device "+device+", ok?")){
-                  //good device login
-                  newDevice = false;
-                  localStorage.setItem("savedDeviceLogin",device);
-                  return false;
-                }else{
-                  alert("ok fine. bruv actually type in the correct device");
-                  return pickDevice(acc);
-                }
-                break;
-              }
-            }
-            if (newDevice){
-              //case appears when the acc exists but a new device logged on
-              if(confirm("Creating new device '"+device+"', ok?")){
-                //good device login
-                localStorage.setItem("savedDeviceLogin",device);
-                return true;
-              }else{
-                alert("be decisive. go again!");
-                return pickDevice(acc);
-              }
-            }
-          }else{
-            //given acc is new, no devices
-            var device = prompt("Noice new account, what device are you using right now? Used in tracking time!");
-            if (confirm("ok with the name "+device)){
-              localStorage.setItem("savedDeviceLogin",device);
-            }else{
-              alert("do it again");
-              return pickDevice(acc);
-            }
-          }
-          return -1;
-        }
-        var updateTime = function(){
-          var newAccReq = new XMLHttpRequest();
-          var pushDevice = {
-            name:localStorage.getItem("savedDeviceLogin"),
-            ["totalTime"]:localStorage.getItem("totalTime"),
-            ["totalTime"+year]:localStorage.getItem("totalTime"+year)
-          }
-          console.log(pushDevice, "accs: "+accs)
-          var body = {
-            name:localStorage.getItem("savedTimeLogin"),
-            updatedDevice:pushDevice
-          }
-          newAccReq.open("POST",window.location.origin+"/updateTime");
-          newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-          newAccReq.send(JSON.stringify(body));
-          newAccReq.addEventListener("readystatechange", ()=>{
-            if (newAccReq.status === 200 && newAccReq.readyState === 4) {
-              console.log("time updated :D :D");
-              var body = JSON.parse(getAccs.responseText);
-              accs=body.accs;
-            } else if (newAccReq.readyState === 4){
-              console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
-            }
-          })
-        }
-
-        var creatingNew = false;
-        document.getElementById("submitLogin").addEventListener("click",function(){
-          if (document.getElementById("timeLoginField").value===null||document.getElementById("timeLoginField").value===undefined||document.getElementById("timeLoginField").value.trim()===""){
-            alert("actually input something please");
-          }else if (document.getElementById("timeLoginField").value.trim().length<=2){
-            alert("too short; longer than 2 characters pls");
-          }else{
-            //good name
-            if (creatingNew){
-              //if it already exists, cannot use the account
-              var exists = false;
-              for (var i=0;i<accs.length;i++){
-                if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
-                  //exists
-                  exists=true;
-                }
-              }
-              if (exists){
-                alert("That account name already exists (sorry!)")
-              }else{
-                document.getElementById("mainContent").style.display="none";
-                document.getElementById("createNewContainer").style.display="none";
-                document.getElementById("loggedInMsg").style.display="";
-                document.getElementById("logout").style.display="";
-                document.getElementById("login").disabled=false;
-                document.getElementById("wrapped").disabled=false;
-                localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
-                var newDevice = pickDevice({devices:[]});
-                var white = document.createElement("font");
-                white.style.color="white";
-                white.append(localStorage.getItem("savedTimeLogin"));
-                document.getElementById("loggedInMsg").append("Logged in as: ");
-                document.getElementById("loggedInMsg").append(white);
-                document.getElementById("loggedInMsg").append(document.createElement("br"));
-                var white = document.createElement("font");
-                white.style.color="white";
-                white.append(localStorage.getItem("savedDeviceLogin"));
-                document.getElementById("loggedInMsg").append("on device ");
-                document.getElementById("loggedInMsg").append(white);
-                document.getElementById("loggedInMsg").append(document.createElement("br"));
-                var newAccReq = new XMLHttpRequest();
-                var submitDevice = {}
-                if (newDevice){
-                  submitDevice = {
-                    name:localStorage.getItem("savedDeviceLogin"),
-                    totalTime:0,
-                    ["totalTime"+year]:0
-                  }
-                }
-                var body = {
-                  name:document.getElementById("timeLoginField").value,
-                  updatedDevice:submitDevice
-                }
-                newAccReq.open("POST",window.location.origin+"/updateTime");
-                newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-                newAccReq.send(JSON.stringify(body));
-                newAccReq.addEventListener("readystatechange", ()=>{
-                  if (newAccReq.status === 200 && newAccReq.readyState === 4) {
-                    alert("New account created successfully :D :D");
-                    var savedTime = localStorage.getItem("totalTime");
-                    if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
-                      updateTime();
-                    }
-                    var body = JSON.parse(getAccs.responseText);
-                    accs=body.accs;
-                    document.getElementById("login").disabled=false;
-                    document.getElementById("wrapped").disabled=false;
-                  } else if (newAccReq.readyState === 4){
-                    console.log("reeeeeeee err new acc creation: "+newAccReq.responseText)
-                  }
-                })
-              }
-            }else{
-              //see if it is in accs; else, reject
-              var exists = false;
-              var currAcc = ""
-              for (var i=0;i<accs.length;i++){
-                if (accs[i].name===document.getElementById("timeLoginField").value.trim()){
-                  //exists
-                  currAcc=accs[i]
-                  exists=true;
-                }
-              }
-              if (!exists){
-                alert("Not a registered account name; please create a new one :)")
-              }else{
-                document.getElementById("mainContent").style.display="none";
-                document.getElementById("createNewContainer").style.display="none";
-                document.getElementById("loggedInMsg").style.display="";
-                document.getElementById("logout").style.display="";
-                document.getElementById("login").disabled=false;
-                document.getElementById("wrapped").disabled=false;
-                localStorage.setItem("savedTimeLogin",document.getElementById("timeLoginField").value.trim());
-                pickDevice(currAcc);
-                var white = document.createElement("font");
-                white.style.color="white";
-                white.append(localStorage.getItem("savedTimeLogin"));
-                document.getElementById("loggedInMsg").append("Logged in as: ");
-                document.getElementById("loggedInMsg").append(white);
-                document.getElementById("loggedInMsg").append(document.createElement("br"));
-                var white = document.createElement("font");
-                white.style.color="white";
-                white.append(localStorage.getItem("savedDeviceLogin"));
-                document.getElementById("loggedInMsg").append("on device ");
-                document.getElementById("loggedInMsg").append(white);
-                document.getElementById("loggedInMsg").append(document.createElement("br"));
-                var savedTime = localStorage.getItem("totalTime");
-                if (!(savedTime===null||savedTime===undefined||savedTime===""||savedTime===0||localStorage.getItem("totalTime"+year)===0)){
-                  updateTime();
-                }
-              }
-            }
-          }
-        })
-        document.getElementById("createNew").addEventListener("click",function(){
-          if (creatingNew){
-            document.getElementById("mainContentLabel").innerHTML="";
-            var b = document.createElement("b");b.append("Sign in to Wrapped!")
-            document.getElementById("mainContentLabel").append(b);
-            document.getElementById("createNew").innerHTML="";
-            document.getElementById("createNew").innerHTML="Create a new acc!";
-          }else{
-            document.getElementById("mainContentLabel").innerHTML="";
-            var b = document.createElement("b");b.append("Create a new acc!")
-            document.getElementById("mainContentLabel").append(b);
-            document.getElementById("createNew").innerHTML="<< Back";
-          }
-          creatingNew=!creatingNew
-        })
-        document.getElementById("logout").addEventListener("click",function(){
-          var accName = localStorage.getItem("savedTimeLogin");
-          localStorage.setItem("savedTimeLogin","");
-          localStorage.setItem("savedDeviceLogin","");
-          window.location.reload();
-          /*
-          //destory account req
-          var destroyAccReq = new XMLHttpRequest();
-          var body = {
-            destroy:accName
-          }
-          destroyAccReq.open("POST",path);
-          destroyAccReq.send(body);
-          destroyAccReq.addEventListener("readystatechange", ()=>{
-            if (destroyAccReq.status === 200 && destroyAccReq.readyState === 4) {
-              alert("Account deleted");
-            } else if (destroyAccReq.readyState === 4){
-              console.log("reeeeeeee err: "+destroyAccReq.responseText)
-            }
-          })*/
-        })
-
-        if (urlParams.has("exp")){
-          var message = document.createElement("p");
-          message.style.position = "relative";
-          message.style.top = window.innerHeight*0.2+"px";
-          message.style.fontSize = "45px";
-          message.id="expiredMessage";
-          message.append("Relogging in for you :)");
-
-          var center = document.createElement("center");
-          document.body.appendChild(center);
-          center.appendChild(message);
-          setTimeout(()=>{
-            var iter=0;
-            var interval = setInterval(()=>{
-              if (iter<=70){
-                document.getElementById("expiredMessage").style.opacity= 100-iter* 100/70 + "%";
-                iter++;
-              } else {
-                clearInterval(interval);
-                document.getElementById("login").click();
-              }
-            },10)
-          },800)
-        }
-      </script>
+      }
+      window.onresize=resize;
+    </script>
+    <style>
+      html{
+        scroll-behavior:smooth;
+      }
+    </style>
+  </head>
+  <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+    <!--navbar-->
+    <nav id="navbar" class="left-0 top-0 z-50 flex items-center justify-between flex-wrap w-screen fixed pr-4 pl-2" style="height:40px; font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+      <div class="flex items-center flex-shrink-0 text-white mr-6 pl-2" onclick="(function(){window.location=window.location.origin})()">
+        <button class="text-xl tracking-tight">Music Quiz</span>
+      </div>
+      <div class="block md:hidden">
+        <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+          <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+        </button>
+      </div>
+      <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm" style="height:100%">
+        <div onclick="(function(){window.location=window.location.origin+'/musicQuiz/'})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;">Home</div>
+      </div>
+    </nav>
+    <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
+    <font style="font-family: 'Cabin';">
+    <center>
+      <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center" style="height:80vh;">
+        <button id="login" class="main" onclick="(function(){window.location=window.location.origin+'/musicQuiz/login/'})()">Login</button>
+      </div>
+    </center>
     </font>
+    <style>
+      .main{
+        border-radius:8px;
+        border:2px solid #000000;
+        font-size:20px;
+        font-family:'Cabin';
+        outline:none;
+        margin-bottom:20px; /* NOTE this is gap betw buttons */
+      }
+      #login{
+        background-color:rgb(54, 219, 54);
+      }
+      #login:disabled{
+        background-color:rgb(170, 255, 170);
+      }
+      #login:hover{
+        background-color:rgb(48, 194, 48);
+      }
+    </style>
   </body>
 </html>
