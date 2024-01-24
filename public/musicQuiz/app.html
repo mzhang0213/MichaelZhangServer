@@ -70,7 +70,12 @@
             <div id="menu1" class="mt-4">
               <p class="font-4xl"><u>Song Guessing</u></p>
               <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
-              <button id="osgStartButton1" class="main relative font-xl mt-12">Choose Playlists >></button>
+              <button id="osgStartButton1" class="main relative font-xl mt-20">Choose Playlists >></button>
+              <button id="connectModButton" class="main relative font-xl mt-20">Connect a Moderator</button>
+              <div id="connectMenu">
+                <p id="connectCode" class=""></p>
+                <p id="connectStatus" class="mt-4"></p>
+              </div>
             </div>
             <div id="menu2" style="display:none" class="mt-4">
               <div id="menu2Desc">
@@ -186,6 +191,12 @@
       }
       #osgStartButton2:hover{
         background-color:rgb(48, 194, 48);
+      }
+      #connectModButton{
+        background-color:#d984e6;
+      }
+      #connectModButton:hover{
+        background-color:#a141b0;
       }
     </style>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
@@ -324,6 +335,7 @@
       function onPlayerStateChange(){
       }
 
+      var code = "";
       var connectMod = function(){
         /*
         hit the connect button
@@ -334,6 +346,10 @@
         display "mod connected" with check mark
         */
       }
+      gebi("connectModButton").addEventListener("click",function(){
+        //show div
+        //change button to be change the code? or hide this menu?
+      })
 
       var totalPlaylists = [];
       var currYtPlaylists = [];
