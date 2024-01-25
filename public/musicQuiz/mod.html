@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="./logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: '0px',
+            md: '700px',
+            lg: '1200px',
+            xl: '1600px'
+          }
+        }
+      }
+    </script>
+    <script>
+      var navMenuShown = false;
+      var gebi = function(e){return document.getElementById(e)};
+      var resize = function(){
+        if (window.innerWidth<700){
+          //small
+        }else if (700<=window.innerWidth && window.innerWidth<1200){
+          //med
+        }else{
+          //lg++
+        }
+      }
+      window.onresize=resize;
+    </script>
+    <style>
+      html{
+        scroll-behavior:smooth;
+      }
+    </style>
+  </head>
+  <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+    <!--navbar-->
+    <nav id="navbar" class="left-0 top-0 z-50 flex items-center justify-between flex-wrap w-screen fixed pr-4 pl-2" style="height:40px; font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+      <div class="flex items-center flex-shrink-0 text-white mr-6 pl-2" onclick="(function(){window.location=window.location.origin})()">
+        <button class="text-xl tracking-tight">Music Quiz</span>
+      </div>
+      <div class="block md:hidden">
+        <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+          <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+        </button>
+      </div>
+      <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm" style="height:100%">
+        <div onclick="(function(){window.location=window.location.origin+'/musicQuiz/'})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;">Home</div>
+      </div>
+    </nav>
+    <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
+    <font style="font-family: 'Cabin';">
+    <center>
+      <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:80vh;">
+        <p id="status">Not connected...</p>
+        <input id="code" class="mt-8">
+        <button id="connect" class="mt-4" disabled>Connect!</button>
+      </div>
+    </center>
+    </font>
+    <style>
+      .main{
+        border-radius:8px;
+        border:2px solid #000000;
+        font-size:20px;
+        font-family:'Cabin';
+        outline:none;
+        margin-bottom:20px; /* NOTE this is gap betw buttons */
+      }
+      #login{
+        background-color:rgb(54, 219, 54);
+      }
+      #login:disabled{
+        background-color:rgb(170, 255, 170);
+      }
+      #login:hover{
+        background-color:rgb(48, 194, 48);
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+
+      socket.on("connect", () => {
+        console.log(`connected with transport ${socket.io.engine.transport.name}`);
+        socket.io.engine.on("upgrade", (transport) => {
+          console.log(`transport upgraded to ${transport.name}`);
+        });
+        gebi("connect").disabled=false;
+      });
+
+      socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log(`disconnect due to ${reason}`);
+      });
+
+
+      var code = "";
+      socket.on("mod_code_res", (body)=>{
+        //body: confirm=t|f, code="the code"
+        if (body.confirm){
+          code=body.code;
+        }
+      })
+
+      gebi("connect").addEventListener("click",function(){
+        //we send a pos code to server AS WELL AS MY ID
+        //server asks all clients trying to play for their active codes
+        //on server, determine if code worked
+        //server then responds good to both client (GIVE CLIENT MY ID) and mod || bad code to mod
+        
+        //client use my id to send messages and that is ez
+        socket.emit("mod_code",{
+          code:gebi("code").value,
+          id:socket.id
+        })
+      })
+    </script>
+  </body>
+</html>
