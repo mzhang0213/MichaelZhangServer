@@ -203,6 +203,10 @@
     <script>
       gebi("ytButton").src=window.location.origin+"/musicQuiz/ytLogo.png";
 
+      var code = "";
+      var modId = "";
+
+
       const socket = io();
 
       socket.on("connect", () => {
@@ -210,6 +214,25 @@
         socket.io.engine.on("upgrade", (transport) => {
           console.log(`transport upgraded to ${transport.name}`);
         });
+        
+        socket.io.engine.on("client-mod_code", (body)=>{
+          if (body.code===localStorage.getItem("musicQuiz-code")){
+            //cache mod's id in localstorage
+            localStorage.setItem("musicQuiz-mod_id",body.modId);
+            socket.emit("client-code_response",{
+              confirm:true,
+              modId:body.id,
+              clientId:socket.id
+            })
+            //display mod acceptance
+          }else{
+            socket.emit("client-code_response",{
+              confirm:false,
+              modId:body.id,
+              clientId:socket.id
+            })
+          }
+        })
       });
 
       socket.on("connect_error", (err) => {
@@ -335,19 +358,21 @@
       function onPlayerStateChange(){
       }
 
-      var code = "";
-      var connectMod = function(){
-        /*
-        hit the connect button
-        make a code that pops up, store it here
-        mod goes to musicQuiz/mod.html and types code
-          WHILE WAITING put a dot dot dot gif or just do setintv(innerhtml="."+"."+".",500)
-        they get confirmation from server, server sends confirmation to us
-        display "mod connected" with check mark
-        */
+      /*
+      hit the connect button
+      make a code that pops up, store it here
+      mod goes to musicQuiz/mod.html and types code
+        WHILE WAITING put a dot dot dot gif or just do setintv(innerhtml="."+"."+".",500)
+      they get confirmation from server, server sends confirmation to us
+      display "mod connected" with check mark
+      */
+      var generateCode = function(){
+        
       }
       gebi("connectModButton").addEventListener("click",function(){
         //show div
+        //generate code
+        localStorage.setItem("musicQuiz-code",/*code*/);
         //change button to be change the code? or hide this menu?
       })
 

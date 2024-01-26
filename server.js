@@ -66,8 +66,12 @@ io.on("connection", (socket) => {
 	  console.log(`disconnected due to ${reason}`);
 	});
 
-	socket.on("yo",(body)=>{
-		console.log(body);
+	socket.on("mod-mod_code",(body)=>{
+		socket.emit("client-mod_code",body);
+	});
+
+	socket.on("client-code_response",(body)=>{
+		socket.to(body.modId).emit(body);
 	})
 });
 

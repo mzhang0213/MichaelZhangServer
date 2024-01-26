@@ -110,6 +110,9 @@
         //body: confirm=t|f, code="the code"
         if (body.confirm){
           code=body.code;
+          localStorage.setItem("musicQuiz-clientId");
+        }else{
+          alert("invalid code entered");
         }
       })
 
@@ -120,9 +123,9 @@
         //server then responds good to both client (GIVE CLIENT MY ID) and mod || bad code to mod
         
         //client use my id to send messages and that is ez
-        socket.emit("mod_code",{
+        socket.emit("mod-mod_code",{
           code:gebi("code").value,
-          id:socket.id
+          modId:socket.id
         })
       })
     </script>
