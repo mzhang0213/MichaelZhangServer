@@ -111,7 +111,8 @@
         //body: confirm=t|f, code="the code"
         if (body.confirm){
           code=body.code;
-          localStorage.setItem("musicQuiz-clientId");
+          localStorage.setItem("musicQuiz-clientId",body.clientId);
+          localStorage.setItem("musicQuiz-mod_code",body.code);
           gebi("status").innerHTML="✅<br><br>Waiting for game to start...";
           gebi("code").disabled=true;
           gebi("connect").disabled=true;

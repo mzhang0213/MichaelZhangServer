@@ -226,7 +226,7 @@
 
       socket.on("client-mod_code", (body)=>{
         console.log(body);
-        if (body.code===localStorage.getItem("musicQuiz-code")){
+        if (body.code===localStorage.getItem("musicQuiz-client_code")){
           //cache mod's id in localstorage
           localStorage.setItem("musicQuiz-mod_id",body.modId);
           socket.emit("client-code_response",{
@@ -382,7 +382,7 @@
         //show div
         //generate code
         var code = generateCode();
-        localStorage.setItem("musicQuiz-code",code);
+        localStorage.setItem("musicQuiz-client_code",code);
         //change button to be change the code? or hide this menu?
         gebi("connectMenu").style.height="200px"; //this is a guess idfk what it should be BTW THIS IS ANIMATION THATS WHY IM DOING THIS
         gebi("connectCode").innerHTML="Code: ";
