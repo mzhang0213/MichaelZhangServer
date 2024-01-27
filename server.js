@@ -67,11 +67,11 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("mod-mod_code",(body)=>{
-		socket.emit("client-mod_code",body);
+		io.emit("client-mod_code",body);
 	});
 
 	socket.on("client-code_response",(body)=>{
-		socket.to(body.modId).emit(body);
+		io.to(body.modId).emit(body);
 	})
 });
 
