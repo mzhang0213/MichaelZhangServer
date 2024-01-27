@@ -59,9 +59,10 @@
     <font style="font-family: 'Cabin';">
     <center>
       <div id="contentBox" class="relative flex flex-col w-9/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:80vh;">
-        <p id="status">Not connected...</p>
-        <input id="code" class="mt-8">
-        <button id="connect" class="mt-4" disabled>Connect!</button>
+        <p id="title" class="text-2xl">Connect with the bolded code!</p>
+        <p id="status" class="mt-12">Not connected...</p>
+        <input id="code" class="p-1 text-lg text-center mt-4">
+        <button id="connect" class="main mt-2" disabled>Connect!</button>
       </div>
     </center>
     </font>
@@ -74,13 +75,13 @@
         outline:none;
         margin-bottom:20px; /* NOTE this is gap betw buttons */
       }
-      #login{
+      #connect{
         background-color:rgb(54, 219, 54);
       }
-      #login:disabled{
+      #connect:disabled{
         background-color:rgb(170, 255, 170);
       }
-      #login:hover{
+      #connect:hover{
         background-color:rgb(48, 194, 48);
       }
     </style>
@@ -111,6 +112,9 @@
         if (body.confirm){
           code=body.code;
           localStorage.setItem("musicQuiz-clientId");
+          gebi("status").innerHTML="✅<br><br>Waiting for game to start...";
+          gebi("code").disabled=true;
+          gebi("connect").disabled=true;
         }else{
           alert("invalid code entered");
         }

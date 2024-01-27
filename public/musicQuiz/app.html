@@ -231,7 +231,7 @@
           localStorage.setItem("musicQuiz-mod_id",body.modId);
           socket.emit("client-code_response",{
             confirm:true,
-            modId:body.id,
+            modId:body.modId,
             clientId:socket.id
           })
           //display mod acceptance: clear intv, change status to check
@@ -240,7 +240,7 @@
         }else{
           socket.emit("client-code_response",{
             confirm:false,
-            modId:body.id,
+            modId:body.modId,
             clientId:socket.id
           })
         }
