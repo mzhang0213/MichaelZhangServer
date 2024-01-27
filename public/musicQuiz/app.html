@@ -67,14 +67,14 @@
       <div id="contentBox" class="relative flex flex-col w-10/12 mt-24 rounded-xl justify-center items-center bg-gray-100" style="height:90vh;overflow:auto;">
         <div id="osg" class="relative flex flex-col justify-start items-center p-4" style="width:100%;height:100%">
           <div id="osgStart" style="width:100%">
-            <div id="menu1" class="mt-4">
+            <div id="menu1" class="flex flex-col justify-start items-center mt-4">
               <p class="font-4xl"><u>Song Guessing</u></p>
               <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
               <button id="osgStartButton1" class="main relative font-xl mt-20">Choose Playlists >></button>
               <button id="connectModButton" class="main relative font-xl mt-20">Connect a Moderator</button>
-              <div id="connectMenu">
-                <p id="connectCode" class=""></p>
-                <p id="connectStatus" class="mt-4"></p>
+              <div id="connectMenu" class="mt-4" style="height:0; transition:height 2s ease-in">
+                <p id="connectCode" class="text-xl"></p>
+                <p id="connectStatus" class="mt-4 text-lg"></p>
               </div>
             </div>
             <div id="menu2" style="display:none" class="mt-4">
@@ -224,7 +224,9 @@
               modId:body.id,
               clientId:socket.id
             })
-            //display mod acceptance
+            //display mod acceptance: clear intv, change status to check
+            clearInterval(dotAnimateIntv);
+            gebi("connectStatus").innerHTML="✅";
           }else{
             socket.emit("client-code_response",{
               confirm:false,
@@ -366,14 +368,37 @@
       they get confirmation from server, server sends confirmation to us
       display "mod connected" with check mark
       */
-      var generateCode = function(){
-        
+      var getLetterFromNum = function(num){
+        switch (num){ case 0:return "a";break;case 1:return "b";break;case 2:return "c";break;case 3:return "d";break;case 4:return "e";break;case 5:return "f";break;case 6:return "g";break;case 7:return "h";break;case 8:return "i";break;case 9:return "j";break;case 10:return "k";break;case 11:return "l";break;case 12:return "m";break;case 13:return "n";break;case 14:return "o";break;case 15:return "p";break;case 16:return "q";break;case 17:return "r";break;case 18:return "s";break;case 19:return "t";break;case 20:return "p";break;case 21:return "v";break;case 22:return "w";break;case 23:return "x";break;case 24:return "y";break;case 25:return "z";break; default:return -1;break;};
       }
+      var generateCode = function(){
+        //code is [A-Z][A-Z][0-9]
+        return getLetterFromNum(Math.floor(Math.random()*26))+getLetterFromNum(Math.floor(Math.random()*26))+Math.floor(Math.random()*10);
+      }
+      var dotAnimatePos = 0;
+      var dotAnimateIntv = "";
       gebi("connectModButton").addEventListener("click",function(){
         //show div
         //generate code
-        localStorage.setItem("musicQuiz-code",/*code*/);
+        var code = generateCode();
+        localStorage.setItem("musicQuiz-code",code);
         //change button to be change the code? or hide this menu?
+        gebi("connectMenu").style.height="200px"; //this is a guess idfk what it should be BTW THIS IS ANIMATION THATS WHY IM DOING THIS
+        gebi("connectCode").innerHTML="Code: ";
+        var styled = document.createElement("b");
+        styled.innerHTML=code;
+        gebi("connectCode").appendChild(styled);
+        gebi("connectStatus").innerHTML="Not connected...";
+        dotAnimateIntv = setInterval(function(){
+          if (dotAnimatePos%3===0){
+            gebi("connectStatus").innerHTML="Not connected.";
+          }else if (dotAnimatePos%3===1){
+            gebi("connectStatus").innerHTML="Not connected..";
+          }else if (dotAnimatePos%3===2){
+            gebi("connectStatus").innerHTML="Not connected...";
+          }
+          dotAnimatePos++;
+        },750);
       })
 
       var totalPlaylists = [];
