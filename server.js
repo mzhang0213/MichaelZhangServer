@@ -71,7 +71,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("client-code_response",(body)=>{
-		io.to(body.modId).emit(body);
+		io.to(body.modId).emit("mod-code_response",body);
 	})
 });
 
