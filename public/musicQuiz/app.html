@@ -207,8 +207,27 @@
       var modId = "";
 
 
+
+
+
+
+
+
+
+
       const socket = io();
 
+
+
+
+
+
+
+
+
+
+
+      
       socket.on("connect", () => {
         console.log(`connected with transport ${socket.io.engine.transport.name}`);
         socket.io.engine.on("upgrade", (transport) => {
