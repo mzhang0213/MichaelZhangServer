@@ -68,10 +68,10 @@
         <div id="osg" class="relative flex flex-col justify-start items-center p-4" style="width:100%;height:100%">
           <div id="osgStart" style="width:100%">
             <div id="menu1" class="flex flex-col justify-start items-center mt-4">
-              <p class="font-4xl"><u>Song Guessing</u></p>
+              <p class="text-4xl"><u>Song Guessing</u></p>
               <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
-              <button id="osgStartButton1" class="main relative font-xl mt-20">Choose Playlists >></button>
-              <button id="connectModButton" class="main relative font-xl mt-20">Connect a Moderator</button>
+              <button id="osgStartButton1" class="main relative text-xl mt-20">Choose Playlists >></button>
+              <button id="connectModButton" class="main relative text-xl mt-20">Connect a Moderator</button>
               <div id="connectMenu" class="mt-4" style="height:0; transition:height 2s ease-in">
                 <p id="connectCode" class="text-xl"></p>
                 <p id="connectStatus" class="mt-4 text-lg"></p>
@@ -79,13 +79,13 @@
             </div>
             <div id="menu2" style="display:none" class="mt-4">
               <div id="menu2Desc">
-                <p class="font-2xl"><b>Choose your playlists</b></p>
+                <p class="text-2xl"><b>Choose your playlists</b></p>
                 <img id="ytButton" class="mt-8" style="z-index:10;width:35px;">
               </div>
               <div id="ytPlaylists" class="grid grid-cols-5" style="width:100%;"></div>
-              <div id="playlistB" class="grid grid-cols-5" style="width:100%;"></div>
-              <button id="osgStartButton2" class="main fixed font-lg" style="bottom:10px; right:10px;">Play!</button>
-              <button id="osgBackButton2" class="main fixed font-lg" style="bottom:10px; left:10px;">< Back</button>
+              <div id="playlistB" class="grid grid-cols-5 mt-4" style="width:100%;"></div>
+              <button id="osgStartButton2" class="main absolute text-lg" style="bottom:10px; right:10px;">Play!</button>
+              <button id="osgBackButton2" class="main absolute text-lg" style="bottom:10px; left:10px;">< Back</button>
             </div>
           </div>
           <!--
@@ -430,7 +430,7 @@
       var createBubble = function(playlist,type){
         var div = document.createElement("div");
         var p = document.createElement("p");
-        div.className = "flex justify-center items-center rounded-xl"
+        div.className = "flex justify-center items-center rounded-xl text-md"
         if (type==="ls") div.style.border = "2px solid blue";
         else if (type==="yt") div.style.border = "2px solid red"
         else div.style.border = "2px solid black";
@@ -473,6 +473,9 @@
         }else{
           playlistTotal=theStuffData.total;
           totalPlaylists=[];
+          //put in liked songs first
+          totalPlaylists.push({"name":"Liked Songs"});
+          createBubble(totalPlaylists[0],"ls");
           for (var i=0;i<playlistTotal;i++){
             totalPlaylists.push(0);
           }
@@ -493,9 +496,6 @@
               finallyDo();
             }
           }
-          //put in liked songs first
-          totalPlaylists.push({"name":"Liked Songs"});
-          createBubble(totalPlaylists[0],"ls");
           things(0);
         }
       })
@@ -641,6 +641,55 @@
         make a buzzer system w/ keyboard and you can bind multiple keys, make sides of the screen light up when some player presses
         also make underlying time limit before question answer window expires
         */
+
+        /*
+        full plan:
+        ask for # of players
+        ask for game end:
+          by # of rounds
+          by winning # of rounds
+        onclick start:
+          -onclick check: number of playlists selected, number of players present
+        -send update to mod that we started
+        -then set up number of players on keybinds to buzz in and show them which ones to put finger on
+        -3 2 1 시작 | 가 | 가자
+        -then start a round
+        on round:
+        -fade in round # real big center
+        -start music (w/o direct indicator? OR rotating clock OR ear emoji big flash on screen)
+        -appear: countdown for buzzing in, 10s or something
+          BUT MAYBE buzz window is dumb AND JUST HAVE PLAY 1 MORE TIME BUTTON...
+        -on buzz:
+          -hotkey press, ans verbally || WITH THE UI
+          -show countdown meter for ans
+          -send boolean ans_result message to mod and back
+            -if playing with mod, give +1s undisplayed for socketio lag
+          -make sure stop reading for buzz once some1 buzzed
+        -if 정답, end round and award 2 pts to win
+        -if 땡, idk either:
+          end guesses for everyone
+          ask to listen one more time
+          or ask to listen on and on
+        -go again and 정답 gets ONE point
+        END ROUND SCREEN
+        -show scores
+        -show next round button in darker blue
+        -show end game button, small, in corner?, red
+        다음 round 다시 시작
+
+        total accounted stuff FOR MOD:
+        -on round:
+          -give mod the 정답
+          -maybe give mod scores? that may be meh feature cuz they can just look at the main screen
+        -on buzz:
+          -display the buzzer above
+          -display in big the 정답
+          -show big ✅✖, do horizontally
+
+        notes:
+        -try to make the round process all functions because i wanna reuse it for not just music game
+        -once some1 buzzes and gets wrong, they can't get consec buzz
+        */
       }
       
       gebi("osgStartButton1").addEventListener("click",function(){
@@ -655,6 +704,7 @@
 
 
       //todos: fix auto token renewal
+      //todo: add in box to input number of players
     </script>
   </body>
 </html>
