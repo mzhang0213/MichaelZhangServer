@@ -84,8 +84,21 @@
               </div>
               <div id="ytPlaylists" class="grid grid-cols-5" style="width:100%;"></div>
               <div id="playlistB" class="grid grid-cols-5 mt-4" style="width:100%;"></div>
-              <button id="osgStartButton2" class="main absolute text-lg" style="bottom:10px; right:10px;">Play!</button>
-              <button id="osgBackButton2" class="main absolute text-lg" style="bottom:10px; left:10px;">< Back</button>
+              <button id="osgBackButton2" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
+              <button id="osgStartButton2" class="main absolute text-lg" style="bottom:20px; right:20px;">Next ></button>
+            </div>
+            <div id="menu3" style="display:none" class="mt-4">
+              <p class="text-2xl"><b>Add Players</b></p>
+              <div id="choosePlayers" class="mt-4"></div>
+              <p class="text-2xl mt-12"><b>Win Condition</b></p>
+              <div id="choice1Div" class="flex flex-row justify-start items-center mt-4" style="opacity:0.5">
+                <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>rounds</p>
+              </div>
+              <div id="choice2Div" class="flex flex-row justify-start items-center mt-4" style="opacity:0.5">
+                <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>wins</p>
+              </div>
+              <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
+              <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
           </div>
           <!--
@@ -172,7 +185,10 @@
         font-family:'Cabin';
         outline:none;
         padding:4px;
-        margin-bottom:20px; /* NOTE this is gap betw buttons */
+        background-color:white;
+      }
+      .main:hover{
+        background-color:rgb(210, 210, 210);
       }
       #osgStartButton1{
         background-color:#4eb8ff;
@@ -183,13 +199,13 @@
       #osgStartButton1:hover{
         background-color:#489ed8;
       }
-      #osgStartButton2{
+      #osgStartButton3{
         background-color:rgb(54, 219, 54);
       }
-      #osgStartButton2:disabled{
+      #osgStartButton3:disabled{
         background-color:rgb(170, 255, 170);
       }
-      #osgStartButton2:hover{
+      #osgStartButton3:hover{
         background-color:rgb(48, 194, 48);
       }
       #connectModButton{
@@ -643,14 +659,14 @@
         */
 
         /*
-        full plan:
+full plan:
         ask for # of players
         ask for game end:
           by # of rounds
           by winning # of rounds
-        onclick start:
+onclick start:
           -onclick check: number of playlists selected, number of players present
-        -send update to mod that we started
+-send update to mod that we started
         -then set up number of players on keybinds to buzz in and show them which ones to put finger on
         -3 2 1 시작 | 가 | 가자
         -then start a round
@@ -692,6 +708,20 @@
         */
       }
       
+      gebi("choice1Div").addEventListener("click",function(){
+        if (gebi("choice1Input").disabled){
+          
+        }else{
+
+        }
+      })
+      gebi("choice2Div").addEventListener("click",function(){
+        if (gebi("choice2Input").disabled){
+
+        }else{
+          
+        }
+      })
       gebi("osgStartButton1").addEventListener("click",function(){
         showMenu("2");
       })
@@ -699,12 +729,19 @@
         showMenu("1");
       })
       gebi("osgStartButton2").addEventListener("click",function(){
+        showMenu("3");
+      })
+      gebi("osgBackButton3").addEventListener("click",function(){
+        showMenu("2");
+      })
+      gebi("osgStartButton3").addEventListener("click",function(){
         //start the gameeee
+        //send msg to mod
+        socket.emit("client-가자", {"clientId":socket.id,"modId":localStorage.getItem("musicQuiz-mod_id")});
       })
 
 
       //todos: fix auto token renewal
-      //todo: add in box to input number of players
     </script>
   </body>
 </html>

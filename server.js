@@ -73,6 +73,10 @@ io.on("connection", (socket) => {
 	socket.on("client-code_response",(body)=>{
 		io.to(body.modId).emit("mod-code_response",body);
 	})
+
+	socket.on("client-가자",(body)=>{
+		io.to(body.modId).emit("client-가자",body);
+	})
 });
 
 
