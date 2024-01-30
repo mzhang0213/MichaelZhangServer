@@ -707,19 +707,38 @@ onclick start:
         -once some1 buzzes and gets wrong, they can't get consec buzz
         */
       }
-      
+      var addPlayer = function(){
+        //add the box, give id
+        //put an x in the box on the right
+          //make the box a textarea cuz that is easier
+          //prob make the x abs position and use javascript to put it
+        //append on len-2 of .children()
+      }
       gebi("choice1Div").addEventListener("click",function(){
         if (gebi("choice1Input").disabled){
-          
+          //inactive rn, activate
+          gebi("choice1Div").opacity="1";
+          gebi("choice1Input").disabled=false;
+          gebi("choice2Div").opacity="0.5";
+          gebi("choice2Input").disabled=true;
         }else{
-
+          gebi("choice1Div").opacity="0.5";
+          gebi("choice1Input").disabled=true;
+          gebi("choice2Div").opacity="1";
+          gebi("choice2Input").disabled=false;
         }
       })
       gebi("choice2Div").addEventListener("click",function(){
         if (gebi("choice2Input").disabled){
-
+          gebi("choice1Div").opacity="0.5";
+          gebi("choice1Input").disabled=true;
+          gebi("choice2Div").opacity="1";
+          gebi("choice2Input").disabled=false;
         }else{
-          
+          gebi("choice1Div").opacity="1";
+          gebi("choice1Input").disabled=false;
+          gebi("choice2Div").opacity="0.5";
+          gebi("choice2Input").disabled=true;
         }
       })
       gebi("osgStartButton1").addEventListener("click",function(){
@@ -735,6 +754,11 @@ onclick start:
         showMenu("2");
       })
       gebi("osgStartButton3").addEventListener("click",function(){
+        
+        //check for: number players >1, win condition
+          //win cond: make sure that only one <input> is active and that it has a number inside of that input
+        //confirm player len as well
+
         //start the gameeee
         //send msg to mod
         socket.emit("client-가자", {"clientId":socket.id,"modId":localStorage.getItem("musicQuiz-mod_id")});
