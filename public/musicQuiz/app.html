@@ -713,6 +713,14 @@ onclick start:
           //make the box a textarea cuz that is easier
           //prob make the x abs position and use javascript to put it
         //append on len-2 of .children()
+        var container = document.createElement("div");
+        var input = document.createElement("textarea");
+        var x = document.createElement("p");
+
+        input.appendChild(x);
+        container.appendChild(input);
+        var k = gebi("choosePlayers").children;
+        gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
       }
       gebi("choice1Div").addEventListener("click",function(){
         if (gebi("choice1Input").disabled){
@@ -754,7 +762,6 @@ onclick start:
         showMenu("2");
       })
       gebi("osgStartButton3").addEventListener("click",function(){
-        
         //check for: number players >1, win condition
           //win cond: make sure that only one <input> is active and that it has a number inside of that input
         //confirm player len as well
