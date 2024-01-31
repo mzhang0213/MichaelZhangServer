@@ -89,7 +89,9 @@
             </div>
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
-              <div id="choosePlayers" class="mt-4"></div>
+              <div id="choosePlayers" class="mt-4">
+                <button id="addPlayerButton">+</button>
+              </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
               <div id="choice1Div" class="flex flex-row justify-start items-center mt-4" style="opacity:0.5">
                 <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>rounds</p>
@@ -708,20 +710,32 @@ onclick start:
         */
       }
       var addPlayer = function(){
-        //add the box, give id
-        //put an x in the box on the right
-          //make the box a textarea cuz that is easier
-          //prob make the x abs position and use javascript to put it
-        //append on len-2 of .children()
         var container = document.createElement("div");
         var input = document.createElement("textarea");
         var x = document.createElement("p");
 
-        input.appendChild(x);
+        container.style.width="225px";
+        container.style.height="50px";
+        input.className="w-full h-full"
+        input.style.resize="none";
+        input.style.outline="none";
+        input.style.border="0";
+        x.style.position="absolute";
+        x.style.left=(container.offsetWidth-x.offsetWidth-3)+"px";
+        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
+        x.innerHTML="❌";
+
+        container.appendChild(x);
         container.appendChild(input);
         var k = gebi("choosePlayers").children;
         gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
+
+        x.addEventListener("click",function(){
+          this.parentElement.remove();
+        })
       }
+      addPlayer();
+
       gebi("choice1Div").addEventListener("click",function(){
         if (gebi("choice1Input").disabled){
           //inactive rn, activate
@@ -762,11 +776,31 @@ onclick start:
         showMenu("2");
       })
       gebi("osgStartButton3").addEventListener("click",function(){
-        //check for: number players >1, win condition
-          //win cond: make sure that only one <input> is active and that it has a number inside of that input
-        //confirm player len as well
+        //also check if the field is filled out
+        if (gebi("choosePlayers").children.length<=1&&gebi("choosePlayers").children[0].innerHTML!==""){
+          alert("you need to have at least one player");
+          return;
+        }
 
-        //start the gameeee
+        if ((gebi("choice1Input").value!==""&&!gebi("choice1Input").disabled)&&Number.isNaN(parseInt(gebi("choice1Input")))){
+          //non number in the field sadge
+          alert("enter a number in the box!!");
+          return;
+        }else{
+          //RN invalid cuz selected div has no val
+          alert("choose a win condition and ")
+          return;
+        }
+        if ((gebi("choice2Input").value!==""&&!gebi("choice2Input").disabled)&&Number.isNan(parseInt(gebi("choice1Input")))){
+          //non number in the field sadge
+          alert("enter a number in the box!!");
+          return;
+        }else{
+          //RN invalid cuz selected div has no val
+          alert("choose a win condition and ")
+          return;
+        }
+
         //send msg to mod
         socket.emit("client-가자", {"clientId":socket.id,"modId":localStorage.getItem("musicQuiz-mod_id")});
       })
