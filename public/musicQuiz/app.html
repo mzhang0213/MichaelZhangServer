@@ -89,14 +89,14 @@
             </div>
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
-              <div id="choosePlayers" class="mt-4">
+              <div id="choosePlayers" class="flex flex-row justify-start items-center mt-4">
                 <button id="addPlayerButton">+</button>
               </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
-              <div id="choice1Div" class="flex flex-row justify-start items-center mt-4" style="opacity:0.5">
-                <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>rounds</p>
+              <div id="choice1Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
+                <p>After</p><input id="choice1Input" type="text" class="mx-1" disabled><p>rounds</p>
               </div>
-              <div id="choice2Div" class="flex flex-row justify-start items-center mt-4" style="opacity:0.5">
+              <div id="choice2Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
                 <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>wins</p>
               </div>
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
@@ -667,7 +667,7 @@ full plan:
           by # of rounds
           by winning # of rounds
 onclick start:
-          -onclick check: number of playlists selected, number of players present
+-onclick check: number of playlists selected, number of players present
 -send update to mod that we started
         -then set up number of players on keybinds to buzz in and show them which ones to put finger on
         -3 2 1 시작 | 가 | 가자
@@ -715,27 +715,37 @@ onclick start:
         var x = document.createElement("p");
 
         container.style.width="225px";
-        container.style.height="50px";
+        container.style.height="40px";
+        container.className="rounded-xl";
         input.className="w-full h-full"
         input.style.resize="none";
         input.style.outline="none";
         input.style.border="0";
+        input.style.fontSize="40px";
         x.style.position="absolute";
-        x.style.left=(container.offsetWidth-x.offsetWidth-3)+"px";
-        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
         x.innerHTML="❌";
-
+        x.className="text-2xl mx-4"
+        
         container.appendChild(x);
         container.appendChild(input);
         var k = gebi("choosePlayers").children;
         gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
-
+        
+        x.style.left=(container.offsetWidth-x.offsetWidth-3)+"px";
+        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
         x.addEventListener("click",function(){
           this.parentElement.remove();
         })
       }
       addPlayer();
 
+      var bindPlayer = function(name){
+
+      }
+
+      gebi("addPlayerButton").addEventListener("click",function(){
+        addPlayer();
+      })
       gebi("choice1Div").addEventListener("click",function(){
         if (gebi("choice1Input").disabled){
           //inactive rn, activate
@@ -803,6 +813,13 @@ onclick start:
 
         //send msg to mod
         socket.emit("client-가자", {"clientId":socket.id,"modId":localStorage.getItem("musicQuiz-mod_id")});
+
+        //set up number of players on keybinds to buzz in and show them which ones to put finger on
+        //maybe in the future put the wireless players here
+        //write a function to wire a player to keybind (and future just wire a remote player)
+
+        //3 2 1 시작 | 가 | 가자
+        
       })
 
 
