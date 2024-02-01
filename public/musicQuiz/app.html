@@ -90,36 +90,40 @@
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
               <div id="choosePlayers" class="flex flex-row justify-start items-center mt-4">
-                <button id="addPlayerButton" class="text-xl mx-4 rounded-2xl" style="border:1px solid rgb(49, 49, 49)">+</button>
+                <button id="addPlayerButton" class="text-xl px-4 rounded-2xl" style="border:1px solid rgb(49, 49, 49)">+</button>
               </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
               <div id="choice1Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
-                <p>After</p><input id="choice1Input" type="text" class="mx-1" disabled><p>rounds</p>
+                <p>After</p><input id="choice1Input" type="text" class="mx-1 px-1" disabled><p>rounds</p>
               </div>
               <div id="choice2Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
-                <p>After</p><input id="choice2Input" type="text" class="mx-1" disabled><p>wins</p>
+                <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1" disabled><p>wins</p>
               </div>
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
           </div>
-          <div id="osgGame" style="width:100%">
-            <div id="keybinds">
-              <div class="keyboard">
+          <div id="osgGame" style="width:100%;display:none;">
+            <div id="keybinds" class="flex flex-col justify-center items-center" style="display:none;">
+              <div id="theKeyboard" class="keyboard mt-12">
                 <div id="r1" class="keyboard-row" style="margin-left:35px;">
                   <div class="keyboardKey">1</div><div class="keyboardKey">2</div><div class="keyboardKey">3</div><div class="keyboardKey">4</div><div class="keyboardKey">5</div><div class="keyboardKey">6</div><div class="keyboardKey">7</div><div class="keyboardKey">8</div><div class="keyboardKey">9</div><div class="keyboardKey">0</div><div class="keyboardKey">-</div><div class="keyboardKey">=</div>
                 </div>
                 <div id="r2" class="keyboard-row" style="margin-left:0px;">
                   <div class="keyboardKey">Q</div><div class="keyboardKey">W</div><div class="keyboardKey">E</div><div class="keyboardKey">R</div><div class="keyboardKey">T</div><div class="keyboardKey">Y</div><div class="keyboardKey">U</div><div class="keyboardKey">I</div><div class="keyboardKey">O</div><div class="keyboardKey">P</div><div class="keyboardKey">[</div><div class="keyboardKey">]</div><div class="keyboardKey">\</div>
                 </div>
-                <div id="r3" class="keyboard-row" style="margin-left:65px;">
+                <div id="r3" class="keyboard-row" style="margin-left:60px;">
                   <div class="keyboardKey">A</div><div class="keyboardKey">S</div><div class="keyboardKey">D</div><div class="keyboardKey">F</div><div class="keyboardKey">G</div><div class="keyboardKey">H</div><div class="keyboardKey">J</div><div class="keyboardKey">K</div><div class="keyboardKey">L</div><div class="keyboardKey">;</div><div class="keyboardKey">'</div>
                 </div>
-                <div id="r4" class="keyboard-row" style="margin-left:100px;">
+                <div id="r4" class="keyboard-row" style="margin-left:95px;">
                   <div class="keyboardKey">Z</div><div class="keyboardKey">X</div><div class="keyboardKey">C</div><div class="keyboardKey">V</div><div class="keyboardKey">B</div><div class="keyboardKey">N</div><div class="keyboardKey">M</div><div class="keyboardKey">,</div><div class="keyboardKey">.</div><div class="keyboardKey">/</div>
                 </div>
+              </div>
+              <div id="keyboardNames" class="grid grid-cols-5 mt-8" style="width:100%;"></div>
+              <button id="keyboardOk" class="main absolute" style="bottom:5px;right:5px;">OK :)</button>
+            <div id="mainGame" style="display:none;">
+              <div id="countdown"></div>
             </div>
-            <div id=""></div>
           </div>
             <!--
             choose either beginning or mid of song
@@ -178,11 +182,11 @@
       .keyboard {
         display:flex;
         flex-direction:column;
-        gap:5px;
+        gap:4px;
       }
       .keyboard-row {
         display:flex;
-        gap:5px;
+        gap:4px;
       }
       .keyboardKey {
         width: 40px;
@@ -193,7 +197,7 @@
         align-items: center;
         justify-content: center;
         margin: 2px;
-        padding: 8px;
+        padding: 10px;
         background-color: white;
       }
       .keyboardKey:hover{
@@ -241,6 +245,15 @@
         background-color:#bde5ff;
       }
       #osgStartButton1:hover{
+        background-color:#489ed8;
+      }
+      #keyboardOk{
+        background-color:#4eb8ff;
+      }
+      #keyboardOk:disabled{
+        background-color:#bde5ff;
+      }
+      #keyboardOk:hover{
         background-color:#489ed8;
       }
       #osgStartButton3{
@@ -751,6 +764,7 @@ onclick start:
         -once some1 buzzes and gets wrong, they can't get consec buzz
         */
       }
+      
       var addPlayer = function(){
         var container = document.createElement("div");
         var input = document.createElement("textarea");
@@ -763,43 +777,56 @@ onclick start:
         input.style.resize="none";
         input.style.outline="none";
         input.style.border="0";
-        input.style.fontSize="40px";
+        input.style.fontSize="37px";
         x.style.position="absolute";
         x.innerHTML="❌";
-        x.className="text-2xl mx-4"
+        x.className="text-xl mx-4"
         
         container.appendChild(x);
         container.appendChild(input);
         var k = gebi("choosePlayers").children;
         gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
         
-        x.style.left=(container.offsetWidth-x.offsetWidth-3)+"px";
-        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
-        x.addEventListener("click",function(){
-          this.parentElement.remove();
-        })
+        container.onload=()=>{
+          x.style.left=(container.offsetWidth+container.offsetLeft-x.offsetWidth-3)+"px";
+          x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
+          x.addEventListener("click",function(){
+            this.parentElement.remove();
+          })
+        }
       }
       addPlayer();
 
-      var bindOrder = ["a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"];
-
+      var bindOrder = [
+      "a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"
+      ];
+      var keyboard = [
+        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='],
+        ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
+        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'"],
+        ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/']
+      ]
+      var colors = [
+      "AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black","BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse","Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson","Cyan","DarkBlue","DarkCyan","DarkGoldenRod","DarkGray","DarkGrey","DarkGreen","DarkKhaki","DarkMagenta","DarkOliveGreen","DarkOrange","DarkOrchid","DarkRed","DarkSalmon","DarkSeaGreen","DarkSlateBlue","DarkSlateGray","DarkSlateGrey","DarkTurquoise","DarkViolet","DeepPink","DeepSkyBlue","DimGray","DimGrey","DodgerBlue","FireBrick","FloralWhite","ForestGreen","Fuchsia","Gainsboro","GhostWhite","Gold","GoldenRod","Gray","Grey","Green","GreenYellow","HoneyDew","HotPink","IndianRed ","Indigo  ","Ivory","Khaki","Lavender","LavenderBlush","LawnGreen","LemonChiffon","LightBlue","LightCoral","LightCyan","LightGoldenRodYellow","LightGray","LightGrey","LightGreen","LightPink","LightSalmon","LightSeaGreen","LightSkyBlue","LightSlateGray","LightSlateGrey","LightSteelBlue","LightYellow","Lime","LimeGreen","Linen","Magenta","Maroon","MediumAquaMarine","MediumBlue","MediumOrchid","MediumPurple","MediumSeaGreen","MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed","MidnightBlue","MintCream","MistyRose","Moccasin","NavajoWhite","Navy","OldLace","Olive","OliveDrab","Orange","OrangeRed","Orchid","PaleGoldenRod","PaleGreen","PaleTurquoise","PaleVioletRed","PapayaWhip","PeachPuff","Peru","Pink","Plum","PowderBlue","Purple","RebeccaPurple","Red","RosyBrown","RoyalBlue","SaddleBrown","Salmon","SandyBrown","SeaGreen","SeaShell","Sienna","Silver","SkyBlue","SlateBlue","SlateGray","SlateGrey","Snow","SpringGreen","SteelBlue","Tan","Teal","Thistle","Tomato","Turquoise","Violet","Wheat","White","WhiteSmoke","Yellow","YellowGreen"
+      ];
+      
       gebi("addPlayerButton").addEventListener("click",function(){
         addPlayer();
       })
       gebi("choice1Div").addEventListener("click",function(){
         if (gebi("choice1Input").disabled){
           //inactive rn, activate
-          gebi("choice1Div").opacity="1";
+          gebi("choice1Div").style.opacity="1";
           gebi("choice1Input").disabled=false;
-          gebi("choice2Div").opacity="0.5";
+          gebi("choice2Div").style.opacity="0.5";
           gebi("choice2Input").disabled=true;
         }
       })
       gebi("choice2Div").addEventListener("click",function(){
         if (gebi("choice2Input").disabled){
-          gebi("choice1Div").opacity="0.5";
+          gebi("choice1Div").style.opacity="0.5";
           gebi("choice1Input").disabled=true;
-          gebi("choice2Div").opacity="1";
+          gebi("choice2Div").style.opacity="1";
           gebi("choice2Input").disabled=false;
         }
       })
@@ -846,13 +873,47 @@ onclick start:
 
         //set up number of players on keybinds to buzz in and show them which ones to put finger on
         //maybe in the future put the wireless players here
-        var players = gebi("choosePlayers").children;
-        for (var i=0;i<players.length-1;i++) players[i]=players[i].innerHTML;
+        var raw = gebi("choosePlayers").children;
+        var players = [];
+        for (var i=0;i<raw.length-1;i++) players.push(players[i].innerHTML);
+        for (var i=0;i<players.length;i++){
+          //add colors rnd
+          players[i]=[players[i],colors[Math.floor(Math.random()*players.length)]];
+        }
+        for (var i=0;i<players.length;i++){
+          var div = document.createElement("div");
+          var p = document.createElement("p");
+          div.className = "flex justify-center items-center rounded-xl text-lg"
+          div.style.backgroundColor=players[i][1];
+          div.style.height = "75px";
+          p.style.width="75%";
+          p.style.textOverflow="ellipsis";
+          p.style.overflow="hidden";
+          p.style.whiteSpace="nowrap";
+          p.innerHTML=players[i][0];
 
-        //3 2 1 시작 | 가 | 가자
-        
+          div.appendChild(p);
+          gebi("playlistB").appendChild(div);
+
+          //color keyboard
+          for (var a=0;a<keyboard.length;a++){
+            for (var b=0;b<keyboard[a].length;b++){
+              if (keyboard[a][b]===bindOrder[i]){
+                //i is the pos of player we are on
+                //we have a and b, access the key
+                gebi("theKeyboard").children[a].children[b].style.backgroundColor=players[i][1];
+                break;
+              }
+            }
+          }
+        }        
       })
 
+      gebi("keyboardOk").addEventListener("click",function(){
+        //3 2 1 시작 | 가 | 가자
+        gebi("osgStart").display="none";
+        gebi("osgStart").display="";
+      })
 
       //todos: fix auto token renewal
     </script>
