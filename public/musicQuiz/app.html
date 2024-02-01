@@ -90,7 +90,7 @@
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
               <div id="choosePlayers" class="flex flex-row justify-start items-center mt-4">
-                <button id="addPlayerButton">+</button>
+                <button id="addPlayerButton" class="text-xl mx-4 rounded-2xl" style="border:1px solid rgb(49, 49, 49)">+</button>
               </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
               <div id="choice1Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
@@ -103,7 +103,25 @@
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
           </div>
-          <!--
+          <div id="osgGame" style="width:100%">
+            <div id="keybinds">
+              <div class="keyboard">
+                <div id="r1" class="keyboard-row" style="margin-left:35px;">
+                  <div class="keyboardKey">1</div><div class="keyboardKey">2</div><div class="keyboardKey">3</div><div class="keyboardKey">4</div><div class="keyboardKey">5</div><div class="keyboardKey">6</div><div class="keyboardKey">7</div><div class="keyboardKey">8</div><div class="keyboardKey">9</div><div class="keyboardKey">0</div><div class="keyboardKey">-</div><div class="keyboardKey">=</div>
+                </div>
+                <div id="r2" class="keyboard-row" style="margin-left:0px;">
+                  <div class="keyboardKey">Q</div><div class="keyboardKey">W</div><div class="keyboardKey">E</div><div class="keyboardKey">R</div><div class="keyboardKey">T</div><div class="keyboardKey">Y</div><div class="keyboardKey">U</div><div class="keyboardKey">I</div><div class="keyboardKey">O</div><div class="keyboardKey">P</div><div class="keyboardKey">[</div><div class="keyboardKey">]</div><div class="keyboardKey">\</div>
+                </div>
+                <div id="r3" class="keyboard-row" style="margin-left:65px;">
+                  <div class="keyboardKey">A</div><div class="keyboardKey">S</div><div class="keyboardKey">D</div><div class="keyboardKey">F</div><div class="keyboardKey">G</div><div class="keyboardKey">H</div><div class="keyboardKey">J</div><div class="keyboardKey">K</div><div class="keyboardKey">L</div><div class="keyboardKey">;</div><div class="keyboardKey">'</div>
+                </div>
+                <div id="r4" class="keyboard-row" style="margin-left:100px;">
+                  <div class="keyboardKey">Z</div><div class="keyboardKey">X</div><div class="keyboardKey">C</div><div class="keyboardKey">V</div><div class="keyboardKey">B</div><div class="keyboardKey">N</div><div class="keyboardKey">M</div><div class="keyboardKey">,</div><div class="keyboardKey">.</div><div class="keyboardKey">/</div>
+                </div>
+            </div>
+            <div id=""></div>
+          </div>
+            <!--
             choose either beginning or mid of song
             then hit play
             then do like 20 songs or something chosen
@@ -157,6 +175,30 @@
     </center>
     </font>
     <style>
+      .keyboard {
+        display:flex;
+        flex-direction:column;
+        gap:5px;
+      }
+      .keyboard-row {
+        display:flex;
+        gap:5px;
+      }
+      .keyboardKey {
+        width: 40px;
+        height: 40px;
+        border-radius: 99999px;
+        border: 3px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2px;
+        padding: 8px;
+        background-color: white;
+      }
+      .keyboardKey:hover{
+        background-color:rgb(186, 186, 186);
+      }
       /*
       #tabs div{
         height:40px;
@@ -715,7 +757,7 @@ onclick start:
         var x = document.createElement("p");
 
         container.style.width="225px";
-        container.style.height="40px";
+        container.style.height="38px";
         container.className="rounded-xl";
         input.className="w-full h-full"
         input.style.resize="none";
@@ -739,9 +781,7 @@ onclick start:
       }
       addPlayer();
 
-      var bindPlayer = function(name){
-
-      }
+      var bindOrder = ["a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"];
 
       gebi("addPlayerButton").addEventListener("click",function(){
         addPlayer();
@@ -753,11 +793,6 @@ onclick start:
           gebi("choice1Input").disabled=false;
           gebi("choice2Div").opacity="0.5";
           gebi("choice2Input").disabled=true;
-        }else{
-          gebi("choice1Div").opacity="0.5";
-          gebi("choice1Input").disabled=true;
-          gebi("choice2Div").opacity="1";
-          gebi("choice2Input").disabled=false;
         }
       })
       gebi("choice2Div").addEventListener("click",function(){
@@ -766,11 +801,6 @@ onclick start:
           gebi("choice1Input").disabled=true;
           gebi("choice2Div").opacity="1";
           gebi("choice2Input").disabled=false;
-        }else{
-          gebi("choice1Div").opacity="1";
-          gebi("choice1Input").disabled=false;
-          gebi("choice2Div").opacity="0.5";
-          gebi("choice2Input").disabled=true;
         }
       })
       gebi("osgStartButton1").addEventListener("click",function(){
@@ -797,8 +827,8 @@ onclick start:
           alert("enter a number in the box!!");
           return;
         }else{
-          //RN invalid cuz selected div has no val
-          alert("choose a win condition and ")
+          //RN invalid cuz selected div
+          alert("choose a win condition and put in a number plssss")
           return;
         }
         if ((gebi("choice2Input").value!==""&&!gebi("choice2Input").disabled)&&Number.isNan(parseInt(gebi("choice1Input")))){
@@ -807,7 +837,7 @@ onclick start:
           return;
         }else{
           //RN invalid cuz selected div has no val
-          alert("choose a win condition and ")
+          alert("choose a win condition and put in a number plssss")
           return;
         }
 
@@ -816,7 +846,8 @@ onclick start:
 
         //set up number of players on keybinds to buzz in and show them which ones to put finger on
         //maybe in the future put the wireless players here
-        //write a function to wire a player to keybind (and future just wire a remote player)
+        var players = gebi("choosePlayers").children;
+        for (var i=0;i<players.length-1;i++) players[i]=players[i].innerHTML;
 
         //3 2 1 시작 | 가 | 가자
         
