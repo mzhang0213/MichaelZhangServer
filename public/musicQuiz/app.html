@@ -863,7 +863,7 @@ onclick start:
         //maybe in the future put the wireless players here
         var raw = gebi("choosePlayers").children;
         var players = [];
-        for (var i=0;i<raw.length-1;i++) players.push(players[i].innerHTML);
+        for (var i=0;i<raw.length-1;i++) players.push(raw[i].children[0].value);
         for (var i=0;i<players.length;i++){
           //add colors rnd
           players[i]=[players[i],colors[Math.floor(Math.random()*players.length)]];
