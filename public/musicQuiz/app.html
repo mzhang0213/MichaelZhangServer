@@ -109,7 +109,7 @@
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
           </div>
-          <div id="osgGame" style="width:100%;display:none;">
+          <div id="osgGame" style="width:100%;height:100%;display:none;">
             <div id="keybinds" class="flex flex-col justify-center items-center">
               <p class="text-3xl mb-4"><b>Find your key!</b></p>
               <div id="theKeyboard" class="keyboard mt-12">
@@ -128,8 +128,22 @@
               </div>
               <div id="keyboardNames" class="grid grid-cols-5 mt-8" style="width:100%;"></div>
               <button id="keyboardOk" class="main absolute" style="bottom:5px;right:5px;">OK :)</button>
-            <div id="mainGame" style="display:none;">
-              <div id="countdown"></div>
+            </div>
+            <div id="mainGame" style="height:100%;width:100%;display:none;">
+              <div id="countdown" class="flex justify-center items-center w-full h-full">
+                <div id="countdown3" class="countdownLetter" style="display:none">3</div>
+                <div id="countdown2" class="countdownLetter" style="display:none">2</div>
+                <div id="countdown1" class="countdownLetter" style="display:none">1</div>
+                <div id="countdown1" class="countdownLetter" style="display:none">GO!</div>
+              </div>
+              <div id="playingSign" style="display:none">Playing!</div>
+              <div id="buzz"></div>
+              <div id="answer"></div>
+              <!--
+                show buzz menu after music play, that shows the buzz 10s timer constraint (if i do include that)
+                answer menu is for when you actually answer(?)
+                maybe they are inside of each other. i dunno the grpahic, something like protobowl
+              -->
             </div>
           </div>
             <!--
@@ -186,6 +200,9 @@
     </center>
     </font>
     <style>
+      .countdownLetter {
+        font-size:48px;
+      }
       .keyboard {
         display:flex;
         flex-direction:column;
@@ -291,6 +308,7 @@
 
       var code = "";
       var modId = "";
+      var players = [];
 
 
 
@@ -690,8 +708,24 @@
           else i.style.display="none";
         }
       }
+      var showGameMenu = function(menu){
+        var menus = gebi("mainGame").children;
+        for (var i of menus){
+          if (i.id.substring(4)===menu) i.style.display="";
+          else i.style.display="none";
+        }
+      }
       
-      var round = function(){
+      var round = function(roundNum){
+        var max = 0;
+        for (var i=0;i<players.length;i++){
+          if (players[i][3]>max) max = players[i][3];
+        }
+        if ((gebi("choice1Div").style.opacity=="1"&& roundNum>gebi("choice1Input").value) || (gebi("choice2Div").style.opacity=="1"&& max>gebi("choice2Input").value)){
+          //end game
+        }else{
+
+        }
         /*
         note that you can buzz whenever, just disable buzzers until round starts
         for each round:
@@ -787,6 +821,22 @@ onclick start:
         })
       }
 
+      var playCountdown = function(){
+        var letters = gebi("countdown").children;
+        var showLetter = function(i){
+          if (i<letters.length){
+            setTimeout(function(){
+              for (var l of letters){
+                l.style.display="none";
+              }
+              letters[i].style.display="";
+              showLetter(i+1);
+            },1000)
+          }
+        }
+        showLetter(0);
+      }
+
       var bindOrder = [
       "a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"
       ];
@@ -863,11 +913,11 @@ onclick start:
         //set up number of players on keybinds to buzz in and show them which ones to put finger on
         //maybe in the future put the wireless players here
         var raw = gebi("choosePlayers").children;
-        var players = [];
+        players = [];
         for (var i=0;i<raw.length-1;i++) players.push(raw[i].children[0].value);
         for (var i=0;i<players.length;i++){
           //add colors rnd
-          players[i]=[players[i],colors[Math.floor(Math.random()*players.length)]];
+          players[i]=[players[i],colors[Math.floor(Math.random()*players.length)], 0];
         }
         for (var i=0;i<players.length;i++){
           var div = document.createElement("div");
@@ -903,6 +953,13 @@ onclick start:
 
       gebi("keyboardOk").addEventListener("click",function(){
         //3 2 1 시작 | 가 | 가자
+        gebi("keybinds").style.display="none";
+        gebi("mainGame").style.display="";
+        showGameMenu("countdown");
+        playCountdown();
+        setTimeout(function(){
+          round(1);
+        },4000);
       })
 
       //todos: fix auto token renewal
