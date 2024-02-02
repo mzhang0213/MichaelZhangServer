@@ -90,14 +90,14 @@
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
               <div id="choosePlayers" class="flex flex-row justify-start items-center mt-4">
-                <button id="addPlayerButton" class="text-xl px-4 rounded-2xl" style="border:1px solid rgb(49, 49, 49)">+</button>
+                <button id="addPlayerButton" class="main text-xl ml-4 px-4 rounded-2xl" style="border:1px solid rgb(49, 49, 49)">+</button>
               </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
-              <div id="choice1Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
-                <p>After</p><input id="choice1Input" type="text" class="mx-1 px-1" disabled><p>rounds</p>
+              <div id="choice1Div" class="flex flex-row justify-center items-center p-1 rounded-lg mt-4" style="width:max-content; opacity:0.5;">
+                <p>After</p><input id="choice1Input" type="text" class="mx-1 px-1"><p>rounds</p>
               </div>
-              <div id="choice2Div" class="flex flex-row justify-center items-center mt-4" style="opacity:0.5">
-                <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1" disabled><p>wins</p>
+              <div id="choice2Div" class="flex flex-row justify-center items-center p-1 rounded-lg mt-4" style="width:max-content; opacity:0.5">
+                <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1"><p>wins</p>
               </div>
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
@@ -415,6 +415,8 @@
             callback(req.responseText, undefined)
           }
         })
+
+        addPlayer();
       }
       //load youtube iframe
       
@@ -770,30 +772,30 @@ onclick start:
         var input = document.createElement("textarea");
         var x = document.createElement("p");
 
+        var xSize = 25;
         container.style.width="225px";
         container.style.height="38px";
-        container.className="rounded-xl";
+        container.className="flex flex-row justify-start items-center rounded-xl";
         input.className="w-full h-full"
         input.style.resize="none";
         input.style.outline="none";
         input.style.border="0";
-        input.style.fontSize="34px";
+        input.style.fontSize="25px";
         x.style.position="absolute";
-        x.innerHTML="❌";
-        x.className="text-xl mx-4"
+        x.innerHTML=(xSize)+"❌";
+        x.className="text-xl"
         
         container.appendChild(x);
         container.appendChild(input);
         var k = gebi("choosePlayers").children;
         gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
         
-        x.style.left=(container.offsetWidth+container.offsetLeft-x.offsetWidth-3)+"px";
-        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
+        //x.style.left=(container.offsetWidth+container.offsetLeft-xSize-5)+"px";
+        //x.style.top=(container.offsetHeight-x.offsetHeight)+"px";
         x.addEventListener("click",function(){
           this.parentElement.remove();
         })
       }
-      addPlayer();
 
       var bindOrder = [
       "a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"
@@ -812,22 +814,18 @@ onclick start:
         addPlayer();
       })
       gebi("choice1Div").addEventListener("click",function(){
-        if (gebi("choice1Input").disabled){
+        if (gebi("choice1Input").style.opacity=="0.5"){
           //inactive rn, activate
           gebi("choice1Div").style.opacity="1";
-          gebi("choice1Input").disabled=false;
           gebi("choice2Div").style.opacity="0.5";
-          gebi("choice2Input").disabled=true;
           gebi("choice1Div").style.border="1px solid black";
           gebi("choice2Div").style.border="";
         }
       })
       gebi("choice2Div").addEventListener("click",function(){
-        if (gebi("choice2Input").disabled){
+        if (gebi("choice2Input").style.opacity=="0.5"){
           gebi("choice1Div").style.opacity="0.5";
-          gebi("choice1Input").disabled=true;
           gebi("choice2Div").style.opacity="1";
-          gebi("choice2Input").disabled=false;
           gebi("choice1Div").style.border="";
           gebi("choice2Div").style.border="1px solid black";
         }
@@ -851,7 +849,7 @@ onclick start:
           return;
         }
 
-        if ((gebi("choice1Input").value!==""&&!gebi("choice1Input").disabled)&&Number.isNaN(parseInt(gebi("choice1Input")))){
+        if ((gebi("choice1Input").value!==""&&!gebi("choice1Input").style.opacity=="0.5")&&Number.isNaN(parseInt(gebi("choice1Input")))){
           //non number in the field sadge
           alert("enter a number in the box!!");
           return;
@@ -860,7 +858,7 @@ onclick start:
           alert("choose a win condition and put in a number plssss")
           return;
         }
-        if ((gebi("choice2Input").value!==""&&!gebi("choice2Input").disabled)&&Number.isNan(parseInt(gebi("choice1Input")))){
+        if ((gebi("choice2Input").value!==""&&!gebi("choice2Input").style.opacity=="0.5")&&Number.isNan(parseInt(gebi("choice1Input")))){
           //non number in the field sadge
           alert("enter a number in the box!!");
           return;
