@@ -818,6 +818,8 @@ onclick start:
           gebi("choice1Input").disabled=false;
           gebi("choice2Div").style.opacity="0.5";
           gebi("choice2Input").disabled=true;
+          gebi("choice1Div").style.border="1px solid black";
+          gebi("choice2Div").style.border="";
         }
       })
       gebi("choice2Div").addEventListener("click",function(){
@@ -826,6 +828,8 @@ onclick start:
           gebi("choice1Input").disabled=true;
           gebi("choice2Div").style.opacity="1";
           gebi("choice2Input").disabled=false;
+          gebi("choice1Div").style.border="";
+          gebi("choice2Div").style.border="1px solid black";
         }
       })
       gebi("osgStartButton1").addEventListener("click",function(){
