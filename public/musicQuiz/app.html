@@ -110,7 +110,8 @@
             </div>
           </div>
           <div id="osgGame" style="width:100%;display:none;">
-            <div id="keybinds" class="flex flex-col justify-center items-center" style="display:none;">
+            <div id="keybinds" class="flex flex-col justify-center items-center">
+              <p class="text-xl mb-4"><b>Find your key!</b></p>
               <div id="theKeyboard" class="keyboard mt-12">
                 <div id="r1" class="keyboard-row" style="margin-left:35px;">
                   <div class="keyboardKey">1</div><div class="keyboardKey">2</div><div class="keyboardKey">3</div><div class="keyboardKey">4</div><div class="keyboardKey">5</div><div class="keyboardKey">6</div><div class="keyboardKey">7</div><div class="keyboardKey">8</div><div class="keyboardKey">9</div><div class="keyboardKey">0</div><div class="keyboardKey">-</div><div class="keyboardKey">=</div>
@@ -874,14 +875,15 @@ onclick start:
           div.className = "flex justify-center items-center rounded-xl text-lg"
           div.style.backgroundColor=players[i][1];
           div.style.height = "75px";
+          div.style.border = "1px solid black";
           p.style.width="75%";
           p.style.textOverflow="ellipsis";
           p.style.overflow="hidden";
           p.style.whiteSpace="nowrap";
-          p.innerHTML=players[i][0];
+          p.innerHTML=bindOrder[i]+" key: "+players[i][0];
 
           div.appendChild(p);
-          gebi("playlistB").appendChild(div);
+          gebi("keyboardNames").appendChild(div);
 
           //color keyboard
           for (var a=0;a<keyboard.length;a++){
@@ -894,13 +896,13 @@ onclick start:
               }
             }
           }
-        }        
+        }
+        gebi("osgStart").style.display="none";
+        gebi("osgGame").style.display="";
       })
 
       gebi("keyboardOk").addEventListener("click",function(){
         //3 2 1 시작 | 가 | 가자
-        gebi("osgStart").display="none";
-        gebi("osgStart").display="";
       })
 
       //todos: fix auto token renewal
