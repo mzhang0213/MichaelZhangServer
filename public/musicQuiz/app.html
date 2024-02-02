@@ -96,13 +96,13 @@
             <div id="menu3" style="display:none" class="mt-4">
               <p class="text-2xl"><b>Add Players</b></p>
               <div id="choosePlayers" class="flex flex-row justify-start items-center mt-4">
-                <button id="addPlayerButton" class="text-xl ml-4 px-4 rounded-2xl" style="border:2px solid rgb(83, 83, 83); background-color:white;">+</button>
+                <button id="addPlayerButton" class="text-xl ml-4 px-4 rounded-2xl" style="border:2px solid rgb(0, 0, 0);">+</button>
               </div>
               <p class="text-2xl mt-12"><b>Win Condition</b></p>
-              <div id="choice1Div" class="flex flex-row justify-center items-center p-1 rounded-lg mt-4" style="width:max-content; opacity:0.5;">
+              <div id="choice1Div" class="flex flex-row justify-center items-center p-3 rounded-lg mt-4" style="width:max-content; opacity:0.5;">
                 <p>After</p><input id="choice1Input" type="text" class="mx-1 px-1"><p>rounds</p>
               </div>
-              <div id="choice2Div" class="flex flex-row justify-center items-center p-1 rounded-lg mt-4" style="width:max-content; opacity:0.5">
+              <div id="choice2Div" class="flex flex-row justify-center items-center p-3 rounded-lg mt-4" style="width:max-content; opacity:0.5">
                 <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1"><p>wins</p>
               </div>
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
@@ -243,6 +243,9 @@
       }
       .main:hover{
         background-color:rgb(210, 210, 210);
+      }
+      #addPlayerButton{
+        background-color:white;
       }
       #addPlayerButton:hover{
         background-color:rgb(210, 210, 210);
@@ -756,15 +759,17 @@ onclick start:
         var input = document.createElement("textarea");
         var x = document.createElement("p");
 
-        var xSize = 25;
+        var xSize = 22;
         container.style.width="225px";
         container.style.height="38px";
-        container.className="flex flex-row justify-start items-center rounded-xl";
-        input.className="w-full h-full rounded-xl"
+        container.className="rounded-xl mb-4";
+        container.style.backgroundColor="white";
+        input.className="w-full h-full rounded-xl p-1"
         input.style.resize="none";
         input.style.outline="none";
         input.style.border="0";
         input.style.fontSize=(xSize)+"px";
+        input.style.paddingLeft="4px";
         //x.style.position="absolute";
         x.innerHTML="❌";
         x.className="text-xl"
