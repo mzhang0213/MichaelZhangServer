@@ -842,12 +842,7 @@ onclick start:
           //non number in the field sadge
           alert("enter a number in the box!!");
           return;
-        }else{
-          //RN invalid cuz selected div
-          alert("choose a win condition and put in a number plssss")
-          return;
-        }
-        if ((gebi("choice2Input").value!==""&&!gebi("choice2Div").style.opacity=="0.5")&&Number.isNan(parseInt(gebi("choice1Input")))){
+        }else if ((gebi("choice2Input").value!==""&&!gebi("choice2Div").style.opacity=="0.5")&&Number.isNan(parseInt(gebi("choice1Input")))){
           //non number in the field sadge
           alert("enter a number in the box!!");
           return;
