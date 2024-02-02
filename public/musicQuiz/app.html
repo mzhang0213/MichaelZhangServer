@@ -777,7 +777,7 @@ onclick start:
         input.style.resize="none";
         input.style.outline="none";
         input.style.border="0";
-        input.style.fontSize="37px";
+        input.style.fontSize="34px";
         x.style.position="absolute";
         x.innerHTML="❌";
         x.className="text-xl mx-4"
@@ -787,13 +787,11 @@ onclick start:
         var k = gebi("choosePlayers").children;
         gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
         
-        container.onload=()=>{
-          x.style.left=(container.offsetWidth+container.offsetLeft-x.offsetWidth-3)+"px";
-          x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
-          x.addEventListener("click",function(){
-            this.parentElement.remove();
-          })
-        }
+        x.style.left=(container.offsetWidth+container.offsetLeft-x.offsetWidth-3)+"px";
+        x.style.height=(container.offsetHeight-x.offsetHeight)+"px";
+        x.addEventListener("click",function(){
+          this.parentElement.remove();
+        })
       }
       addPlayer();
 
