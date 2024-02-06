@@ -718,7 +718,10 @@
         }
       }
 
-      var playMusic = function(duration, song){ //duration in ms, 
+      var playMusic = function(start, duration, song){
+        //start in ms, duration in ms, song contains all the song data and shi
+        //if doing at the start, have to use frekaing yt api
+        //if start is -1, use the chorus from spotify (not on yt so rip)
         if (song[1]==="s"){
 
         }else if(song[1]==="y"){
@@ -1043,6 +1046,49 @@ onclick start:
               doReq(apiEndpoint);
             }else{
               //yt playlist get songs
+              var stuff = function(nextPageToken){
+                var currPlaylistReq = "";
+                if (nextPageToken===0){
+                  //init run
+                  currPlaylistReq=(
+                    "https://www.googleapis.com/youtube/v3/playlistItems"
+                  +"?playlistId="+currYtPlaylists[index].id
+                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                  +"&maxResults=50"
+                  +"&part=snippet"
+                  ) //CHANGE currYtPlaylists[].id JOIFejaeiofwjEIOrjeiojgojawoeohjiornjgifdb
+                }else{
+                  currPlaylistReq=(
+                    "https://www.googleapis.com/youtube/v3/playlistItems"
+                  +"?playlistId="+currYtPlaylists[index].id
+                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                  +"&maxResults=50"
+                  +"&part=snippet"
+                  +"&pageToken="+nextPageToken
+                  )
+                }
+                var req = new XMLHttpRequest();
+                req.open("GET",currPlaylistReq);
+                req.send();
+                req.addEventListener("readystatechange", ()=>{
+                  if (req.status === 200 && req.readyState === 4) {
+                    var currPlaylistData = JSON.parse(req.responseText).items;
+                    var nextToken = JSON.parse(req.responseText).nextPageToken;
+                    //do some chit
+                    //push into songQuiz
+                    if (!(nextToken===undefined||nextToken===null||nextToken==="")){
+                      //if there is another page, gogogogogogo
+                      stuff(nextToken);
+                    }else{
+                      finishUp();
+                    }
+                  } else if (req.readyState === 4){
+                    //bad
+                    alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+                  }
+                })
+              }
+              stuff(0);
             }
           }else{
             pushSongsFinally();
