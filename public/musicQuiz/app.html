@@ -105,6 +105,17 @@
               <div id="choice2Div" class="flex flex-row justify-center items-center p-3 rounded-lg mt-4" style="width:max-content; opacity:0.5">
                 <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1"><p>wins</p>
               </div>
+              <div id="lyricModeSliderContainer" class="sliderContainer">
+                <div id="lyricModeParagraphContainer" class="sliderParagraph">
+                  <p id="lyricModeSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+                </div>
+                <div id="actualLyricModeSliderContainer" class="actualSliderContainer">
+                  <label class="sliderSwitch">
+                  <input type="checkbox" id="lyricModeSliderCheckBox" class="sliderCheckBox">
+                  <span class="sliderSlider"></span>
+                  </label>
+                </div>
+              </div>      
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
@@ -302,6 +313,74 @@
         background-color:#a141b0;
       }
     </style>
+    <style>
+      .sliderContainer{
+        position:relative;
+        width:0;
+      }
+      .sliderParagraph{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .actualSliderContainer{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .sliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      .sliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      .sliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      .sliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      .sliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      .sliderCheckBox:checked + .sliderSlider {
+        background-color: #2196F3;
+      }
+      .sliderCheckBox:checked + .sliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+    </style>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
       gebi("ytButton").src=window.location.origin+"/musicQuiz/ytLogo.png";
@@ -458,7 +537,18 @@
         player.setVolume(50);//not rip headphones users immediately
       }
 
+      var musicDuration = 0;
       function onPlayerStateChange(){
+        if (player.getPlayerState()===0){
+          //song ended, play next
+        } else if (player.getPlayerState()===1){
+          //changed and is playing
+          setTimeout(function(){
+            player.pauseVideo();
+          },musicDuration);
+        } else if (player.getPlayerState()===2){
+          //changed and is paused
+        }
       }
 
       /*
@@ -718,14 +808,105 @@
         }
       }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+      /*
+      unfinished list of things happening:
+      hit ok after keyboard
+      >gather and randomize songs
+      start round
+      -load and start music, throw up graphic
+      -stop music after duration (onplayerstatechange), throw up buzzing limit menu
+      onbuzz
+      -throw up answer time limit menu
+      -throw up answer box if no moderator
+      -send buzz start duration to moderator
+      -send buzz limit end to moderator
+      */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       var playMusic = function(start, duration, song){
         //start in ms, duration in ms, song contains all the song data and shi
         //if doing at the start, have to use frekaing yt api
         //if start is -1, use the chorus from spotify (not on yt so rip)
-        if (song[1]==="s"){
-
-        }else if(song[1]==="y"){
-
+        var id="";
+        var loadIntoPlayer = function(){
+          player.loadVideoById({videoId:id});
+          musicDuration=duration;
+        }
+        if (song[1]==="y"){
+          id=song[0].id;
+          loadIntoPlayer();
+        }else if (song[1]==="s"){
+          if (start===-1){
+            //do spotify
+            //the url for the mp3 is stored in song[0].track.preview_url
+          }else{
+            var searchQ = "";
+            for (var a=0;a<song[0].track.artists.length;a++){
+              searchQ+=song[0].track.artists[a]+" ";
+            }
+            searchQ+="- "+song[0].track.name;
+            if (gebi("lyricModeSliderCheckBox").value){
+              searchQ+=" Lyrics";
+            }else{
+              searchQ+=" Audio";
+            }
+            var req = new XMLHttpRequest();
+            req.open("GET","https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&format=5&type=video&videoEmbeddable=true"
+            +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+            +"&q="+searchQ);
+            req.send();
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                var searchData = JSON.parse(req.responseText);
+                var currSongIds = searchData.items;
+                id=currSongIds[0].id.videoId;
+                loadIntoPlayer();
+              } else if (req.readyState === 4){
+                alert("failure in youtube search api for the id");
+              }
+            })
+          }
         }
       }
       
@@ -1052,7 +1233,7 @@ onclick start:
                   //init run
                   currPlaylistReq=(
                     "https://www.googleapis.com/youtube/v3/playlistItems"
-                  +"?playlistId="+currYtPlaylists[index].id
+                  +"?playlistId="+selected[i][0]
                   +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
                   +"&maxResults=50"
                   +"&part=snippet"
@@ -1060,7 +1241,7 @@ onclick start:
                 }else{
                   currPlaylistReq=(
                     "https://www.googleapis.com/youtube/v3/playlistItems"
-                  +"?playlistId="+currYtPlaylists[index].id
+                  +"?playlistId="+selected[i][0]
                   +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
                   +"&maxResults=50"
                   +"&part=snippet"
@@ -1075,13 +1256,12 @@ onclick start:
                     var currPlaylistData = JSON.parse(req.responseText).items;
                     var nextToken = JSON.parse(req.responseText).nextPageToken;
                     //do some chit
-                    //push into songQuiz
-                    if (!(nextToken===undefined||nextToken===null||nextToken==="")){
-                      //if there is another page, gogogogogogo
-                      stuff(nextToken);
-                    }else{
-                      finishUp();
-                    }
+                    var arr = JSON.parse(req.responseText);
+  
+                    for (var a of arr.items) songOrder.push([a,"y"]);
+                    
+                    if (nextToken) stuff(nextToken);
+                    else pushSongs(i+1);
                   } else if (req.readyState === 4){
                     //bad
                     alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
