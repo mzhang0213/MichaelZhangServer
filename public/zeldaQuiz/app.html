@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="./logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+    <script>
+      if (window.location.origin.substring(0,4)==="http"&&window.location.origin.charAt(4)!=="s"){
+        //not https!
+        window.location="https://"+window.location.href.substring(7);
+      }
+    </script>
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: '0px',
+            md: '700px',
+            lg: '1200px',
+            xl: '1600px'
+          }
+        }
+      }
+    </script>
+    <script>
+      var navMenuShown = false;
+      var gebi = function(e){return document.getElementById(e)};
+      var resize = function(){
+        if (window.innerWidth<700){
+          //small
+        }else if (700<=window.innerWidth && window.innerWidth<1200){
+          //med
+        }else{
+          //lg++
+        }
+      }
+      window.onresize=resize;
+    </script>
+    <style>
+      html{
+        scroll-behavior:smooth;
+      }
+    </style>
+  </head>
+  <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+    <!--navbar-->
+    <nav id="navbar" class="left-0 top-0 z-50 flex items-center justify-between flex-wrap w-screen fixed pr-4 pl-2" style="height:40px; font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+      <div class="flex items-center flex-shrink-0 text-white mr-6 pl-2" onclick="(function(){window.location=window.location.origin})()">
+        <button class="text-xl tracking-tight">Music Quiz</span>
+      </div>
+      <div class="block md:hidden">
+        <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+          <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+        </button>
+      </div>
+      <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm" style="height:100%">
+        <div onclick="(function(){window.location=window.location.origin+'/musicQuiz/'})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;">Home</div>
+        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;"><b>1秒 Game</b></div>
+        <div onclick="(function(){})()" class="block mt-4 md:flex md:items-center md:pl-2 md:pr-2 md:mt-0 text-gray-200 hover:text-white" style="height:100%;cursor:pointer;"><b>Lyric Game</b></div>
+      </div>
+    </nav>
+    <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
+    <font style="font-family: 'Cabin';">
+    <!--<div id="tabs" class="absolute -z-10 flex flex-row w-9/12 h-fit">
+      <div id="osg" class="rounded-xl">1秒</div>
+      <div id="lyrics" class="rounded-xl">Lyrics</div>
+    </div>-->
+    <center>
+      <div id="contentBox" class="relative flex flex-col w-10/12 mt-14 rounded-xl justify-center items-center bg-gray-100" style="height:90vh;overflow:auto;">
+        <div id="osg" class="relative flex flex-col justify-start items-center p-4" style="width:100%;height:100%">
+          <div id="osgStart" style="width:100%">
+            <div id="menu1" class="flex flex-col justify-start items-center mt-4">
+              <p class="text-4xl"><u>Song Guessing</u></p>
+              <!--<button id="osgHowToButton" class="main mt-12">How to Play</button>-->
+              <button id="osgStartButton1" class="main relative text-xl mt-20">Choose Playlists >></button>
+              <button id="connectModButton" class="main relative text-xl mt-20">Connect a Moderator</button>
+              <div id="connectMenu" class="mt-4" style="height:0; transition:height 2s ease-in">
+                <p id="connectCode" class="text-xl"></p>
+                <p id="connectStatus" class="mt-4 text-lg"></p>
+              </div>
+            </div>
+            <div id="menu2" style="display:none" class="mt-4">
+              <div id="menu2Desc">
+                <p class="text-2xl"><b>Choose your playlists</b></p>
+                <img id="ytButton" class="mt-8" style="z-index:10;width:35px;">
+              </div>
+              <div id="ytPlaylists" class="grid grid-cols-5" style="width:100%;"></div>
+              <div id="playlistB" class="grid grid-cols-5 mt-4" style="width:100%;"></div>
+              <button id="osgBackButton2" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
+              <button id="osgStartButton2" class="main absolute text-lg" style="bottom:20px; right:20px;">Next ></button>
+            </div>
+          </div>
+          <div id="osgGame" style="width:100%;height:100%;display:none;">
+            <div id="keybinds" class="flex flex-col justify-center items-center">
+              <p class="text-3xl mb-4"><b>Find your key!</b></p>
+              <div id="theKeyboard" class="keyboard mt-12">
+                <div id="r1" class="keyboard-row" style="margin-left:35px;">
+                  <div class="keyboardKey">1</div><div class="keyboardKey">2</div><div class="keyboardKey">3</div><div class="keyboardKey">4</div><div class="keyboardKey">5</div><div class="keyboardKey">6</div><div class="keyboardKey">7</div><div class="keyboardKey">8</div><div class="keyboardKey">9</div><div class="keyboardKey">0</div><div class="keyboardKey">-</div><div class="keyboardKey">=</div>
+                </div>
+                <div id="r2" class="keyboard-row" style="margin-left:0px;">
+                  <div class="keyboardKey">Q</div><div class="keyboardKey">W</div><div class="keyboardKey">E</div><div class="keyboardKey">R</div><div class="keyboardKey">T</div><div class="keyboardKey">Y</div><div class="keyboardKey">U</div><div class="keyboardKey">I</div><div class="keyboardKey">O</div><div class="keyboardKey">P</div><div class="keyboardKey">[</div><div class="keyboardKey">]</div><div class="keyboardKey">\</div>
+                </div>
+                <div id="r3" class="keyboard-row" style="margin-left:60px;">
+                  <div class="keyboardKey">A</div><div class="keyboardKey">S</div><div class="keyboardKey">D</div><div class="keyboardKey">F</div><div class="keyboardKey">G</div><div class="keyboardKey">H</div><div class="keyboardKey">J</div><div class="keyboardKey">K</div><div class="keyboardKey">L</div><div class="keyboardKey">;</div><div class="keyboardKey">'</div>
+                </div>
+                <div id="r4" class="keyboard-row" style="margin-left:95px;">
+                  <div class="keyboardKey">Z</div><div class="keyboardKey">X</div><div class="keyboardKey">C</div><div class="keyboardKey">V</div><div class="keyboardKey">B</div><div class="keyboardKey">N</div><div class="keyboardKey">M</div><div class="keyboardKey">,</div><div class="keyboardKey">.</div><div class="keyboardKey">/</div>
+                </div>
+              </div>
+              <div id="keyboardNames" class="grid grid-cols-5 mt-8" style="width:100%;"></div>
+              <button id="keyboardOk" class="main absolute" style="bottom:5px;right:5px;">OK :)</button>
+            </div>
+            <div id="mainGame" style="height:100%;width:100%;display:none;">
+              <div id="countdown" class="flex justify-center items-center w-full h-full">
+                <div id="countdown3" class="countdownLetter" style="display:none">3</div>
+                <div id="countdown2" class="countdownLetter" style="display:none">2</div>
+                <div id="countdown1" class="countdownLetter" style="display:none">1</div>
+                <div id="countdown1" class="countdownLetter" style="display:none">GO!</div>
+              </div>
+              <div id="playingSign" style="display:none">Playing!</div>
+              <div id="buzz"></div>
+              <div id="answer"></div>
+              <!--
+                show buzz menu after music play, that shows the buzz 10s timer constraint (if i do include that)
+                answer menu is for when you actually answer(?)
+                maybe they are inside of each other. i dunno the grpahic, something like protobowl
+              -->
+            </div>
+          </div>
+            <!--
+            choose either beginning or mid of song
+            then hit play
+            then do like 20 songs or something chosen
+            make it so that buzzers can be on keyboard or just general buzzer AND THEN DROPDOWN picker to give points to person
+            i can do play with MC on a live connection to server where they can approve and deny answers and see answers live hehehehe
+
+            todo:
+            remove highlightable boxes on the playlists
+            maybe add spacing between items in the grid...
+            add css styling
+              seems like the p len is too small, chg font size
+              chg bg color
+              curr game highlighted in navbar
+            make the box bigger
+
+            put floating stuck next button on the bot right
+            put title "one second game"
+            put "how to instructions" above the playlists
+            some space
+            on next, choose settings:
+            -lives per player?
+            -players
+            -time threshold for buzzing after question shown
+            -starting duration for music
+            -want to play start of music or start of chorus
+
+            if choose start of chorus:
+            -need spotify song preview links (should just be in playlist)
+
+            game
+            정답:
+            a search box?
+            big grid with album covers and song titles and search box?
+            do a answer box and if artist / title is close enough
+              like count # of mistaken characters and see if the mistakes are close to their respective keys on keyboard or something eh that might be too hard
+          -->
+          <!--
+            also make image guessing game
+              figure person guessing game
+
+          -->
+        </div>
+        <div id="lyrics">
+          <!--
+            serve lyrics using some random ass api and then see if they can get song
+            time limit?
+            other way to do this game?
+          -->
+        </div>
+      </div>
+    </center>
+    </font>
+    <style>
+      .countdownLetter {
+        font-size:48px;
+      }
+      .keyboard {
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+      }
+      .keyboard-row {
+        display:flex;
+        gap:4px;
+      }
+      .keyboardKey {
+        width: 40px;
+        height: 40px;
+        border-radius: 99999px;
+        border: 3px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2px;
+        padding: 10px;
+        background-color: white;
+      }
+      .keyboardKey:hover{
+        background-color:rgb(186, 186, 186);
+      }
+      /*
+      #tabs div{
+        height:40px;
+        padding-left:7px;
+        padding-right:7px;
+        padding-top:3px;
+        padding-bottom:3px;
+        background-color:rgb(243 244 246); //gray-100
+        user-select:none;
+        margin-right:7px;
+      }
+      */
+      #hearts img{
+        width:20px;
+      }
+      #hearts{
+        position:absolute;
+        top:5px;
+        left:5px;
+        display:flex;
+        height:fit-content;
+        width:fit-content;
+        flex-direction: column;
+      }
+      .main{ /*note: no font size*/
+        border-radius:8px;
+        border:2px solid #000000;
+        font-family:'Cabin';
+        outline:none;
+        padding:4px;
+        background-color:white;
+      }
+      .main:hover{
+        background-color:rgb(210, 210, 210);
+      }
+      #addPlayerButton{
+        background-color:white;
+      }
+      #addPlayerButton:hover{
+        background-color:rgb(210, 210, 210);
+      }
+      #osgStartButton1{
+        background-color:#4eb8ff;
+      }
+      #osgStartButton1:disabled{
+        background-color:#bde5ff;
+      }
+      #osgStartButton1:hover{
+        background-color:#489ed8;
+      }
+      #keyboardOk{
+        background-color:#4eb8ff;
+      }
+      #keyboardOk:disabled{
+        background-color:#bde5ff;
+      }
+      #keyboardOk:hover{
+        background-color:#489ed8;
+      }
+      #osgStartButton3{
+        background-color:rgb(54, 219, 54);
+      }
+      #osgStartButton3:disabled{
+        background-color:rgb(170, 255, 170);
+      }
+      #osgStartButton3:hover{
+        background-color:rgb(48, 194, 48);
+      }
+      #connectModButton{
+        background-color:#d984e6;
+      }
+      #connectModButton:hover{
+        background-color:#a141b0;
+      }
+    </style>
+    <style>
+      .sliderContainer{
+        position:relative;
+        width:0;
+      }
+      .sliderParagraph{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .actualSliderContainer{
+        position:absolute;
+        top:0;
+        left:0;
+      }
+      .sliderDescription{
+        font-size:20px;
+        margin:0;
+        padding:0;
+        top:5px;
+        width:20px;
+        float:right;
+      }
+      .sliderSwitch {
+        position:absolute;
+        display:inline-block;
+        width:60px;
+        height:34px;
+        left:10px;
+      }
+      .sliderSwitch input {
+        opacity:0;
+        width:0;
+        height:0;
+      }
+      .sliderSlider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 34px;
+      }
+      .sliderSlider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+      }
+      .sliderCheckBox:checked + .sliderSlider {
+        background-color: #2196F3;
+      }
+      .sliderCheckBox:checked + .sliderSlider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+    </style>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      gebi("ytButton").src=window.location.origin+"/musicQuiz/ytLogo.png";
+
+      var code = "";
+      var modId = "";
+      var players = [];
+
+
+
+
+
+
+
+
+
+
+      const socket = io();
+
+
+
+
+
+
+
+
+
+
+
+      
+      socket.on("connect", () => {
+        console.log(`connected with transport ${socket.io.engine.transport.name}`);
+        socket.io.engine.on("upgrade", (transport) => {
+          console.log(`transport upgraded to ${transport.name}`);
+        });
+      });
+
+      socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log(`disconnect due to ${reason}`);
+      });
+
+      socket.on("client-mod_code", (body)=>{
+        console.log(body);
+        if (body.code===localStorage.getItem("musicQuiz-client_code")){
+          //cache mod's id in localstorage
+          localStorage.setItem("musicQuiz-mod_id",body.modId);
+          socket.emit("client-code_response",{
+            confirm:true,
+            modId:body.modId,
+            clientId:socket.id
+          })
+          //display mod acceptance: clear intv, change status to check
+          clearInterval(dotAnimateIntv);
+          gebi("connectStatus").innerHTML="✅";
+        }else{
+          socket.emit("client-code_response",{
+            confirm:false,
+            modId:body.modId,
+            clientId:socket.id
+          })
+        }
+      })
+
+      var msg = function(msg){
+        socket.emit("yo",msg);
+      }
+
+      //either: Math.floor(Math.random()*__)+__  Math.floor(Math.random()*__+__) OR (int) at beginning
+      var games = document.getElementsByClassName("contentBox");
+      for (var i=0;i<games.length;i++){
+        games[i]=games[i].id;
+      }
+      
+      var hideAllGames = function(){
+        for (var i of games){
+          gebi(i).style.display="none";
+        }
+      }
+      /*
+      var highlightTab = function(tab){
+        for (var i of games){
+          gebi(i+"Tab").style.backgroundColor="rgb(243 244 246)";
+        }
+        gebi(tab+"Tab").style.backgroundColor="rgb(199, 200, 201)";
+      }
+      */
+      var tries = 0;
+      var decreaseVisualLife = function(heart){
+        setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none";setTimeout(function () { gebi("heart"+heart).style.display="";setTimeout(function () { gebi("heart"+heart).style.display="none" }, 55)}, 182)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)}, 55)
+        tries++;
+      }
+      var resetLife = function(){
+        gebi("heart1").style.display="";
+        gebi("heart2").style.display="";
+        gebi("heart3").style.display="";
+        tries=0;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      var accessToken = urlParams.get("access_token");
+      const refreshToken = urlParams.get("refresh_token");
+      console.log(accessToken)
+      var getRequest = (apiLink, access_token, callback) => {
+        var req = new XMLHttpRequest();
+        req.open("GET", apiLink);
+        if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
+        req.send();
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var arr = JSON.parse(req.responseText);
+            var type = "";
+            callback(undefined, arr); //undefined is basically null which means nothing
+          } else if (req.readyState === 4){
+            console.log("REEEEEEEEEEe", undefined)
+            callback(req.responseText, undefined)
+          }
+        })
+      }
+      //load youtube iframe
+      
+      //This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      //src: https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+      function htmlDecode(input) {
+        var doc = new DOMParser().parseFromString(input, "text/html");
+        return doc.documentElement.textContent;
+      }
+
+      //This function creates an <iframe> (and YouTube player) after the API code downloads.
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          //videoId would go here
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+        resize();
+      }
+
+      function onPlayerReady(){
+        player.setVolume(50);//not rip headphones users immediately
+      }
+
+      var musicDuration = 0;
+      function onPlayerStateChange(){
+        if (player.getPlayerState()===0){
+          //song ended, play next
+        } else if (player.getPlayerState()===1){
+          //changed and is playing
+          setTimeout(function(){
+            player.pauseVideo();
+          },musicDuration);
+        } else if (player.getPlayerState()===2){
+          //changed and is paused
+        }
+      }
+
+      /*
+      hit the connect button
+      make a code that pops up, store it here
+      mod goes to musicQuiz/mod.html and types code
+        WHILE WAITING put a dot dot dot gif or just do setintv(innerhtml="."+"."+".",500)
+      they get confirmation from server, server sends confirmation to us
+      display "mod connected" with check mark
+      */
+      var getLetterFromNum = function(num){
+        switch (num){ case 0:return "a";break;case 1:return "b";break;case 2:return "c";break;case 3:return "d";break;case 4:return "e";break;case 5:return "f";break;case 6:return "g";break;case 7:return "h";break;case 8:return "i";break;case 9:return "j";break;case 10:return "k";break;case 11:return "l";break;case 12:return "m";break;case 13:return "n";break;case 14:return "o";break;case 15:return "p";break;case 16:return "q";break;case 17:return "r";break;case 18:return "s";break;case 19:return "t";break;case 20:return "p";break;case 21:return "v";break;case 22:return "w";break;case 23:return "x";break;case 24:return "y";break;case 25:return "z";break; default:return -1;break;};
+      }
+      var generateCode = function(){
+        //code is [A-Z][A-Z][0-9]
+        return getLetterFromNum(Math.floor(Math.random()*26))+getLetterFromNum(Math.floor(Math.random()*26))+Math.floor(Math.random()*10);
+      }
+      var dotAnimatePos = 0;
+      var dotAnimateIntv = "";
+      gebi("connectModButton").addEventListener("click",function(){
+        //show div
+        //generate code
+        var code = generateCode();
+        localStorage.setItem("musicQuiz-client_code",code);
+        //change button to be change the code? or hide this menu?
+        gebi("connectMenu").style.height="200px"; //this is a guess idfk what it should be BTW THIS IS ANIMATION THATS WHY IM DOING THIS
+        gebi("connectCode").innerHTML="Code: ";
+        var styled = document.createElement("b");
+        styled.innerHTML=code;
+        gebi("connectCode").appendChild(styled);
+        gebi("connectStatus").innerHTML="Not connected";
+        dotAnimatePos=1;
+        dotAnimateIntv = setInterval(function(){
+          if (dotAnimatePos%4===0){
+            gebi("connectStatus").innerHTML="Not connected";
+          }else if (dotAnimatePos%4===1){
+            gebi("connectStatus").innerHTML="Not connected.";
+          }else if (dotAnimatePos%4===2){
+            gebi("connectStatus").innerHTML="Not connected..";
+          }else if (dotAnimatePos%4===3){
+            gebi("connectStatus").innerHTML="Not connected...";
+          }
+          dotAnimatePos++;
+        },750);
+      })
+
+      var totalPlaylists = [];
+      var currYtPlaylists = [];
+      var songOrder = [];
+      var selected = [];
+      var createBubble = function(playlist,type){
+        var div = document.createElement("div");
+        var p = document.createElement("p");
+        div.className = "flex justify-center items-center rounded-xl text-md"
+        if (type==="ls") div.style.border = "2px solid blue";
+        else if (type==="yt") div.style.border = "2px solid red"
+        else div.style.border = "2px solid black";
+        div.style.height = "50px";
+        div.style.outlineOffset="-7px";
+        p.style.width="50%";
+        p.style.textOverflow="ellipsis";
+        p.style.overflow="hidden";
+        p.style.whiteSpace="nowrap";
+        p.innerHTML=playlist.name;
+
+        div.addEventListener("click",function(){
+          //add outline offset -7px
+          var alrSelected = false;
+          for (var i=0;i<selected.length;i++){
+            if (selected[i]===this.children[0].innerHTML){ //ASSUMING THAT THE FIRST CHILD IS THE P ELEMENT!!
+              //deselect since it is alr selected
+              alrSelected=true;
+              selected.splice(i,1);
+              this.style.outline="";
+            }
+          }
+          if (!alrSelected){
+            //so now select
+            selected.push(this.children[0].innerHTML);
+            this.style.outline="2px solid black";
+          }
+        })
+        div.appendChild(p);
+        gebi("playlistB").appendChild(div);
+      }
+      function finallyDo(){
+        for (var i=0;i<totalPlaylists.length;i++){
+          createBubble(totalPlaylists[i],"df")
+        }
+      }
+      getRequest("https://api.spotify.com/v1/me/playlists", accessToken, (dogsErr, theStuffData)=>{ 
+        if (dogsErr){
+          console.log("dogs err line515");
+        }else{
+          playlistTotal=theStuffData.total;
+          totalPlaylists=[];
+          //put in liked songs first
+          totalPlaylists.push({"name":"Liked Songs"});
+          createBubble(totalPlaylists[0],"ls");
+          for (var i=0;i<playlistTotal;i++){
+            totalPlaylists.push(0);
+          }
+          var collect = {}
+          var things = function(atoms){
+            if (atoms<playlistTotal){
+              getRequest("https://api.spotify.com/v1/me/playlists"+"?"+"&limit=50"+"&offset="+atoms, accessToken, (playlistFetchErr, playlistData)=>{
+                if (playlistFetchErr){
+                  console.log("playlistFetchErr: " + playlistFetchErr);
+                } else {
+                  for (var i=0;i<playlistData.items.length;i++){
+                    totalPlaylists[atoms+i+1]=playlistData.items[i];
+                    //+1 cuz liked songs is first
+                  }
+                  things(atoms+50);
+                }
+              })
+            }else{
+              finallyDo();
+            }
+          }
+          things(0);
+        }
+      })
+
+
+      function checkListInStorage(list){
+        var bad=false;
+        if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(loadedSongs));
+          return false;
+        }
+        var loadedSongs = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+        for(var i=0;i<loadedSongs.items.length;i++){
+          if (loadedSongs.items[i].title==list.title){
+            bad=true;
+          }
+        }
+        return bad;
+      }
+      var getYtPlaylists = function() {
+        currYtPlaylists=[];
+        if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+          var loadedSongs={
+            items:[]
+          }
+          localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(loadedSongs));
+        }
+        document.getElementById("ytPlaylists").innerHTML="";
+        var playlistData = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+        currYtPlaylists = playlistData.items;
+        for (var i=0;i<playlistData.items.length;i++){
+          createBubble(playlistData.items[i],"yt");
+        }
+      }
+      getYtPlaylists();
+      document.getElementById("ytButton").addEventListener("click",function(){
+        //first pop up prompt msg asking for yt playlist link
+        //then check link validity / playlist validity
+        //then save to localstorage
+        //then reload using getYtPlaylists()
+
+        //actually load yt playlists in their own div situated above the spotify one
+
+        var retLink = function(){
+          var playlistId = prompt("What is the playlist ID or link?\nIf you have the link to the playlist it is the stuff after the ?list= thing :)");
+
+
+          //USE URL PARAMS TO PARSE LINK IF LINK DETECTED !!!
+
+
+          if (playlistId===null){
+            //cancel
+            return null;
+          }else if (playlistId.trim()===""){
+            alert("pls write something");
+            return retLink();
+          }else{
+            //test validity
+            var req = new XMLHttpRequest();
+            req.open("GET",
+              "https://www.googleapis.com/youtube/v3/playlistItems"
+              +"?playlistId="+playlistId
+              +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+              +"&part=contentDetails"
+              +"&maxResults=1"
+            );
+            req.send();
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                //init 성공
+                var body = JSON.parse(req.responseText);
+                if (body.pageInfo.totalResults===0||body.pageInfo.totalResults==="0"){
+                  //실패 미안해
+                  alert("error: playlist has zero items bruh")
+                }else{
+                  //완전 성공 우후우우우우우우우우
+                  //save to local
+                  //first format the save
+                  var playlistReq = new XMLHttpRequest();
+                  playlistReq.open("GET",
+                    "https://www.googleapis.com/youtube/v3/playlists"
+                    +"?id="+playlistId
+                    +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                    +"&part=snippet"
+                  );
+                  playlistReq.send();
+                  playlistReq.addEventListener("readystatechange", ()=>{
+                    if (playlistReq.status === 200 && playlistReq.readyState === 4) {
+                      var thisPlaylistData = JSON.parse(playlistReq.responseText);
+                      var thisPlaylist = {
+                        id:playlistId,
+                        name:thisPlaylistData.items[0].snippet.title
+                      }
+                      var storedLists = JSON.parse(localStorage.getItem("osgSavedYtPlaylists"));
+                      if (localStorage.getItem("osgSavedYtPlaylists")===null||localStorage.getItem("osgSavedYtPlaylists")===undefined||localStorage.getItem("osgSavedYtPlaylists")===""||localStorage.getItem("osgSavedYtPlaylists")==="null"){
+                        storedLists={
+                          items:[]
+                        }
+                        storedLists.items.push(thisPlaylist)
+                      }else{
+                        if (!checkListInStorage(thisPlaylist)){
+                          storedLists.items.push(thisPlaylist)
+                        }
+                      }
+                      localStorage.setItem("osgSavedYtPlaylists",JSON.stringify(storedLists));
+                      getYtPlaylists();
+                    }else if(playlistReq.readyState===4){
+                      //idk some fail
+                    }
+                  })
+                }
+              } else if (req.readyState === 4){
+                //bad
+                alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+              }
+            })
+          }
+        }
+        retLink();
+      })
+    
+      var showMenu = function(menu){
+        var menus = gebi("osgStart").children;
+        for (var i of menus){
+          if (i.id.substring(4)===menu) i.style.display="";
+          else i.style.display="none";
+        }
+      }
+      var showGameMenu = function(menu){
+        var menus = gebi("mainGame").children;
+        for (var i of menus){
+          if (i.id.substring(4)===menu) i.style.display="";
+          else i.style.display="none";
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+      /*
+      unfinished list of things happening:
+      hit ok after keyboard
+      >gather and randomize songs
+      start round
+      -load and start music, throw up graphic
+      -stop music after duration (onplayerstatechange), throw up buzzing limit menu
+      onbuzz
+      -throw up answer time limit menu
+      -throw up answer box if no moderator
+      -send buzz start duration to moderator
+      -send buzz limit end to moderator
+      */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      var playMusic = function(start, duration, song){
+        //start in ms, duration in ms, song contains all the song data and shi
+        //if doing at the start, have to use frekaing yt api
+        //if start is -1, use the chorus from spotify (not on yt so rip)
+        var id="";
+        var loadIntoPlayer = function(){
+          player.loadVideoById({videoId:id});
+          musicDuration=duration;
+        }
+        if (song[1]==="y"){
+          id=song[0].id;
+          loadIntoPlayer();
+        }else if (song[1]==="s"){
+          if (start===-1){
+            //do spotify
+            //the url for the mp3 is stored in song[0].track.preview_url
+          }else{
+            var searchQ = "";
+            for (var a=0;a<song[0].track.artists.length;a++){
+              searchQ+=song[0].track.artists[a]+" ";
+            }
+            searchQ+="- "+song[0].track.name;
+            if (gebi("lyricModeSliderCheckBox").value){
+              searchQ+=" Lyrics";
+            }else{
+              searchQ+=" Audio";
+            }
+            var req = new XMLHttpRequest();
+            req.open("GET","https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&format=5&type=video&videoEmbeddable=true"
+            +"&key="+ "AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+            +"&q="+searchQ);
+            req.send();
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                var searchData = JSON.parse(req.responseText);
+                var currSongIds = searchData.items;
+                id=currSongIds[0].id.videoId;
+                loadIntoPlayer();
+              } else if (req.readyState === 4){
+                alert("failure in youtube search api for the id");
+              }
+            })
+          }
+        }
+      }
+      
+      var round = function(roundNum){
+        var max = 0;
+        for (var i=0;i<players.length;i++){
+          if (players[i][3]>max) max = players[i][3];
+        }
+        if ((gebi("choice1Div").style.opacity=="1"&& roundNum>gebi("choice1Input").value) || (gebi("choice2Div").style.opacity=="1"&& max>gebi("choice2Input").value)){
+          //end game
+        }else{
+          playMusic(1000,songOrder[roundNum-1]);
+          /*
+          on round:
+          -fade in round # real big center
+          -start music (w/o direct indicator? OR rotating clock OR ear emoji big flash on screen)
+          -appear: countdown for buzzing in, 10s or something
+            BUT MAYBE buzz window is dumb AND JUST HAVE PLAY 1 MORE TIME BUTTON...
+          -on buzz:
+            -hotkey press, ans verbally || WITH THE UI
+            -show countdown meter for ans
+            -send boolean ans_result message to mod and back
+              -if playing with mod, give +1s undisplayed for socketio lag
+            -make sure stop reading for buzz once some1 buzzed
+          -if 정답, end round and award 2 pts to win
+          -if 땡, idk either:
+            end guesses for everyone
+            ask to listen one more time
+            or ask to listen on and on
+          -go again and 정답 gets ONE point
+          END ROUND SCREEN
+          -show scores
+          -show next round button in darker blue
+          -show end game button, small, in corner?, red
+          다음 round 다시 시작
+          */
+        }
+        /*
+        note that you can buzz whenever, just disable buzzers until round starts
+        for each round:
+          say 음악 주세요 and then it will be fun
+          count down
+          auto play music
+          500ms
+          display question mark / indicator that it is time to buzz
+          on buzz: 6 seconds to start typing, +1 if text box len > 0.5(answer len)
+        make a buzzer system w/ keyboard and you can bind multiple keys, make sides of the screen light up when some player presses
+        also make underlying time limit before question answer window expires
+        */
+
+        /*
+full plan:
+        ask for # of players
+        ask for game end:
+          by # of rounds
+          by winning # of rounds
+onclick start:
+-onclick check: number of playlists selected, number of players present
+-send update to mod that we started
+        -then set up number of players on keybinds to buzz in and show them which ones to put finger on
+        -3 2 1 시작 | 가 | 가자
+        -then start a round
+        
+
+        total accounted stuff FOR MOD:
+        -on round:
+          -give mod the 정답
+          -maybe give mod scores? that may be meh feature cuz they can just look at the main screen
+        -on buzz:
+          -display the buzzer above
+          -display in big the 정답
+          -show big ✅✖, do horizontally
+
+        notes:
+        -try to make the round process all functions because i wanna reuse it for not just music game
+        -once some1 buzzes and gets wrong, they can't get consec buzz
+        */
+      }
+      
+      var addPlayer = function(){
+        var container = document.createElement("div");
+        var input = document.createElement("textarea");
+        var x = document.createElement("p");
+
+        var xSize = 19;
+        container.style.width="225px";
+        container.style.height="38px";
+        container.className="flex flex-row justify-start items-center rounded-xl mb-4";
+        container.style.backgroundColor="white";
+        input.className="w-full h-full rounded-xl p-1"
+        input.style.resize="none";
+        input.style.outline="none";
+        input.style.border="0";
+        input.style.fontSize=(xSize)+"px";
+        input.style.paddingLeft="4px";
+        //x.style.position="absolute";
+        x.innerHTML="❌";
+        x.className="text-xl"
+        
+        container.appendChild(input);
+        container.appendChild(x);
+        var k = gebi("choosePlayers").children;
+        gebi("choosePlayers").insertBefore(container,k[k.length-1]); //ins before the last elem
+        
+        //x.style.left=(container.offsetWidth+container.offsetLeft-xSize-5)+"px";
+        //x.style.top=(container.offsetHeight-x.offsetHeight)+"px";
+        x.addEventListener("click",function(){
+          this.parentElement.remove();
+        })
+      }
+
+      var playCountdown = function(){
+        var letters = gebi("countdown").children;
+        var showLetter = function(i){
+          if (i<letters.length){
+            setTimeout(function(){
+              for (var l of letters){
+                l.style.display="none";
+              }
+              letters[i].style.display="";
+              showLetter(i+1);
+            },1000)
+          }
+        }
+        showLetter(0);
+      }
+
+      var bindOrder = [
+      "a","x","v","n",",","/","\\","=","0","8","6","4","2","q","z","c","b","m",".","'","]","-","9","7","5","3","1","s","f","h","k",";","[","o","u","t","e","w","d","g","j","l","p","i","y","r"
+      ];
+      var keyboard = [
+        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='],
+        ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
+        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'"],
+        ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/']
+      ]
+      var colors = [
+      "AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black","BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse","Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson","Cyan","DarkBlue","DarkCyan","DarkGoldenRod","DarkGray","DarkGrey","DarkGreen","DarkKhaki","DarkMagenta","DarkOliveGreen","DarkOrange","DarkOrchid","DarkRed","DarkSalmon","DarkSeaGreen","DarkSlateBlue","DarkSlateGray","DarkSlateGrey","DarkTurquoise","DarkViolet","DeepPink","DeepSkyBlue","DimGray","DimGrey","DodgerBlue","FireBrick","FloralWhite","ForestGreen","Fuchsia","Gainsboro","GhostWhite","Gold","GoldenRod","Gray","Grey","Green","GreenYellow","HoneyDew","HotPink","IndianRed ","Indigo  ","Ivory","Khaki","Lavender","LavenderBlush","LawnGreen","LemonChiffon","LightBlue","LightCoral","LightCyan","LightGoldenRodYellow","LightGray","LightGrey","LightGreen","LightPink","LightSalmon","LightSeaGreen","LightSkyBlue","LightSlateGray","LightSlateGrey","LightSteelBlue","LightYellow","Lime","LimeGreen","Linen","Magenta","Maroon","MediumAquaMarine","MediumBlue","MediumOrchid","MediumPurple","MediumSeaGreen","MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed","MidnightBlue","MintCream","MistyRose","Moccasin","NavajoWhite","Navy","OldLace","Olive","OliveDrab","Orange","OrangeRed","Orchid","PaleGoldenRod","PaleGreen","PaleTurquoise","PaleVioletRed","PapayaWhip","PeachPuff","Peru","Pink","Plum","PowderBlue","Purple","RebeccaPurple","Red","RosyBrown","RoyalBlue","SaddleBrown","Salmon","SandyBrown","SeaGreen","SeaShell","Sienna","Silver","SkyBlue","SlateBlue","SlateGray","SlateGrey","Snow","SpringGreen","SteelBlue","Tan","Teal","Thistle","Tomato","Turquoise","Violet","Wheat","White","WhiteSmoke","Yellow","YellowGreen"
+      ];
+      
+      gebi("addPlayerButton").addEventListener("click",function(){
+        addPlayer();
+      })
+      gebi("choice1Div").addEventListener("click",function(){
+        if (gebi("choice1Div").style.opacity=="0.5"){
+          //inactive rn, activate
+          gebi("choice1Div").style.opacity="1";
+          gebi("choice2Div").style.opacity="0.5";
+          gebi("choice1Div").style.border="1px solid black";
+          gebi("choice2Div").style.border="";
+        }
+      })
+      gebi("choice2Div").addEventListener("click",function(){
+        if (gebi("choice2Div").style.opacity=="0.5"){
+          gebi("choice1Div").style.opacity="0.5";
+          gebi("choice2Div").style.opacity="1";
+          gebi("choice1Div").style.border="";
+          gebi("choice2Div").style.border="1px solid black";
+        }
+      })
+      gebi("osgStartButton1").addEventListener("click",function(){
+        showMenu("2");
+      })
+      gebi("osgBackButton2").addEventListener("click",function(){
+        showMenu("1");
+      })
+      gebi("osgStartButton2").addEventListener("click",function(){
+        showMenu("3");
+      })
+      gebi("osgBackButton3").addEventListener("click",function(){
+        showMenu("2");
+      })
+      gebi("osgStartButton3").addEventListener("click",function(){
+        //also check if the field is filled out
+        if (gebi("choosePlayers").children.length<=1&&gebi("choosePlayers").children[0].innerHTML!==""){
+          alert("you need to have at least one player");
+          return;
+        }
+
+        if (((gebi("choice1Input").value!==""&&gebi("choice1Div").style.opacity!=="0.5"))){
+          //non number in the field sadge
+          if (Number.isNaN(parseInt(gebi("choice1Input").value))){
+            alert("enter a number in the box!!");
+            return;
+          }
+        }else if ((gebi("choice2Input").value!==""&&gebi("choice2Div").style.opacity!=="0.5")){
+          //non number in the field sadge
+          if (Number.isNan(parseInt(gebi("choice1Input").value))){
+            alert("enter a number in the box!!");
+            return;
+          }
+        }else{
+          //RN invalid cuz selected div has no val
+          alert("choose a win condition and put in a number plssss")
+          return;
+        }
+
+        //send msg to mod
+        socket.emit("client-가자", {"clientId":socket.id,"modId":localStorage.getItem("musicQuiz-mod_id")});
+
+        //set up number of players on keybinds to buzz in and show them which ones to put finger on
+        //maybe in the future put the wireless players here
+        var raw = gebi("choosePlayers").children;
+        players = [];
+        for (var i=0;i<raw.length-1;i++) players.push(raw[i].children[0].value);
+        for (var i=0;i<players.length;i++){
+          //add colors rnd
+          players[i]=[players[i],colors[Math.floor(Math.random()*players.length)], 0];
+        }
+        for (var i=0;i<players.length;i++){
+          var div = document.createElement("div");
+          var p = document.createElement("p");
+          div.className = "flex justify-center items-center rounded-xl text-lg"
+          div.style.backgroundColor=players[i][1];
+          div.style.height = "75px";
+          div.style.border = "1px solid black";
+          p.style.width="75%";
+          p.style.textOverflow="ellipsis";
+          p.style.overflow="hidden";
+          p.style.whiteSpace="nowrap";
+          p.innerHTML=bindOrder[i]+" key: "+players[i][0];
+
+          div.appendChild(p);
+          gebi("keyboardNames").appendChild(div);
+
+          //color keyboard
+          for (var a=0;a<keyboard.length;a++){
+            for (var b=0;b<keyboard[a].length;b++){
+              if (keyboard[a][b]===bindOrder[i]){
+                //i is the pos of player we are on
+                //we have a and b, access the key
+                gebi("theKeyboard").children[a].children[b].style.backgroundColor=players[i][1];
+                break;
+              }
+            }
+          }
+        }
+        gebi("osgStart").style.display="none";
+        gebi("osgGame").style.display="";
+      })
+
+      gebi("keyboardOk").addEventListener("click",function(){
+        //3 2 1 시작 | 가 | 가자
+        gebi("keybinds").style.display="none";
+        gebi("mainGame").style.display="";
+        //get selected playlists and choose the song order
+        //get all songs, put them into song order, then scramble song order
+
+        //replace playlist names with their spotify playlist ids
+        for (var i=0;i<selected.length;i++){
+          var found = false;
+          for (var j=0;j<totalPlaylists.length;j++){
+            if (selected[i]===totalPlaylists[j].name){
+              if (totalPlaylists[j].name==="Liked Songs")selected[i]=[totalPlaylists[j].name,"s"];
+              else selected[i]=[totalPlaylists[j].id,"s"];
+              found=true;
+            }
+          }
+          if (!found){
+            var found2=false;
+            for (var j=0;j<currYtPlaylists.length;j++){
+              if (selected[i]===currYtPlaylists[j].name){
+                selected[i]=[totalPlaylists[j].id,"y"];
+              }
+              false2=true;
+            }
+            if (!found2){
+              alert("could not find playlist error ahhhhhhhh");
+            }
+          }
+        }
+        var pushSongsFinally = function(){
+          //randomize
+          //"fisher-yates alg" credit: https://www.freecodecamp.org/news/how-to-shuffle-an-array-of-items-using-javascript-or-typescript/
+          const shuffle = (array) => { 
+            for (let i = array.length - 1; i > 0; i--) { 
+              const j = Math.floor(Math.random() * (i + 1)); 
+              [array[i], array[j]] = [array[j], array[i]]; 
+            } 
+            return array; 
+          }
+          songOrder=shuffle(songOrder);
+          //start game
+          showGameMenu("countdown");
+          playCountdown();
+          setTimeout(function(){
+            round(1);
+          },4000);
+        }
+        //push songs got from spotify api from each playlist into songOrder
+        var pushSongs = function(i){
+          if (i<selected.length){
+            if (selected[i][1]==="s"){
+              var reqEndpoint = "";
+              if (selected[i][0]==="Liked Songs"){
+                //do special ass liked songs procedure cuz it thinks its special like a bitch
+                reqEndpoint="https://api.spotify.com/v1/me/tracks?limit=50";
+              }else{
+                reqEndpoint="https://api.spotify.com/v1/playlists/"+selected[i][0]+"/tracks?limit=50"
+              }
+              var nextReq = "";
+              var doReq = function(next){
+                var req = new XMLHttpRequest(); req.open("GET", next); if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token); req.send();
+                req.addEventListener("readystatechange", ()=>{
+                  if (req.status === 200 && req.readyState === 4) {
+                    var arr = JSON.parse(req.responseText);
+  
+                    for (var a of arr.items) songOrder.push([a,"s"]);
+  
+                    next=arr.next;
+                    if (next) doReq(next);
+                    else pushSongs(i+1);
+                  } else if (req.readyState === 4){
+                    console.log("REEEEEEEEEEe", undefined)
+                  }
+                })
+              }
+              doReq(apiEndpoint);
+            }else{
+              //yt playlist get songs
+              var stuff = function(nextPageToken){
+                var currPlaylistReq = "";
+                if (nextPageToken===0){
+                  //init run
+                  currPlaylistReq=(
+                    "https://www.googleapis.com/youtube/v3/playlistItems"
+                  +"?playlistId="+selected[i][0]
+                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                  +"&maxResults=50"
+                  +"&part=snippet"
+                  ) //CHANGE currYtPlaylists[].id JOIFejaeiofwjEIOrjeiojgojawoeohjiornjgifdb
+                }else{
+                  currPlaylistReq=(
+                    "https://www.googleapis.com/youtube/v3/playlistItems"
+                  +"?playlistId="+selected[i][0]
+                  +"&key="+"AIzaSyC5YeBNQyA8mpjfL4WEdi3DBEwSd9ayxwk"
+                  +"&maxResults=50"
+                  +"&part=snippet"
+                  +"&pageToken="+nextPageToken
+                  )
+                }
+                var req = new XMLHttpRequest();
+                req.open("GET",currPlaylistReq);
+                req.send();
+                req.addEventListener("readystatechange", ()=>{
+                  if (req.status === 200 && req.readyState === 4) {
+                    var currPlaylistData = JSON.parse(req.responseText).items;
+                    var nextToken = JSON.parse(req.responseText).nextPageToken;
+                    //do some chit
+                    var arr = JSON.parse(req.responseText);
+  
+                    for (var a of arr.items) songOrder.push([a,"y"]);
+                    
+                    if (nextToken) stuff(nextToken);
+                    else pushSongs(i+1);
+                  } else if (req.readyState === 4){
+                    //bad
+                    alert("playlist id was bad. try again or check ur id and make sure you got it right or maybe the playlist is private or something else sryyyyyyyyyy")
+                  }
+                })
+              }
+              stuff(0);
+            }
+          }else{
+            pushSongsFinally();
+          }
+        }
+        pushSongs(0);
+      })
+
+      //todos: fix auto token renewal
+
+      window.onload=function(){
+        if (window.innerWidth<700){
+          //small
+          document.getElementById("navItemContainer").style.display="none"
+          document.getElementById("menuToggle").addEventListener("click",function(){
+            if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+            else document.getElementById("navItemContainer").style.display="";
+            navMenuShown=!navMenuShown;
+          })
+        }
+        resize();
+        //gebi("tabs").style.left=gebi("contentBox").offsetLeft+"px";
+        //gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
+        //highlightTab(games[0]+"Tab");
+        for (var i of games){
+          gebi(i+"Tab").addEventListener("click",function(event){
+            var eId = event.srcElement.id.substring(0,event.srcElement.id.length-3);
+            //highlightTab(eId+"Tab");
+            hideAllGames();
+            gebi(eId).style.display="";
+          })
+        }
+        addPlayer();
+      }
+    </script>
+  </body>
+</html>
