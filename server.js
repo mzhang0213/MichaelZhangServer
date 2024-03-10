@@ -127,13 +127,98 @@ app.use('/prox', exampleProxy);
 
 //메모장
 
-app.post("/mmj-update",async(req,res)=>{
+app.post("/mmj-newNote",async(req,res)=>{
+	//req.body.title, creates empty
 	try{
 		(async function(){
-			//data: req.body.note
 			await client.connect();
 			const db = client.db("mmj").collection("note");
-			const filter = {title:"note"}
+			await db.insertOne({
+				title:req.body.title,
+				note:""
+			})
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.post("/mmj-deleteNote",async(req,res)=>{
+	//data: req.body.title
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const filter = {title:req.body.title}
+			await db.deleteOne(filter);
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.get("/mmj-getBackup",async(req,res)=>{
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const cursor = db.find();
+			var sending = "";
+			for await (var doc of cursor){
+				for (var i=0;i<20;i++) sending+=doc.title+"  ";
+				sending+="\n";
+				sending+=doc.note;
+				sending+="\n";
+				sending+="\n";
+				sending+="\n";
+			}
+			msg.backup=sending;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.get("/mmj-getTitles",async(req,res)=>{
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const cursor = db.find();
+			var titles = []
+			for await (var doc of cursor){
+				titles.push(doc.titles);
+			}
+			msg.titles=titles;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.post("/mmj-update",async(req,res)=>{
+	//data: req.body.title, req.body.note
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const filter = {title:req.body.title}
 			const updateDoc = {
 				$set: {
 					note:req.body.note
@@ -152,6 +237,7 @@ app.post("/mmj-update",async(req,res)=>{
 	}
 })
 app.post("/mmj-getNote",async (req,res)=>{
+	//data: req.body.title
 	var msg = {};
 	try{
 		(async function(){
@@ -159,7 +245,7 @@ app.post("/mmj-getNote",async (req,res)=>{
 			const db = client.db("mmj").collection("note");
 			const cursor = db.find();
 			for await (var doc of cursor){
-				if (doc.title===req.body.title){ //coded to allow multiple notes in the future
+				if (doc.title===req.body.title){
 					msg.note=doc.note;
 					msg.title=doc.title;
 					break;
