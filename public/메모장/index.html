@@ -132,8 +132,8 @@
 
     
     <script>
-      const tabPassive = "rgb(243 244 246)";
-      const tabActive = "rgb(199, 200, 201)";
+      const tabActive = "rgb(243 244 246)";
+      const tabPassive = "rgb(199, 200, 201)";
       var changeNote = function(title){
         var req = new XMLHttpRequest();
         var getNoteBody = {
@@ -151,11 +151,19 @@
             popUpErr("Failed to fetch the note oh noes :( :(");
           }
         })
+        var tabs = gebi("tabs").children;
+        for (var i of tabs){
+          if (i.innerHTML===title)
+            i.style.backgroundColor=tabActive;
+          else
+            i.style.backgroundColor=tabPassive;
+        }
         gebi("saveStatus").style.backgroundColor="lightblue";
       }
       var createTab = function(title){
         var div = document.createElement("div");
         div.innerHTML=title;
+        div.style.borderRadius="0.75rem";
         gebi("tabs").appendChild(div);
         var tabs = gebi("tabs").children;
         for (var i of tabs){
