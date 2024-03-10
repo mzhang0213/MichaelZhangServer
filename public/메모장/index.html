@@ -179,7 +179,14 @@
         tabs=Array.prototype.slice.call(tabs);
         tabs.splice(tabs.length-1,1);//because of the add button
         div.addEventListener("click",function(event){
-          if (event.target===this){
+          var currTab = "";
+          for (var i of tabs){
+            if (i.style.backgroundColor===tabActive){
+              currTab = i;
+              break;
+            }
+          }
+          if (currTab===this){
             console.log("clicking myself!")
           }else{
             changeNote(this.innerHTML);
