@@ -47,9 +47,12 @@
       <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <div class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
-        <button class="groupButton" style="color:lightgray;">···</button>
+        <button class="groupButton" style="color:lightgray;"> · · · </button>
         <div class="groupContent">
           <a class="groupItem" id="backupButton">Get Backup</a>
+        </div>
+        <div class="groupContent">
+          <a class="groupItem" id="backupButton" style="color:red;">Delete this note</a>
         </div>
       </div>
     </nav>
@@ -120,9 +123,11 @@
     <!--<div id="mainBg" class="absolute top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width: 100%;height: 200vh;background-image:url('./kimi-bg.jpg');background-size: contain;background-repeat: no-repeat;background-position:center;"></div>-->
     <div class="absolute left-0 top-0 -z-20 bg-cover bg-fixed bg-repeat-y" style="width: 100%;height: 120vh;background-image:url('./kimi-bg.jpg');"></div>
     <div id="dimScreen" class="fixed z-10 left-0 top-0 bg-black opacity-70" style="display:none;width:100%;height:100%;"></div>
-    <div id="tabs" class="absolute -z-10 flex flex-row w-9/12 h-fit"></div>
+    <div id="tabs" class="absolute -z-10 flex flex-row w-9/12 h-fit">
+      <div id="addNoteButton" style="border-radius:2rem;background-color:rgb(162, 207, 253);padding-left:5px;padding-right:5px;padding-top:0;padding-bottom:0;height:22px;display:flex;justify-content:center;align-items:center;margin-left:5px;"></div>
+    </div>
     <center>
-      <div id="contentBox" class="relative flex flex-col mt-18 rounded-xl justify-center items-center bg-gray-100" style="width:90%;height:83vh;">
+      <div id="contentBox" class="relative flex flex-col mt-20 rounded-xl justify-center items-center bg-gray-100" style="width:90%;height:83vh;">
         <textarea id='noteBox' class='relative p-4 rounded-lg'></textarea>
         <div id="saveStatus" class="rounded-3xl"></div>
       </div>
@@ -146,35 +151,49 @@
           if (req.status === 200 && req.readyState === 4) {
             var body = JSON.parse(req.responseText);
             gebi("noteBox").value=body.note;
+
+            var tabs = gebi("tabs").children;
+            tabs.splice(tabs.length-1,1);//because of the add button
+            for (var i of tabs){
+              if (i.innerHTML===title)
+                i.style.backgroundColor=tabActive;
+              else
+                i.style.backgroundColor=tabPassive;
+            }
+            gebi("saveStatus").style.backgroundColor="lightblue";
+
           } else if (req.readyState === 4){
             console.log("reeeeeeee retrive note failure: "+req.responseText);
             popUpErr("Failed to fetch the note oh noes :( :(");
           }
         })
-        var tabs = gebi("tabs").children;
-        for (var i of tabs){
-          if (i.innerHTML===title)
-            i.style.backgroundColor=tabActive;
-          else
-            i.style.backgroundColor=tabPassive;
-        }
-        gebi("saveStatus").style.backgroundColor="lightblue";
       }
       var createTab = function(title){
         var div = document.createElement("div");
         div.innerHTML=title;
         div.style.borderRadius="0.75rem";
-        gebi("tabs").appendChild(div);
+        div.style.paddingBottom="30px";
+        gebi("tabs").insertBefore(div,gebi("addNoteButton"));
         var tabs = gebi("tabs").children;
-        for (var i of tabs){
-          if (i.innerHTML===title)
-            i.style.backgroundColor=tabActive;
-          else
-            i.style.backgroundColor=tabPassive;
-        }
+        tabs.splice(tabs.length-1,1);//because of the add button
         div.addEventListener("click",function(event){
-          changeNote(this.innerHTML);
+          if (event.target===this){
+            console.log("clicking myself!")
+          }else{
+            changeNote(this.innerHTML);
+          }
         })
+      }
+      var deleteTab = function(title){
+        var tab = "";
+        for (var i of tabs){
+          if (i.style.backgroundColor===tabActive){
+            tab = i;
+            break;
+          }
+        }
+        tab.remove();
+        changeNote(gebi("tabs").children[0].innerHTML);
       }
       var resize = function(){
         gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
@@ -238,6 +257,7 @@
           //go ahead with the save
           //find curr tab
           var tabs = gebi("tabs").children;
+          tabs.splice(tabs.length-1,1);//because of the add button
           var title = "";
           for (var tab of tabs){
             if (tab.style.backgroundColor===tabActive){
@@ -309,6 +329,62 @@
             popUpErr("Failed to fetch the note oh noes :( :(");
           }
         })
+      })
+      gebi("addNoteButton").addEventListener("click",function(){
+        var title = prompt("what title do want for the new note?");
+        if (title===null||title.trim()===""){
+          //invalid title
+          return;
+        }
+        var req = new XMLHttpRequest();
+        var getNoteBody = {
+          title:title
+        }
+        req.open("POST",window.location.origin+"/mmj-newNote");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(getNoteBody));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+            createTab(title);
+            changeNote(title);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee retrive note failure: "+req.responseText);
+            popUpErr("Failed to fetch the note oh noes :( :(");
+          }
+        })
+      })
+      gebi("deleteNote").addEventListener("click",function(){
+        if (confirm("DO U SERIOUSLY WANT TO DELETE THIS PRECIOUS 특별한 특이 특끼 NOTE ? ? ? 진짜ㅏㅏ??")){
+          if (confirm("no but fr actually?")){
+            var tabs = gebi("tabs").children;
+            tabs.splice(tabs.length-1,1);//because of the add button
+            var title = "";
+            for (var tab of tabs){
+              if (tab.style.backgroundColor===tabActive){
+                title=tab.innerHTML;
+                break;
+              }
+            }
+            var req = new XMLHttpRequest();
+            var getNoteBody = {
+              title:title
+            }
+            req.open("POST",window.location.origin+"/mmj-deleteNote");
+            req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            req.send(JSON.stringify(getNoteBody));
+            req.addEventListener("readystatechange", ()=>{
+              if (req.status === 200 && req.readyState === 4) {
+                var body = JSON.parse(req.responseText);
+                alert("successfully deleted :)")
+                deleteTab();
+              } else if (req.readyState === 4){
+                console.log("reeeeeeee retrive note failure: "+req.responseText);
+                popUpErr("Failed to fetch the note oh noes :( :(");
+              }
+            })
+          }
+        }
       })
     </script>
   </body>

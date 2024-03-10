@@ -176,9 +176,12 @@ app.get("/mmj-getBackup",async(req,res)=>{
 			const cursor = db.find();
 			var sending = "";
 			for await (var doc of cursor){
-				for (var i=0;i<20;i++) sending+=doc.title+"  ";
+				sending+="~ "
+				for (var i=0;i<20;i++) sending+=doc.title+"  ~";
+				sending+="\n";
 				sending+="\n";
 				sending+=doc.note;
+				sending+="\n";
 				sending+="\n";
 				sending+="\n";
 				sending+="\n";
