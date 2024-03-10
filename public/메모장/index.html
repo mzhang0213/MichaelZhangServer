@@ -52,7 +52,7 @@
           <a class="groupItem" id="backupButton">Get Backup</a>
         </div>
         <div class="groupContent">
-          <a class="groupItem" id="backupButton" style="color:red;">Delete this note</a>
+          <a class="groupItem" id="deleteButton" style="color:red;">Delete this note</a>
         </div>
       </div>
     </nav>
@@ -124,7 +124,7 @@
     <div class="absolute left-0 top-0 -z-20 bg-cover bg-fixed bg-repeat-y" style="width: 100%;height: 120vh;background-image:url('./kimi-bg.jpg');"></div>
     <div id="dimScreen" class="fixed z-10 left-0 top-0 bg-black opacity-70" style="display:none;width:100%;height:100%;"></div>
     <div id="tabs" class="absolute -z-10 flex flex-row w-9/12 h-fit">
-      <div id="addNoteButton" style="border-radius:2rem;background-color:rgb(162, 207, 253);padding-left:5px;padding-right:5px;padding-top:0;padding-bottom:0;height:22px;display:flex;justify-content:center;align-items:center;margin-left:5px;"></div>
+      <div id="addNoteButton" style="border-radius:2rem;background-color:rgb(162, 207, 253);padding-left:5px;padding-right:5px;padding-top:0;padding-bottom:0;height:22px;display:flex;justify-content:center;align-items:center;margin-left:5px;">+</div>
     </div>
     <center>
       <div id="contentBox" class="relative flex flex-col mt-20 rounded-xl justify-center items-center bg-gray-100" style="width:90%;height:83vh;">
@@ -153,6 +153,7 @@
             gebi("noteBox").value=body.note;
 
             var tabs = gebi("tabs").children;
+            tabs=Array.prototype.slice.call(tabs);
             tabs.splice(tabs.length-1,1);//because of the add button
             for (var i of tabs){
               if (i.innerHTML===title)
@@ -172,9 +173,10 @@
         var div = document.createElement("div");
         div.innerHTML=title;
         div.style.borderRadius="0.75rem";
-        div.style.paddingBottom="30px";
+        div.style.paddingBottom="50px";
         gebi("tabs").insertBefore(div,gebi("addNoteButton"));
         var tabs = gebi("tabs").children;
+        tabs=Array.prototype.slice.call(tabs);
         tabs.splice(tabs.length-1,1);//because of the add button
         div.addEventListener("click",function(event){
           if (event.target===this){
@@ -257,6 +259,7 @@
           //go ahead with the save
           //find curr tab
           var tabs = gebi("tabs").children;
+          tabs=Array.prototype.slice.call(tabs);
           tabs.splice(tabs.length-1,1);//because of the add button
           var title = "";
           for (var tab of tabs){
@@ -354,10 +357,11 @@
           }
         })
       })
-      gebi("deleteNote").addEventListener("click",function(){
+      gebi("deleteButton").addEventListener("click",function(){
         if (confirm("DO U SERIOUSLY WANT TO DELETE THIS PRECIOUS 특별한 특이 특끼 NOTE ? ? ? 진짜ㅏㅏ??")){
           if (confirm("no but fr actually?")){
             var tabs = gebi("tabs").children;
+            tabs=Array.prototype.slice.call(tabs);
             tabs.splice(tabs.length-1,1);//because of the add button
             var title = "";
             for (var tab of tabs){
