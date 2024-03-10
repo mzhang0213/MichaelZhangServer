@@ -177,7 +177,7 @@ app.get("/mmj-getBackup",async(req,res)=>{
 			var sending = "";
 			for await (var doc of cursor){
 				sending+="~ "
-				for (var i=0;i<20;i++) sending+=doc.title+"  ~";
+				for (var i=0;i<20;i++) sending+=doc.title+" ~ ";
 				sending+="\n";
 				sending+="\n";
 				sending+=doc.note;

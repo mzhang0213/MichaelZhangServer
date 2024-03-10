@@ -176,10 +176,10 @@
         div.style.borderRadius="0.75rem";
         div.style.paddingBottom="50px";
         gebi("tabs").insertBefore(div,gebi("addNoteButton"));
-        var tabs = gebi("tabs").children;
-        tabs=Array.prototype.slice.call(tabs);
-        tabs.splice(tabs.length-1,1);//because of the add button
         div.addEventListener("click",function(event){
+          var tabs = gebi("tabs").children;
+          tabs=Array.prototype.slice.call(tabs);
+          tabs.splice(tabs.length-1,1);//because of the add button
           if (!clicked){
             var currTab = "";
             for (var i of tabs){
