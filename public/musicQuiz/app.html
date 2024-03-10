@@ -105,17 +105,17 @@
               <div id="choice2Div" class="flex flex-row justify-center items-center p-3 rounded-lg mt-4" style="width:max-content; opacity:0.5">
                 <p>After</p><input id="choice2Input" type="text" class="mx-1 px-1"><p>wins</p>
               </div>
-              <div id="lyricModeSliderContainer" class="sliderContainer">
-                <div id="lyricModeParagraphContainer" class="sliderParagraph">
-                  <p id="lyricModeSliderDescription" class="sliderDescription">Lyric Search Mode</p>
+              <div class="sliderContainer">
+                <div class="paragraphContainer">
+                  <p class="sliderDescription">Search Lyric Videos</p>
                 </div>
-                <div id="actualLyricModeSliderContainer" class="actualSliderContainer">
-                  <label class="sliderSwitch">
-                  <input type="checkbox" id="lyricModeSliderCheckBox" class="sliderCheckBox">
-                  <span class="sliderSlider"></span>
-                  </label>
+                <label class="sliderSwitch">
+                <input type="checkbox" id="sliderCheckBox">
+                <span class="sliderSlider"></span>
+                </label>
                 </div>
-              </div>      
+                </div>
+              </div>
               <button id="osgBackButton3" class="main absolute text-lg" style="bottom:20px; left:20px;">< Back</button>
               <button id="osgStartButton3" class="main absolute text-lg" style="bottom:20px; right:20px;">Play!</button>
             </div>
@@ -315,33 +315,28 @@
     </style>
     <style>
       .sliderContainer{
+        display:flex;
+        flex-direction:row;
+        justify-content:start;
+        align-items:center;
+        margin-top:20px;
+      }
+      .slider{
         position:relative;
-        width:0;
-      }
-      .sliderParagraph{
-        position:absolute;
-        top:0;
-        left:0;
-      }
-      .actualSliderContainer{
-        position:absolute;
-        top:0;
-        left:0;
       }
       .sliderDescription{
         font-size:20px;
+        width:20px;
         margin:0;
         padding:0;
-        top:5px;
-        width:20px;
-        float:right;
       }
       .sliderSwitch {
         position:absolute;
         display:inline-block;
         width:60px;
         height:34px;
-        left:10px;
+        margin-left:8px;
+        margin-right:8px;
       }
       .sliderSwitch input {
         opacity:0;
@@ -372,10 +367,10 @@
         transition: .4s;
         border-radius: 50%;
       }
-      .sliderCheckBox:checked + .sliderSlider {
+      #sliderCheckBox:checked + .sliderSlider {
         background-color: #2196F3;
       }
-      .sliderCheckBox:checked + .sliderSlider:before {
+      #sliderCheckBox:checked + .sliderSlider:before {
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
         transform: translateX(26px);
@@ -886,7 +881,7 @@
               searchQ+=song[0].track.artists[a]+" ";
             }
             searchQ+="- "+song[0].track.name;
-            if (gebi("lyricModeSliderCheckBox").value){
+            if (gebi("sliderCheckbox").value){
               searchQ+=" Lyrics";
             }else{
               searchQ+=" Audio";
