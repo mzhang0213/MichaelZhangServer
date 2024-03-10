@@ -201,7 +201,7 @@ app.get("/mmj-getTitles",async(req,res)=>{
 			const cursor = db.find();
 			var titles = []
 			for await (var doc of cursor){
-				titles.push(doc.titles);
+				titles.push(doc.title);
 			}
 			msg.titles=titles;
 			res.send(JSON.stringify(msg));
