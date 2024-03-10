@@ -137,7 +137,9 @@
     <script>
       const tabActive = "rgb(243 244 246)";
       const tabPassive = "rgb(199, 200, 201)";
+      var clicked = false;
       var changeNote = function(title){
+        clicked=true;
         var req = new XMLHttpRequest();
         var getNoteBody = {
           title:title
@@ -160,6 +162,7 @@
                 i.style.backgroundColor=tabPassive;
             }
             gebi("saveStatus").style.backgroundColor="lightblue";
+            clicked=false;
 
           } else if (req.readyState === 4){
             console.log("reeeeeeee retrive note failure: "+req.responseText);
@@ -177,17 +180,21 @@
         tabs=Array.prototype.slice.call(tabs);
         tabs.splice(tabs.length-1,1);//because of the add button
         div.addEventListener("click",function(event){
-          var currTab = "";
-          for (var i of tabs){
-            if (i.style.backgroundColor===tabActive){
-              currTab = i;
-              break;
+          if (!clicked){
+            var currTab = "";
+            for (var i of tabs){
+              if (i.style.backgroundColor===tabActive){
+                currTab = i;
+                break;
+              }
             }
-          }
-          if (currTab===this){
-            console.log("clicking myself!")
-          }else{
-            changeNote(this.innerHTML);
+            console.log(currTab)
+            console.log(this)
+            if (currTab===this){
+              console.log("clicking myself!")
+            }else{
+              changeNote(this.innerHTML);
+            }
           }
         })
       }
