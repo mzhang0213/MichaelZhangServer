@@ -50,6 +50,7 @@
         <button class="groupButton" style="color:lightgray;"> · · · </button>
         <div class="groupContent">
           <a class="groupItem" id="backupButton">Get Backup</a>
+          <a class="groupItem" id="darkMode">Dark Mode</a>
           <a class="groupItem" id="deleteButton" style="color:red;">Delete this note</a>
         </div>
       </div>
@@ -198,6 +199,9 @@
       }
       var deleteTab = function(title){
         var tab = "";
+        var tabs = gebi("tabs").children;
+        tabs=Array.prototype.slice.call(tabs);
+        tabs.splice(tabs.length-1,1);//because of the add button
         for (var i of tabs){
           if (i.style.backgroundColor===tabActive){
             tab = i;
@@ -398,6 +402,45 @@
               }
             })
           }
+        }
+      })
+      
+      if (localStorage.getItem("mmj-dark")==="true"){
+        gebi("noteBox").style.backgroundColor="rgb(35, 35, 35)";
+        gebi("noteBox").style.color="rgb(189, 193, 198)";
+        gebi("contentBox").style.backgroundColor="rgb(5, 5, 5)";
+        //opposite
+        gebi("darkMode").style.backgroundColor="";
+        gebi("darkMode").style.color="";
+        gebi("darkMode").innerHTML="Light Mode";
+      }else{
+        gebi("noteBox").style.backgroundColor="";
+        gebi("noteBox").style.color="";
+        gebi("contentBox").style.backgroundColor="";
+        //opposite
+        gebi("darkMode").style.backgroundColor="rgb(35, 35, 35)";
+        gebi("darkMode").style.color="rgb(189, 193, 198)";
+        gebi("darkMode").innerHTML="Dark Mode";
+      }
+      gebi("darkMode").addEventListener("click",function(){
+        if (gebi("noteBox").style.backgroundColor===""){
+          localStorage.setItem("mmj-dark","true");
+          gebi("noteBox").style.backgroundColor="rgb(35, 35, 35)";
+          gebi("noteBox").style.color="rgb(189, 193, 198)";
+          gebi("contentBox").style.backgroundColor="rgb(5, 5, 5)";
+          //opposite
+          gebi("darkMode").style.backgroundColor="";
+          gebi("darkMode").style.color="";
+          gebi("darkMode").innerHTML="Light Mode";
+        }else{
+          localStorage.setItem("mmj-dark","false");
+          gebi("noteBox").style.backgroundColor="";
+          gebi("noteBox").style.color="";
+          gebi("contentBox").style.backgroundColor="";
+          //opposite
+          gebi("darkMode").style.backgroundColor="rgb(35, 35, 35)";
+          gebi("darkMode").style.color="rgb(189, 193, 198)";
+          gebi("darkMode").innerHTML="Dark Mode";
         }
       })
     </script>
