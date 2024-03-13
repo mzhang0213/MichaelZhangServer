@@ -126,7 +126,93 @@ app.use('/prox', exampleProxy);
 
 
 //메모장
+app.get("/mmj-getFolders",async(req,res)=>{
+	//req.body.title, creates empty
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			await db.insertOne({
+				title:req.body.title,
+				note:""
+			})
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.post("/mmj-getFolder",async(req,res)=>{
+	//req.body.title
 
+	//return folder of notes, each with just titles no body
+	
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			await db.insertOne({
+				title:req.body.title,
+				note:""
+			})
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.post("/mmj-newFolder",async(req,res)=>{
+	//req.body.title, creates empty
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			await db.insertOne({
+				title:req.body.title,
+				note:""
+			})
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+app.post("/mmj-deleteFolder",async(req,res)=>{
+	//req.body.title, creates empty
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			await db.insertOne({
+				title:req.body.title,
+				note:""
+			})
+			var msg = {
+				"msg":"yay"
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
 app.post("/mmj-newNote",async(req,res)=>{
 	//req.body.title, creates empty
 	try{

@@ -46,7 +46,7 @@
       </div>
       <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
-      <div class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+      <div id="optionsMenu" class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button class="groupButton" style="color:lightgray;"> · · · </button>
         <div class="groupContent">
           <a class="groupItem" id="backupButton">Get Backup</a>
@@ -140,6 +140,93 @@
       const tabActive = "rgb(243, 244, 246)";
       const tabPassive = "rgb(199, 200, 201)";
       var clicked = false;
+      var changeFolder = function(title){
+        clicked=true;
+        var req = new XMLHttpRequest();
+        var getFolderBody = {
+          title:title
+        }
+        req.open("POST",window.location.origin+"/mmj-getFolder");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(getFolderBody));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+
+            //delete existing tabs
+            var tabs = gebi("tabs").children;
+            tabs=Array.prototype.slice.call(tabs);
+            tabs.splice(tabs.length-1,1);//because of the add button
+            for (var tab in tabs) tab.remove();
+
+            for (var note of body.notes){
+              createTab(note.title);
+            }
+            changeNote(body.notes[0].title);
+
+            //highlight curr folder??
+
+            clicked=false;
+
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee retrive note failure: "+req.responseText);
+            popUpErr("Failed to fetch the note oh noes :( :(");
+          }
+        })
+      }
+      var createFolder = function(title){
+        //<button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+        var button = document.createElement("div");
+        button.className="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4";
+        var b = document.createElement("b");
+        b.innerHTML=title;
+        button.appendChild(b);
+        gebi("tabs").insertBefore(button,gebi("optionsMenu"));
+        button.addEventListener("click",function(event){
+          var folders = gebi("navItemContainer").children;
+          folders=Array.prototype.slice.call(folders);
+          folders.splice(folders.length-1,1);//because of the add button
+          if (!clicked){
+            /*
+            var currFolder = "";
+            for (var i of folders){
+              if (i.style.backgroundColor===tabActive){
+                currFolder = i;
+                break;
+              }
+            }
+            if (currFolder===this){
+              console.log("clicking myself!")
+            }else{
+              changeNote(this.innerHTML);
+            }
+            */
+
+            //temp for now; use some way to see which folder is active and compare with clicked
+            changeFolder(this.innerHTML);
+          }
+        })
+      }
+      var deleteFolder = function(title){
+        /*
+        var tab = "";
+        var tabs = gebi("tabs").children;
+        tabs=Array.prototype.slice.call(tabs);
+        tabs.splice(tabs.length-1,1);//because of the add button
+        for (var i of tabs){
+          if (i.style.backgroundColor===tabActive){
+            tab = i;
+            break;
+          }
+        }
+        tab.remove();
+        */
+
+        //temp for now; use some way to see which folder is active and compare with clicked
+        
+        changeNote(gebi("navItemContainer").children[0].innerHTML);
+      }
+      
       var changeNote = function(title){
         clicked=true;
         var req = new XMLHttpRequest();
@@ -163,7 +250,7 @@
               else
                 i.style.backgroundColor=tabPassive;
             }
-            gebi("saveStatus").style.backgroundColor="lightblue";
+            gebi("saveStatus").style.backgroundColor="orange";
             clicked=false;
 
           } else if (req.readyState === 4){
@@ -212,6 +299,8 @@
         tab.remove();
         changeNote(gebi("tabs").children[0].innerHTML);
       }
+      
+      
       var resize = function(){
         gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
         gebi("tabs").style.left=gebi("contentBox").offsetLeft+"px";
