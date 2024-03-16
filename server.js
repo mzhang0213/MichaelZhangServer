@@ -127,6 +127,12 @@ app.use('/prox', exampleProxy);
 
 //메모장
 app.get("/mmj-getFolders",async(req,res)=>{
+
+
+
+	//LOOP THRU NOTES AND ARR OF WHICH FOLDERS EXIST
+	//WRITE THIS WRITE THIS WRITE THIS
+	
 	//req.body.title, creates empty
 	try{
 		(async function(){
@@ -151,6 +157,9 @@ app.post("/mmj-getFolder",async(req,res)=>{
 	//req.body.title
 
 	//return folder of notes, each with just titles no body
+
+
+	//WRITE THIS WRITE THIS WRITE THIS
 	
 	try{
 		(async function(){
@@ -171,16 +180,14 @@ app.post("/mmj-getFolder",async(req,res)=>{
 		console.log(e);
 	}
 })
+/* THIS METHOD IS ALL IN THE FRONTEND AND DOESNT EXIST AS A SERVER OPERATION
 app.post("/mmj-newFolder",async(req,res)=>{
-	//req.body.title, creates empty
+	//req.body.folder, creates folder with note inside
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
-			await db.insertOne({
-				title:req.body.title,
-				note:""
-			})
+			////////////////////////////////////
 			var msg = {
 				"msg":"yay"
 			}
@@ -192,16 +199,20 @@ app.post("/mmj-newFolder",async(req,res)=>{
 		console.log(e);
 	}
 })
+*/
 app.post("/mmj-deleteFolder",async(req,res)=>{
-	//req.body.title, creates empty
+	//req.body.folder: deletes all notes inside folder!
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
-			await db.insertOne({
-				title:req.body.title,
-				note:""
-			})
+			const cursor = db.find();
+			for await (var doc of cursor){
+				if (doc.folder===req.body.folder){
+					var filter = {title:req.body.title};
+					await db.deleteOne(filter);
+				}
+			}
 			var msg = {
 				"msg":"yay"
 			}
@@ -214,13 +225,14 @@ app.post("/mmj-deleteFolder",async(req,res)=>{
 	}
 })
 app.post("/mmj-newNote",async(req,res)=>{
-	//req.body.title, creates empty
+	//req.body.title, req.body.folder, creates empty
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
 			await db.insertOne({
 				title:req.body.title,
+				folder:req.body.folder,
 				note:""
 			})
 			var msg = {
@@ -253,35 +265,8 @@ app.post("/mmj-deleteNote",async(req,res)=>{
 		console.log(e);
 	}
 })
-app.get("/mmj-getBackup",async(req,res)=>{
-	var msg = {};
-	try{
-		(async function(){
-			await client.connect();
-			const db = client.db("mmj").collection("note");
-			const cursor = db.find();
-			var sending = "";
-			for await (var doc of cursor){
-				sending+="~ "
-				for (var i=0;i<20;i++) sending+=doc.title+" ~ ";
-				sending+="\n";
-				sending+="\n";
-				sending+=doc.note;
-				sending+="\n";
-				sending+="\n";
-				sending+="\n";
-				sending+="\n";
-			}
-			msg.backup=sending;
-			res.send(JSON.stringify(msg));
-		})().then(async function(){
-			imDone();
-		})
-	}catch (e){
-		console.log(e);
-	}
-})
-app.get("/mmj-getTitles",async(req,res)=>{
+app.post("/mmj-getTitles",async(req,res)=>{
+	//req.body.folder
 	var msg = {};
 	try{
 		(async function(){
@@ -290,7 +275,8 @@ app.get("/mmj-getTitles",async(req,res)=>{
 			const cursor = db.find();
 			var titles = []
 			for await (var doc of cursor){
-				titles.push(doc.title);
+				if (req.body.folder===doc.folder)
+					titles.push(doc.title);
 			}
 			msg.titles=titles;
 			res.send(JSON.stringify(msg));
@@ -348,7 +334,34 @@ app.post("/mmj-getNote",async (req,res)=>{
 		console.log(e);
 	}
 })
-
+app.get("/mmj-getBackup",async(req,res)=>{
+	var msg = {};
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db("mmj").collection("note");
+			const cursor = db.find();
+			var sending = "";
+			for await (var doc of cursor){
+				sending+="~ "
+				for (var i=0;i<20;i++) sending+=doc.title+" ~ ";
+				sending+="\n";
+				sending+="\n";
+				sending+=doc.note;
+				sending+="\n";
+				sending+="\n";
+				sending+="\n";
+				sending+="\n";
+			}
+			msg.backup=sending;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			imDone();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
 
 
 
