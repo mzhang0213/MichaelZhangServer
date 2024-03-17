@@ -62,6 +62,7 @@
     <style>
       .folders{
         font-weight:bold;
+        cursor:pointer;
       }
       #tabs div{
         height:40px;
@@ -229,7 +230,6 @@
             if (currTab===this){
               console.log("clicking myself!")
             }else{
-              gebi("saveStatus").style.backgroundColor="orange";
               changeNote(this.innerHTML);
             }
           }
@@ -328,6 +328,7 @@
             var body = JSON.parse(req.responseText);
             createTab(title);
             changeNote(title);
+            gebi("saveStatus").style.backgroundColor="orange";
           } else if (req.readyState === 4){
             console.log("reeeeeeee retrive note failure: "+req.responseText);
             popUpErr("Failed to fetch the note oh noes :( :(");
@@ -347,6 +348,7 @@
         var tabs = getTabs();
         for (var tab of tabs) tab.remove();
         highlightFolder(title);
+        gebi("saveStatus").style.backgroundColor="orange";
         createNote("what do you want first note to be called in this folder?");
       }
 
