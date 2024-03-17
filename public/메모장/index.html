@@ -520,7 +520,7 @@
             var getNoteBody = {
               folder:folder
             }
-            req.open("POST",window.location.origin+"/mmj-deleteNote");
+            req.open("POST",window.location.origin+"/mmj-deleteFolder");
             req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
             req.send(JSON.stringify(getNoteBody));
             req.addEventListener("readystatechange", ()=>{

@@ -312,22 +312,66 @@ app.post("/mmj-getNote",async (req,res)=>{
 })
 app.get("/mmj-getBackup",async(req,res)=>{
 	var msg = {};
+	/*
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	ㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡ
+
+	folder folder folder folder
+
+	ㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡㅇㅡ
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+	· note · note · note · note · note ·
+	shit
+	shit
+
+	· note · note · note · note · note ·
+	shit
+	shit
+
+	· note · note · note · note · note ·
+	shit
+	shit
+	<8x \n>
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	*/
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
 			const cursor = db.find();
-			var sending = "";
+			var folders = {}
 			for await (var doc of cursor){
-				sending+="~ "
-				for (var i=0;i<20;i++) sending+=doc.title+" ~ ";
+				if (folders[doc.folder]===undefined){
+					folders[doc.folder]=[];
+				}
+				folders[doc.folder].push(doc);
+			}
+			var sending = "";
+			for (var folder of Object.keys(folders)){
+				//make folder dividing pattern
+				for (var i=0;i<30;i++) sending+="~";
+				sending+="\n";
+				for (var i=0;i<12;i++) sending+="ㅡㅇ";
 				sending+="\n";
 				sending+="\n";
-				sending+=doc.note;
+				for (var i=0;i<30;i++) sending+=folder+" ";
 				sending+="\n";
 				sending+="\n";
+				for (var i=0;i<12;i++) sending+="ㅡㅇ";
 				sending+="\n";
+				for (var i=0;i<30;i++) sending+="~";
 				sending+="\n";
+				sending+="\n\n";
+				for (var note of folders[folder]){
+					sending+="· "; for (var i=0;i<35;i++) sending+=note.title+" · ";
+					sending+="\n";
+					sending+="\n";
+				}
+				sending+="\n";
+				sending+="\n\n\n\n\n\n\n\n";
 			}
 			msg.backup=sending;
 			res.send(JSON.stringify(msg));
