@@ -483,7 +483,13 @@
       gebi("deleteNoteButton").addEventListener("click",function(){
         //when you delete note and no notes left, it menas folder is getting deleted
         var tabs = getTabs();
-        if (tabs.length===1&&confirm("ALERT: this is the last note in this folder, which means deleting this note will basically delete the folder as well. IS THAT OKKKK AHHHH")){
+        var go = false;
+        if (tabs.length===1){
+          if(confirm("ALERT: this is the last note in this folder, which means deleting this note will basically delete the folder as well. IS THAT OKKKK AHHHH"))go=true;
+        }else{
+          go=true;
+        }
+        if (go){
           if (confirm("DO U SERIOUSLY WANT TO DELETE THIS PRECIOUS 특별한 특이 특끼 NOTE ? ? ? 진짜ㅏㅏ??")){
             if (confirm("no but fr actually?")){
               var title = getCurrNote().innerHTML;
