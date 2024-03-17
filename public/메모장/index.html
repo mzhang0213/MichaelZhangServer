@@ -261,7 +261,7 @@
 
             //delete existing tabs
             var tabs = getTabs();
-            for (var tab in tabs) tab.remove();
+            for (var tab of tabs) tab.remove();
 
             for (var note of body.folder){
               createTab(note.title); //btw this is synchronous funct
@@ -346,7 +346,7 @@
         //manually run the folder switching cuz i aint tryna get delayed by a post req
         //delete existing tabs
         var tabs = getTabs();
-        for (var tab in tabs) tab.remove();
+        for (var tab of tabs) tab.remove();
         highlightFolder(title);
         createNote("what do you want first note to be called in this folder?");
       }
