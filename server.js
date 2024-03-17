@@ -128,6 +128,7 @@ app.use('/prox', exampleProxy);
 //메모장
 app.get("/mmj-getFolders",async(req,res)=>{
 	//returns folderS WITH AN S
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -140,9 +141,6 @@ app.get("/mmj-getFolders",async(req,res)=>{
 				}
 			}
 			msg.folders=folders;
-			var msg = {
-				"msg":"yay"
-			}
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
 			imDone();
@@ -153,6 +151,7 @@ app.get("/mmj-getFolders",async(req,res)=>{
 })
 app.post("/mmj-getFolder",async(req,res)=>{
 	//req.body.folder, returns arr of notes in the folder
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -166,9 +165,6 @@ app.post("/mmj-getFolder",async(req,res)=>{
 				}
 			}
 			msg.folder=folder;
-			var msg = {
-				"msg":"yay"
-			}
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
 			imDone();
@@ -179,13 +175,14 @@ app.post("/mmj-getFolder",async(req,res)=>{
 })
 /* THIS METHOD IS ALL IN THE FRONTEND AND DOESNT EXIST AS A SERVER OPERATION
 app.post("/mmj-newFolder",async(req,res)=>{
+	var msg = {};
 	//req.body.folder, creates folder with note inside
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
 			////////////////////////////////////
-			var msg = {
+			msg = {
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
@@ -199,6 +196,7 @@ app.post("/mmj-newFolder",async(req,res)=>{
 */
 app.post("/mmj-deleteFolder",async(req,res)=>{
 	//req.body.folder: deletes all notes inside folder!
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -210,7 +208,7 @@ app.post("/mmj-deleteFolder",async(req,res)=>{
 					await db.deleteOne(filter);
 				}
 			}
-			var msg = {
+			msg = {
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
@@ -223,6 +221,7 @@ app.post("/mmj-deleteFolder",async(req,res)=>{
 })
 app.post("/mmj-newNote",async(req,res)=>{
 	//req.body.title, req.body.folder, creates empty
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -232,7 +231,7 @@ app.post("/mmj-newNote",async(req,res)=>{
 				folder:req.body.folder,
 				note:""
 			})
-			var msg = {
+			msg = {
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
@@ -245,13 +244,14 @@ app.post("/mmj-newNote",async(req,res)=>{
 })
 app.post("/mmj-deleteNote",async(req,res)=>{
 	//data: req.body.title
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
 			const filter = {title:req.body.title}
 			await db.deleteOne(filter);
-			var msg = {
+			msg = {
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
@@ -264,6 +264,7 @@ app.post("/mmj-deleteNote",async(req,res)=>{
 })
 app.post("/mmj-update",async(req,res)=>{
 	//data: req.body.title, req.body.note
+	var msg = {};
 	try{
 		(async function(){
 			await client.connect();
@@ -275,7 +276,7 @@ app.post("/mmj-update",async(req,res)=>{
 				}
 			}
 			await db.updateOne(filter,updateDoc);
-			var msg = {
+			msg = {
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
