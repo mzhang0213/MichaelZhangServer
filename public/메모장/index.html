@@ -316,10 +316,10 @@
           return;
         }
         var req = new XMLHttpRequest();
-        var currNote = getCurrNote().innerHTML;
+        var currFolder = getCurrFolder().innerHTML;
         var getNoteBody = {
           title:title,
-          folder:currNote
+          folder:currFolder
         }
         req.open("POST",window.location.origin+"/mmj-newNote");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
