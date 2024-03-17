@@ -368,6 +368,8 @@ app.get("/mmj-getBackup",async(req,res)=>{
 				for (var note of folders[folder]){
 					sending+="· "; for (var i=0;i<35;i++) sending+=note.title+" · ";
 					sending+="\n";
+					sending+=note.note;
+					sending+="\n";
 					sending+="\n";
 				}
 				sending+="\n";
