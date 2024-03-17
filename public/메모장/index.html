@@ -250,7 +250,7 @@
         clicked=true;
         var req = new XMLHttpRequest();
         var getFolderBody = {
-          title:title
+          folder:title
         }
         req.open("POST",window.location.origin+"/mmj-getFolder");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
