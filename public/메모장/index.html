@@ -528,7 +528,7 @@
               if (req.status === 200 && req.readyState === 4) {
                 var body = JSON.parse(req.responseText);
                 alert("successfully deleted :)")
-                deleteFolder(title);
+                deleteFolder(folder);
               } else if (req.readyState === 4){
                 console.log("reeeeeeee retrive note failure: "+req.responseText);
                 popUpErr("Failed to fetch the note oh noes :( :(");
