@@ -45,7 +45,7 @@
       </button>
       </div>
       <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
-        <button onclick="(function(){window.location=window.location.origin+'/'})()" class="folders block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4">Home</button>
+        <!-- <button onclick="(function(){window.location=window.location.origin+'/'})()" class="folders block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4">Home</button> -->
         <div id="optionsMenu" class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
           <button class="groupButton" style="color:lightgray;"> · · · </button>
           <div class="groupContent">
@@ -263,10 +263,10 @@
             var tabs = getTabs();
             for (var tab in tabs) tab.remove();
 
-            for (var note of body.notes){
+            for (var note of body.folder){
               createTab(note.title); //btw this is synchronous funct
             }
-            changeNote(body.notes[0].title);
+            changeNote(body.folder[0].title);
 
             highlightFolder(title);
 
@@ -282,7 +282,7 @@
         var button = document.createElement("div");
         button.className="folders block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4";
         button.innerHTML=title;
-        gebi("tabs").insertBefore(button,gebi("optionsMenu"));
+        gebi("navItemContainer").insertBefore(button,gebi("optionsMenu"));
         button.addEventListener("click",function(event){
           var folders = gebi("navItemContainer").children;
           folders=Array.prototype.slice.call(folders);
