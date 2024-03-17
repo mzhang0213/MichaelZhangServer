@@ -45,17 +45,24 @@
       </button>
       </div>
       <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
-      <button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
-      <div id="optionsMenu" class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
-        <button class="groupButton" style="color:lightgray;"> · · · </button>
-        <div class="groupContent">
-          <a class="groupItem" id="backupButton">Get Backup</a>
-          <a class="groupItem" id="darkMode">Dark Mode</a>
-          <a class="groupItem" id="deleteButton" style="color:red;">Delete this note</a>
+        <button onclick="(function(){window.location=window.location.origin+'/'})()" class="folders block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4">Home</button>
+        <div id="optionsMenu" class="group block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+          <button class="groupButton" style="color:lightgray;"> · · · </button>
+          <div class="groupContent">
+            <a class="groupItem" id="backupButton">Get Backup</a>
+            <a class="groupItem" id="darkMode">Dark Mode</a>
+            <a class="groupItem" id="deleteNoteButton" style="color:red;">Delete this note</a>
+            <br>
+            <a class="groupItem" id="createFolderButton">Create folder</a>
+            <a class="groupItem" id="deleteFolderButton" style="color:red;">Delete this folder</a>
+          </div>
         </div>
       </div>
     </nav>
     <style>
+      .folders{
+        font-weight:bold;
+      }
       #tabs div{
         height:40px;
         padding-left:7px;
@@ -140,93 +147,53 @@
       const tabActive = "rgb(243, 244, 246)";
       const tabPassive = "rgb(199, 200, 201)";
       var clicked = false;
-      var changeFolder = function(title){
-        clicked=true;
-        var req = new XMLHttpRequest();
-        var getFolderBody = {
-          title:title
+
+      var getCurrNote = function(){
+        var tabs = getTabs();
+        for (var i of tabs){
+          if (i.style.backgroundColor===tabActive){
+            return i;
+          }
         }
-        req.open("POST",window.location.origin+"/mmj-getFolder");
-        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-        req.send(JSON.stringify(getFolderBody));
-        req.addEventListener("readystatechange", ()=>{
-          if (req.status === 200 && req.readyState === 4) {
-            var body = JSON.parse(req.responseText);
-
-            //delete existing tabs
-            var tabs = gebi("tabs").children;
-            tabs=Array.prototype.slice.call(tabs);
-            tabs.splice(tabs.length-1,1);//because of the add button
-            for (var tab in tabs) tab.remove();
-
-            for (var note of body.notes){
-              createTab(note.title);
-            }
-            changeNote(body.notes[0].title);
-
-            //highlight curr folder??
-
-            clicked=false;
-
-          } else if (req.readyState === 4){
-            console.log("reeeeeeee retrive note failure: "+req.responseText);
-            popUpErr("Failed to fetch the note oh noes :( :(");
-          }
-        })
       }
-      var createFolder = function(title){
-        //<button onclick="(function(){window.location=window.location.origin+'/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
-        var button = document.createElement("div");
-        button.className="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4";
-        var b = document.createElement("b");
-        b.innerHTML=title;
-        button.appendChild(b);
-        gebi("tabs").insertBefore(button,gebi("optionsMenu"));
-        button.addEventListener("click",function(event){
-          var folders = gebi("navItemContainer").children;
-          folders=Array.prototype.slice.call(folders);
-          folders.splice(folders.length-1,1);//because of the add button
-          if (!clicked){
-            /*
-            var currFolder = "";
-            for (var i of folders){
-              if (i.style.backgroundColor===tabActive){
-                currFolder = i;
-                break;
-              }
-            }
-            if (currFolder===this){
-              console.log("clicking myself!")
-            }else{
-              changeNote(this.innerHTML);
-            }
-            */
-
-            //temp for now; use some way to see which folder is active and compare with clicked
-            changeFolder(this.innerHTML);
-          }
-        })
-      }
-      var deleteFolder = function(title){
-        /*
-        var tab = "";
+      var getTabs = function(){
         var tabs = gebi("tabs").children;
         tabs=Array.prototype.slice.call(tabs);
         tabs.splice(tabs.length-1,1);//because of the add button
-        for (var i of tabs){
-          if (i.style.backgroundColor===tabActive){
-            tab = i;
-            break;
+        return tabs;
+      }
+      var getCurrFolder = function(){
+        var folders = document.getElementsByClassName("folders");
+        for (var i of folders){
+          if (i.style.textDecoration==="underline"){
+            return i;
           }
         }
-        tab.remove();
-        */
-
-        //temp for now; use some way to see which folder is active and compare with clicked
-        
-        changeNote(gebi("navItemContainer").children[0].innerHTML);
       }
-      
+      var getFolders = function(){
+        return Array.prototype.slice.call(document.getElementsByClassName("folders"));
+      }
+      var highlightFolder = function(title){ //void
+        var folders = getFolders();
+        for (var i of folders){
+          if (i.innerHTML===title)
+            i.style.textDecoration="underline";
+          else
+            i.style.textDecoration="";
+        }
+        clicked=false;
+      }
+      var highlightTab = function(title){ //void
+        var tabs = getTabs();
+        for (var i of tabs){
+          if (i.innerHTML===title)
+            i.style.backgroundColor=tabActive;
+          else
+            i.style.backgroundColor=tabPassive;
+        }
+        clicked=false;
+      }
+
       var changeNote = function(title){
         clicked=true;
         var req = new XMLHttpRequest();
@@ -241,17 +208,7 @@
             var body = JSON.parse(req.responseText);
             gebi("noteBox").value=body.note;
 
-            var tabs = gebi("tabs").children;
-            tabs=Array.prototype.slice.call(tabs);
-            tabs.splice(tabs.length-1,1);//because of the add button
-            for (var i of tabs){
-              if (i.innerHTML===title)
-                i.style.backgroundColor=tabActive;
-              else
-                i.style.backgroundColor=tabPassive;
-            }
-            gebi("saveStatus").style.backgroundColor="orange";
-            clicked=false;
+            highlightTab(body.title);
 
           } else if (req.readyState === 4){
             console.log("reeeeeeee retrive note failure: "+req.responseText);
@@ -266,41 +223,134 @@
         div.style.paddingBottom="50px";
         gebi("tabs").insertBefore(div,gebi("addNoteButton"));
         div.addEventListener("click",function(event){
-          var tabs = gebi("tabs").children;
-          tabs=Array.prototype.slice.call(tabs);
-          tabs.splice(tabs.length-1,1);//because of the add button
+          var tabs = getTabs();
           if (!clicked){
-            var currTab = "";
-            for (var i of tabs){
-              if (i.style.backgroundColor===tabActive){
-                currTab = i;
-                break;
-              }
-            }
+            var currTab = getCurrNote();
             if (currTab===this){
               console.log("clicking myself!")
             }else{
+              gebi("saveStatus").style.backgroundColor="orange";
               changeNote(this.innerHTML);
             }
           }
         })
       }
       var deleteTab = function(title){
-        var tab = "";
-        var tabs = gebi("tabs").children;
-        tabs=Array.prototype.slice.call(tabs);
-        tabs.splice(tabs.length-1,1);//because of the add button
+        var tabs = getTabs();
         for (var i of tabs){
-          if (i.style.backgroundColor===tabActive){
-            tab = i;
+          if (i.innerHTML===title){
+            i.remove();
             break;
           }
         }
-        tab.remove();
         changeNote(gebi("tabs").children[0].innerHTML);
       }
       
-      
+      var changeFolder = function(title){
+        clicked=true;
+        var req = new XMLHttpRequest();
+        var getFolderBody = {
+          title:title
+        }
+        req.open("POST",window.location.origin+"/mmj-getFolder");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(getFolderBody));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+
+            //delete existing tabs
+            var tabs = getTabs();
+            for (var tab in tabs) tab.remove();
+
+            for (var note of body.notes){
+              createTab(note.title); //btw this is synchronous funct
+            }
+            changeNote(body.notes[0].title);
+
+            highlightFolder(title);
+
+            clicked=false;
+
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee retrive note failure: "+req.responseText);
+            popUpErr("Failed to fetch the note oh noes :( :(");
+          }
+        })
+      }
+      var createFolderButton = function(title){
+        var button = document.createElement("div");
+        button.className="folders block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4";
+        button.innerHTML=title;
+        gebi("tabs").insertBefore(button,gebi("optionsMenu"));
+        button.addEventListener("click",function(event){
+          var folders = gebi("navItemContainer").children;
+          folders=Array.prototype.slice.call(folders);
+          folders.splice(folders.length-1,1);//because of the add button
+          if (!clicked){
+            var currFolder = getCurrFolder();
+            if (currFolder===this){
+              console.log("clicking myself!")
+            }else{
+              changeFolder(this.innerHTML);
+            }
+          }
+        })
+      }
+      var deleteFolder = function(title){
+        var folder = "";
+        var folders = getFolders();
+        for (var i of folders){
+          if (i.innerHTML===title){
+            folder.remove();
+            break;
+          }
+        }
+        changeFolder(gebi("navItemContainer").children[0].innerHTML);
+      }
+
+      var createNote = function(message){
+        var title = prompt(message);
+        if (title===null||title.trim()===""){
+          //invalid title
+          return;
+        }
+        var req = new XMLHttpRequest();
+        var currNote = getCurrNote().innerHTML;
+        var getNoteBody = {
+          title:title,
+          folder:currNote
+        }
+        req.open("POST",window.location.origin+"/mmj-newNote");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(getNoteBody));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+            createTab(title);
+            changeNote(title);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee retrive note failure: "+req.responseText);
+            popUpErr("Failed to fetch the note oh noes :( :(");
+          }
+        })
+      }
+      var createFolder = function(){
+        var title = prompt("what title do want for the new folder?");
+        if (title===null||title.trim()===""){
+          //invalid title
+          return;
+        }
+        createFolderButton(title);
+
+        //manually run the folder switching cuz i aint tryna get delayed by a post req
+        //delete existing tabs
+        var tabs = getTabs();
+        for (var tab in tabs) tab.remove();
+        highlightFolder(title);
+        createNote("what do you want first note to be called in this folder?");
+      }
+
       var resize = function(){
         gebi("tabs").style.top=(gebi("contentBox").offsetTop-25)+"px";
         gebi("tabs").style.left=gebi("contentBox").offsetLeft+"px";
@@ -340,16 +390,16 @@
       }
 
       var req = new XMLHttpRequest();
-      req.open("GET",window.location.origin+"/mmj-getTitles");
+      req.open("GET",window.location.origin+"/mmj-getFolders");
       req.send();
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
-          for (title of body.titles){
-            createTab(title);
+          for (folder of body.folders){
+            createFolderButton(folder);
           }
 
-          changeNote(gebi("tabs").children[0].innerHTML);
+          changeFolder(gebi("navItemContainer").children[0].innerHTML);
 
 
         } else if (req.readyState === 4){
@@ -361,17 +411,7 @@
       var saveFile = function(){
         if (gebi("saveStatus").style.backgroundColor==="orange"){//determining unsaved status with color cuz boolean is hard and i am lazy
           //go ahead with the save
-          //find curr tab
-          var tabs = gebi("tabs").children;
-          tabs=Array.prototype.slice.call(tabs);
-          tabs.splice(tabs.length-1,1);//because of the add button
-          var title = "";
-          for (var tab of tabs){
-            if (tab.style.backgroundColor===tabActive){
-              title=tab.innerHTML;
-              break;
-            }
-          }
+          var title = getCurrNote().innerHTML;
           var req = new XMLHttpRequest();
           var body = {
             note:gebi("noteBox").value,
@@ -405,20 +445,20 @@
           saveFile();
         }
       });
-      gebi("saveStatus").addEventListener("click",function(){
-        console.log("Saved (from click)");
-        saveFile();
-      })
-      
       input.addEventListener('keyup', e => {
         const index = keysDown.indexOf(e.keyCode);
         if (index !== -1) {
           keysDown.splice(index, 1);
         }
       });
+      gebi("saveStatus").addEventListener("click",function(){
+        console.log("Saved (from click)");
+        saveFile();
+      })
       gebi("dimScreen").addEventListener("click",function(){
         gebi("dimScreen").style.display="none";
       })
+      
       gebi("backupButton").addEventListener("click",function(){
         var a = document.createElement("a");
         var req = new XMLHttpRequest();
@@ -437,46 +477,49 @@
           }
         })
       })
+      
       gebi("addNoteButton").addEventListener("click",function(){
-        var title = prompt("what title do want for the new note?");
-        if (title===null||title.trim()===""){
-          //invalid title
-          return;
-        }
-        var req = new XMLHttpRequest();
-        var getNoteBody = {
-          title:title
-        }
-        req.open("POST",window.location.origin+"/mmj-newNote");
-        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-        req.send(JSON.stringify(getNoteBody));
-        req.addEventListener("readystatechange", ()=>{
-          if (req.status === 200 && req.readyState === 4) {
-            var body = JSON.parse(req.responseText);
-            createTab(title);
-            changeNote(title);
-          } else if (req.readyState === 4){
-            console.log("reeeeeeee retrive note failure: "+req.responseText);
-            popUpErr("Failed to fetch the note oh noes :( :(");
-          }
-        })
+        createNote("what title do want for the new note?");
       })
-      gebi("deleteButton").addEventListener("click",function(){
-        if (confirm("DO U SERIOUSLY WANT TO DELETE THIS PRECIOUS 특별한 특이 특끼 NOTE ? ? ? 진짜ㅏㅏ??")){
-          if (confirm("no but fr actually?")){
-            var tabs = gebi("tabs").children;
-            tabs=Array.prototype.slice.call(tabs);
-            tabs.splice(tabs.length-1,1);//because of the add button
-            var title = "";
-            for (var tab of tabs){
-              if (tab.style.backgroundColor===tabActive){
-                title=tab.innerHTML;
-                break;
+      gebi("deleteNoteButton").addEventListener("click",function(){
+        //when you delete note and no notes left, it menas folder is getting deleted
+        var tabs = getTabs();
+        if (tabs.length===1&&confirm("ALERT: this is the last note in this folder, which means deleting this note will basically delete the folder as well. IS THAT OKKKK AHHHH")){
+          if (confirm("DO U SERIOUSLY WANT TO DELETE THIS PRECIOUS 특별한 특이 특끼 NOTE ? ? ? 진짜ㅏㅏ??")){
+            if (confirm("no but fr actually?")){
+              var title = getCurrNote().innerHTML;
+              var req = new XMLHttpRequest();
+              var getNoteBody = {
+                title:title
               }
+              req.open("POST",window.location.origin+"/mmj-deleteNote");
+              req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+              req.send(JSON.stringify(getNoteBody));
+              req.addEventListener("readystatechange", ()=>{
+                if (req.status === 200 && req.readyState === 4) {
+                  var body = JSON.parse(req.responseText);
+                  alert("successfully deleted :)")
+                  deleteTab(title);
+                } else if (req.readyState === 4){
+                  console.log("reeeeeeee retrive note failure: "+req.responseText);
+                  popUpErr("Failed to fetch the note oh noes :( :(");
+                }
+              })
             }
+          }
+        }
+      })
+
+      gebi("createFolderButton").addEventListener("click",function(){
+        createFolder();
+      })
+      gebi("deleteFolderButton").addEventListener("click",function(){
+        if (confirm("DO U SERIOUSLY WANT TO DELETE THIS FOLDER ??? ? ? ALL OF THE NOTES ARE ALSO 뒤질레")){
+          if (confirm("no but fr actually?")){
+            var folder = getCurrFolder().innerHTML;
             var req = new XMLHttpRequest();
             var getNoteBody = {
-              title:title
+              folder:folder
             }
             req.open("POST",window.location.origin+"/mmj-deleteNote");
             req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -485,7 +528,7 @@
               if (req.status === 200 && req.readyState === 4) {
                 var body = JSON.parse(req.responseText);
                 alert("successfully deleted :)")
-                deleteTab();
+                deleteFolder(title);
               } else if (req.readyState === 4){
                 console.log("reeeeeeee retrive note failure: "+req.responseText);
                 popUpErr("Failed to fetch the note oh noes :( :(");

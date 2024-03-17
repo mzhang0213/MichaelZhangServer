@@ -1,6 +1,8 @@
 -when you delete folder and no notes left, it menas folder is getting deleted
 	-ALERT WHEN THIS CASE HAPPENS
+	DONE DONE DONE
 -when you create folder, prompt user with folder name > create tab > switch to that folder tab > alert ("what do you want first note to be called in this folder?")
-
+	DONE DONE DONE
 SO ACTUALLY SCRAP THE IDEA OF "new folder" CUZ IT IS ALL BUILT INTO NOTES
 -this is actually shit design but idc
+	DONE DONE DONE

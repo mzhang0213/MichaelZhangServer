@@ -127,21 +127,19 @@ app.use('/prox', exampleProxy);
 
 //메모장
 app.get("/mmj-getFolders",async(req,res)=>{
-
-
-
-	//LOOP THRU NOTES AND ARR OF WHICH FOLDERS EXIST
-	//WRITE THIS WRITE THIS WRITE THIS
-	
-	//req.body.title, creates empty
+	//returns folderS WITH AN S
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
-			await db.insertOne({
-				title:req.body.title,
-				note:""
-			})
+			const cursor = db.find();
+			var folders = [];
+			for await (var doc of cursor){
+				if (folders.indexOf(doc.folder)===-1){
+					folders.push(doc.folder);
+				}
+			}
+			msg.folders=folders;
 			var msg = {
 				"msg":"yay"
 			}
@@ -154,21 +152,20 @@ app.get("/mmj-getFolders",async(req,res)=>{
 	}
 })
 app.post("/mmj-getFolder",async(req,res)=>{
-	//req.body.title
-
-	//return folder of notes, each with just titles no body
-
-
-	//WRITE THIS WRITE THIS WRITE THIS
-	
+	//req.body.folder, returns arr of notes in the folder
 	try{
 		(async function(){
 			await client.connect();
 			const db = client.db("mmj").collection("note");
-			await db.insertOne({
-				title:req.body.title,
-				note:""
-			})
+			const cursor = db.find();
+			var folder = [];
+			for await (var doc of cursor){
+				if (doc.folder===req.body.folder){
+					var pDoc = {title:doc.title}; //push doc
+					folder.push(pDoc);
+				}
+			}
+			msg.folder=folder;
 			var msg = {
 				"msg":"yay"
 			}
@@ -258,28 +255,6 @@ app.post("/mmj-deleteNote",async(req,res)=>{
 				"msg":"yay"
 			}
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
-			imDone();
-		})
-	}catch (e){
-		console.log(e);
-	}
-})
-app.post("/mmj-getTitles",async(req,res)=>{
-	//req.body.folder
-	var msg = {};
-	try{
-		(async function(){
-			await client.connect();
-			const db = client.db("mmj").collection("note");
-			const cursor = db.find();
-			var titles = []
-			for await (var doc of cursor){
-				if (req.body.folder===doc.folder)
-					titles.push(doc.title);
-			}
-			msg.titles=titles;
-			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			imDone();
 		})
