@@ -298,11 +298,10 @@
         })
       }
       var deleteFolder = function(title){
-        var folder = "";
         var folders = getFolders();
         for (var i of folders){
           if (i.innerHTML===title){
-            folder.remove();
+            i.remove();
             break;
           }
         }
