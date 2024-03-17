@@ -204,7 +204,7 @@ app.post("/mmj-deleteFolder",async(req,res)=>{
 			const cursor = db.find();
 			for await (var doc of cursor){
 				if (doc.folder===req.body.folder){
-					var filter = {title:req.body.title};
+					var filter = {title:doc.title};
 					await db.deleteOne(filter);
 				}
 			}
