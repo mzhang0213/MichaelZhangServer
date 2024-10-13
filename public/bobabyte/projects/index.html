@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+  <!--navbar-->
+  <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <img class="h-8 mr-2" id="logo" src="./logo.png">
+      <button class="text-xl tracking-tight">BobaByte</span>
+    </div>
+    <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/hippohack/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/hippohack/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
+      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/hippohack/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+        <button id="userButton"></button>
+        <div id="userContent">
+          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');window.location.reload();})()" id="logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <script>
+    if (localStorage.getItem("hh-username")===null){
+      gebi("userButton").innerHTML="Guest";
+    }else{
+      gebi("userButton").innerHTML=`Hi, ${localStorage.getItem("hh-username")}!`;
+    }
+  </script>
+  
+  <style>
+    #user {
+      position:relative;
+      display:inline-block;
+    }
+    #userContent {
+      display:none;
+      position:absolute;
+      background-color:rgb(36, 36, 36);
+      min-width: 100px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      left: 50%;
+      right: auto;
+      text-align: center;
+      transform: translate(-50%, 0);
+    }
+    #userContent a {
+      font-size:12px;
+      text-decoration:none;
+      padding: 12px 16px;
+      display:block;
+    }
+    #user:hover #userContent {
+      display:block;
+    }
+    #user a:hover {
+      background-color:#383838;
+      cursor:pointer;
+    }
+    #logout{
+      color:red;
+    }
+    #logout:hover{
+      color:rgb(190, 0, 0);
+    }
+  </style>
+
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.png')"></div>
+  <!--title -->
+  <div class="relative flex flex-col justify-center items-center" style="height:65vh;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">Projects</p>
+      </div>
+    </div>
+  </div>
+
+  <!--projects display-->
+  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
+    <div id="projectBox" class="relative flex flex-col justify-start items-center rounded-2xl w-11/12 mt-4" style="height:600px"></div>
+  </div>
+
+  <script>
+    var createProject = function(project){
+      //project is JSON obj containing project properties
+      var proj = document.createElement("div");
+      proj.className="relative w-10/12 pl-3 py-3 mb-6 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
+
+      var projName = document.createElement("h1");
+      projName.className="relative w-full text-3xl";
+      projName.innerHTML=project.projName;
+
+      //combine the group name line and italicize the names
+      var groupName = document.createElement("p");
+      groupName.className="relative w-full text-sm mt-1";
+      groupName.innerHTML=project.groupName;
+
+      var groupMembers = document.createElement("p");
+      groupMembers.className="relative w-full text-sm mt-1";
+      var members = project.groupMembers;
+      groupMembers.innerHTML="By:";
+      for (var i=0;i<members.length;i++){
+        groupMembers.innerHTML+=" "+members[i]+" |";
+      }
+
+      var projDesc = document.createElement("p");
+      projDesc.className="relative w-full text-lg mt-4";
+      projDesc.innerHTML=project.projDesc;
+
+      var mediaLink = document.createElement("p");
+      mediaLink.className="relative w-full text-lg mt-4";
+      mediaLink.innerHTML="Link: " + project.mediaLink;
+
+      //now somewhere put the embed of their thing but idk how
+      //maybe have the icon of the platform they used and then onclick expand to full embed?
+      //before submit onerror if invalid yt link / slides
+      //also todo: make this flex grid somehow idk how
+
+      proj.appendChild(projName);
+      proj.appendChild(groupName);
+      proj.appendChild(groupMembers);
+      proj.appendChild(projDesc);
+      proj.appendChild(mediaLink);
+      gebi("projectBox").appendChild(proj);
+    }
+
+    var req = new XMLHttpRequest();
+    var db_projects = [];
+    req.open("GET",window.location.origin+"/hh-getProjects");
+    req.send();
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
+        db_projects = body.projects;
+        for (var i=db_projects.length-1;i>=0;i--){
+          createProject(db_projects[i]);
+        }
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+  </script>
+</body>
+</html>

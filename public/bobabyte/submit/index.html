@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
+  <!--navbar-->
+  <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+      <img class="h-8 mr-2" id="logo" src="./logo.png">
+      <button class="text-xl tracking-tight">BobaByte</span>
+    </div>
+    <div class="block md:hidden">
+      <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
+        <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
+      </button>
+    </div>
+    <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
+      <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
+      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
+      <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
+        <button id="userButton"></button>
+        <div id="userContent">
+          <a id="group"></a>
+          <a onclick="(function(){localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('group');window.location.reload();})()" id="logout">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    //check for account presence
+    if (localStorage.getItem("platform-username")==null){
+      alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
+      window.location=window.location.origin+"/bobabyte/signin/"
+    }else{
+      gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
+    }
+    if (localStorage.getItem("platform-group")==null){
+      gebi("platform-group").innerHTML="Join your group";
+      gebi("platform-group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
+    }else{
+      gebi("platform-group").innerHTML=localStorage.getItem("platform-group");
+    }
+    var now = new Date().getTime();
+    if (now>1693249200000){
+      //show proj submit
+      gebi("myProjectButton").style.display="";
+    }
+    if (now>1693262400000){
+      //hide proj submit after deadline
+      gebi("myProjectButton").style.display="none";
+    }
+    if (now>1693265400000){
+      gebi("myProjectButton").style.display="";
+    }
+  </script>
+  <style>
+    #user {
+      position:relative;
+      display:inline-block;
+    }
+    #userContent {
+      display:none;
+      position:absolute;
+      background-color:rgb(36, 36, 36);
+      min-width: 100px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      left: 50%;
+      right: auto;
+      text-align: center;
+      transform: translate(-50%, 0);
+    }
+    #userContent a {
+      font-size:12px;
+      text-decoration:none;
+      padding: 12px 16px;
+      display:block;
+    }
+    #user:hover #userContent {
+      display:block;
+    }
+    #user a:hover {
+      background-color:#383838;
+      cursor:pointer;
+    }
+    #logout{
+      color:red;
+    }
+    #logout:hover{
+      color:rgb(190, 0, 0);
+    }
+  </style>
+
+  <!--entire site bg-->
+  <div class="absolute left-0 top-0 -z-10 bg-cover bg-fixed bg-repeat-y" style="width:100%;height:500vh;background-image:url('./kimi-bg.jpg')"></div>
+  <!--title -->
+  <div class="relative flex flex-col justify-center items-center" style="height:85vh;">
+    <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
+      <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
+        <p class="font-bold sm:text-5xl md:text-7xl">My Project</p>
+      </div>
+    </div>
+  </div>
+
+  <!--submit-->
+  <div class="relative flex flex-col justify-center items-center" style="height:800px;">
+    <p class="font-bold sm:text-5xl md:text-6xl text-white mt-8">Submit Your Project!</p>
+    <div id="data" class="relative flex flex-col justify-center items-center rounded-2xl w-11/12 mt-4 bg-gray-200" style="height:700px">
+      <p id="groupBlurb" class="mb-8 w-7/12 text-center text-xl"></p>
+      <div class="mb-4 w-9/12">
+        <p class="text-2xl">Project Name</p>
+        <textarea id="projName" class="regField relative w-full"></textarea>
+      </div>
+      <div class="mb-4 w-9/12">
+        <p class="text-2xl">Project Description</p>
+        <textarea id="projDesc" class="relative w-full" style="height:70px;"></textarea>
+      </div>
+      <div class="mb-4 w-9/12">
+        <p class="text-2xl">Visual Media Link</p>
+        <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
+        <textarea id="mediaLink" class="regField relative w-full"></textarea>
+      </div>
+      <style>.regField{height:32px;}</style>
+      <div class="flex">
+        <div class="flex justify-center w-1/2">
+          <button id="edit" class="relative p-3 mt-4">Edit ✏</button>
+        </div>
+        <div class="flex justify-center w-1/2">
+          <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    textarea{
+      border: 2px black solid;
+      resize:none;
+    }
+    #edit{
+      background-color:rgb(236, 236, 236);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #edit:disabled{
+      background-color:rgb(251, 251, 251);
+    }
+    #edit:hover{
+      background-color:rgb(144, 144, 144);
+    }
+    #submit{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #submit:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #submit:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
+  <script>
+    var req = new XMLHttpRequest();
+    var body = {
+      group:localStorage.getItem("platform-group")
+    }
+    req.open("POST",window.location.origin+"/platform-getMembers");
+    req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    req.send(JSON.stringify(body));
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
+        console.log(body);
+        if (body.error==1){
+          alert("something bad happened - couldnt find group")
+        }else{
+          //groupBlurb
+          var display1 = "Group Name: "+localStorage.getItem("platform-group")+"  |  Group Members: ";
+          var me = document.createElement("i");
+          var display2= "";
+          var two=false;
+          for (var i=0;i<body.members.length;i++){
+            if (body.members[i]===localStorage.getItem("platform-username")){
+              me.append(body.members[i]+" ")
+              two=true;
+            }else{
+              if (two)display2+=body.members[i]+" "
+              else display1+=body.members[i]+" "
+            }
+          }
+          gebi("groupBlurb").append(display1);
+          gebi("groupBlurb").append(me);
+          gebi("groupBlurb").append(display2);
+        }
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+
+    var loadEditor = function(){
+      gebi("edit").disabled="";
+      gebi("projName").disabled=true;
+      gebi("projDesc").disabled=true;
+      gebi("mediaLink").disabled=true;
+      gebi("submit").disabled=true;
+    }
+    var loadCreator = function(){
+      gebi("edit").disabled=true;
+      gebi("projName").disabled="";
+      gebi("projDesc").disabled="";
+      gebi("mediaLink").disabled="";
+      gebi("submit").disabled="";
+    }
+    loadCreator();
+    if (localStorage.getItem("submitted")==="true")loadEditor();
+
+    gebi("submit").addEventListener("click",function(){
+      var req = new XMLHttpRequest();
+      var projName = gebi("projName").value;
+      var projDesc = gebi("projDesc").value;
+      var mediaLink = gebi("mediaLink").value;
+      if (projName===""||projDesc===""){
+        //bad submit
+        alert("please fill out project name and description!!")
+      }
+      var body = {
+        projName:projName,
+        groupName:localStorage.getItem("platform-group"),
+        projDesc:projDesc,
+        mediaLink:mediaLink
+      }
+      req.open("POST",window.location.origin+"/platform-proj");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          //now check for responded errors
+          if (body.error == 1) {
+            //code 1: invalid username
+            alert("couldn't find group :P")
+          }else if (body.error == 0){
+            //code 0: success
+            alert("success!!");
+            loadEditor();
+            localStorage.setItem("submitted",true);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+  </script>
+  <!--
+    schematic
+
+    data: proj name, group name - group members, project description, visual media link [slides || yt]
+
+    just make it like this; maybe get images if mongodb can allow but idk how to store those
+
+
+
+    on proj display,
+    -------------------------------------
+    |
+    | PROJ NAMEEEEEEEEEE
+    | PROJ NAMEEEEEEEEEE
+    | Group Name - group members         here embed slides/yt
+    |
+    |
+    | DESCRIPTION
+    |
+    |
+    | DESCRIPTION
+    -------------------------------------
+
+
+  -->
+  
+</body>
+</html>

@@ -1,5 +1,5 @@
-var express = require("express");
 var app = express();
+var express = require("express");
 var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
@@ -47,7 +47,8 @@ const imDone = async function(){
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
+/*
+const io = new Server(httpServer, {    }); //options
 
 
 
@@ -79,9 +80,9 @@ io.on("connection", (socket) => {
 	})
 });
 
-
 }
 
+*/
 
 
 
@@ -119,6 +120,618 @@ const exampleProxy = createProxyMiddleware(options);
 app.use('/prox', exampleProxy);
 
 */
+
+
+
+
+
+
+
+// BOBABYTE PLATFORM - generalized to "platform"
+
+//create the frameworks for websocket connection to work
+const server = createServer(app);
+const io = new Server(httpServer, { /* options */ });
+
+var bobabytewebsocket = function(){
+
+console.log("doing web socket stuff");
+
+//instantiating websocket with events
+io.on("connection", (socket) => {
+	console.log(`connected with transport ${socket.conn.transport.name}`);
+  
+	socket.conn.on("upgrade", (transport) => {
+	  console.log(`transport upgraded to ${transport.name}`);
+	});
+  
+	socket.on("disconnect", (reason) => {
+	  console.log(`disconnected due to ${reason}`);
+	});
+});
+
+
+}
+
+//name of database in mongodb
+const hackDbName = "bobabyte2024";
+
+/**
+ * Given username submission, lets the client
+ * know that username is good and that login
+ * is successful
+ */
+//req.body.user is the username submitted
+app.post("/platform-login", async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			const usernames = currContent.usernames;
+		
+			var found=false;
+			var msg = {
+				error:0
+			}
+			for (var i=0;i<usernames.length;i++){
+				if (req.body.user==usernames[i].user){
+					//usernames[i] is the correct registered username
+					msg.user=usernames[i].user;
+					msg.first=usernames[i].first;
+					msg.last=usernames[i].last;
+					found=true;
+				}
+			}
+			if (!found){
+				msg.error=1;
+				console.log("toast");
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(error);
+	}
+})
+
+/**
+ * Creating a group creates a group
+ * in the voting database.
+ */
+app.post("/platform-glogin", async (req,res)=>{
+	try{
+		//req.body.group is the username submitted, req.body.user is the user's username
+		/*
+			groups are stored in an array
+			a single group's schematic:
+			{
+				group:"group_name"
+				id:"######" //6 random numbers
+				members:[<usernames>]
+			}
+		*/
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			const groups = currContent.groups;
+		
+			var found=false;
+			var submit = [];
+			var msg = {
+				error:0
+			}
+			for (var i=0;i<groups.length;i++){
+				console.log("submitted gname: "+req.body.group);
+				console.log("db gname: "+groups[i].group);
+				if (req.body.group==groups[i].group){
+					found=true;
+					groups[i].members.push(req.body.user);
+				}
+				submit.push(groups[i])
+			}
+			if (found){
+				const filter = {title:"usernames"}
+				const updateDoc = {
+					$set: {
+						groups:submit
+					}
+				}
+				await db.updateOne(filter,updateDoc);
+				
+			}else {
+				//new group, but i want to send confirmation that they are creating new group
+				msg.error=1;
+			}
+			msg.group=req.body.group;
+			msg.user=req.body.user;
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (error){
+		console.log(error);
+	}
+})
+
+app.post("/platform-glogin-confirm", async (req,res)=>{
+	//posted to req.body.confirm, req.body.group, req.body.user
+	try{
+		await client.connect();
+		const db = client.db(hackDbName).collection("accounts");
+		const currContent = await db.findOne();
+		const groups = currContent.groups;
+		console.log(currContent)
+		console.log(groups)
+		var submit = [];
+		for (var i=0;i<groups.length;i++){
+			submit.push(groups[i])
+		}
+		var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
+		var members = [];
+		members.push(req.body.user);
+		var currGroup = {
+			group:req.body.group, //gname
+			user:randomName, //random name
+			members:members
+		}
+		submit.push(currGroup);
+		const filter = {title:"usernames"}
+		const updateDoc = {
+			$set: {
+				groups:submit
+			}
+		}
+		var msg = {
+			group:req.body.group
+		}
+		await db.updateOne(filter,updateDoc);
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
+/**
+ * Given [req.body.user] and [req.body.group],
+ * removes the given user from the group.
+ * 
+ * IF the user is the last member in the group,
+ * the group is completely deleted
+ */
+//req.body.user req.body.group
+app.post("/platform-removeGroup", async (req,res)=>{
+	try{
+		var msg = {
+			error:0
+		}
+		await client.connect();
+		const db_accs = client.db(hackDbName).collection("accounts");
+		const currContent_groups = await db_accs.findOne();
+		const groups = currContent_groups.groups;
+		var submit = [];
+		for (var i=0;i<groups.length;i++){
+			var dont=false
+			if (groups[i].group===req.body.group){
+				//found the correct group, now remove user
+				var newMembers = []
+				for (var j=0;j<groups[i].members.length;j++){
+					if (groups[i].members[j]!==req.body.user){
+						newMembers.push(groups[i].members[j]);
+					}
+				}
+				if (newMembers.length===0){
+					//well now there are no group members; don't push
+					dont=true;
+				}else{
+					groups[i].members=newMembers;
+				}
+			}
+			if (!dont) submit.push(groups[i]);
+		}
+		const filter = {title:"usernames"}
+		const updateDoc = {
+			$set: {
+				groups:submit
+			}
+		}
+		await db_accs.updateOne(filter,updateDoc);
+		
+		res.send(JSON.stringify(msg))
+
+	}finally{
+		await client.close();
+	}
+})
+
+
+/* db.voting
+	groups: [
+		{
+			id:"group_id",
+			votes:[
+				"username1", "username2"
+			] //easy use of votes.length to get total votes for a group
+		}
+	],
+	finals: [<same struc as above>]
+*/
+/**
+ * Given [req.body.user] and [req.body.votes: Set],
+ * submits votes for the user. Goes through all
+ * groups and updates user's newly intended votes.
+ * If the user, for instance, changed their votes,
+ * then a deletion would be made under one group and
+ * addition to under another group.
+*/
+//req.body.user req.body.votes
+app.post("/platform-vote", async (req,res)=>{
+	try{
+		(async function(){
+
+			await client.connect();
+			const db = client.db(hackDbName).collection("voting");
+			//groupAVote groupBVote >> arrays
+			const currContent = await db.findOne();
+			const groups = currContent.groups;
+			const votes = new Set(req.body.votes);
+		
+			var submit = [];
+			var msg = {
+				error:0
+			}
+			for (var i=0;i<groups.length;i++){
+				var updatedVotes = [];
+				for (var j=0;j<groups[i].votes.length;j++){
+					if (groups[i].votes[j]!==req.body.user){
+						updatedVotes.push(groups[i].votes[j]);
+					}
+				}
+				if (votes.has(groups[i])){
+					updatedVotes.push(req.body.user);
+				}
+				submit.push(groups[i]);
+			}
+			//new vote
+			var vote = {
+				user:req.body.user,
+				votes:req.body.votes
+			}
+			submit.push(vote);
+			const filter = {title:"voting"}
+			const updateDoc = {
+				$set: {
+					groups:submit
+				}
+			}
+			await db_accs.updateOne(filter,updateDoc);
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (error){
+		console.log(error);
+	}
+})
+
+/**
+ * Creates a new project in database
+ * with the given the project data.
+ */
+/*
+data: (req.body.xxx)
+	projName
+	groupName
+	projDesc
+	mediaLink
+*/
+app.post("/platform-proj", async (req,res)=>{
+	try{
+		(async function(){
+
+			var msg = {
+				error:0
+			}
+			await client.connect();
+			const db = client.db(hackDbName).collection("projects");
+			const currContent = await db.findOne();
+			const projects = currContent.projects;
+			var submit = [];
+			var editing = false;
+			for (var i=0;i<projects.length;i++){
+				if (projects[i].groupName===req.body.groupName){
+					//edited submission
+					editing = true;
+					projects[i].projName=req.body.projName
+					projects[i].projDesc=req.body.projDesc
+					projects[i].mediaLink=req.body.mediaLink
+				}
+				submit.push(projects[i]);
+			}
+			var found=false;
+			if (!editing) {
+				var members = [];
+				var groupId = "";
+				const db_accs = client.db(hackDbName).collection("accounts");
+				const currContent_groups = await db_accs.findOne();
+				const groups = currContent_groups.groups;
+				console.log(groups);
+				for (var i=0;i<groups.length;i++){
+					if (groups[i].group===req.body.groupName){
+						//found the group
+						found=true;
+						members=groups[i].members;
+						groupId=groups[i].user;
+					}
+				}
+				if (!found){
+					msg.error=1
+				}else{
+					var members_str = "";
+					for (var i=0;i<members.length;i++){
+						members_str=members[i]+", ";
+					}
+					members_str=members_str.substring(0,members_str.length-2);
+					var proj = {
+						projName:req.body.projName,
+						groupName:req.body.groupName,
+						groupMembers:members_str,
+						id:groupId,
+						projDesc:req.body.projDesc,
+						mediaLink:req.body.mediaLink
+					}
+					submit.push(proj);
+				}
+			}
+			if(found){
+				const filter = {title:"projects"}
+				const updateDoc = {
+					$set: {
+						projects:submit
+					}
+				}
+				await db.updateOne(filter,updateDoc);
+			}
+			
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+
+	}catch(e){
+		console.log(e)
+	}
+})
+
+//NOTE: WEBPUSH DETAILS DEFINED ABOVE EALIER
+
+/**
+ * Makes an announcement in database title and body
+ * and broadcasts the announcement to everyone
+ */
+app.post("/platform-anno", async(req,res)=>{
+	try {
+		
+		await client.connect();
+		const db_annos = client.db(hackDbName).collection("annos");
+		const currContent_annos = await db_annos.findOne();
+		var annos_content = currContent_annos.annos;
+		var submit = [];
+		for (var i=0;i<annos_content.length;i++){
+			submit.push(annos_content[i]);
+		}
+		var currAnno = {
+			title:req.body.title,
+			date:Date.now(),
+			body:req.body.body
+		}
+		submit.push(currAnno);
+
+		const filter = {title:"annos"}
+		const updateDoc = {
+			$set: {
+				annos:submit
+			}
+		}
+		await db_annos.updateOne(filter,updateDoc);
+		var msg = {
+			body:req.body.body
+		}
+
+		//service worker time
+		// payload @ req.body.title req.body.body
+		const db_subs = client.db(hackDbName).collection("subs");
+		const currContent_subs = await db_subs.findOne();
+		var subs_content = currContent_subs.subs;
+		var message = {
+			title:req.body.title,
+			body:req.body.body
+		};
+		for (var i=0;i<subs_content.length;i++){
+			//for each subscription, send noti
+			sendNotification(subs_content[i].sub,message);
+		}
+
+		res.send(JSON.stringify(msg))
+
+	} finally {
+		// Ensures that the client will close when you finish/error
+		await client.close();
+	}
+})
+
+app.post("/platform-save-sub",async(req,res)=>{
+	try{
+		//data: req.body.user req.body.sub
+		await client.connect();
+		const db = client.db(hackDbName).collection("subs");
+		const currContent = await db.findOne();
+		var db_subs = currContent.subs;
+		var submit = [];
+		for (var i=0;i<db_subs.length;i++){
+			//found a sub that alr has a user
+			//dont push the old sub back, update the it instead
+			if (db_subs[i].user!==req.body.user){
+				submit.push(db_subs[i]);
+			}
+		}
+		var currSub = {
+			user:req.body.user,
+			sub:req.body.sub
+		}
+		submit.push(currSub);
+		const filter = {title:"subs"}
+		const updateDoc = {
+			$set: {
+				subs:submit
+			}
+		}
+		await db.updateOne(filter,updateDoc);
+		var msg = {
+			"msg":"yay"
+		}
+		res.send(JSON.stringify(msg))
+	}finally{
+		await client.close();
+	}
+})
+
+/**
+ * Gets the list of announcements in database
+ */
+app.get("/platform-getAnnos",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db(hackDbName).collection("annos");
+		const currContent = await db.findOne();
+		var db_annos = currContent.annos;
+		var msg = {
+			annos:db_annos
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
+/**
+ * Gets the members of a group given
+ * the id of a group
+ */
+//req.body.id
+app.post("/platform-getMembers",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			var db_group = currContent.groups;
+			var msg = {
+				error:0
+			}
+			var found = false;
+			for (var i=0;i<db_group.length;i++){
+				if (db_group[i].id===req.body.id){
+					//found the group, now ret members
+					found = true;
+					var msg = {
+						members:db_group[i].members
+					}
+				}
+			}
+			if (!found){
+				msg.error=1;
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (e){
+		console.log(e);
+	}
+})
+
+//dont remember what this was for
+//i think its ass
+app.post("/platform-getMyGroup",async (req,res)=>{
+	//req.body.group
+	try{
+		//get group a|b
+		//get other group members
+		await client.connect();
+		const db = client.db(hackDbName).collection("contest");
+		const currContent = await db.findOne();
+		var db_group = currContent.groups;
+		console.log(currContent);
+		var msg = {
+			error:0
+		}
+		var otherMembers = [];
+		var groupA = db_group.a; //array
+		var groupB = db_group.b; //array
+		var found = false;
+		for (var i=0;i<groupA.length;i++){
+			console.log(groupA[i].group, req.body.group)
+			if (groupA[i].group===req.body.group){
+				//found group do the tasks
+				msg.group="a";
+				found=true;
+			}else {
+				otherMembers.push(groupA[i])
+			}
+		}
+		if (!found){
+			otherMembers=[];
+			for (var i=0;i<groupB.length;i++){
+				console.log(groupA[i].group, req.body.group)
+				if (groupB[i].group===req.body.group){
+					//found group do the tasks
+					msg.group="b";
+					found=true;
+				}else {
+					otherMembers.push(groupB[i])
+				}
+			}
+		}
+		if (!found){
+			msg.error=1;
+		}else{
+			msg.teams=otherMembers;
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
+/**
+ * Gets all the projects in database
+ */
+app.get("/platform-getProjects",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db(hackDbName).collection("projects");
+		const currContent = await db.findOne();
+		var db_proj = currContent.projects;
+		var msg = {
+			projects:db_proj
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
+
+
+
+
+
+
 
 
 
@@ -1599,7 +2212,17 @@ app.get("/hh-getProjects",async (req,res)=>{
 
 
 
+
+
+
+
+
 // SPOTIFY
+
+
+
+
+
 
 
 app.get("/accounts", async (req,res)=>{
@@ -1955,7 +2578,9 @@ app.listen(PORT, ()=>{
 })
 */
 
-dowebsocketstuff();
+//dowebsocketstuff();
+
+bobabytewebsocket();
 
 httpServer.listen(PORT, ()=>{
 	console.log("listening asdfsdf " + PORT)

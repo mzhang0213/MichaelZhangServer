@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="-z-10 bg-gray-200">
+  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./hippoooooo.png')"></div>
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
+    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login to your group!</h1>
+    <input id="groupname" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
+    <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
+  </div>
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <style>
+    #login{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #login:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
+  <script>
+    var gebi = function(e){return document.getElementById(e)}
+    if (localStorage.getItem("platform-username")==null){
+      alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
+      window.location=window.location.origin+"/bobabyte/signin/"
+    }
+    if (localStorage.getItem("platform-group")!==null){
+      //alr logged in??? but ok
+      alert("you're already logged in! whattttt??\nSending you back home :)");
+      window.location=window.location.origin+"/bobabyte/";
+    }
+    gebi("login").addEventListener("click",function(){
+      var req1 = new XMLHttpRequest();
+      var groupname = gebi("groupname").value;
+      var submit1 = {
+        group:groupname,
+        user:localStorage.getItem("platform-username")
+      }
+      req1.open("POST",window.location.origin+"/platform-glogin");
+      req1.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req1.send(JSON.stringify(submit1));
+      req1.addEventListener("readystatechange", ()=>{
+        if (req1.status === 200 && req1.readyState === 4) {
+          var body1 = JSON.parse(req1.responseText);
+          console.log(body1);
+          //now check for responded errors
+          if (body1.error == 1) {
+            //code 1: confirm new team name
+            var confirmation = confirm(`Confirm new group name ${body1.group}?`);
+            if (confirmation){
+              var req2 = new XMLHttpRequest();
+              var submit2 = {
+                confirm:confirmation,
+                group:body1.group,
+                user:body1.user
+              }
+              req2.open("POST",window.location.origin+"/platform-glogin-confirm");
+              req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+              req2.send(JSON.stringify(submit2));
+              req2.addEventListener("readystatechange", ()=>{
+                if (req2.status === 200 && req2.readyState === 4) {
+                  var body2 = JSON.parse(req2.responseText);
+                  localStorage.setItem("platform-group",body2.group);
+                  alert(`Created new group ${body2.group}! Sending you home...`);
+                  window.location=window.location.origin+"/bobabyte/";
+                } else if (req2.readyState === 4){
+                  console.log("reeeeeeee err new acc creation: "+req2.responseText);
+                  alert("please ask michael for help oh noes")
+                }
+              })
+            }else{
+              alert("o.k. fix your name");
+            }
+          }else if (body1.error == 0){
+            //code 0: success
+            alert(`Joined group ${body1.group}! Sending you home...`);
+            localStorage.setItem("platform-group",body1.group);
+            window.location=window.location.origin+"/bobabyte/";
+          }
+        } else if (req1.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req1.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+  </script>
+</body>
+</html>
