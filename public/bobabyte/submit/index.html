@@ -161,16 +161,16 @@
       <p id="groupBlurb" class="mb-8 w-7/12 text-center text-xl"></p>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Name</p>
-        <textarea id="projName" class="regField relative w-full"></textarea>
+        <textarea id="projName" class="regField relative w-full px-1"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Project Description</p>
-        <textarea id="projDesc" class="relative w-full" style="height:70px;"></textarea>
+        <textarea id="projDesc" class="relative w-full px-1" style="height:70px;"></textarea>
       </div>
       <div class="mb-4 w-9/12">
         <p class="text-2xl">Visual Media Link</p>
         <p class="text-lg">Put either a Google Slides or YouTube link. Make sure it is open to public viewing!</p>
-        <textarea id="mediaLink" class="regField relative w-full"></textarea>
+        <textarea id="mediaLink" class="regField relative w-full px-1"></textarea>
       </div>
       <style>.regField{height:32px;}</style>
       <div class="flex">
@@ -178,7 +178,7 @@
           <button id="edit" class="relative p-3 mt-4">Edit Submission</button>
         </div>
         <div class="flex justify-center w-1/2">
-          <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
+          <button id="submit" class="relative p-3 mt-4">Submit!!</button>
         </div>
       </div>
     </div>
@@ -219,6 +219,23 @@
     }
   </style>
   <script>
+    var loadEditor = function(){
+      gebi("edit").disabled="";
+      gebi("projName").disabled=true;
+      gebi("projDesc").disabled=true;
+      gebi("mediaLink").disabled=true;
+      gebi("submit").disabled=true;
+    }
+    var loadCreator = function(){
+      gebi("edit").disabled=true;
+      gebi("projName").disabled="";
+      gebi("projDesc").disabled="";
+      gebi("mediaLink").disabled="";
+      gebi("submit").disabled="";
+    }
+    loadCreator();
+    if (localStorage.getItem("submitted")==="true")loadEditor();
+
     if (localStorage.getItem("platform-group")!==null){
       var req = new XMLHttpRequest();
       var body = {
@@ -265,23 +282,6 @@
       gebi("mediaLink").disabled=true;
       gebi("submit").disabled=true;
     }
-
-    var loadEditor = function(){
-      gebi("edit").disabled="";
-      gebi("projName").disabled=true;
-      gebi("projDesc").disabled=true;
-      gebi("mediaLink").disabled=true;
-      gebi("submit").disabled=true;
-    }
-    var loadCreator = function(){
-      gebi("edit").disabled=true;
-      gebi("projName").disabled="";
-      gebi("projDesc").disabled="";
-      gebi("mediaLink").disabled="";
-      gebi("submit").disabled="";
-    }
-    loadCreator();
-    if (localStorage.getItem("submitted")==="true")loadEditor();
 
     gebi("submit").addEventListener("click",function(){
       var req = new XMLHttpRequest();
