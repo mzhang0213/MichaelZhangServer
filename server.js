@@ -291,7 +291,7 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 			members:members
 		}
 		submit.push(currGroup);
-		const filter = {title:"usernames"}
+		const filter = {title:"accounts"}
 		const updateDoc = {
 			$set: {
 				groups:submit
