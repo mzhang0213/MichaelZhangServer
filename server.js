@@ -158,6 +158,7 @@ io.on("connection", (socket) => {
 app.get("/sendSuperSecretMessage",(req,res)=>{
 	io.emit("messageBack","this is message from sorvor");
 	io.emit("messageBack",{"안녕":"하세요"});
+	res.send("pog");
 })
 
 //name of database in mongodb
