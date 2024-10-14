@@ -87,10 +87,10 @@
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
     if (localStorage.getItem("platform-group")==null){
-      gebi("platform-group").innerHTML="Join your group";
-      gebi("platform-group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
+      gebi("group").innerHTML="Join your group";
+      gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
     }else{
-      gebi("platform-group").innerHTML=localStorage.getItem("platform-group");
+      gebi("group").innerHTML=localStorage.getItem("platform-group");
     }
     var now = new Date().getTime();
     if (now>1693249200000){
@@ -175,7 +175,7 @@
       <style>.regField{height:32px;}</style>
       <div class="flex">
         <div class="flex justify-center w-1/2">
-          <button id="edit" class="relative p-3 mt-4">Edit ✏</button>
+          <button id="edit" class="relative p-3 mt-4">Edit Submission</button>
         </div>
         <div class="flex justify-center w-1/2">
           <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
@@ -219,43 +219,52 @@
     }
   </style>
   <script>
-    var req = new XMLHttpRequest();
-    var body = {
-      id:localStorage.getItem("platform-group-id")
-    }
-    req.open("POST",window.location.origin+"/platform-getMembers");
-    req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    req.send(JSON.stringify(body));
-    req.addEventListener("readystatechange", ()=>{
-      if (req.status === 200 && req.readyState === 4) {
-        var body = JSON.parse(req.responseText);
-        console.log(body);
-        if (body.error==1){
-          alert("something bad happened - couldnt find group")
-        }else{
-          //groupBlurb
-          var display1 = "Group Name: "+localStorage.getItem("platform-group")+"  |  Group Members: ";
-          var me = document.createElement("i");
-          var display2= "";
-          var two=false;
-          for (var i=0;i<body.members.length;i++){
-            if (body.members[i]===localStorage.getItem("platform-username")){
-              me.append("Me"+" ") //body.members[i]
-              two=true;
-            }else{
-              if (two)display2+=body.members[i]+" "
-              else display1+=body.members[i]+" "
-            }
-          }
-          gebi("groupBlurb").append(display1);
-          gebi("groupBlurb").append(me);
-          gebi("groupBlurb").append(display2);
-        }
-      } else if (req.readyState === 4){
-        console.log("reeeeeeee err new acc creation: "+req.responseText);
-        alert("please ask michael for help oh noes")
+    if (localStorage.getItem("platform-group")!==null){
+      var req = new XMLHttpRequest();
+      var body = {
+        id:localStorage.getItem("platform-group-id")
       }
-    })
+      req.open("POST",window.location.origin+"/platform-getMembers");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          console.log(body);
+          if (body.error==1){
+            alert("something bad happened - couldnt find group")
+          }else{
+            //groupBlurb
+            var display1 = "Group Name: "+localStorage.getItem("platform-group")+"  |  Group Members: ";
+            var me = document.createElement("i");
+            var display2= "";
+            var two=false;
+            for (var i=0;i<body.members.length;i++){
+              if (body.members[i]===localStorage.getItem("platform-username")){
+                me.append("Me"+" ") //body.members[i]
+                two=true;
+              }else{
+                if (two)display2+=body.members[i]+" "
+                else display1+=body.members[i]+" "
+              }
+            }
+            gebi("groupBlurb").append(display1);
+            gebi("groupBlurb").append(me);
+            gebi("groupBlurb").append(display2);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    }else{
+      alert("Create or join a group to your project!");
+      gebi("edit").disabled=true;
+      gebi("projName").disabled=true;
+      gebi("projDesc").disabled=true;
+      gebi("mediaLink").disabled=true;
+      gebi("submit").disabled=true;
+    }
 
     var loadEditor = function(){
       gebi("edit").disabled="";
