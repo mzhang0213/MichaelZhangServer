@@ -205,29 +205,33 @@ app.post("/platform-login", async (req,res)=>{
 	}
 })
 
+/*
+groups are stored in an array
+a single group's schematic:
+{
+	group:"group_name"
+	id:"######" //6 random numbers
+	members:[<usernames>]
+}
+*/
 /**
- * Creating a group creates a group
- * in the voting database.
+ * Reads the current groups to see if
+ * [req.body.group] exists in the database
+ * already. If so, add [req.body.user] to
+ * the group and update database. If not,
+ * respond to client asking if the submitted
+ * group name is correct.
  */
+//req.body.group is the username submitted, req.body.user is the user's username
 app.post("/platform-glogin", async (req,res)=>{
 	try{
-		//req.body.group is the username submitted, req.body.user is the user's username
-		/*
-			groups are stored in an array
-			a single group's schematic:
-			{
-				group:"group_name"
-				id:"######" //6 random numbers
-				members:[<usernames>]
-			}
-		*/
 		(async function(){
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
 			const groups = currContent.groups;
 		
-			var found=false;
+			var found=-1; //holds group id if found, else -1 (bad code, bad variable purpose, idc)
 			var submit = [];
 			var msg = {
 				error:0
@@ -236,12 +240,12 @@ app.post("/platform-glogin", async (req,res)=>{
 				console.log("submitted gname: "+req.body.group);
 				console.log("db gname: "+groups[i].group);
 				if (req.body.group==groups[i].group){
-					found=true;
+					found=req.body.id;
 					groups[i].members.push(req.body.user);
 				}
 				submit.push(groups[i])
 			}
-			if (found){
+			if (found!==-1){
 				const filter = {title:"usernames"}
 				const updateDoc = {
 					$set: {
@@ -249,12 +253,12 @@ app.post("/platform-glogin", async (req,res)=>{
 					}
 				}
 				await db.updateOne(filter,updateDoc);
-				
 			}else {
 				//new group, but i want to send confirmation that they are creating new group
 				msg.error=1;
 			}
 			msg.group=req.body.group;
+			msg.id=found;
 			msg.user=req.body.user;
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
@@ -265,8 +269,14 @@ app.post("/platform-glogin", async (req,res)=>{
 	}
 })
 
+/**
+ * Create a new group in database with the
+ * given [req.body.user] as the first member
+ * in the group, named [req.body.group]. Creates
+ * the group with a random ID.
+ */
+//req.body.group, req.body.user
 app.post("/platform-glogin-confirm", async (req,res)=>{
-	//posted to req.body.confirm, req.body.group, req.body.user
 	try{
 		await client.connect();
 		const db = client.db(hackDbName).collection("accounts");
@@ -283,7 +293,7 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 		members.push(req.body.user);
 		var currGroup = {
 			group:req.body.group, //gname
-			user:randomName, //random name
+			id:randomName, //random name
 			members:members
 		}
 		submit.push(currGroup);
@@ -293,10 +303,11 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 				groups:submit
 			}
 		}
-		var msg = {
-			group:req.body.group
-		}
 		await db.updateOne(filter,updateDoc);
+		var msg = {
+			group:req.body.group,
+			id:randomName
+		}
 		res.send(JSON.stringify(msg))
 
 	}finally{
@@ -305,13 +316,18 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 })
 
 /**
- * Given [req.body.user] and [req.body.group],
+ * Given [req.body.user] and [req.body.id],
  * removes the given user from the group.
  * 
  * IF the user is the last member in the group,
  * the group is completely deleted
+ * 
+ * On client-side, this method should only be
+ * able to be properly used by client who is
+ * actually in the group (using [req.body.id]
+ * which is not readily accessible to client)
  */
-//req.body.user req.body.group
+//req.body.user req.body.id
 app.post("/platform-removeGroup", async (req,res)=>{
 	try{
 		var msg = {
@@ -324,7 +340,7 @@ app.post("/platform-removeGroup", async (req,res)=>{
 		var submit = [];
 		for (var i=0;i<groups.length;i++){
 			var dont=false
-			if (groups[i].group===req.body.group){
+			if (groups[i].id===req.body.id){
 				//found the correct group, now remove user
 				var newMembers = []
 				for (var j=0;j<groups[i].members.length;j++){
@@ -515,8 +531,6 @@ app.post("/platform-proj", async (req,res)=>{
 	}
 })
 
-//NOTE: WEBPUSH DETAILS DEFINED ABOVE EALIER
-
 /**
  * Makes an announcement in database title and body
  * and broadcasts the announcement to everyone
@@ -572,42 +586,6 @@ app.post("/platform-anno", async(req,res)=>{
 	}
 })
 
-app.post("/platform-save-sub",async(req,res)=>{
-	try{
-		//data: req.body.user req.body.sub
-		await client.connect();
-		const db = client.db(hackDbName).collection("subs");
-		const currContent = await db.findOne();
-		var db_subs = currContent.subs;
-		var submit = [];
-		for (var i=0;i<db_subs.length;i++){
-			//found a sub that alr has a user
-			//dont push the old sub back, update the it instead
-			if (db_subs[i].user!==req.body.user){
-				submit.push(db_subs[i]);
-			}
-		}
-		var currSub = {
-			user:req.body.user,
-			sub:req.body.sub
-		}
-		submit.push(currSub);
-		const filter = {title:"subs"}
-		const updateDoc = {
-			$set: {
-				subs:submit
-			}
-		}
-		await db.updateOne(filter,updateDoc);
-		var msg = {
-			"msg":"yay"
-		}
-		res.send(JSON.stringify(msg))
-	}finally{
-		await client.close();
-	}
-})
-
 /**
  * Gets the list of announcements in database
  */
@@ -625,6 +603,25 @@ app.get("/platform-getAnnos",async (req,res)=>{
 		await client.close();
 	}
 })
+
+/**
+ * Gets the total list of groups
+ */
+app.get("/platform-getMembers",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db(hackDbName).collection("accounts");
+		const currContent = await db.findOne();
+		var db_groups = currContent.groups;
+		var msg = {
+			groups:db_groups
+		}
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
+
 
 /**
  * Gets the members of a group given

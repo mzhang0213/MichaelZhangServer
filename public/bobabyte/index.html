@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script> var socket = io(); </script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
   <script>
     tailwind.config = {
@@ -276,44 +277,11 @@
       })
     }
     updateNotis()
-    //CHANGE CHANGE CHANGE
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      console.log(event.data.msg)
+    socket.on("new-anno",(body)=>{
       updateNotis();
-    });
-    //include another schematic for doing async notification pushing
-  </script>
-
-  <script>   //this is all dedicated to web worker support
-    const check = () => {
-      if (!('serviceWorker' in navigator)) {
-        throw new Error('No Service Worker support!')
-      }
-      if (!('PushManager' in window)) {
-        throw new Error('No Push API Support!')
-      }
-    }
-    const registerServiceWorker = async () => {
-      const swRegistration = await navigator.serviceWorker.register(`./service.js?user=${localStorage.getItem("platform-username")}`); //notice the file name
-      return swRegistration;
-    }
-    const requestNotificationPermission = async () => {
-      const permission = await window.Notification.requestPermission();
-      // value of permission can be 'granted', 'default', 'denied'
-      // granted: user has accepted the request
-      // default: user has dismissed the notification permission popup by clicking on x
-      // denied: user has denied the request.
-      if(permission !== 'granted'){
-          throw new Error('Permission not granted for Notification');
-      }
-    }
-    const main = async () => {
-        check()
-        await registerServiceWorker()
-        await requestNotificationPermission()
-    }
-    main();
-  
+      //fire new announcement alert
+      //use notifications ??
+    })
   </script>
 
   <!-- day's schedule-->
