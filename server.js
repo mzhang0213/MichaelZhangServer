@@ -449,7 +449,7 @@ app.post("/platform-vote", async (req,res)=>{
 /*
 data: (req.body.xxx)
 	projName
-	groupName
+	groupId
 	projDesc
 	mediaLink
 */
@@ -481,15 +481,17 @@ app.post("/platform-proj", async (req,res)=>{
 				var members = [];
 				var groupId = "";
 				const db_accs = client.db(hackDbName).collection("accounts");
-				const currContent_groups = await db_accs.findOne();
-				const groups = currContent_groups.groups;
+				const currContent_accs = await db_accs.findOne();
+				const groups = currContent_accs.groups;
+				const users = currContent_accs.usernames;
 				console.log(groups);
 				for (var i=0;i<groups.length;i++){
 					if (groups[i].group===req.body.groupName){
 						//found the group
 						found=true;
 						members=groups[i].members;
-						groupId=groups[i].user;
+						groupId=groups[i].id;
+						break;
 					}
 				}
 				if (!found){
@@ -497,7 +499,12 @@ app.post("/platform-proj", async (req,res)=>{
 				}else{
 					var members_str = "";
 					for (var i=0;i<members.length;i++){
-						members_str=members[i]+", ";
+						for (var j=0;j<users.length;j++){
+							if (users[j].user===members[i]){
+								members_str=users[j].first+", ";
+								break;
+							}
+						}
 					}
 					members_str=members_str.substring(0,members_str.length-2);
 					var proj = {
