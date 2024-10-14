@@ -1,5 +1,4 @@
 var express = require("express");
-var app = express();
 var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
@@ -148,10 +147,18 @@ io.on("connection", (socket) => {
 	socket.on("disconnect", (reason) => {
 	  console.log(`disconnected due to ${reason}`);
 	});
+
+	socket.on("testMessage", (body)=>{
+		console.log(body);
+	})
 });
 
 
 }
+app.get("/sendSuperSecretMessage",(req,res)=>{
+	socket.emit("messageBack","this is message from sorvor");
+	socket.emit("messageBack",{"안녕":"하세요"});
+})
 
 //name of database in mongodb
 const hackDbName = "bobabyte2024";

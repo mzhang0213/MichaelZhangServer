@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+	</head>
+	<body>
+		<button id="hi">bigbutton</button>
+		<script>
+			var socket=io();
+			socket.emit("testMessage","wsg");
+			socket.on("messageBack",(body)=>{
+				console.log(body);
+			})
+		</script>
+	</body>
+</html>
