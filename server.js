@@ -282,15 +282,9 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 		const db = client.db(hackDbName).collection("accounts");
 		const currContent = await db.findOne();
 		const groups = currContent.groups;
-		console.log(currContent)
-		console.log(groups)
-		var submit = [];
-		for (var i=0;i<groups.length;i++){
-			submit.push(groups[i])
-		}
+		var submit = groups;
 		var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
-		var members = [];
-		members.push(req.body.user);
+		var members = [req.body.user];
 		var currGroup = {
 			group:req.body.group, //gname
 			id:randomName, //random name
@@ -650,9 +644,7 @@ app.post("/platform-getMembers",async (req,res)=>{
 				if (db_group[i].id===req.body.id){
 					//found the group, now ret members
 					found = true;
-					var msg = {
-						members:db_group[i].members
-					}
+					msg.members = db_group[i].members;
 				}
 			}
 			if (!found){
