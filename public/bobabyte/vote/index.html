@@ -168,21 +168,6 @@
   <script>
     var projects = [];
     const ALLOTTEDVOTES = 2;
-    var req = new XMLHttpRequest();
-    req.open("GET",window.location.origin+"/platform-getProjects");
-    req.send();
-    req.addEventListener("readystatechange", ()=>{
-      if (req.status === 200 && req.readyState === 4) {
-        var body = JSON.parse(req.responseText);
-        projects=body.projects;
-      } else if (req.readyState === 4){
-        console.log("reeeeeeee err new acc creation: "+req.responseText);
-        alert("please ask michael for help oh noes")
-      }
-    })
-    var body = {
-      group:localStorage.getItem("platform-group")
-    }
     var getHighlighted = function(){
       var boxes = gebi("votingBox").children;
       var cats = gebi("categoryBox").children;
@@ -294,6 +279,19 @@
             alert("please ask michael for help oh noes")
           }
         })
+      }
+    })
+    var req = new XMLHttpRequest();
+    req.open("GET",window.location.origin+"/platform-getProjects");
+    req.send();
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+        var body = JSON.parse(req.responseText);
+        projects=body.projects;
+        for (var i of projects) createProject(i);
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
       }
     })
   </script>
