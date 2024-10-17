@@ -164,26 +164,46 @@
       <div id="category3" class="relative w-full h-1/3 mt-5 rounded-2xl" style="background-color:yellow;"></div>
     </div>
     <button id="submit" class="relative p-3 mt-4" style="margin-left:75%;">Submit!!</button>
+    <style>
+      #submit{
+        background-color:rgb(117, 234, 117);
+        border-radius:8px;
+        border:2px solid #000000;
+        font-size:20px;
+        font-family:'Cabin';
+        outline:none;
+      }
+      #submit:disabled{
+        background-color:rgb(170, 255, 170);
+      }
+      #submit:hover{
+        background-color:rgb(48, 194, 48);
+      }
+    </style>
   </div>
   <script>
     var projects = [];
     const ALLOTTEDVOTES = 2;
-    const SELECTIONBORDER = "2px solid white";
-    gebi("category1").style.border=SELECTIONBORDER;
+    const BASEBORDER = "2px solid black"
+    const SIDEBARSELECTIONBORDER = "2px solid white";
+    gebi("category1").style.border=SIDEBARSELECTIONBORDER;
 
     var getHighlighted = function(){
       var boxes = gebi("votingBox").children;
       var cats = gebi("categoryBox").children;
       var categories = {};
       var ret = {};
+      //pair border color of the categories with the # category they are
+      //tracking # of categories and auto assigning their associated color
       for (var i=0;i<cats.length;i++){
         categories["2px solid "+cats[i].style.backgroundColor]=i+1;
         ret[i+1]=0;
       }
-      var total = 0;
       for (var i=0;i<boxes.length;i++){
-        if (categories[boxes[i].style.border]!==null){
-          ret[i+1]++;
+        var catNum = categories[boxes[i].style.border];
+        if (catNum!==null){
+          if (ret[catNum]===null)ret[catNum]=0;
+          ret[catNum]++;
         }
       }
       return ret;
@@ -192,7 +212,7 @@
       var categories = gebi("categoryBox").children;
       var total = 0;
       for (var i=0;i<categories.length;i++){
-        if (categories[i].style.border==="2px solid black"){
+        if (categories[i].style.border===SIDEBARSELECTIONBORDER){
           return categories[i].id;
         }
       }
@@ -211,7 +231,7 @@
       //project is JSON obj containing project properties
       var proj = document.createElement("div");
       proj.className="relative w-11/12 p-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
-      proj.style.border="2px solid black";
+      proj.style.border=BASEBORDER;
 
       var projName = document.createElement("h1");
       projName.className="relative w-full text-3xl";
@@ -219,7 +239,7 @@
 
       //combine the group name line and italicize the names
       var groupName = document.createElement("p");
-      groupName.className="relative w-full text-sm mt-1";
+      groupName.className="relative w-full text-md mt-1";
       groupName.innerHTML=project.groupName;
 
       var groupMembers = document.createElement("p");
@@ -227,7 +247,8 @@
       groupMembers.innerHTML=project.groupMembers;
 
       var projDesc = document.createElement("p");
-      projDesc.className="relative w-full text-lg mt-4";
+      projDesc.className="relative w-full mt-4";
+      projDesc.style.fontSize="16px";
       projDesc.innerHTML=project.projDesc;
 
       //now somewhere put the embed of their thing but idk how
@@ -242,7 +263,12 @@
       gebi("votingBox").appendChild(proj);
       proj.addEventListener("click",function(){
         var newBorder = "2px solid "+gebi(getSelectedCategory()).style.backgroundColor;
-        this.style.border=newBorder;
+        if (newBorder===this.style.border){
+          //same thing; deselect
+          this.style.border=BASEBORDER;
+        }else{
+          this.style.border=newBorder;
+        }
         if (getVoteInvalidity()){
           gebi("submit").disabled=true;
         }else{
@@ -256,7 +282,7 @@
         for (var cat of gebi("categoryBox").children){
           cat.style.border="";
         }
-        this.style.border=SELECTIONBORDER;
+        this.style.border=SIDEBARSELECTIONBORDER;
       })
     }
     gebi("submit").addEventListener("click",function(){
