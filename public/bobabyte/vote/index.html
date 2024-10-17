@@ -251,15 +251,15 @@
       projDesc.style.fontSize="16px";
       projDesc.innerHTML=project.projDesc;
 
-      //now somewhere put the embed of their thing but idk how
-      //maybe have the icon of the platform they used and then onclick expand to full embed?
-      //before submit onerror if invalid yt link / slides
-      //also todo: make this flex grid somehow idk how
+      var mediaLink = document.createElement("p");
+      mediaLink.className="relative w-full text-lg mt-4";
+      mediaLink.innerHTML="Link: " + project.mediaLink;
 
       proj.appendChild(projName);
       proj.appendChild(groupName);
       proj.appendChild(groupMembers);
       proj.appendChild(projDesc);
+      proj.appendChild(mediaLink)
       gebi("votingBox").appendChild(proj);
       proj.addEventListener("click",function(){
         var newBorder = "2px solid "+gebi(getSelectedCategory()).style.backgroundColor;
