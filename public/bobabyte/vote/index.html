@@ -238,7 +238,7 @@
       proj.appendChild(projDesc);
       gebi("votingBox").appendChild(proj);
       proj.addEventListener("click",function(){
-        var newBorder = "2px solid "+getSelectedCategory().style.backgroundColor;
+        var newBorder = "2px solid "+gebi(getSelectedCategory()).style.backgroundColor;
         this.style.border=newBorder;
         if (getVoteInvalidity()){
           gebi("submit").disabled=true;
