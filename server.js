@@ -461,7 +461,7 @@ app.post("/platform-proj", async (req,res)=>{
 			var submit = [];
 			var editing = false;
 			for (var i=0;i<projects.length;i++){
-				if (projects[i].groupName===req.body.groupName){
+				if (projects[i].id===req.body.id){
 					//edited submission
 					editing = true;
 					projects[i].projName=req.body.projName
@@ -480,7 +480,7 @@ app.post("/platform-proj", async (req,res)=>{
 				const users = currContent_accs.usernames;
 				console.log(groups);
 				for (var i=0;i<groups.length;i++){
-					if (groups[i].group===req.body.groupName){
+					if (groups[i].id===req.body.id){
 						//found the group
 						found=true;
 						members=groups[i].members;
