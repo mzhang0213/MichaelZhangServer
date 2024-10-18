@@ -220,7 +220,7 @@
     var getVoteInvalidity = function(){
       var highlightedCounts = getHighlighted();
         var invalid = false;
-        for (var key of highlightedCounts){
+        for (var key of Object.keys(highlightedCounts)){
           if (highlightedCounts[key]!==ALLOTTEDVOTES){ //exactly allotted votes required to submit
             invalid=true;
           }
