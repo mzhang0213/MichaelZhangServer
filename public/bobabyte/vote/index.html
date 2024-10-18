@@ -201,7 +201,7 @@
       }
       for (var i=0;i<boxes.length;i++){
         var catNum = categories[boxes[i].style.border];
-        if (catNum!==null&&catNum!==NaN){
+        if (catNum!==null&&catNum!==NaN&&catNum!==undefined){
           if (ret[catNum]===null)ret[catNum]=0;
           ret[catNum]++;
         }
