@@ -278,34 +278,37 @@ app.post("/platform-glogin", async (req,res)=>{
 //req.body.group, req.body.user
 app.post("/platform-glogin-confirm", async (req,res)=>{
 	try{
-		await client.connect();
-		const db = client.db(hackDbName).collection("accounts");
-		const currContent = await db.findOne();
-		const groups = currContent.groups;
-		var submit = groups;
-		var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
-		var members = [req.body.user];
-		var currGroup = {
-			group:req.body.group, //gname
-			id:randomName, //random name
-			members:members
-		}
-		submit.push(currGroup);
-		const filter = {title:"accounts"}
-		const updateDoc = {
-			$set: {
-				groups:submit
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			const groups = currContent.groups;
+			var submit = groups;
+			var randomName = (Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+""+(Math.floor(Math.random()*10))+"";
+			var members = [req.body.user];
+			var currGroup = {
+				group:req.body.group, //gname
+				id:randomName, //random name
+				members:members
 			}
-		}
-		await db.updateOne(filter,updateDoc);
-		var msg = {
-			group:req.body.group,
-			id:randomName
-		}
-		res.send(JSON.stringify(msg))
-
-	}finally{
-		await client.close();
+			submit.push(currGroup);
+			const filter = {title:"accounts"}
+			const updateDoc = {
+				$set: {
+					groups:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			var msg = {
+				group:req.body.group,
+				id:randomName
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
@@ -324,45 +327,48 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 //req.body.user req.body.id
 app.post("/platform-removeGroup", async (req,res)=>{
 	try{
-		var msg = {
-			error:0
-		}
-		await client.connect();
-		const db_accs = client.db(hackDbName).collection("accounts");
-		const currContent_groups = await db_accs.findOne();
-		const groups = currContent_groups.groups;
-		var submit = [];
-		for (var i=0;i<groups.length;i++){
-			var dont=false
-			if (groups[i].id===req.body.id){
-				//found the correct group, now remove user
-				var newMembers = []
-				for (var j=0;j<groups[i].members.length;j++){
-					if (groups[i].members[j]!==req.body.user){
-						newMembers.push(groups[i].members[j]);
+		(async function(){
+			var msg = {
+				error:0
+			}
+			await client.connect();
+			const db_accs = client.db(hackDbName).collection("accounts");
+			const currContent_groups = await db_accs.findOne();
+			const groups = currContent_groups.groups;
+			var submit = [];
+			for (var i=0;i<groups.length;i++){
+				var dont=false
+				if (groups[i].id===req.body.id){
+					//found the correct group, now remove user
+					var newMembers = []
+					for (var j=0;j<groups[i].members.length;j++){
+						if (groups[i].members[j]!==req.body.user){
+							newMembers.push(groups[i].members[j]);
+						}
+					}
+					if (newMembers.length===0){
+						//well now there are no group members; don't push
+						dont=true;
+					}else{
+						groups[i].members=newMembers;
 					}
 				}
-				if (newMembers.length===0){
-					//well now there are no group members; don't push
-					dont=true;
-				}else{
-					groups[i].members=newMembers;
+				if (!dont) submit.push(groups[i]);
+			}
+			const filter = {title:"usernames"}
+			const updateDoc = {
+				$set: {
+					groups:submit
 				}
 			}
-			if (!dont) submit.push(groups[i]);
-		}
-		const filter = {title:"usernames"}
-		const updateDoc = {
-			$set: {
-				groups:submit
-			}
-		}
-		await db_accs.updateOne(filter,updateDoc);
-		
-		res.send(JSON.stringify(msg))
-
-	}finally{
-		await client.close();
+			await db_accs.updateOne(filter,updateDoc);
+			
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
@@ -538,52 +544,54 @@ app.post("/platform-proj", async (req,res)=>{
  */
 app.post("/platform-anno", async(req,res)=>{
 	try {
-		
-		await client.connect();
-		const db_annos = client.db(hackDbName).collection("annos");
-		const currContent_annos = await db_annos.findOne();
-		var annos_content = currContent_annos.annos;
-		var submit = [];
-		for (var i=0;i<annos_content.length;i++){
-			submit.push(annos_content[i]);
-		}
-		var currAnno = {
-			title:req.body.title,
-			date:Date.now(),
-			body:req.body.body
-		}
-		submit.push(currAnno);
-
-		const filter = {title:"annos"}
-		const updateDoc = {
-			$set: {
-				annos:submit
+		(async function(){
+			await client.connect();
+			const db_annos = client.db(hackDbName).collection("annos");
+			const currContent_annos = await db_annos.findOne();
+			var annos_content = currContent_annos.annos;
+			var submit = [];
+			for (var i=0;i<annos_content.length;i++){
+				submit.push(annos_content[i]);
 			}
-		}
-		await db_annos.updateOne(filter,updateDoc);
-		var msg = {
-			body:req.body.body
-		}
-
-		//service worker time
-		// payload @ req.body.title req.body.body
-		const db_subs = client.db(hackDbName).collection("subs");
-		const currContent_subs = await db_subs.findOne();
-		var subs_content = currContent_subs.subs;
-		var message = {
-			title:req.body.title,
-			body:req.body.body
-		};
-		for (var i=0;i<subs_content.length;i++){
-			//for each subscription, send noti
-			sendNotification(subs_content[i].sub,message);
-		}
-
-		res.send(JSON.stringify(msg))
-
-	} finally {
+			var currAnno = {
+				title:req.body.title,
+				date:Date.now(),
+				body:req.body.body
+			}
+			submit.push(currAnno);
+	
+			const filter = {title:"annos"}
+			const updateDoc = {
+				$set: {
+					annos:submit
+				}
+			}
+			await db_annos.updateOne(filter,updateDoc);
+			var msg = {
+				body:req.body.body
+			}
+	
+			//service worker time
+			// payload @ req.body.title req.body.body
+			const db_subs = client.db(hackDbName).collection("subs");
+			const currContent_subs = await db_subs.findOne();
+			var subs_content = currContent_subs.subs;
+			var message = {
+				title:req.body.title,
+				body:req.body.body
+			};
+			for (var i=0;i<subs_content.length;i++){
+				//for each subscription, send noti
+				sendNotification(subs_content[i].sub,message);
+			}
+	
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(e) {
 		// Ensures that the client will close when you finish/error
-		await client.close();
+		console.log(e);
 	}
 })
 
@@ -592,16 +600,20 @@ app.post("/platform-anno", async(req,res)=>{
  */
 app.get("/platform-getAnnos",async (req,res)=>{
 	try{
-		await client.connect();
-		const db = client.db(hackDbName).collection("annos");
-		const currContent = await db.findOne();
-		var db_annos = currContent.annos;
-		var msg = {
-			annos:db_annos
-		}
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("annos");
+			const currContent = await db.findOne();
+			var db_annos = currContent.annos;
+			var msg = {
+				annos:db_annos
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
@@ -610,16 +622,20 @@ app.get("/platform-getAnnos",async (req,res)=>{
  */
 app.get("/platform-getGroups",async (req,res)=>{
 	try{
-		await client.connect();
-		const db = client.db(hackDbName).collection("accounts");
-		const currContent = await db.findOne();
-		var db_groups = currContent.groups;
-		var msg = {
-			groups:db_groups
-		}
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			var db_groups = currContent.groups;
+			var msg = {
+				groups:db_groups
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
@@ -664,16 +680,20 @@ app.post("/platform-getMembers",async (req,res)=>{
  */
 app.get("/platform-getProjects",async (req,res)=>{
 	try{
-		await client.connect();
-		const db = client.db(hackDbName).collection("projects");
-		const currContent = await db.findOne();
-		var db_proj = currContent.projects;
-		var msg = {
-			projects:db_proj
-		}
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("projects");
+			const currContent = await db.findOne();
+			var db_proj = currContent.projects;
+			var msg = {
+				projects:db_proj
+			}
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
@@ -683,24 +703,28 @@ app.get("/platform-getProjects",async (req,res)=>{
  */
 app.post("/platform-getMyProject",async (req,res)=>{
 	try{
-		await client.connect();
-		const db = client.db(hackDbName).collection("projects");
-		const currContent = await db.findOne();
-		var msg = {
-			error:-1
-		}
-		var db_proj = currContent.projects;
-		for (var i=0;i<db_proj.length;i++){
-			if (db_proj[i].id===req.body.id){
-				//found
-				msg.error=0;
-				msg.project=db_proj[i];
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("projects");
+			const currContent = await db.findOne();
+			var msg = {
+				error:-1
 			}
-		}
-		if(msg.error===-1)msg.error=1;
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
+			var db_proj = currContent.projects;
+			for (var i=0;i<db_proj.length;i++){
+				if (db_proj[i].id===req.body.id){
+					//found
+					msg.error=0;
+					msg.project=db_proj[i];
+				}
+			}
+			if(msg.error===-1)msg.error=1;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
 	}
 })
 
