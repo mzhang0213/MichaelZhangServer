@@ -95,6 +95,9 @@
       gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
     }else{
       gebi("group").innerHTML=localStorage.getItem("platform-group");
+      gebi("group").addEventListener("click",function(){
+        window.location=window.location.origin+'/bobabyte/team';
+      })
     }
 
     //project submission button

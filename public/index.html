@@ -35,6 +35,25 @@
         You are looking at a webpage made and hosted by Michael Zhang. Explore by clicking on the links above!
       </p>
       <br><br><br>
+      <button id="bobaButton" class="relative p-1 text-black sm:text-md md:text-3xl mt-16 rounded-2xl md:max-w-xl md:mx-auto bg-orange-800 text-center" style="box-shadow:0px 0px 36px 13px #dea753;">
+        <span id="bobaButtonFront" class="relative px-6 py-2 rounded-2xl md:max-w-xl md:mx-auto bg-gradient-to-br from-orange-300 to-gray-300">
+          Click here for BobaByte!
+        </span>
+      </button>
+      <style>
+        #bobaButton{
+          padding: 0;
+          cursor: pointer;
+          outline-offset: 4px;
+        }
+        #bobaButtonFront{
+          display: block;
+          transform: translateX(-4px) translateY(-6px);
+        }
+        #bobaButton:active #bobaButtonFront {
+          transform: translateX(-2px) translateY(-2px);
+        }
+      </style>
       <center>
         <!--
         <video width="990px" height="540px" controls>

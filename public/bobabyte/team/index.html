@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="-z-10 bg-gray-200">
+  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./hippoooooo.png')"></div>
+  <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
+    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">BobaByte Team</h1>
+    <p id="groupName" class="text-2xl mt-36 bg-white rounded-lg px-7"></p>
+    <p id="members" class="text-2xl mt-12 bg-white rounded-lg px-7"></p>
+  </div>
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <script>
+    //check for account presence
+    if (localStorage.getItem("platform-username")==null){
+      alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
+      window.location=window.location.origin+"/bobabyte/signin/"
+    }else{
+      gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
+    }
+
+    //join group button
+    if (localStorage.getItem("platform-group")==null){
+      gebi("group").innerHTML="Please join your group!!";
+      gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
+    }else{
+      var req = new XMLHttpRequest();
+      var body = {
+        id:localStorage.getItem("platform-group-id")
+      }
+      req.open("POST",window.location.origin+"/platform-getMembers");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          console.log(body);
+          if (body.error==1){
+            alert("something bad happened - couldnt find group")
+          }else{
+            //groupBlurb
+            var display1 = "";
+            var me = document.createElement("i");
+            var display2= "";
+            var two=false;
+            for (var i=0;i<body.members.length;i++){
+              if (body.members[i]===localStorage.getItem("platform-username")){
+                me.append("Me"+" ") //body.members[i]
+                two=true;
+              }else{
+                if (two)display2+=body.members[i]+" "
+                else display1+=body.members[i]+" "
+              }
+            }
+            gebi("groupName").innerHTML=localStorage.getItem("platform-group");
+            gebi("members").append(display1);
+            gebi("members").append(me);
+            gebi("members").append(display2);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    }
+  </script>
+</body>
+</html>

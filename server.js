@@ -712,7 +712,6 @@ app.post("/platform-getMyProject",async (req,res)=>{
 			}
 			var projects = currContent.projects;
 			for (var i=0;i<projects.length;i++){
-				console.log(projects[i].id);
 				if (projects[i].id===req.body.id){
 					//found
 					msg.error=0;
@@ -728,6 +727,12 @@ app.post("/platform-getMyProject",async (req,res)=>{
 		console.log(e);
 	}
 })
+
+
+
+
+
+
 
 
 

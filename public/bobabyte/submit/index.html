@@ -285,8 +285,8 @@
                   alert("something bad happened - couldnt find project")
                 }else{
                   gebi("projName").innerHTML=body.project.projName;
-                  gebi("projDesc").disabled=body.project.projDesc;
-                  gebi("mediaLink").disabled=body.project.mediaLink;
+                  gebi("projDesc").innerHTML=body.project.projDesc;
+                  gebi("mediaLink").innerHTML=body.project.mediaLink;
                 }
               } else if (req2.readyState === 4){
                 console.log("reeeeeeee err new acc creation: "+req2.responseText);
@@ -320,6 +320,7 @@
       }
       var body = {
         projName:projName,
+        groupName:localStorage.getItem("platform-group"),
         id:localStorage.getItem("platform-group-id"),
         projDesc:projDesc,
         mediaLink:mediaLink
@@ -345,6 +346,15 @@
           alert("please ask michael for help oh noes")
         }
       })
+    })
+    gebi("edit").addEventListener("click",function(){
+      if (gebi("submit").disabled) {
+        loadCreator();
+        gebi("edit").disabled=false;
+      }
+      else {
+        loadEditor();
+      }
     })
   </script>
   <!--
