@@ -234,7 +234,7 @@
       gebi("submit").disabled="";
     }
     loadCreator();
-    if (localStorage.getItem("submitted")==="true")loadEditor();
+    if (localStorage.getItem("platform-submitted")==="true")loadEditor();
 
     if (localStorage.getItem("platform-group")!==null){
       var req = new XMLHttpRequest();
@@ -268,6 +268,30 @@
             gebi("groupBlurb").append(display1);
             gebi("groupBlurb").append(me);
             gebi("groupBlurb").append(display2);
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+      //get existing project
+      var req = new XMLHttpRequest();
+      var body = {
+        id:localStorage.getItem("platform-group-id")
+      }
+      req.open("POST",window.location.origin+"/platform-getMyProject");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          console.log(body);
+          if (body.err===1){
+            alert("something bad happened - couldnt find project")
+          }else{
+            gebi("projName").innerHTML=body.project.projName;
+            gebi("projDesc").disabled=body.project.projDesc;
+            gebi("mediaLink").disabled=body.project.mediaLink;
           }
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
@@ -312,7 +336,7 @@
             //code 0: success
             alert("success!!");
             loadEditor();
-            localStorage.setItem("submitted",true);
+            localStorage.setItem("platform-submitted",true);
           }
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);

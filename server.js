@@ -659,59 +659,6 @@ app.post("/platform-getMembers",async (req,res)=>{
 	}
 })
 
-//dont remember what this was for
-//i think its ass
-app.post("/platform-getMyGroup",async (req,res)=>{
-	//req.body.group
-	try{
-		//get group a|b
-		//get other group members
-		await client.connect();
-		const db = client.db(hackDbName).collection("contest");
-		const currContent = await db.findOne();
-		var db_group = currContent.groups;
-		console.log(currContent);
-		var msg = {
-			error:0
-		}
-		var otherMembers = [];
-		var groupA = db_group.a; //array
-		var groupB = db_group.b; //array
-		var found = false;
-		for (var i=0;i<groupA.length;i++){
-			console.log(groupA[i].group, req.body.group)
-			if (groupA[i].group===req.body.group){
-				//found group do the tasks
-				msg.group="a";
-				found=true;
-			}else {
-				otherMembers.push(groupA[i])
-			}
-		}
-		if (!found){
-			otherMembers=[];
-			for (var i=0;i<groupB.length;i++){
-				console.log(groupA[i].group, req.body.group)
-				if (groupB[i].group===req.body.group){
-					//found group do the tasks
-					msg.group="b";
-					found=true;
-				}else {
-					otherMembers.push(groupB[i])
-				}
-			}
-		}
-		if (!found){
-			msg.error=1;
-		}else{
-			msg.teams=otherMembers;
-		}
-		res.send(JSON.stringify(msg));
-	}finally{
-		await client.close();
-	}
-})
-
 /**
  * Gets all the projects in database
  */
@@ -730,6 +677,32 @@ app.get("/platform-getProjects",async (req,res)=>{
 	}
 })
 
+/**
+ * Given group id [req.body.id], return project
+ * associated with that group.
+ */
+app.post("/platform-getMyProject",async (req,res)=>{
+	try{
+		await client.connect();
+		const db = client.db(hackDbName).collection("projects");
+		const currContent = await db.findOne();
+		var msg = {
+			error:-1
+		}
+		var db_proj = currContent.projects;
+		for (var i=0;i<db_proj.length;i++){
+			if (db_proj[i].id===req.body.id){
+				//found
+				msg.error=0;
+				msg.project=db_proj[i];
+			}
+		}
+		if(msg.error===-1)msg.error=1;
+		res.send(JSON.stringify(msg));
+	}finally{
+		await client.close();
+	}
+})
 
 
 
