@@ -710,12 +710,13 @@ app.post("/platform-getMyProject",async (req,res)=>{
 			var msg = {
 				error:-1
 			}
-			var db_proj = currContent.projects;
-			for (var i=0;i<db_proj.length;i++){
-				if (db_proj[i].id===req.body.id){
+			var projects = currContent.projects;
+			for (var i=0;i<projects.length;i++){
+				console.log(projects[i].id);
+				if (projects[i].id===req.body.id){
 					//found
 					msg.error=0;
-					msg.project=db_proj[i];
+					msg.project=projects[i];
 				}
 			}
 			if(msg.error===-1)msg.error=1;
