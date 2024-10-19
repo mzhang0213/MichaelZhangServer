@@ -275,16 +275,16 @@
         }
       })
       //get existing project
-      var req = new XMLHttpRequest();
-      var body = {
+      var req2 = new XMLHttpRequest();
+      var body2 = {
         id:localStorage.getItem("platform-group-id")
       }
-      req.open("POST",window.location.origin+"/platform-getMyProject");
-      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-      req.send(JSON.stringify(body));
-      req.addEventListener("readystatechange", ()=>{
-        if (req.status === 200 && req.readyState === 4) {
-          var body = JSON.parse(req.responseText);
+      req2.open("POST",window.location.origin+"/platform-getMyProject");
+      req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req2.send(JSON.stringify(body2));
+      req2.addEventListener("readystatechange", ()=>{
+        if (req2.status === 200 && req2.readyState === 4) {
+          var body = JSON.parse(req2.responseText);
           console.log(body);
           if (body.err===1){
             alert("something bad happened - couldnt find project")
@@ -293,8 +293,8 @@
             gebi("projDesc").disabled=body.project.projDesc;
             gebi("mediaLink").disabled=body.project.mediaLink;
           }
-        } else if (req.readyState === 4){
-          console.log("reeeeeeee err new acc creation: "+req.responseText);
+        } else if (req2.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req2.responseText);
           alert("please ask michael for help oh noes")
         }
       })

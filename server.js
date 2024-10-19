@@ -608,7 +608,7 @@ app.get("/platform-getAnnos",async (req,res)=>{
 /**
  * Gets the total list of groups
  */
-app.get("/platform-getMembers",async (req,res)=>{
+app.get("/platform-getGroups",async (req,res)=>{
 	try{
 		await client.connect();
 		const db = client.db(hackDbName).collection("accounts");
