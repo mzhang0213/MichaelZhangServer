@@ -210,8 +210,8 @@
       for (var i=0;i<boxes.length;i++){
         var catNum = categories[boxes[i].style.border];
         if (catNum!==null&&catNum!==NaN&&catNum!==undefined){
-          if (ret[catNum]===null)ret[catNum]=0;
-          ret[catNum]++;
+          if (ret[catNum]===null)ret[catNum]=[];
+          ret[catNum].push(boxes[i].id);
         }
       }
       return ret;
@@ -229,7 +229,7 @@
       var highlightedCounts = getHighlighted();
         var invalid = false;
         for (var key of Object.keys(highlightedCounts)){
-          if (highlightedCounts[key]!==ALLOTTEDVOTES){ //exactly allotted votes required to submit
+          if (highlightedCounts[key].length!==ALLOTTEDVOTES){ //exactly allotted votes required to submit
             invalid=true;
           }
         }
@@ -240,6 +240,7 @@
       var proj = document.createElement("div");
       proj.className="relative w-11/12 p-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-sky-300";
       proj.style.border=BASEBORDER;
+      proj.id=project.id;
 
       var projName = document.createElement("h1");
       projName.className="relative w-full text-3xl";
