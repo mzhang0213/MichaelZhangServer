@@ -186,6 +186,7 @@
     const ALLOTTEDVOTES = 2;
     const BASEBORDER = "2px solid black"
     const SIDEBARSELECTIONBORDER = "2px solid black";
+    const ROUND = "groups"
     gebi("category1").style.border=SIDEBARSELECTIONBORDER;
 
     var getHighlighted = function(){
@@ -299,9 +300,9 @@
       }else{
         var req = new XMLHttpRequest();
         var body = {
-          votes:highlights,
+          votes:getHighlighted(),
           user:localStorage.getItem("platform-username"),
-          round:"groups"
+          round:ROUND
         }
         req.open("POST",window.location.origin+"/platform-vote");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -334,8 +335,8 @@
 
         var req2 = new XMLHttpRequest();
         var body2 = {
-          votes:highlights,
-          user:localStorage.getItem("platform-username")
+          user:localStorage.getItem("platform-username"),
+          round:ROUND
         }
         req2.open("POST",window.location.origin+"/platform-getMyVotes");
         req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
