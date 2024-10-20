@@ -423,6 +423,7 @@ app.post("/platform-vote", async (req,res)=>{
 				error:0
 			}
 			for (key of Object.keys(req.body.votes)){
+				console.log(req.body.votes);
 				var currCategory = new Set(req.body.votes[key]);
 				//looping through categories, each containing distinct votes
 				//for each vote made by user,
