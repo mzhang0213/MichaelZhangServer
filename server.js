@@ -494,7 +494,7 @@ app.post("/platform-vote", async (req,res)=>{
 					}
 				}
 			}
-			await db_accs.updateOne(filter,updateDoc);
+			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
 			await client.close();
