@@ -830,6 +830,8 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 					}
 				}
 				if (found!==-1){
+					console.log("found pos: "+found);
+					console.log(votes[i].votes[found].category);
 					if (submit[votes[i].votes[found].category]===null){
 						submit[votes[i].votes[found].category]=[]
 					}
