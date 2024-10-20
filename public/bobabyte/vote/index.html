@@ -80,13 +80,13 @@
 
   <script>
     //check for account presence
-    if (localStorage.getItem("platform-username")==null){
+    if (localStorage.getItem("platform-username")===null){
       alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
       window.location=window.location.origin+"/bobabyte/signin/"
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
-    if (localStorage.getItem("platform-group")==null){
+    if (localStorage.getItem("platform-group")===null){
       gebi("group").innerHTML="Join your group";
       gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
     }else{
@@ -210,7 +210,7 @@
       for (var i=0;i<boxes.length;i++){
         var catNum = categories[boxes[i].style.border];
         if (catNum!==null&&catNum!==NaN&&catNum!==undefined){
-          if (ret[catNum]===null)ret[catNum]=[];
+          if (ret[catNum]===undefined)ret[catNum]=[];
           ret[catNum].push(boxes[i].id);
         }
       }

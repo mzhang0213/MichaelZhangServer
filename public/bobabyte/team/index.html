@@ -61,7 +61,7 @@
   <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
   <script>
     //check for account presence
-    if (localStorage.getItem("platform-username")==null){
+    if (localStorage.getItem("platform-username")===null){
       alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
       window.location=window.location.origin+"/bobabyte/signin/"
     }else{
@@ -69,7 +69,7 @@
     }
 
     //join group button
-    if (localStorage.getItem("platform-group")==null){
+    if (localStorage.getItem("platform-group")===null){
       gebi("group").innerHTML="Please join your group!!";
       gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
     }else{
