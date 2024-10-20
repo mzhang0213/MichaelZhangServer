@@ -378,11 +378,25 @@ app.post("/platform-removeGroup", async (req,res)=>{
 		{
 			id:"group_id",
 			votes:[
-				"username1", "username2"
+				{
+					user: "username",
+					category: 1|2|3 <integer>
+				},
+				{
+					user: "username",
+					category: 1|2|3 <integer>
+				}
 			] //easy use of votes.length to get total votes for a group
 		}
 	],
 	finals: [<same struc as above>]
+*/
+/*
+req.body.votes: {
+	1: ["groupid","groupid"],
+	2: [],
+	3: []
+}
 */
 /**
  * Given [req.body.user] and [req.body.votes: Set],
@@ -401,15 +415,56 @@ app.post("/platform-vote", async (req,res)=>{
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
-			var votes = [];
-			if (req.body.round==="groups")votes=currContent.groups;
-			else votes=currContent.finals;
-			const userVotes = new Set(req.body.votes);
+			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
+			//const userVotes = new Set(req.body.votes);
 		
 			var submit = [];
 			var msg = {
 				error:0
 			}
+			for (key of Object.keys(req.body.votes)){
+				var currCategory = new Set(req.body.votes[key]);
+				//looping through categories, each containing distinct votes
+				//for each vote made by user,
+				//try to find it in database and replace
+				//-----
+				//if not found, create a new vote profile
+				//for that project in voting db
+				var foundCategories = []; for (c of currCategory) foundCategories.push(false);
+				for (var i=0;i<votes.length;i++){
+					if (currCategory.has(votes[i].id)){
+						//we found the right group
+						//IE, EXPLICITLY: this curr group under this groupID
+						//exists in the current category of votes we are
+						//looping through
+						var updatedVotes = [];
+						for (var j=0;j<votes[i].votes.length;j++){
+							if (votes[i].votes[j].user!==req.body.user){
+								updatedVotes.push(votes[i].votes[j]);
+							}
+						}
+						updatedVotes.push({
+							"user":req.body.user,
+							"category":key
+						})
+						votes[i].votes=updatedVotes;
+						currCategory.delete(votes[i].id);
+					}
+					submit.push(votes[i]);
+				}
+				for (group of currCategory){
+					//these guys are new, create new
+					var newGroup = {};
+					newGroup.id=group;
+					newGroup.votes=[{
+						"user":req.body.user,
+						"category":key
+					}];
+					submit.push(newGroup);
+				}
+			}
+
+			/*
 			for (var i=0;i<votes.length;i++){
 				var updatedVotes = [];
 				for (var j=0;j<votes[i].votes.length;j++){
@@ -422,21 +477,21 @@ app.post("/platform-vote", async (req,res)=>{
 				}
 				submit.push(votes[i]);
 			}
-			//new vote
-			var vote = {
-				user:req.body.user,
-				votes:req.body.votes
-			}
-			submit.push(vote);
+			*/
+
 			const filter = {title:"voting"}
 			var updateDoc = {}
 			if (req.body.round==="groups"){
-				$set: {
-					groups:submit
+				updateDoc={
+					$set: {
+						groups:submit
+					}
 				}
 			}else{
-				$set: {
-					finals:submit
+				updateDoc={
+					$set: {
+						finals:submit
+					}
 				}
 			}
 			await db_accs.updateOne(filter,updateDoc);
@@ -743,9 +798,19 @@ app.post("/platform-getMyProject",async (req,res)=>{
 	],
 	finals: [<same struc as above>]
 */
+/*
+body.votes = [
+	{
+		id:"groupId",
+		category:0|1|2 <int>
+	}
+]
+*/
 /**
  * Given group user [req.body.user], return votes
- * that that the given user made.
+ * that that the given user made from either groups
+ * stage or finals stage, depending on [req.body.round]
+ * Votes will contain a [groupId] and a [category]
  */
 app.post("/platform-getMyVotes",async (req,res)=>{
 	try{
@@ -754,20 +819,20 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
 			var msg = {}
-			var groups = currContent.groups;
-			var votes = [];
-			for (var i=0;i<groups.length;i++){
+			var votes = []; if (req.body.round==="groups")submit=currContent.groups; else submit=currContent.finals;
+			var submit = [];
+			for (var i=0;i<votes.length;i++){
 				var found = false;
-				for (var j=0;j<groups[i].votes.length;j++){
-					if (groups[i].votes[j]===req.body.user){
+				for (var j=0;j<votes[i].votes.length;j++){
+					if (votes[i].votes[j].user===req.body.user){
 						found=true;
 					}
 				}
 				if (found){
-					votes.push(groups[i].id);
+					submit.push(votes[i].id);
 				}
 			}
-			msg.votes = votes;
+			msg.votes = submit;
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();

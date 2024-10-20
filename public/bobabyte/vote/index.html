@@ -189,6 +189,13 @@
     const ROUND = "groups"
     gebi("category1").style.border=SIDEBARSELECTIONBORDER;
 
+    /*
+    {
+      1: ["groupid","groupid"],
+      2: [],
+      3: []
+    }
+    */
     var getHighlighted = function(){
       var boxes = gebi("votingBox").children;
       var cats = gebi("categoryBox").children;
@@ -325,13 +332,8 @@
     req.send();
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
-        var body = JSON.parse(req.responseText);
-        projects=body.projects;
-        for (var i of projects){
-          if (i.id!==localStorage.getItem("platform-group-id")){
-            createProject(i);
-          }
-        }
+
+        var myVotes = [];
 
         var req2 = new XMLHttpRequest();
         var body2 = {
@@ -343,15 +345,36 @@
         req2.send(JSON.stringify(body2));
         req2.addEventListener("readystatechange", ()=>{
           if (req2.status === 200 && req2.readyState === 4) {
-            var body = JSON.parse(req2.responseText);
-            //throw up thx for voting graphic
-            //TEMPORARY
-            alert("Thanks for voting!!");
+            var bodyIn = JSON.parse(req2.responseText);
+            myVotes=bodyIn.votes;
           } else if (req2.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+req2.responseText);
             alert("please ask michael for help oh noes")
           }
         })
+
+        /*
+        body.votes = [
+          {
+            id:"groupId",
+            category:0|1|2 <int>
+          }
+        ]
+        */
+
+        var bodyIn = JSON.parse(req.responseText);
+        projects=bodyIn.projects;
+        for (var i of projects){
+          if (i.id!==localStorage.getItem("platform-group-id")){
+            var p = createProject(i);
+            for (v of myVotes){
+              if (i.id===v.id){
+                p.style.border="2px solid "+gebi("category"+v.category).style.backgroundColor;
+                p.style.boxShadow="0px 0px 5px 2px "+gebi("category"+v.category).style.backgroundColor;
+              }
+            }
+          }
+        }
 
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
