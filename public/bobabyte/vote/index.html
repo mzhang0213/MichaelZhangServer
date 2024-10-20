@@ -205,7 +205,7 @@
       //tracking # of categories and auto assigning their associated color
       for (var i=0;i<cats.length;i++){
         categories["2px solid "+cats[i].style.backgroundColor]=i+1;
-        ret[i+1]=0;
+        ret[i+1]=[];
       }
       for (var i=0;i<boxes.length;i++){
         var catNum = categories[boxes[i].style.border];
