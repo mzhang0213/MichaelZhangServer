@@ -476,7 +476,6 @@ app.post("/platform-proj", async (req,res)=>{
 				}
 				submit.push(projects[i]);
 			}
-			var found=false;
 			if (!editing) {
 				var members = [];
 				var groupId = "";
@@ -485,6 +484,7 @@ app.post("/platform-proj", async (req,res)=>{
 				const groups = currContent_accs.groups;
 				const users = currContent_accs.usernames;
 				console.log(groups);
+				var found=false;
 				for (var i=0;i<groups.length;i++){
 					if (groups[i].id===req.body.id){
 						//found the group
@@ -518,16 +518,13 @@ app.post("/platform-proj", async (req,res)=>{
 					submit.push(proj);
 				}
 			}
-			if(found){
-				const filter = {title:"projects"}
-				const updateDoc = {
-					$set: {
-						projects:submit
-					}
+			const filter = {title:"projects"}
+			const updateDoc = {
+				$set: {
+					projects:submit
 				}
-				await db.updateOne(filter,updateDoc);
 			}
-			
+			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
