@@ -217,7 +217,7 @@
         }
       }
     }
-    var getVoteInvalidity = function(){
+    var getGroupsVoteInvalidity = function(){
       var highlightedCounts = getHighlighted();
         var invalid = false;
         for (var key of Object.keys(highlightedCounts)){
@@ -276,7 +276,7 @@
             this.style.border=newBorder;
             this.style.boxShadow="0px 0px 5px 2px "+gebi(getSelectedCategory()).style.backgroundColor;
           }
-          if (getVoteInvalidity()){
+          if (getGroupsVoteInvalidity()){
             gebi("submit").disabled=true;
           }else{
             gebi("submit").disabled="";
@@ -294,13 +294,14 @@
       })
     }
     gebi("submit").addEventListener("click",function(){
-      if (getVoteInvalidity()){
+      if (getGroupsVoteInvalidity()){
         alert("choose more groups!");
       }else{
         var req = new XMLHttpRequest();
         var body = {
           votes:highlights,
-          user:localStorage.getItem("platform-username")
+          user:localStorage.getItem("platform-username"),
+          round:"groups"
         }
         req.open("POST",window.location.origin+"/platform-vote");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -308,9 +309,9 @@
         req.addEventListener("readystatechange", ()=>{
           if (req.status === 200 && req.readyState === 4) {
             var body = JSON.parse(req.responseText);
-            //res: group a|b , other teams in group
-            
             //throw up thx for voting graphic
+            //TEMPORARY
+            alert("Thanks for voting!!");
           } else if (req.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+req.responseText);
             alert("please ask michael for help oh noes")
@@ -325,7 +326,32 @@
       if (req.status === 200 && req.readyState === 4) {
         var body = JSON.parse(req.responseText);
         projects=body.projects;
-        for (var i of projects) createProject(i);
+        for (var i of projects){
+          if (i.id!==localStorage.getItem("platform-group-id")){
+            createProject(i);
+          }
+        }
+
+        var req2 = new XMLHttpRequest();
+        var body2 = {
+          votes:highlights,
+          user:localStorage.getItem("platform-username")
+        }
+        req2.open("POST",window.location.origin+"/platform-getMyVotes");
+        req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req2.send(JSON.stringify(body2));
+        req2.addEventListener("readystatechange", ()=>{
+          if (req2.status === 200 && req2.readyState === 4) {
+            var body = JSON.parse(req2.responseText);
+            //throw up thx for voting graphic
+            //TEMPORARY
+            alert("Thanks for voting!!");
+          } else if (req2.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req2.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);
         alert("please ask michael for help oh noes")

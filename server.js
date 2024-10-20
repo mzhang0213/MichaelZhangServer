@@ -391,34 +391,36 @@ app.post("/platform-removeGroup", async (req,res)=>{
  * If the user, for instance, changed their votes,
  * then a deletion would be made under one group and
  * addition to under another group.
+ * This process is done to either the groups or finals
+ * array, based on the round of voting occurring
 */
-//req.body.user req.body.votes
+//req.body.user req.body.votes req.body.round
 app.post("/platform-vote", async (req,res)=>{
 	try{
 		(async function(){
-
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
-			//groupAVote groupBVote >> arrays
 			const currContent = await db.findOne();
-			const groups = currContent.groups;
-			const votes = new Set(req.body.votes);
+			var votes = [];
+			if (req.body.round==="groups")votes=currContent.groups;
+			else votes=currContent.finals;
+			const userVotes = new Set(req.body.votes);
 		
 			var submit = [];
 			var msg = {
 				error:0
 			}
-			for (var i=0;i<groups.length;i++){
+			for (var i=0;i<votes.length;i++){
 				var updatedVotes = [];
-				for (var j=0;j<groups[i].votes.length;j++){
-					if (groups[i].votes[j]!==req.body.user){
-						updatedVotes.push(groups[i].votes[j]);
+				for (var j=0;j<votes[i].votes.length;j++){
+					if (votes[i].votes[j]!==req.body.user){
+						updatedVotes.push(votes[i].votes[j]);
 					}
 				}
-				if (votes.has(groups[i])){
+				if (userVotes.has(votes[i])){
 					updatedVotes.push(req.body.user);
 				}
-				submit.push(groups[i]);
+				submit.push(votes[i]);
 			}
 			//new vote
 			var vote = {
@@ -427,9 +429,14 @@ app.post("/platform-vote", async (req,res)=>{
 			}
 			submit.push(vote);
 			const filter = {title:"voting"}
-			const updateDoc = {
+			var updateDoc = {}
+			if (req.body.round==="groups"){
 				$set: {
 					groups:submit
+				}
+			}else{
+				$set: {
+					finals:submit
 				}
 			}
 			await db_accs.updateOne(filter,updateDoc);
@@ -716,6 +723,51 @@ app.post("/platform-getMyProject",async (req,res)=>{
 				}
 			}
 			if(msg.error===-1)msg.error=1;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
+	}
+})
+
+/* db.voting
+	groups: [
+		{
+			id:"group_id",
+			votes:[
+				"username1", "username2"
+			] //easy use of votes.length to get total votes for a group
+		}
+	],
+	finals: [<same struc as above>]
+*/
+/**
+ * Given group user [req.body.user], return votes
+ * that that the given user made.
+ */
+app.post("/platform-getMyVotes",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("voting");
+			const currContent = await db.findOne();
+			var msg = {}
+			var groups = currContent.groups;
+			var votes = [];
+			for (var i=0;i<groups.length;i++){
+				var found = false;
+				for (var j=0;j<groups[i].votes.length;j++){
+					if (groups[i].votes[j]===req.body.user){
+						found=true;
+					}
+				}
+				if (found){
+					votes.push(groups[i].id);
+				}
+			}
+			msg.votes = votes;
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
