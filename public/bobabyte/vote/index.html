@@ -348,34 +348,36 @@
           if (req2.status === 200 && req2.readyState === 4) {
             var bodyIn = JSON.parse(req2.responseText);
             myVotes=bodyIn.votes;
+
+            /*
+            body.votes = {
+              1: {
+                ["group id","group_id"]
+              },
+              2: {},
+              3: {}
+            }
+            */
+            var bodyIn = JSON.parse(req.responseText);
+            projects=bodyIn.projects;
+            for (var i of projects){
+              if (i.id!==localStorage.getItem("platform-group-id")){
+                var p = createProject(i);
+                for (category of Object.keys(myVotes)){
+                  var catVotes = new Set(myVotes[category]);
+                  if (catVotes.has(i.id)){
+                    p.style.border="2px solid "+gebi("category"+category).style.backgroundColor;
+                    p.style.boxShadow="0px 0px 5px 2px "+gebi("category"+category).style.backgroundColor;
+                  }
+                }
+              }
+            }
+          
           } else if (req2.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+req2.responseText);
             alert("please ask michael for help oh noes")
           }
         })
-
-        /*
-        body.votes = [
-          {
-            id:"groupId",
-            category:0|1|2 <int>
-          }
-        ]
-        */
-
-        var bodyIn = JSON.parse(req.responseText);
-        projects=bodyIn.projects;
-        for (var i of projects){
-          if (i.id!==localStorage.getItem("platform-group-id")){
-            var p = createProject(i);
-            for (v of myVotes){
-              if (i.id===v.id){
-                p.style.border="2px solid "+gebi("category"+v.category).style.backgroundColor;
-                p.style.boxShadow="0px 0px 5px 2px "+gebi("category"+v.category).style.backgroundColor;
-              }
-            }
-          }
-        }
 
       } else if (req.readyState === 4){
         console.log("reeeeeeee err new acc creation: "+req.responseText);

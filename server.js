@@ -799,12 +799,13 @@ app.post("/platform-getMyProject",async (req,res)=>{
 	finals: [<same struc as above>]
 */
 /*
-body.votes = [
-	{
-		id:"groupId",
-		category:0|1|2 <int>
-	}
-]
+body.votes = {
+	1: {
+		["group id","group_id"]
+	},
+	2: {},
+	3: {}
+}
 */
 /**
  * Given group user [req.body.user], return votes
@@ -819,17 +820,20 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
 			var msg = {}
-			var votes = []; if (req.body.round==="groups")submit=currContent.groups; else submit=currContent.finals;
-			var submit = [];
+			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
+			var submit = {};
 			for (var i=0;i<votes.length;i++){
-				var found = false;
+				var found = -1;
 				for (var j=0;j<votes[i].votes.length;j++){
 					if (votes[i].votes[j].user===req.body.user){
-						found=true;
+						found=j;
 					}
 				}
-				if (found){
-					submit.push(votes[i].id);
+				if (found!==-1){
+					if (submit[votes[i].votes[found].category]===null){
+						submit[votes[i].votes[found].category]=[]
+					}
+					submit[votes[i].votes[found].category].push(votes[i].id);
 				}
 			}
 			msg.votes = submit;
