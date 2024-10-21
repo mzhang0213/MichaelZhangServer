@@ -239,8 +239,8 @@ app.post("/platform-glogin", async (req,res)=>{
 			for (var i=0;i<groups.length;i++){
 				console.log("submitted gname: "+req.body.group);
 				console.log("db gname: "+groups[i].group);
-				if (req.body.group==groups[i].group){
-					found=req.body.id;
+				if (req.body.group===groups[i].group){
+					found=groups[i].id;
 					groups[i].members.push(req.body.user);
 				}
 				submit.push(groups[i])
@@ -260,7 +260,7 @@ app.post("/platform-glogin", async (req,res)=>{
 			msg.group=req.body.group;
 			msg.id=found;
 			msg.user=req.body.user;
-			res.send(JSON.stringify(msg))
+			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
 		})
