@@ -100,23 +100,19 @@
             alert("something bad happened - couldnt find group")
           }else{
             //groupBlurb
-            var display1 = "";
             var me = document.createElement("i");
-            var display2= "";
-            var two=false;
+            var membersTitle = document.createElement("u");
+            membersTitle.innerHTML="Members";
+            gebi("members").appendChild(membersTitle);
             for (var i=0;i<body.members.length;i++){
               if (body.members[i]===localStorage.getItem("platform-username")){
-                me.append("Me"+" ") //body.members[i]
-                two=true;
+                gebi("members").append("Me") //body.members[i]
               }else{
-                if (two)display2+=body.members[i]+" "
-                else display1+=body.members[i]+" "
+                gebi("members").append(body.members[i]);
               }
+              gebi("members").appendChild(document.createElement("br"));
             }
             gebi("groupName").innerHTML=localStorage.getItem("platform-group");
-            gebi("members").append(display1);
-            gebi("members").append(me);
-            gebi("members").append(display2);
           }
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
