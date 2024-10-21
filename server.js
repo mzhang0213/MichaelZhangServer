@@ -347,22 +347,23 @@ app.post("/platform-removeGroup", async (req,res)=>{
 						}
 					}
 					if (newMembers.length===0){
-						//well now there are no group members; don't push
+						//well now there are no group members; don't push this group back into storage
 						dont=true;
 					}else{
 						groups[i].members=newMembers;
 					}
+				}else{
+					submit.push(groups[i]);
 				}
 				if (!dont) submit.push(groups[i]);
 			}
-			const filter = {title:"usernames"}
+			const filter = {title:"accounts"}
 			const updateDoc = {
 				$set: {
 					groups:submit
 				}
 			}
 			await db_accs.updateOne(filter,updateDoc);
-			
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
 			await client.close();

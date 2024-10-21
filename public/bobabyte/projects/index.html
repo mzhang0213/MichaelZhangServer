@@ -100,7 +100,7 @@
         var req = new XMLHttpRequest();
         var body = {
           user:localStorage.getItem("platform-username"),
-          group:localStorage.getItem("platform-group")
+          id:localStorage.getItem("platform-group-id")
         }
         req.open("POST",window.location.origin+"/platform-removeGroup");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
