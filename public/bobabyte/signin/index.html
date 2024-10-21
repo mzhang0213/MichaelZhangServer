@@ -58,8 +58,20 @@
     <input id="user" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
     <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
   </div>
+  <button id="back">Back Home</button>
   <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
   <style>
+    #back{
+      position:absolute;
+      left:25px;
+      top:20px;
+      background-color:rgb(152, 152, 152);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
     #login{
       background-color:rgb(117, 234, 117);
       border-radius:8px;
@@ -152,6 +164,7 @@
         }
       })
     })
+    gebi("back").addEventListener("click",()=>window.location=window.location.origin+"/bobabyte/")
   </script>
 </body>
 </html>

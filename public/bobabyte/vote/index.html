@@ -72,7 +72,7 @@
         <button id="userButton"></button>
         <div id="userContent">
           <a id="group"></a>
-          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -259,7 +259,7 @@
     var createProject = function(project){
       //project is JSON obj containing project properties
       var proj = document.createElement("div");
-      proj.className="relative w-11/12 p-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-red-300";
+      proj.className="relative w-11/12 p-3 h-auto flex flex-col justify-center items-center text-left rounded-2xl shadow-2xl bg-red-200";
       proj.style.border=BASEBORDER;
       proj.id=project.id;
 
