@@ -54,7 +54,7 @@
 <body onscroll="(function(){if(window.scrollY>10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,1)'; else if (window.scrollY<10)document.getElementById('navbar').style.backgroundColor='rgba(0,0,0,0.5)'})()">
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
-    <div class="flex items-center flex-shrink-0 text-white mr-6" onclick="(function(){window.location=window.location.origin})()">
+    <div class="flex items-center flex-shrink-0 text-white mr-6" style="cursor:pointer;" onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()">
       <img class="h-8 mr-2" id="logo" src="./logo.png">
       <button class="text-xl tracking-tight">BobaByte</span>
     </div>
