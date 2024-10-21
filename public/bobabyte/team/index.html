@@ -112,7 +112,6 @@
             var membersTitle = document.createElement("u");
             membersTitle.innerHTML="Members";
             gebi("members").appendChild(membersTitle);
-            gebi("members").appendChild(document.createElement("br"));
             for (var i=0;i<body.members.length;i++){
               if (body.members[i].user===localStorage.getItem("platform-username")){
                 var italics = document.createElement("i");
