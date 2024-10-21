@@ -237,14 +237,14 @@ app.post("/platform-glogin", async (req,res)=>{
 				error:0
 			}
 			for (var i=0;i<groups.length;i++){
-				console.log("submitted gname: "+req.body.group);
-				console.log("db gname: "+groups[i].group);
 				if (req.body.group===groups[i].group){
 					found=groups[i].id;
 					groups[i].members.push(req.body.user);
 				}
-				submit.push(groups[i])
+				submit.push(groups[i]);
 			}
+			//얼마든지 맞아줄게
+			console.log(submit);
 			if (found!==-1){
 				const filter = {title:"usernames"}
 				const updateDoc = {
