@@ -57,21 +57,33 @@
     <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">BobaByte Team</h1>
     <p id="groupName" class="text-2xl mt-36 bg-white rounded-lg px-7"></p>
     <p id="members" class="text-2xl mt-12 bg-white rounded-lg px-7"></p>
+    <button id="logout" class="relative p-3 mt-12">Logout</button>
   </div>
   <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
+  <style>
+    #logout{
+      background-color:rgb(233, 103, 103);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #logout:disabled{
+      background-color:rgb(255, 179, 170);
+    }
+  </style>
   <script>
     //check for account presence
     if (localStorage.getItem("platform-username")===null){
       alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
       window.location=window.location.origin+"/bobabyte/signin/"
-    }else{
-      gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
 
     //join group button
     if (localStorage.getItem("platform-group")===null){
-      gebi("group").innerHTML="Please join your group!!";
-      gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
+      alert("Please join your group!!");
+      window.location=window.location.origin+'/bobabyte/group/';
     }else{
       var req = new XMLHttpRequest();
       var body = {
@@ -112,6 +124,12 @@
         }
       })
     }
+    gebi("logout").addEventListener("click",function(){
+      localStorage.removeItem("platform-group");
+      localStorage.removeItem("platform-group-id");
+      alert("Please join your group!!");
+      window.location=window.location.origin+'/bobabyte/group/';
+    })
   </script>
 </body>
 </html>

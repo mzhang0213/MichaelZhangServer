@@ -64,23 +64,56 @@
       </button>
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
-      <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
+      <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b style="text-decoration:underline;">Home</b></button>
       <button onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
-      <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
-      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
-          <a onclick="(function(){localStorage.removeItem('hh-username');localStorage.removeItem('hh-first');localStorage.removeItem('hh-last');localStorage.removeItem('group');window.location.reload();})()" id="logout">Logout</a>
+          <a id="group"></a>
+          <a onclick="(function(){localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
   </nav>
+
   <script>
-    if (localStorage.getItem("hh-username")===null){
+    //check for account presence
+    if (localStorage.getItem("platform-username")==null){
       gebi("userButton").innerHTML="Guest";
     }else{
-      gebi("userButton").innerHTML=`Hi, ${localStorage.getItem("hh-username")}!`;
+      gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
+    }
+
+    //join group button
+    if (localStorage.getItem("platform-group")==null){
+      gebi("group").innerHTML="Join your group";
+      gebi("group").onclick=function(){window.location=window.location.origin+'/bobabyte/group/'}
+    }else{
+      gebi("group").innerHTML=localStorage.getItem("platform-group");
+      gebi("group").addEventListener("click",function(){
+        window.location=window.location.origin+'/bobabyte/team';
+      })
+    }
+    //remove member from group
+    function unregisterGroup(){
+      if (localStorage.getItem("platform-group")!==null){
+        var req = new XMLHttpRequest();
+        var body = {
+          user:localStorage.getItem("platform-username"),
+          group:localStorage.getItem("platform-group")
+        }
+        req.open("POST",window.location.origin+"/platform-removeGroup");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
     }
   </script>
   

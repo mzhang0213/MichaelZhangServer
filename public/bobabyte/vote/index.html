@@ -67,12 +67,12 @@
       <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
       <button onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
       <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
-      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
+      <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b style="text-decoration:underline;">Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
           <a id="group"></a>
-          <a onclick="(function(){localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');unregisterGroup();window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -103,6 +103,27 @@
     }
     if (now>1693265400000){
       gebi("myProjectButton").style.display="";
+    }
+    //remove member from group
+    function unregisterGroup(){
+      if (localStorage.getItem("platform-group")!==null){
+        var req = new XMLHttpRequest();
+        var body = {
+          user:localStorage.getItem("platform-username"),
+          group:localStorage.getItem("platform-group")
+        }
+        req.open("POST",window.location.origin+"/platform-removeGroup");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
     }
   </script>
   <style>
