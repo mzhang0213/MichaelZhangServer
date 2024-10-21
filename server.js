@@ -734,6 +734,15 @@ app.get("/platform-getGroups",async (req,res)=>{
 })
 
 
+/*
+body.members = [
+	{
+		user:"username",
+		first:"bob",
+		last:"smith"
+	}
+]
+*/
 /**
  * Gets the members of a group given
  * the id of a group
@@ -746,15 +755,26 @@ app.post("/platform-getMembers",async (req,res)=>{
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
 			var db_group = currContent.groups;
+			var db_users = currContent.usernames;
 			var msg = {
-				error:0
+				error:0,
+				members:[]
 			}
 			var found = false;
+			var memberUsernames = [];
 			for (var i=0;i<db_group.length;i++){
 				if (db_group[i].id===req.body.id){
 					//found the group, now ret members
 					found = true;
-					msg.members = db_group[i].members;
+					memberUsernames = db_group[i].members;
+				}
+			}
+			//add names into members
+			for (var i=0;i<memberUsernames.length;i++){
+				for (var j=0;j<db_users;j++){
+					if (memberUsernames[i]===db_users[i].user){
+						msg.members.push(db_users[i]);
+					}
 				}
 			}
 			if (!found){

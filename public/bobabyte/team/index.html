@@ -57,7 +57,7 @@
   <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
     <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">BobaByte Team</h1>
     <p id="groupName" class="text-2xl mt-36 bg-white rounded-lg px-7"></p>
-    <p id="members" class="text-2xl mt-12 bg-white rounded-lg px-7"></p>
+    <p id="members" class="flex flex-col items-center text-2xl mt-12 bg-white rounded-lg px-7"></p>
     <button id="logout" class="relative p-3 mt-12">Logout</button>
   </div>
   <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-50" style="width:100%;height:100%;display:none"></div>
@@ -100,19 +100,29 @@
           if (body.error==1){
             alert("something bad happened - couldnt find group")
           }else{
-            //groupBlurb
-            var me = document.createElement("i");
+            /*
+            body.members = [
+              {
+                user:"username",
+                first:"bob",
+                last:"smith"
+              }
+            ]
+            */
             var membersTitle = document.createElement("u");
             membersTitle.innerHTML="Members";
             gebi("members").appendChild(membersTitle);
             gebi("members").appendChild(document.createElement("br"));
             for (var i=0;i<body.members.length;i++){
-              if (body.members[i]===localStorage.getItem("platform-username")){
-                gebi("members").append("Me") //body.members[i]
+              if (body.members[i].user===localStorage.getItem("platform-username")){
+                var italics = document.createElement("i");
+                italics.append("Me");
+                gebi("members").append(italics);
               }else{
-                gebi("members").append(body.members[i]);
+                var p = document.createElement("p");
+                p.append(body.members[i].first+" "+body.members[i].last);
+                gebi("members").append(p);
               }
-              gebi("members").appendChild(document.createElement("br"));
             }
             gebi("groupName").innerHTML=localStorage.getItem("platform-group");
           }
