@@ -104,6 +104,7 @@
             var membersTitle = document.createElement("u");
             membersTitle.innerHTML="Members";
             gebi("members").appendChild(membersTitle);
+            gebi("members").appendChild(document.createElement("br"));
             for (var i=0;i<body.members.length;i++){
               if (body.members[i]===localStorage.getItem("platform-username")){
                 gebi("members").append("Me") //body.members[i]
@@ -120,10 +121,34 @@
         }
       })
     }
+
+    //remove member from group
+    function unregisterGroup(){
+      if (localStorage.getItem("platform-group")!==null){
+        var req = new XMLHttpRequest();
+        var body = {
+          user:localStorage.getItem("platform-username"),
+          group:localStorage.getItem("platform-group")
+        }
+        req.open("POST",window.location.origin+"/platform-removeGroup");
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req.send(JSON.stringify(body));
+        req.addEventListener("readystatechange", ()=>{
+          if (req.status === 200 && req.readyState === 4) {
+            var body = JSON.parse(req.responseText);
+          } else if (req.readyState === 4){
+            console.log("reeeeeeee err new acc creation: "+req.responseText);
+            alert("please ask michael for help oh noes")
+          }
+        })
+      }
+    }
+    
     gebi("logout").addEventListener("click",function(){
+      unregisterGroup();
       localStorage.removeItem("platform-group");
       localStorage.removeItem("platform-group-id");
-      alert("Please join your group!!");
+      alert("Successfully removed you from your group");
       window.location=window.location.origin+'/bobabyte/group/';
     })
   </script>
