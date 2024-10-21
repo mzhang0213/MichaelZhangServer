@@ -246,7 +246,7 @@ app.post("/platform-glogin", async (req,res)=>{
 			//얼마든지 맞아줄게
 			console.log(submit);
 			if (found!==-1){
-				const filter = {title:"usernames"}
+				const filter = {title:"accounts"}
 				const updateDoc = {
 					$set: {
 						groups:submit
