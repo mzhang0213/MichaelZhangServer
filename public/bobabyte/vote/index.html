@@ -373,6 +373,11 @@
                 }
               }
             }
+            if (getGroupsVoteInvalidity()){
+              gebi("submit").disabled=true;
+            }else{
+              gebi("submit").disabled="";
+            }
           
           } else if (req2.readyState === 4){
             console.log("reeeeeeee err new acc creation: "+req2.responseText);

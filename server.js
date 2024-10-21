@@ -415,13 +415,47 @@ app.post("/platform-vote", async (req,res)=>{
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
-			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
+			var allGroups = []; if (req.body.round==="groups")allGroups=currContent.groups; else allGroups=currContent.finals;
 			//const userVotes = new Set(req.body.votes);
 		
 			var submit = [];
 			var msg = {
 				error:0
 			}
+			for (var i=0;i<allGroups.length;i++){
+				//for all existing groups, try to find our user-casted vote
+					//if we found it, we want to have our user-casted vote in allGroups[].votes
+				//if you can't find it, then for this group re-create the group
+				//EXCLUSIVELY WITHOUT the user's vote in there, whether it is there or not
+				var found = false;
+				var category = -1;
+				for (key of Object.keys(req.body.votes)){
+					var currCategory = new Set(req.body.votes[key]);
+					if (currCategory.has(allGroups[i].id)){
+						found = true;
+						category = key;
+						break;
+					}
+				}
+				var updatedVotes = [];
+				for (var j=0;j<allGroups[i].votes.length;j++){
+					if (allGroups[i].votes[j].user!==req.body.user){
+						updatedVotes.push(allGroups[i].votes[j]);
+					}
+				}
+				if (found){
+					//if we want the user-submitted vote to be in allGroups[].votes,
+					//then lets create it and push it in!
+					updatedVotes.push({
+						"user":req.body.user,
+						"category":category
+					});
+				}
+				allGroups[i].votes=updatedVotes;
+				submit.push(allGroups[i]);
+			}
+
+
 			for (key of Object.keys(req.body.votes)){
 				var currCategory = new Set(req.body.votes[key]);
 				//looping through categories, each containing distinct votes
@@ -431,26 +465,26 @@ app.post("/platform-vote", async (req,res)=>{
 				//if not found, create a new vote profile
 				//for that project in voting db
 				var foundCategories = []; for (c of currCategory) foundCategories.push(false);
-				for (var i=0;i<votes.length;i++){
-					if (currCategory.has(votes[i].id)){
+				for (var i=0;i<allGroups.length;i++){
+					if (currCategory.has(allGroups[i].id)){
 						//we found the right group
 						//IE, EXPLICITLY: this curr group under this groupID
 						//exists in the current category of votes we are
 						//looping through
 						var updatedVotes = [];
-						for (var j=0;j<votes[i].votes.length;j++){
-							if (votes[i].votes[j].user!==req.body.user){
-								updatedVotes.push(votes[i].votes[j]);
+						for (var j=0;j<allGroups[i].votes.length;j++){
+							if (allGroups[i].votes[j].user!==req.body.user){
+								updatedVotes.push(allGroups[i].votes[j]);
 							}
 						}
 						updatedVotes.push({
 							"user":req.body.user,
 							"category":key
 						})
-						votes[i].votes=updatedVotes;
-						currCategory.delete(votes[i].id);
+						allGroups[i].votes=updatedVotes;
+						currCategory.delete(allGroups[i].id);
 					}
-					submit.push(votes[i]);
+					submit.push(allGroups[i]);
 				}
 				for (group of currCategory){
 					//these guys are new, create new
