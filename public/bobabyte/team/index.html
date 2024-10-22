@@ -114,7 +114,7 @@
             gebi("members").appendChild(membersTitle);
             for (var i=0;i<body.members.length;i++){
               if (body.members[i].user===localStorage.getItem("platform-username")){
-                var italics = document.createElement("i");
+                var italics = document.createElement("i");  
                 italics.append("Me");
                 gebi("members").append(italics);
               }else{

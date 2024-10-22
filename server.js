@@ -770,6 +770,7 @@ app.post("/platform-getMembers",async (req,res)=>{
 				}
 			}
 			//add names into members
+			console.log(memberUsernames);
 			for (var i=0;i<memberUsernames.length;i++){
 				for (var j=0;j<db_users.length;j++){
 					if (memberUsernames[i]===db_users[i].user){
@@ -777,6 +778,7 @@ app.post("/platform-getMembers",async (req,res)=>{
 					}
 				}
 			}
+			console.log(msg.members);
 			if (!found){
 				msg.error=1;
 			}
