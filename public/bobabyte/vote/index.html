@@ -275,7 +275,11 @@
 
       var groupMembers = document.createElement("p");
       groupMembers.className="relative w-full text-sm mt-1";
-      groupMembers.innerHTML=project.groupMembers;
+      var members = project.groupMembers;
+      groupMembers.innerHTML="By:";
+      for (var i=0;i<members.length;i++){
+        groupMembers.innerHTML+=" "+members[i]+" |";
+      }
 
       var projDesc = document.createElement("p");
       projDesc.className="relative w-full mt-4";

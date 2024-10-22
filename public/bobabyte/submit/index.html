@@ -267,12 +267,12 @@
             var display2= "";
             var two=false;
             for (var i=0;i<body.members.length;i++){
-              if (body.members[i]===localStorage.getItem("platform-username")){
+              if (body.members[i].user===localStorage.getItem("platform-username")){
                 me.append("Me"+" ") //body.members[i]
                 two=true;
               }else{
-                if (two)display2+=body.members[i]+" "
-                else display1+=body.members[i]+" "
+                if (two)display2+=body.members[i].user+" "
+                else display1+=body.members[i].user+" "
               }
             }
             gebi("groupBlurb").append(display1);
