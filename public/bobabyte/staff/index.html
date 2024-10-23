@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+  <title>BobaByte Staff</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="./logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          sm: '0px',
+          md: '700px',
+          lg: '1200px',
+          xl: '1600px'
+        }
+      }
+    }
+  </script>
+  <script>
+    var navMenuShown = false;
+    var gebi = function(e){return document.getElementById(e)};
+    var resize = function(){
+      if (window.innerWidth<700){
+        //small
+      }else if (700<=window.innerWidth && window.innerWidth<1200){
+        //med
+      }else{
+        //lg++
+      }
+    }
+    window.onresize=resize;
+    window.onload=function(){
+      if (window.innerWidth<700){
+        //small
+        document.getElementById("navItemContainer").style.display="none"
+        document.getElementById("menuToggle").addEventListener("click",function(){
+          if (navMenuShown) document.getElementById("navItemContainer").style.display="none"
+          else document.getElementById("navItemContainer").style.display="";
+          navMenuShown=!navMenuShown;
+        })
+      }
+      resize();
+    }
+  </script>
+  <style>
+    html{
+      scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body class="-z-10 bg-gray-200">
+  <div id="loginMenu">
+    <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png')"></div>
+    <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
+      <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login with your staff username!</h1>
+      <input id="user" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
+      <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
+    </div>
+    <button id="back" class="p-1">Back Home</button>
+    <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-80" style="width:100%;height:100%;display:none"></div>
+  </div>
+
+  <div id="">
+
+  </div>
+
+  <style>
+    #back{
+      position:absolute;
+      left:25px;
+      top:20px;
+      background-color:rgb(209, 209, 209);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:13px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login{
+      background-color:rgb(117, 234, 117);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:20px;
+      font-family:'Cabin';
+      outline:none;
+    }
+    #login:disabled{
+      background-color:rgb(170, 255, 170);
+    }
+    #login:hover{
+      background-color:rgb(48, 194, 48);
+    }
+  </style>
+  <script>
+    var gebi = function(e){return document.getElementById(e)}
+    var loadUI = function(){
+      gebi("loginMenu").style.display="none";
+    }
+    gebi("login").addEventListener("click",function(){
+      var req = new XMLHttpRequest();
+      var username = gebi("user").value;
+      var body = {
+        user:username
+      }
+      req.open("POST",window.location.origin+"/platform-staff-login");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          //now check for responded errors
+          if (body.error == 1) {
+            //code 1: invalid username
+            alert("wrong / misspelled username. sorry!")
+          }else if (body.error == 0){
+            //code 0: success
+            console.log("acc signin success");
+            loadUI();
+          }
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+    gebi("back").addEventListener("click",()=>window.location=window.location.origin+"/bobabyte/")
+  </script>
+</body>
+</html>

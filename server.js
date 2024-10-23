@@ -205,6 +205,45 @@ app.post("/platform-login", async (req,res)=>{
 	}
 })
 
+/**
+ * Given username submission, lets the client
+ * know that username is good and that login
+ * is successful
+ * We let the client know using body.error
+ */
+//req.body.user is the username submitted
+app.post("/platform-staff-login", async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			const staff = currContent.staff;
+		
+			var found=false;
+			var msg = {
+				error:0
+			}
+			for (var i=0;i<staff.length;i++){
+				if (req.body.user==staff[i].user){
+					found=true;
+					break;
+				}
+			}
+			if (!found){
+				msg.error=1;
+				console.log("toast");
+			}
+			res.send(JSON.stringify(msg))
+		})().then(async function(){
+			await client.close();
+		})
+	} catch(error) {
+		// Ensures that the client will close when you finish/error
+		console.log(error);
+	}
+})
+
 /*
 groups are stored in an array
 a single group's schematic:
@@ -609,7 +648,7 @@ app.post("/platform-proj", async (req,res)=>{
 					var proj = {
 						projName:req.body.projName,
 						groupName:req.body.groupName,
-						groupMembers:members,
+						groupMembers:users,
 						id:groupId,
 						projDesc:req.body.projDesc,
 						mediaLink:req.body.mediaLink
