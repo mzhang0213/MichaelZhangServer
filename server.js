@@ -633,22 +633,10 @@ app.post("/platform-proj", async (req,res)=>{
 				if (!found){
 					msg.error=1
 				}else{
-					/*
-					var members_str = "";
-					for (var i=0;i<members.length;i++){
-						for (var j=0;j<users.length;j++){
-							if (users[j].user===members[i]){
-								members_str=users[j].first+", ";
-								break;
-							}
-						}
-					}
-					members_str=members_str.substring(0,members_str.length-2);
-					*/
 					var proj = {
 						projName:req.body.projName,
 						groupName:req.body.groupName,
-						groupMembers:users,
+						groupMembers:members,
 						id:groupId,
 						projDesc:req.body.projDesc,
 						mediaLink:req.body.mediaLink
