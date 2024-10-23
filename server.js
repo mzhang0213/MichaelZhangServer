@@ -582,6 +582,18 @@ app.post("/platform-vote", async (req,res)=>{
  * Creates a new project in database
  * with the given the project data.
  */
+/* db.projects = [
+	{
+		projName:"poggers",
+		groupName:"epic team",
+		groupMembers:["Michael Zhang", "Bob Smith"],
+		id:12345,
+		projDesc:"epic description",
+		mediaLink:"bobabyte.org"
+	},
+	{},,,,,,,
+]
+*/
 /*
 data: (req.body.xxx)
 	projName

@@ -53,22 +53,41 @@
   </style>
 </head>
 <body class="-z-10 bg-gray-200">
+  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png')"></div>
   <div id="loginMenu">
-    <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png')"></div>
     <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
       <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login with your staff username!</h1>
       <input id="user" class="text-center mt-12 rounded-xl" style="width:200px;height:20px;border:2px black solid">
       <button id="login" class="main mt-6 px-3 py-2">Go! >></button>
     </div>
     <button id="back" class="p-1">Back Home</button>
-    <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-80" style="width:100%;height:100%;display:none"></div>
   </div>
+  
+  <div id="mainMenu" class="flex flex-col justify-center">
+    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Welcome!</h1>
+    <div id="menuBar" class="relative mt-6 flex flex-row justify-start">
+      <button id="accountsTab">Accounts</button>
+      <button id="contestTab">Contest</button>
+    </div>
+    <div id="accounts" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
 
-  <div id="">
+    </div>
+    <div id="votes" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
 
+    </div>
   </div>
-
+  
+  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-80" style="width:100%;height:100%;display:none"></div>
   <style>
+    .generalButton{
+      position:relative;
+      background-color:rgb(240, 240, 240);
+      border-radius:8px;
+      border:2px solid #000000;
+      font-size:17px;
+      font-family:'Cabin';
+      outline:none;
+    }
     #back{
       position:absolute;
       left:25px;
