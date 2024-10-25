@@ -428,7 +428,7 @@
 
     if (localStorage.getItem("platform-votingOff")==="true"){
       gebi("closedVotingBox").style.display="";
-      gebi("submit").remove();
+      gebi("submit").style.display="none";
     }
     socket.on("platform-anno",(body)=>{
       alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
@@ -437,7 +437,7 @@
       //throw up the disabled banner
       if (body==="true"){
         gebi("closedVotingBox").style.display="";
-        gebi("submit").remove();
+        gebi("submit").style.display="none";
         localStorage.setItem("platform-votingOff",true);
       }else{
         localStorage.setItem("platform-votingOff",false);
