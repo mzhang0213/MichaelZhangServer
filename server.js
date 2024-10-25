@@ -533,6 +533,8 @@ app.post("/platform-vote", async (req,res)=>{
 						updatedVotes.push(allGroups[i].votes[j]);
 					}
 				}
+				console.log(found,category);
+				console.log(updatedVotes);
 				if (found){
 					//if we want the user-submitted vote to be in allGroups[].votes,
 					//then lets create it and push it in!
