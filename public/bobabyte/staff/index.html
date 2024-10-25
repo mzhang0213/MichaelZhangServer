@@ -46,17 +46,6 @@
       }
       resize();
     }
-    socket.on("platform-anno",(body)=>{
-      alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
-    })
-    socket.on("platform-votingOff", (body) => {
-      //throw up the disabled banner
-      if (body==="true"||body){
-        localStorage.setItem("platform-votingOff",true);
-      }else{
-        localStorage.setItem("platform-votingOff",false);
-      }
-    });
   </script>
   <style>
     html{
@@ -280,6 +269,20 @@
         gebi("votingOff").checked=false;
       }
     }
+
+    socket.on("platform-anno",(body)=>{
+      alert("NEW ANNOUNCEMENT: \n\n"+body.title+"\n"+body.body)
+    })
+    socket.on("platform-votingOff", (body) => {
+      //throw up the disabled banner
+      if (body==="true"||body){
+        localStorage.setItem("platform-votingOff",true);
+        gebi("votingOff").checked=true;
+      }else{
+        localStorage.setItem("platform-votingOff",false);
+        gebi("votingOff").checked=false;
+      }
+    });
     /*
     var start = new Date();
     gebi("votingDeadline").value=start.getMinutes()+":"+start.getSeconds();
