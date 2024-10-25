@@ -565,7 +565,7 @@ app.post("/platform-vote", async (req,res)=>{
 					if (!found){
 						//create a whole new vote profile for this group
 						var newGroup = {};
-						newGroup.id=group;
+						newGroup.id=currCategory[i];
 						newGroup.votes=[{
 							"user":req.body.user,
 							"category":key
