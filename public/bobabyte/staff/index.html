@@ -80,7 +80,7 @@
           <input class="text-center rounded-xl" style="width:200px;height:20px;border:2px black solid">
         </div>
       </div>
-      <button id="addAccount" class="submit mt-2 px-3 py-2">Submit</button>
+      <button id="addAccount" class="submit mt-3 px-2 py-1">Add new line</button>
       <button id="newAccountSubmit" class="submit mt-2 px-3 py-2">Submit</button>
     </div>
     <div id="contest" class="contentPage relative mt-24 py-5 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;display:none;">
@@ -210,7 +210,7 @@
     })
     gebi("addAccount").addEventListener("click",function(){
       var div = document.createElement("div");
-      div.className="relative flex flex-row justify-start bg-gray-100 rounded-2xl";
+      div.className="relative flex flex-row justify-start bg-gray-100 mt-1 rounded-2xl";
       var input1 = document.createElement("input");
       input1.className="text-center rounded-xl mr-2"
       input1.style="width:200px;height:20px;border:2px black solid";
@@ -245,7 +245,8 @@
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
-          alert("created new user in db!! yayay")
+          alert("created new user in db!! yayay");
+          window.location.reload();
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
           alert("please ask michael for help oh noes")
