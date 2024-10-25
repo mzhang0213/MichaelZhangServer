@@ -51,7 +51,7 @@
     })
     socket.on("platform-votingOff", (body) => {
       //throw up the disabled banner
-      if (body){
+      if (body==="true"){
         localStorage.setItem("platform-votingOff",true);
       }else{
         localStorage.setItem("platform-votingOff",false);
@@ -275,7 +275,7 @@
       })
     })
     if (localStorage.getItem("platform-votingOff")!==null){
-      if (localStorage.getItem("platform-votingOff")){
+      if (localStorage.getItem("platform-votingOff")==="true"){
         gebi("votingOff").checked=true;
       }else{
         gebi("votingOff").checked=false;

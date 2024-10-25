@@ -435,7 +435,7 @@
     })
     socket.on("platform-votingOff", (body) => {
       //throw up the disabled banner
-      if (body){
+      if (body==="true"){
         gebi("closedVotingBox").style.display="";
         gebi("submit").remove();
         localStorage.setItem("platform-votingOff",true);
