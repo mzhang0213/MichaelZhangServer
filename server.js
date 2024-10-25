@@ -558,7 +558,7 @@ app.post("/platform-vote", async (req,res)=>{
 					var found=false;
 					//go thru submitted to see if they exist in db
 					for (var j=0;j<allGroups.length;j++){
-						if (currCategory[i]===allGroups[i].id){
+						if (currCategory[i]===allGroups[j].id){
 							found=true;
 							break;
 						}
