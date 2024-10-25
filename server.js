@@ -546,6 +546,7 @@ app.post("/platform-vote", async (req,res)=>{
 			}
 
 
+			/*
 			for (key of Object.keys(req.body.votes)){
 				var currCategory = new Set(req.body.votes[key]);
 				//looping through categories, each containing distinct votes
@@ -587,6 +588,7 @@ app.post("/platform-vote", async (req,res)=>{
 					submit.push(newGroup);
 				}
 			}
+			*/
 
 			/*
 			for (var i=0;i<votes.length;i++){
