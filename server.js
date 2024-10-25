@@ -786,19 +786,11 @@ app.post("/platform-anno", async(req,res)=>{
 				body:req.body.body
 			}
 	
-			//service worker time
-			// payload @ req.body.title req.body.body
-			const db_subs = client.db(hackDbName).collection("subs");
-			const currContent_subs = await db_subs.findOne();
-			var subs_content = currContent_subs.subs;
 			var message = {
 				title:req.body.title,
 				body:req.body.body
 			};
-			for (var i=0;i<subs_content.length;i++){
-				//for each subscription, send noti
-				sendNotification(subs_content[i].sub,message);
-			}
+			io.emit("platform-anno",message);
 	
 			res.send(JSON.stringify(msg))
 		})().then(async function(){
@@ -1033,7 +1025,7 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 app.post("/platform-votingOff",async (req,res)=>{
 	try{
 		(async function(){
-			io.emit("votingOff",req.body.votingStatus);
+			io.emit("platform-votingOff",req.body.votingStatus);
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();

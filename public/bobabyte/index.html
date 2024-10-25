@@ -46,6 +46,17 @@
       }
       resize();
     }
+    socket.on("platform-anno",(body)=>{
+      alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
+    })
+    socket.on("platform-votingOff", (body) => {
+      //throw up the disabled banner
+      if (body){
+        localStorage.setItem("platform-votingOff",true);
+      }else{
+        localStorage.setItem("platform-votingOff",false);
+      }
+    });
   </script>
   <style>
     html{
@@ -285,11 +296,6 @@
       })
     }
     updateNotis()
-    socket.on("new-anno",(body)=>{
-      updateNotis();
-      //fire new announcement alert
-      //use notifications ??
-    })
   </script>
 
   <!-- day's schedule-->

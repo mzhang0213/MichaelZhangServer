@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script> var socket = io(); </script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
   <script>
     tailwind.config = {
@@ -45,6 +46,17 @@
       }
       resize();
     }
+    socket.on("platform-anno",(body)=>{
+      alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
+    })
+    socket.on("platform-votingOff", (body) => {
+      //throw up the disabled banner
+      if (body){
+        localStorage.setItem("platform-votingOff",true);
+      }else{
+        localStorage.setItem("platform-votingOff",false);
+      }
+    });
   </script>
   <style>
     html{

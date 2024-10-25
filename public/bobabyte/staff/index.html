@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script> var socket = io(); </script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
   <script>
     tailwind.config = {
@@ -45,6 +46,17 @@
       }
       resize();
     }
+    socket.on("platform-anno",(body)=>{
+      alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
+    })
+    socket.on("platform-votingOff", (body) => {
+      //throw up the disabled banner
+      if (body){
+        localStorage.setItem("platform-votingOff",true);
+      }else{
+        localStorage.setItem("platform-votingOff",false);
+      }
+    });
   </script>
   <style>
     html{
@@ -85,15 +97,23 @@
       <div id="votingOffBox">
         <label>Turn off voting</label><input id="votingOff" type="checkbox">
       </div>
+      <div id="annoBox" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl">
+        <h2>Make an announcement!</h2>
+        <label class="mt-5">Title</label>
+        <textarea id="annoTitle" style="resize:none;width:200px;"></textarea>
+        <label class="mt-3">Body</label>
+        <textarea id="annoBody" style="resize:none;width:350px;"></textarea>
+        <button id="annoSubmit" class="submit mt-3 px-3 py-2">Send!</button>
+      </div>
     <!--
       <div id="votingSwitchBox" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl">
         <label>Switch to finals voting</label><input id="votingSwitch" type="checkbox">
       </div>
       <div id="finalsChooseBox" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl"></div>
-    -->
       <div id="votingDeadlineBox" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl">
         <label>Change voting deadline</label><input id="votingDeadline" type="time">
       </div>
+      -->
     </div>
   </div>
   
@@ -196,7 +216,26 @@
       gebi("contest").style.display="";
     })
 
-
+    gebi("newAccountSubmit").addEventListener("click",function(){
+      var req = new XMLHttpRequest();
+      var body = {
+        first:gebi("newAccountFirst").value,
+        last:gebi("newAccountLast").value,
+        user:gebi("newAccountUser").value
+      }
+      req.open("POST",window.location.origin+"/platform-newUser");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          alert("created new user in db!! yayay")
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
     gebi("votingOff").addEventListener("change",function(){
       var req = new XMLHttpRequest();
       var username = gebi("user").value;
@@ -210,6 +249,25 @@
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           console.log("voting off state of "+gebi("votingOff").value+" success!");
+        } else if (req.readyState === 4){
+          console.log("reeeeeeee err new acc creation: "+req.responseText);
+          alert("please ask michael for help oh noes")
+        }
+      })
+    })
+    gebi("annoSubmit").addEventListener("click",function(){
+      var req = new XMLHttpRequest();
+      var body = {
+        title:gebi("annoTitle").value,
+        body:gebi("annoBody").value
+      }
+      req.open("POST",window.location.origin+"/platform-anno");
+      req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      req.send(JSON.stringify(body));
+      req.addEventListener("readystatechange", ()=>{
+        if (req.status === 200 && req.readyState === 4) {
+          var body = JSON.parse(req.responseText);
+          alert("successfully made announcement");
         } else if (req.readyState === 4){
           console.log("reeeeeeee err new acc creation: "+req.responseText);
           alert("please ask michael for help oh noes")

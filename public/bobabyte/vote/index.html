@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script> var socket = io(); </script>
   <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
   <script>
     tailwind.config = {
@@ -212,8 +213,6 @@
     }
   </style>
   <script>
-    const socket = io();
-    
     var projects = [];
     const ALLOTTEDVOTES = 2;
     const BASEBORDER = "2px solid black"
@@ -431,7 +430,10 @@
       gebi("closedVotingBox").style.display="";
       gebi("submit").remove();
     }
-    socket.on("votingOff", (body) => {
+    socket.on("platform-anno",(body)=>{
+      alert("NEW ANNOUNCEMENT: "+body.title+"\n\n"+body.body)
+    })
+    socket.on("platform-votingOff", (body) => {
       //throw up the disabled banner
       if (body){
         gebi("closedVotingBox").style.display="";
