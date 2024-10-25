@@ -546,6 +546,7 @@ app.post("/platform-vote", async (req,res)=>{
 				allGroups[i].votes=updatedVotes;
 				submit.push(allGroups[i]);
 			}
+			console.log(submit);
 			
 			//possible that allGroups has no groups instantiated
 			//in that case, lets go thru all submitted votes and
@@ -573,6 +574,7 @@ app.post("/platform-vote", async (req,res)=>{
 						submit.push(newGroup);
 					}
 				}
+				console.log(submit);
 			}
 
 
