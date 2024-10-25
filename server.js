@@ -193,9 +193,11 @@ app.post("/platform-newUser", async (req,res)=>{
 			}
 			for (var i=0;i<req.body.names.length;i++){
 				var newUser = req.body.names[i];
-				var newName = (req.body.names[i].first.charAt(0)+req.body.names[i].last.charAt(0)).toLowerCase();
-				for (var j=0;j<5;j++)newName+=Math.floor(Math.random()*10);
-				newUser.user = newName;
+				if(req.body.names[i].user===undefined||req.body.names[i].user===null||req.body.names[i].user===""){
+					var newName = (req.body.names[i].first.charAt(0)+req.body.names[i].last.charAt(0)).toLowerCase();
+					for (var j=0;j<5;j++)newName+=Math.floor(Math.random()*10);
+					newUser.user = newName;
+				}
 				submit.push(newUser);
 			}
 			const filter = {title:"accounts"}

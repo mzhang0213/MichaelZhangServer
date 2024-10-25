@@ -71,15 +71,16 @@
       <button id="contestTab">Contest</button>
     </div>
     <div id="accounts" class="contentPage relative mt-24 py-5 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
-      <h2>Create new user</h2>
-      <div id="newAccount" class="relative flex flex-row justify-start bg-gray-100 rounded-2xl">
-        <label>First</label>
-        <input id="newAccountFirst" class="text-center rounded-xl mr-2" style="width:200px;height:20px;border:2px black solid">
-        <label>Last</label>
-        <input id="newAccountLast" class="text-center rounded-xl mr-2" style="width:200px;height:20px;border:2px black solid">
-        <label>Username</label>
-        <input id="newAccountUser" class="text-center rounded-xl" style="width:200px;height:20px;border:2px black solid">
+      <h2>Create new users</h2>
+      <label>First | Last | User</label>
+      <div id="newAccount" class="relative flex flex-col bg-gray-100 rounded-2xl">
+        <div class="relative flex flex-row justify-start bg-gray-100 rounded-2xl">
+          <input class="text-center rounded-xl mr-2" style="width:200px;height:20px;border:2px black solid">
+          <input class="text-center rounded-xl mr-2" style="width:200px;height:20px;border:2px black solid">
+          <input class="text-center rounded-xl" style="width:200px;height:20px;border:2px black solid">
+        </div>
       </div>
+      <button id="addAccount" class="submit mt-2 px-3 py-2">Submit</button>
       <button id="newAccountSubmit" class="submit mt-2 px-3 py-2">Submit</button>
     </div>
     <div id="contest" class="contentPage relative mt-24 py-5 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;display:none;">
@@ -153,6 +154,9 @@
     .submit:hover{
       background-color:rgb(48, 194, 48);
     }
+    #addAccount{
+      background-color:aqua;
+    }
   </style>
   <script>
     var gebi = function(e){return document.getElementById(e)}
@@ -204,13 +208,36 @@
       }
       gebi("contest").style.display="";
     })
-
+    gebi("addAccount").addEventListener("click",function(){
+      var div = document.createElement("div");
+      div.className="relative flex flex-row justify-start bg-gray-100 rounded-2xl";
+      var input1 = document.createElement("input");
+      input1.className="text-center rounded-xl mr-2"
+      input1.style="width:200px;height:20px;border:2px black solid";
+      var input2 = document.createElement("input");
+      input2.className="text-center rounded-xl mr-2"
+      input2.style="width:200px;height:20px;border:2px black solid";
+      var input3 = document.createElement("input");
+      input3.className="text-center rounded-xl mr-2"
+      input3.style="width:200px;height:20px;border:2px black solid";
+      div.appendChild(input1);
+      div.appendChild(input2);
+      div.appendChild(input3);
+      gebi("newAccount").appendChild(div);
+    })
     gebi("newAccountSubmit").addEventListener("click",function(){
+      var accs = [];
+      var htmlAccs = gebi("newAccount").children;
+      for (var i=0;i<htmlAccs.length;i++){
+        accs.push({
+          first:htmlAccs[i].children[0].value,
+          last:htmlAccs[i].children[1].value,
+          user:htmlAccs[i].children[2].value
+        })
+      }
       var req = new XMLHttpRequest();
       var body = {
-        first:gebi("newAccountFirst").value,
-        last:gebi("newAccountLast").value,
-        user:gebi("newAccountUser").value
+        names:accs
       }
       req.open("POST",window.location.origin+"/platform-newUser");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -225,6 +252,7 @@
         }
       })
     })
+    
     gebi("votingOff").addEventListener("change",function(){
       var req = new XMLHttpRequest();
       var body = {
