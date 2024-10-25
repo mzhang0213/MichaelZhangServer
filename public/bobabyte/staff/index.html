@@ -238,7 +238,6 @@
     })
     gebi("votingOff").addEventListener("change",function(){
       var req = new XMLHttpRequest();
-      var username = gebi("user").value;
       var body = {
         votingStatus:gebi("votingOff").checked
       }

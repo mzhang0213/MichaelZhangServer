@@ -1025,6 +1025,7 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 app.post("/platform-votingOff",async (req,res)=>{
 	try{
 		(async function(){
+			console.log(req.body.votingStatus);
 			io.emit("platform-votingOff",req.body.votingStatus);
 			res.send(JSON.stringify({msg:"OK"}));
 		})().then(async function(){

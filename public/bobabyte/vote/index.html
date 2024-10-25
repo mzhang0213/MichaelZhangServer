@@ -435,6 +435,7 @@
     })
     socket.on("platform-votingOff", (body) => {
       //throw up the disabled banner
+      console.log("received off message");
       if (body==="true"){
         gebi("closedVotingBox").style.display="";
         gebi("submit").style.display="none";
