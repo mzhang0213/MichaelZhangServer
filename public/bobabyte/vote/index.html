@@ -66,14 +66,14 @@
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
-      <button onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
+      <button id="navBarProjects" onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Projects</b></button>
       <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
       <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b style="text-decoration:underline;">Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton"></button>
         <div id="userContent">
           <a id="group"></a>
-          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -93,17 +93,8 @@
     }else{
       gebi("group").innerHTML=localStorage.getItem("platform-group");
     }
-    var now = new Date().getTime();
-    if (now>1693249200000){
-      //show proj submit
-      gebi("myProjectButton").style.display="";
-    }
-    if (now>1693262400000){
-      //hide proj submit after deadline
-      gebi("myProjectButton").style.display="none";
-    }
-    if (now>1693265400000){
-      gebi("myProjectButton").style.display="";
+    if (Date.now()>1729980000000){
+      gebi("navBarProjects").style.display="";
     }
     //remove member from group
     function unregisterGroup(){
@@ -221,6 +212,8 @@
     }
   </style>
   <script>
+    const socket = io();
+    
     var projects = [];
     const ALLOTTEDVOTES = 2;
     const BASEBORDER = "2px solid black"
@@ -433,6 +426,22 @@
         alert("please ask michael for help oh noes")
       }
     })
+
+    if (localStorage.getItem("platform-votingOff")){
+      gebi("closedVotingBox").style.display="";
+      gebi("submit").remove();
+    }
+    socket.on("votingOff", (body) => {
+      //throw up the disabled banner
+      if (body){
+        gebi("closedVotingBox").style.display="";
+        gebi("submit").remove();
+        localStorage.setItem("platform-votingOff",true);
+      }else{
+        localStorage.setItem("platform-votingOff",false);
+        window.location.reload();
+      }
+    });
   </script>
   <!--
     schematic

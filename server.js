@@ -1026,32 +1026,14 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 
 
 /**
- * docx
+ * When received, blast signal to users on /vote
+ * and everywhere else that voting is turned off.
+ * Clients will set localstorage to voting off.
  */
 app.post("/platform-votingOff",async (req,res)=>{
 	try{
 		(async function(){
-			await client.connect();
-			const db = client.db(hackDbName).collection("voting");
-			const currContent = await db.findOne();
-			var msg = {}
-			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
-			var submit = {};
-			for (var i=0;i<votes.length;i++){
-				var found = -1;
-				for (var j=0;j<votes[i].votes.length;j++){
-					if (votes[i].votes[j].user===req.body.user){
-						found=j;
-					}
-				}
-				if (found!==-1){
-					if (submit[votes[i].votes[found].category]===undefined){
-						submit[votes[i].votes[found].category]=[]
-					}
-					submit[votes[i].votes[found].category].push(votes[i].id);
-				}
-			}
-			msg.votes = submit;
+			io.emit("votingOff",req.body.votingStatus);
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
@@ -1064,30 +1046,22 @@ app.post("/platform-votingOff",async (req,res)=>{
 /**
  * docx
  */
+/*
 app.post("/platform-votingSwitch",async (req,res)=>{
+//abandoning
+})
+*/
+ 
+
+/**
+ * docx
+ */
+/*
+abandoning
+app.post("/platform-votingDeadline",async (req,res)=>{
 	try{
 		(async function(){
-			await client.connect();
-			const db = client.db(hackDbName).collection("voting");
-			const currContent = await db.findOne();
-			var msg = {}
-			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
-			var submit = {};
-			for (var i=0;i<votes.length;i++){
-				var found = -1;
-				for (var j=0;j<votes[i].votes.length;j++){
-					if (votes[i].votes[j].user===req.body.user){
-						found=j;
-					}
-				}
-				if (found!==-1){
-					if (submit[votes[i].votes[found].category]===undefined){
-						submit[votes[i].votes[found].category]=[]
-					}
-					submit[votes[i].votes[found].category].push(votes[i].id);
-				}
-			}
-			msg.votes = submit;
+			io.emit("votingDeadline",req.body.time);
 			res.send(JSON.stringify(msg));
 		})().then(async function(){
 			await client.close();
@@ -1096,6 +1070,7 @@ app.post("/platform-votingSwitch",async (req,res)=>{
 		console.log(e);
 	}
 })
+*/
 
 
 
