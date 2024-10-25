@@ -275,7 +275,7 @@ app.post("/platform-staff-login", async (req,res)=>{
 				error:0
 			}
 			for (var i=0;i<staff.length;i++){
-				if (req.body.user==staff[i].user){
+				if (req.body.user==staff[i]){
 					found=true;
 					break;
 				}
