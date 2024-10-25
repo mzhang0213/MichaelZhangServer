@@ -179,8 +179,8 @@ const hackDbName = "bobabyte2024";
 ]
 */
 app.post("/platform-newUser", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -206,12 +206,13 @@ app.post("/platform-newUser", async (req,res)=>{
 			}
 			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch (error){
-		console.log(error);
+		}
 	}
+	await run();
 })
 
 /**
@@ -221,8 +222,8 @@ app.post("/platform-newUser", async (req,res)=>{
  */
 //req.body.user is the username submitted
 app.post("/platform-login", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -246,13 +247,13 @@ app.post("/platform-login", async (req,res)=>{
 				console.log("toast");
 			}
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	} catch(error) {
-		// Ensures that the client will close when you finish/error
-		console.log(error);
+		}
 	}
+	await run();
 })
 
 /**
@@ -263,8 +264,8 @@ app.post("/platform-login", async (req,res)=>{
  */
 //req.body.user is the username submitted
 app.post("/platform-staff-login", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+			try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -285,13 +286,13 @@ app.post("/platform-staff-login", async (req,res)=>{
 				console.log("toast");
 			}
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	} catch(error) {
-		// Ensures that the client will close when you finish/error
-		console.log(error);
+		}
 	}
+	await run();
 })
 
 /*
@@ -313,8 +314,8 @@ a single group's schematic:
  */
 //req.body.group is the username submitted, req.body.user is the user's username
 app.post("/platform-glogin", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -350,12 +351,13 @@ app.post("/platform-glogin", async (req,res)=>{
 			msg.id=found;
 			msg.user=req.body.user;
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch (error){
-		console.log(error);
+		}
 	}
+	await run();
 })
 
 /**
@@ -366,8 +368,8 @@ app.post("/platform-glogin", async (req,res)=>{
  */
 //req.body.group, req.body.user
 app.post("/platform-glogin-confirm", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -393,12 +395,13 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
 				id:randomName
 			}
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
@@ -415,8 +418,8 @@ app.post("/platform-glogin-confirm", async (req,res)=>{
  */
 //req.body.user req.body.id
 app.post("/platform-removeGroup", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			var msg = {
 				error:0
 			}
@@ -454,12 +457,13 @@ app.post("/platform-removeGroup", async (req,res)=>{
 			}
 			await db_accs.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 
@@ -500,8 +504,8 @@ req.body.votes: {
 */
 //req.body.user req.body.votes req.body.round
 app.post("/platform-vote", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+			try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
@@ -650,12 +654,13 @@ app.post("/platform-vote", async (req,res)=>{
 			}
 			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch (error){
-		console.log(error);
+		}
 	}
+	await run();
 })
 
 /**
@@ -682,8 +687,8 @@ data: (req.body.xxx)
 	mediaLink
 */
 app.post("/platform-proj", async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 
 			var msg = {
 				error:0
@@ -744,13 +749,13 @@ app.post("/platform-proj", async (req,res)=>{
 			}
 			await db.updateOne(filter,updateDoc);
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-
-	}catch(e){
-		console.log(e)
+		}
 	}
+	await run();
 })
 
 /**
@@ -758,8 +763,8 @@ app.post("/platform-proj", async (req,res)=>{
  * and broadcasts the announcement to everyone
  */
 app.post("/platform-anno", async(req,res)=>{
-	try {
-		(async function(){
+	async function run(){
+		try {
 			await client.connect();
 			const db_annos = client.db(hackDbName).collection("annos");
 			const currContent_annos = await db_annos.findOne();
@@ -793,21 +798,21 @@ app.post("/platform-anno", async(req,res)=>{
 			io.emit("platform-anno",message);
 	
 			res.send(JSON.stringify(msg))
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	} catch(e) {
-		// Ensures that the client will close when you finish/error
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
  * Gets the list of announcements in database
  */
 app.get("/platform-getAnnos",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("annos");
 			const currContent = await db.findOne();
@@ -816,20 +821,21 @@ app.get("/platform-getAnnos",async (req,res)=>{
 				annos:db_annos
 			}
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
  * Gets the total list of groups
  */
 app.get("/platform-getGroups",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -838,12 +844,13 @@ app.get("/platform-getGroups",async (req,res)=>{
 				groups:db_groups
 			}
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 
@@ -862,8 +869,8 @@ body.members = [
  */
 //req.body.id
 app.post("/platform-getMembers",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
@@ -896,20 +903,21 @@ app.post("/platform-getMembers",async (req,res)=>{
 				msg.error=1;
 			}
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch (e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
  * Gets all the projects in database
  */
 app.get("/platform-getProjects",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("projects");
 			const currContent = await db.findOne();
@@ -918,12 +926,13 @@ app.get("/platform-getProjects",async (req,res)=>{
 				projects:db_proj
 			}
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
@@ -931,8 +940,8 @@ app.get("/platform-getProjects",async (req,res)=>{
  * associated with that group.
  */
 app.post("/platform-getMyProject",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("projects");
 			const currContent = await db.findOne();
@@ -949,12 +958,13 @@ app.post("/platform-getMyProject",async (req,res)=>{
 			}
 			if(msg.error===-1)msg.error=1;
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /* db.voting
@@ -984,8 +994,8 @@ body.votes = {
  * Votes will contain a [groupId] and a [category]
  */
 app.post("/platform-getMyVotes",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();
@@ -1008,12 +1018,13 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 			}
 			msg.votes = submit;
 			res.send(JSON.stringify(msg));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 
@@ -1023,17 +1034,18 @@ app.post("/platform-getMyVotes",async (req,res)=>{
  * Clients will set localstorage to voting off.
  */
 app.post("/platform-votingOff",async (req,res)=>{
-	try{
-		(async function(){
+	async function run(){
+		try{
 			console.log(req.body.votingStatus);
 			io.emit("platform-votingOff",req.body.votingStatus);
 			res.send(JSON.stringify({msg:"OK"}));
-		})().then(async function(){
+		}catch (error){
+			console.log(error);
+		}finally{
 			await client.close();
-		})
-	}catch(e){
-		console.log(e);
+		}
 	}
+	await run();
 })
 
 /**
