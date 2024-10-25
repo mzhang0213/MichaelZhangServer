@@ -164,6 +164,56 @@ app.get("/sendSuperSecretMessage",(req,res)=>{
 //name of database in mongodb
 const hackDbName = "bobabyte2024";
 
+
+/**
+ * Creates a new user given a list [req.body.names]
+ * containing objects that list first and last name.
+ */
+/* req.body.names:
+[
+	{
+		first:"Michael",
+		last:"Jang"
+	},
+	{}
+]
+*/
+app.post("/platform-newUser", async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("accounts");
+			const currContent = await db.findOne();
+			const users = currContent.usernames;
+		
+			var found=-1; //holds group id if found, else -1 (bad code, bad variable purpose, idc)
+			var submit = users;
+			var msg = {
+				error:0
+			}
+			for (var i=0;i<req.body.names.length;i++){
+				var newUser = req.body.names[i];
+				var newName = (req.body.names[i].first.charAt(0)+req.body.names[i].last.charAt(0)).toLowerCase();
+				for (var j=0;j<5;j++)newName+=Math.floor(Math.random()*10);
+				newUser.user = newName;
+				submit.push(newUser);
+			}
+			const filter = {title:"accounts"}
+			const updateDoc = {
+				$set: {
+					usernames:submit
+				}
+			}
+			await db.updateOne(filter,updateDoc);
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch (error){
+		console.log(error);
+	}
+})
+
 /**
  * Given username submission, lets the client
  * know that username is good and that login
@@ -943,6 +993,97 @@ app.post("/platform-getMyVotes",async (req,res)=>{
 		console.log(e);
 	}
 })
+
+
+/**
+ * docx
+ */
+app.post("/platform-votingOff",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("voting");
+			const currContent = await db.findOne();
+			var msg = {}
+			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
+			var submit = {};
+			for (var i=0;i<votes.length;i++){
+				var found = -1;
+				for (var j=0;j<votes[i].votes.length;j++){
+					if (votes[i].votes[j].user===req.body.user){
+						found=j;
+					}
+				}
+				if (found!==-1){
+					if (submit[votes[i].votes[found].category]===undefined){
+						submit[votes[i].votes[found].category]=[]
+					}
+					submit[votes[i].votes[found].category].push(votes[i].id);
+				}
+			}
+			msg.votes = submit;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
+	}
+})
+
+/**
+ * docx
+ */
+app.post("/platform-votingSwitch",async (req,res)=>{
+	try{
+		(async function(){
+			await client.connect();
+			const db = client.db(hackDbName).collection("voting");
+			const currContent = await db.findOne();
+			var msg = {}
+			var votes = []; if (req.body.round==="groups")votes=currContent.groups; else votes=currContent.finals;
+			var submit = {};
+			for (var i=0;i<votes.length;i++){
+				var found = -1;
+				for (var j=0;j<votes[i].votes.length;j++){
+					if (votes[i].votes[j].user===req.body.user){
+						found=j;
+					}
+				}
+				if (found!==-1){
+					if (submit[votes[i].votes[found].category]===undefined){
+						submit[votes[i].votes[found].category]=[]
+					}
+					submit[votes[i].votes[found].category].push(votes[i].id);
+				}
+			}
+			msg.votes = submit;
+			res.send(JSON.stringify(msg));
+		})().then(async function(){
+			await client.close();
+		})
+	}catch(e){
+		console.log(e);
+	}
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
