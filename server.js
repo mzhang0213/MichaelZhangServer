@@ -533,8 +533,6 @@ app.post("/platform-vote", async (req,res)=>{
 						updatedVotes.push(allGroups[i].votes[j]);
 					}
 				}
-				console.log(found,category);
-				console.log(updatedVotes);
 				if (found){
 					//if we want the user-submitted vote to be in allGroups[].votes,
 					//then lets create it and push it in!
@@ -546,7 +544,6 @@ app.post("/platform-vote", async (req,res)=>{
 				allGroups[i].votes=updatedVotes;
 				submit.push(allGroups[i]);
 			}
-			console.log(submit);
 			
 			//possible that allGroups has no groups instantiated
 			//in that case, lets go thru all submitted votes and
@@ -575,7 +572,6 @@ app.post("/platform-vote", async (req,res)=>{
 					}
 				}
 			}
-			console.log(submit);
 
 
 			/*
