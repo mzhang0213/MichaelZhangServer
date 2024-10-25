@@ -51,7 +51,7 @@
     })
     socket.on("platform-votingOff", (body) => {
       //throw up the disabled banner
-      if (body==="true"){
+      if (body==="true"||body){
         localStorage.setItem("platform-votingOff",true);
       }else{
         localStorage.setItem("platform-votingOff",false);
