@@ -275,7 +275,11 @@
       })
     })
     if (localStorage.getItem("platform-votingOff")!==null){
-      gebi("votingOff").value=localStorage.getItem("platform-votingOff");
+      if (localStorage.getItem("platform-votingOff")){
+        gebi("votingOff").checked=true;
+      }else{
+        gebi("votingOff").checked=false;
+      }
     }
     /*
     var start = new Date();
