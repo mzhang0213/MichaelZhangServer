@@ -53,7 +53,7 @@
   </style>
 </head>
 <body class="-z-10 bg-gray-200">
-  <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png')"></div>
+  <div id="background" class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png')"></div>
   <div id="loginMenu">
     <div class="relative flex flex-col justify-start items-center" style="width:100%;height:100%;">
       <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Login with your staff username!</h1>
@@ -63,14 +63,14 @@
     <button id="back" class="p-1">Back Home</button>
   </div>
   
-  <div id="mainMenu" class="relative z-10 flex flex-col item-center" style="display:none;">
-    <h1 class="text-4xl mt-24 bg-white rounded-lg px-7">Welcome!</h1>
-    <div id="menuBar" class="relative mt-6 flex flex-row justify-start">
+  <div id="mainMenu" class="relative z-10 flex flex-col items-center" style="display:none;">
+    <h1 class="w-fit text-4xl mt-24 bg-white rounded-lg px-7">Welcome!</h1>
+    <div id="menuBar" class="relative w-10/12 mt-6 flex flex-row justify-start bg-gray-800 p-2">
       <button id="accountsTab">Accounts</button>
       <button id="contestTab">Contest</button>
     </div>
-    <div id="accounts" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
-      <div id="newAccount" class="relative mt-12 flex flex-row justify-start bg-gray-100 rounded-2xl">
+    <div id="accounts" class="relative mt-24 py-5 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
+      <div id="newAccount" class="relative flex flex-row justify-start bg-gray-100 rounded-2xl">
         <label>First</label>
         <input id="newAccountFirst" class="text-center rounded-xl mr-2" style="width:200px;height:20px;border:2px black solid">
         <label>Last</label>
@@ -79,7 +79,7 @@
         <input id="newAccountUser" class="text-center rounded-xl" style="width:200px;height:20px;border:2px black solid">
       </div>
     </div>
-    <div id="votes" class="relative mt-12 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;">
+    <div id="votes" class="relative mt-24 py-5 flex flex-col justify-start items-center bg-gray-100 rounded-2xl" style="width:100%;height:80%;display:none;">
       <div id="votingOffBox">
         <label>Turn off voting</label><input id="votingOff" type="checkbox">
       </div>
@@ -145,6 +145,9 @@
     var gebi = function(e){return document.getElementById(e)}
     var loadUI = function(){
       gebi("loginMenu").style.display="none";
+      gebi("mainMenu").style.display="";
+      document.body.style.backgroundColor="#8e839b";
+      gebi("background").style.opacity="75%";
     }
     gebi("login").addEventListener("click",function(){
       var req = new XMLHttpRequest();
