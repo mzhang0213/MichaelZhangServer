@@ -574,8 +574,8 @@ app.post("/platform-vote", async (req,res)=>{
 						submit.push(newGroup);
 					}
 				}
-				console.log(submit);
 			}
+			console.log(submit);
 
 
 			/*
