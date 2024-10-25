@@ -546,6 +546,34 @@ app.post("/platform-vote", async (req,res)=>{
 				allGroups[i].votes=updatedVotes;
 				submit.push(allGroups[i]);
 			}
+			
+			//possible that allGroups has no groups instantiated
+			//in that case, lets go thru all submitted votes and
+			//see which voted-for groups need a new creation in
+			//the database
+			for (key of Object.keys(req.body.votes)){
+				var currCategory = req.body.votes[key];
+				for (var i=0;i<currCategory.length;i++){
+					found=false;
+					//go thru submitted to see if they exist in db
+					for (var j=0;j<allGroups.length;j++){
+						if (currCategory[i]===allGroups[i].id){
+							found=true;
+							break;
+						}
+					}
+					if (!found){
+						//create a whole new vote profile for this group
+						var newGroup = {};
+						newGroup.id=group;
+						newGroup.votes=[{
+							"user":req.body.user,
+							"category":key
+						}];
+						submit.push(newGroup);
+					}
+				}
+			}
 
 
 			/*
