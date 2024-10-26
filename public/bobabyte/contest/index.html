@@ -184,8 +184,8 @@
                 var data1 = JSON.parse(req2.responseText);
                 var data2 = JSON.parse(req3.responseText);
 
-                gebi("category1").innerHTML="Most Useful - "+data1.group+" - "+category1Max+" votes";
-                gebi("category2").innerHTML="Fan Favorite - "+data2.group+" - "+category2Max+" votes";
+                gebi("category1").innerHTML="Most Useful - "+data1.groupName+" - "+category1Max+" votes";
+                gebi("category2").innerHTML="Fan Favorite - "+data2.groupName+" - "+category2Max+" votes";
               }
             })
           }
