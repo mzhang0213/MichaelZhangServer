@@ -145,12 +145,14 @@
         var category2 = "";
         var category2Max = -1;
         for (var i=0;i<totalVotes.length;i++){
-          if (totalVotes[i].votes["1"].length>category1Max){
-            category1Max=totalVotes[i].votes["1"].length;
-            category1=totalVotes[i].id;
-          }else if (totalVotes[i].votes["2"].length>category2Max){
-            category2Max=totalVotes[i].votes["2"].length;
-            category2=totalVotes[i].id;
+          if (totalVotes[i].votes["1"]!==undefined&&totalVotes[i].votes["2"]!==undefined){
+            if (totalVotes[i].votes["1"].length>category1Max){
+              category1Max=totalVotes[i].votes["1"].length;
+              category1=totalVotes[i].id;
+            }else if (totalVotes[i].votes["2"].length>category2Max){
+              category2Max=totalVotes[i].votes["2"].length;
+              category2=totalVotes[i].id;
+            }
           }
         }
 
