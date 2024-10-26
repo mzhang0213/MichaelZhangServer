@@ -868,6 +868,7 @@ body.members = [
 /**
  * Gets the members of a group given
  * the id of a group
+ * Also includes the group name
  */
 //req.body.id
 app.post("/platform-getMembers",async (req,res)=>{
@@ -889,6 +890,7 @@ app.post("/platform-getMembers",async (req,res)=>{
 					//found the group, now ret members
 					found = true;
 					memberUsernames = db_group[i].members;
+					msg.groupName = db_group[i].group;
 				}
 			}
 			//add names into members
@@ -926,6 +928,30 @@ app.get("/platform-getProjects",async (req,res)=>{
 			var db_proj = currContent.projects;
 			var msg = {
 				projects:db_proj
+			}
+			res.send(JSON.stringify(msg));
+		}catch (error){
+			console.log(error);
+		}finally{
+			await client.close();
+		}
+	}
+	await run();
+})
+
+/**
+ * Return all votes from either groups or finals
+ * phase of voting from [req.body.round]
+ */
+app.post("/platform-getVoting",async (req,res)=>{
+	async function run(){
+		try{
+			await client.connect();
+			const db = client.db(hackDbName).collection("voting");
+			const currContent = await db.findOne();
+			var voting = []; if (req.body.round==="groups")voting=currContent.groups; else voting=currContent.finals;
+			var msg = {
+				voting:voting
 			}
 			res.send(JSON.stringify(msg));
 		}catch (error){

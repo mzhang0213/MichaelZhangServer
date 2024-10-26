@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>BobaByte Staff</title>
+  <title>BobaByte Contest Results</title>
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="./logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,10 +66,13 @@
 </head>
 <body class="-z-10 bg-gray-700">
   <div class="absolute left-0 top-0 bg-cover" style="width:100%;height:100%;background-image:url('./logobanner.png');opacity:50%;"></div>
-  <div id="mainMenu" class="relative z-10 flex flex-col item-center" style="display:none;">
+  <div id="mainMenu" class="relative z-10 flex flex-col item-center">
+    <!-- Most Useful - GROUP NAME - xx votes  -->
+    <div id="category1" class="relative w-full h-1/3 mt-36 rounded-2xl" style="background-color:#dcb4e3;font-size:24px;"></div>
+    <!-- Fan Favorite - GROUP NAME - xx votes  -->
+    <div id="category2" class="relative w-full h-1/3 mt-5 rounded-2xl" style="background-color:#eddd8c;font-size:24px;"></div>
   </div>
   
-  <div id="dim" class="absolute left-0 top-0 bg-white z-10 opacity-80" style="width:100%;height:100%;display:none"></div>
   <style>
     .generalButton{
       position:relative;
@@ -111,7 +114,82 @@
     var loadUI = function(){
       gebi("loginMenu").style.display="none";
     }
-    gebi("back").addEventListener("click",()=>window.location=window.location.origin+"/bobabyte/");
+    var req = new XMLHttpRequest();
+    var body = {
+      round:"groups"
+    }
+    req.open("POST",window.location.origin+"/platform-getVoting");
+    req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    req.send(JSON.stringify(body));
+    req.addEventListener("readystatechange", ()=>{
+      if (req.status === 200 && req.readyState === 4) {
+
+        var body = JSON.parse(req.responseText);
+        var votes = body.voting;
+        var totalVotes = [];
+        for (var i=0;i<votes.length;i++){
+          totalVotes.push({
+            id:votes[i].id,
+            votes:{}
+          })
+          for (var j=0;j<votes[i].votes.length;j++){
+            if (totalVotes[i].votes[votes[i].votes[j].category]===undefined||totalVotes[i].votes[votes[i].votes[j].category]===null){
+              totalVotes[i].votes[votes[i].votes[j].category]=[]
+            }
+            totalVotes[i].votes[votes[i].votes[j].category].push(votes[i].votes[j].user);
+          }
+        }
+        //hardcoded cuz I cant anymore
+        var category1 = "";
+        var category1Max = -1;
+        var category2 = "";
+        var category2Max = -1;
+        for (var i=0;i<votes.length;i++){
+          if (votes[i].votes[1].length>category1Max){
+            category1Max=votes[i].votes[1].length;
+            category1=votes[i].id;
+          }else if (votes[i].votes[2].length>category2Max){
+            category2Max=votes[i].votes[2].length;
+            category2=votes[i].id;
+          }
+        }
+
+        //GET THE GROUP INFO - NAME AND MEMBERS
+        var req2 = new XMLHttpRequest();
+        var body2 = {
+          id:category1
+        }
+        req2.open("POST",window.location.origin+"/platform-getMembers");
+        req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        req2.send(JSON.stringify(body2));
+        req2.addEventListener("readystatechange", ()=>{
+          if (req2.status === 200 && req2.readyState === 4) {
+            var req3 = new XMLHttpRequest();
+            var body3 = {
+              id:category2
+            }
+            req3.open("POST",window.location.origin+"/platform-getMembers");
+            req3.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+            req3.send(JSON.stringify(body3));
+            req3.addEventListener("readystatechange", ()=>{
+              if (req3.status === 200 && req3.readyState === 4) {
+
+                //body2, body3
+                //THEN REPLACE THE DIVS WITH WINNERS
+                gebi("category1").innerHTML="Most Useful - "+body2.group+" - "+category1Max+" votes";
+                gebi("category2").innerHTML="Fan Favorite - "+body3.group+" - "+category2Max+" votes";
+                
+              }
+            })
+          }
+        })
+
+      } else if (req.readyState === 4){
+        console.log("reeeeeeee err new acc creation: "+req.responseText);
+        alert("please ask michael for help oh noes")
+      }
+    })
+    //gebi("back").addEventListener("click",()=>window.location=window.location.origin+"/bobabyte/");
   </script>
 </body>
 </html>
