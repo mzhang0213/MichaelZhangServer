@@ -144,13 +144,13 @@
         var category1Max = -1;
         var category2 = "";
         var category2Max = -1;
-        for (var i=0;i<votes.length;i++){
-          if (votes[i].votes[1].length>category1Max){
-            category1Max=votes[i].votes[1].length;
-            category1=votes[i].id;
-          }else if (votes[i].votes[2].length>category2Max){
-            category2Max=votes[i].votes[2].length;
-            category2=votes[i].id;
+        for (var i=0;i<totalVotes.length;i++){
+          if (totalVotes[i].votes["1"].length>category1Max){
+            category1Max=totalVotes[i].votes["1"].length;
+            category1=totalVotes[i].id;
+          }else if (totalVotes[i].votes["2"].length>category2Max){
+            category2Max=totalVotes[i].votes["2"].length;
+            category2=totalVotes[i].id;
           }
         }
 
@@ -178,7 +178,7 @@
                 //THEN REPLACE THE DIVS WITH WINNERS
                 gebi("category1").innerHTML="Most Useful - "+body2.group+" - "+category1Max+" votes";
                 gebi("category2").innerHTML="Fan Favorite - "+body3.group+" - "+category2Max+" votes";
-                
+
               }
             })
           }
