@@ -181,9 +181,11 @@
 
                 //body2, body3
                 //THEN REPLACE THE DIVS WITH WINNERS
-                gebi("category1").innerHTML="Most Useful - "+body2.group+" - "+category1Max+" votes";
-                gebi("category2").innerHTML="Fan Favorite - "+body3.group+" - "+category2Max+" votes";
+                var data1 = JSON.parse(req2.responseText);
+                var data2 = JSON.parse(req3.responseText);
 
+                gebi("category1").innerHTML="Most Useful - "+data1.group+" - "+category1Max+" votes";
+                gebi("category2").innerHTML="Fan Favorite - "+data2.group+" - "+category2Max+" votes";
               }
             })
           }
