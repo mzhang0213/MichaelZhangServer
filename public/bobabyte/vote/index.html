@@ -71,7 +71,7 @@
       <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>My Project</b></button>
       <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b style="text-decoration:underline;">Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
-        <button id="userButton"></button>
+        <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
           <a id="group"></a>
           <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
@@ -82,9 +82,11 @@
 
   <script>
     //check for account presence
+    var guest = false;
     if (localStorage.getItem("platform-username")===null){
-      alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
-      window.location=window.location.origin+"/bobabyte/signin/"
+      alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
+      gebi("userButton").innerHTML="Guest";
+      guest = true;
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
@@ -339,6 +341,7 @@
       })
     }
     gebi("submit").addEventListener("click",function(){
+if (!guest){
       if (getGroupsVoteInvalidity()){
         alert("choose more groups!");
       }else{
@@ -363,6 +366,7 @@
           }
         })
       }
+}
     })
     var req = new XMLHttpRequest();
     req.open("GET",window.location.origin+"/platform-getProjects");

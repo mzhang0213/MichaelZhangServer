@@ -82,7 +82,7 @@
       <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>My Project</b></button>
       <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
-        <button id="userButton"></button>
+        <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
           <a id="group"></a>
           <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
@@ -95,8 +95,8 @@
 
     //check for account presence
     if (localStorage.getItem("platform-username")==null){
-      alert("Sign in to your BobaByte account with the username on your badge to access the platform!\n\nHit OK to proceed...");
-      window.location=window.location.origin+"/bobabyte/signin/"
+      alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
+      gebi("userButton").innerHTML="Guest";
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
@@ -299,6 +299,7 @@
   </script>
 
   <!-- day's schedule-->
+  <!--
   <div class="relative flex flex-col justify-start items-center mt-36" style="height:700px;">
     <div class="z-10 relative md:py-5 md:max-w-2xl sm:px-5 md:mx-auto rounded-2xl shadow-2xl text-center text-white bg-white">
       <div class="bg-clip-text py-6 text-transparent bg-gradient-to-r h-full from-blue-500 to-sky-300">
@@ -306,9 +307,10 @@
       </div>
     </div>
     <div class="relative mt-12">
-      <!--make a table using table tag and stuff-->
+      make a table using table tag and stuff
     </div>
   </div>
+  -->
 
   <!--
     what if i made a feature that showed people serving foods who had what allergies, what food they wanted
