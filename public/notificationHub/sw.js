@@ -11,7 +11,7 @@ const urlB64ToUint8Array = base64String => {
 	return outputArray
   }
   const saveSubscription = async subscription => {
-	const SERVER_URL = 'https://michaelzhangwebsite.herokuapp.com/save-subscription'
+	const SERVER_URL = window.location.origin+'/save-subscription'
 	const response = await fetch(SERVER_URL, {
 	  method: 'post',
 	  headers: {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/sFavicon.png">
+    <link rel="icon" type="image/ico" href="/sFavicon.png">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
     <script>
@@ -27,11 +27,11 @@
       <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
       <script>
         const navBar = document.createElement("script");
-        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        navBar.src = window.location.origin+"/navigationBar.js";
         document.body.appendChild(navBar);
         const navBarStyle = document.createElement("link");
         navBarStyle.rel="stylesheet";
-        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        navBarStyle.href = window.location.origin+"/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
       <center>
@@ -102,7 +102,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-    <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
+    <script src="/switchHTTPS.js"></script>
     <script>
       document.getElementById("loggedInMsg").style.display="none";
       document.getElementById("logout").style.display="none";

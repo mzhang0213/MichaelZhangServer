@@ -12,13 +12,16 @@ var webpush = require('web-push');
 /*
 var {Client} = require("pg");
 */
-const PORT = process.env.PORT || "12232";
+const PORT = process.env.PORT || 12232;
 var app = express();
 app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser()).use(bodyParser.json({limit:"50mb"}));
-
+console.log(process.env.HOST);
+console.log()
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://mzhang0213:jIdggOURnfAJOROQ@heroku.qkcqp9r.mongodb.net/?retryWrites=true&w=majority";
+
+// "mongodb+srv://mzhang0213:<db_password>@heroku.qkcqp9r.mongodb.net/?retryWrites=true&w=majority&appName=heroku"
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -2743,7 +2746,7 @@ app.get('/spotifyYt/login', function(req, res) {
 			response_type: 'code',
 			client_id: client_id,
 			scope: scope,
-			redirect_uri: window.location.origin+'/spotifyYt/callback',
+			redirect_uri: req.hostname+'/spotifyYt/callback',
 			state: state
 		})
 	);
@@ -2769,7 +2772,7 @@ if (state === null || state !== storedState) {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 			code: code,
-			redirect_uri: window.location.origin+'/spotifyYt/callback',
+			redirect_uri: req.hostname+'/spotifyYt/callback',
 			grant_type: 'authorization_code'
 		},
 		headers: {
@@ -2838,7 +2841,7 @@ app.get('/musicQuiz/login', function(req, res) {
 			response_type: 'code',
 			client_id: client_id,
 			scope: scope,
-			redirect_uri: window.location.origin+'/musicQuiz/callback',
+			redirect_uri: req.hostname+'/musicQuiz/callback',
 			state: state
 		})
 	);
@@ -2864,7 +2867,7 @@ if (state === null || state !== storedState) {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 			code: code,
-			redirect_uri: window.location.origin+'/musicQuiz/callback',
+			redirect_uri: req.hostname+'/musicQuiz/callback',
 			grant_type: 'authorization_code'
 		},
 		headers: {
@@ -2956,7 +2959,7 @@ var oAuth2Client;
 const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly", "https://www.googleapis.com/auth/classroom.coursework.me.readonly", "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly", "https://www.googleapis.com/auth/classroom.announcements.readonly"];
 
 app.get("/classroom/login", (req,res)=>{
-	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":[window.location.origin+"/classroom/callback/"]};
+	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":[req.hostname+"/classroom/callback/"]};
 	oAuth2Client = new google.auth.OAuth2(
 		client_id, client_secret, redirect_uris[0]);
 

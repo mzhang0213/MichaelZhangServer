@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="icon" type="image/ico" href="https://michaelzhangwebsite.herokuapp.com/sFavicon.png">
+    <link rel="icon" type="image/ico" href="/sFavicon.png">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167496422-1"></script>
     <script>
@@ -278,7 +278,7 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-    <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
+    <script src="/switchHTTPS.js"></script>
     <script>
       const gebi = function(e){return document.getElementById(e)};
       gebi("cd").src=window.location.origin+"/spotifyYt/cd.png";
@@ -591,13 +591,13 @@
               console.log("getting new token, old: "+accessToken)
               var oldToken = accessToken;
               var req = new XMLHttpRequest()
-              req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+              req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
               req.onload=()=>{
                 accessToken=JSON.parse(req.responseText).access_token;
                 console.log("new token: "+accessToken)
                 if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
                   alert("Relogging you in :P\nGoing home...");
-                  window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+                  window.location=window.location.origin+"/spotifyYt?exp=true";
                 }
               }
               req.send()
@@ -696,13 +696,13 @@
             console.log("getting new token, old: "+accessToken)
             var oldToken = accessToken;
             var req = new XMLHttpRequest()
-            req.open("GET","https://michaelzhangwebsite.herokuapp.com/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+            req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
             req.onload=()=>{
               accessToken=JSON.parse(req.responseText).access_token;
               console.log("new token: "+accessToken)
               if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
                 alert("Relogging you in :P\nGoing home...");
-                window.location="https://michaelzhangwebsite.herokuapp.com/spotifyYt?exp=true";
+                window.location=window.location.origin+"/spotifyYt?exp=true";
               }
               getPlaylists();
             }

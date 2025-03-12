@@ -1,4 +1,4 @@
-const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
+//const ipAddress = "https://michaelzhangwebsite.herokuapp.com";
 
 const navBarContainer = document.createElement("nav");
 navBarContainer.id = "navBar";
@@ -44,10 +44,10 @@ function createDropdown(name, displayName){
 createButton("home", "Home");
 
 createDropdown("games", "Games 🎮");
-addElement(ipAddress + "/catchBananas/", "Catch The Bananas!", "gamesDropdownContent");
+addElement(window.location.origin + "/catchBananas/", "Catch The Bananas!", "gamesDropdownContent");
 addElement("https://scratch.mit.edu/projects/366161531/", "Catch The Bananas (Scratch)", "gamesDropdownContent");
-addElement(ipAddress + "/hangman/", "Hangman!", "gamesDropdownContent");
-addElement(ipAddress + "/type/", "Typing Test", "gamesDropdownContent");
+addElement(window.location.origin + "/hangman/", "Hangman!", "gamesDropdownContent");
+addElement(window.location.origin + "/type/", "Typing Test", "gamesDropdownContent");
 
 createButton("spotifyYt", "Cracked Spotify");
 
@@ -56,7 +56,7 @@ createButton("classroom", "GC Notis");
 createButton("USH", "USH")
 
 document.getElementById("homeButton").addEventListener("click", () => {
-    window.location = ipAddress;
+    window.location = window.location.origin;
 });
 document.getElementById("spotifyYtButton").addEventListener("click", () => {
     window.location = "https://"+window.location.host+"/spotifyYt";

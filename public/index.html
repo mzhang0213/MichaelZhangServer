@@ -20,14 +20,14 @@
     <font style="font-family: 'Cabin';">
       <div id="navContainer"></div>
       <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-      <script src="https://michaelzhangwebsite.herokuapp.com/switchHTTPS.js"></script>
+      <script src="/switchHTTPS.js"></script>
       <script>
         const navBar = document.createElement("script");
-        navBar.src = "https://michaelzhangwebsite.herokuapp.com/navigationBar.js";
+        navBar.src = window.location.origin+"/navigationBar.js";
         document.body.appendChild(navBar);
         const navBarStyle = document.createElement("link");
         navBarStyle.rel="stylesheet";
-        navBarStyle.href = "https://michaelzhangwebsite.herokuapp.com/navigationBarStyle.css";
+        navBarStyle.href = window.location.origin+"/navigationBarStyle.css";
         document.body.appendChild(navBarStyle);
       </script>
       <div id="navContainer"></div>
