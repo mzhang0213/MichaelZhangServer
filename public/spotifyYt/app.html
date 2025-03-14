@@ -104,6 +104,14 @@
             </label>
           </div>
         </div>
+        <div id="freeModeSliderContainer" class="sliderContainer">
+          <div id="freeModeParagraphContainer" class="sliderParagraph">
+            <p id="freeModeSliderDescription" class="sliderDescription">Free Search Mode</p>
+          </div>
+          <div id="actualfreeModeSliderContainer" class="actualSliderContainer">
+            <input type="text" id="freeModeSliderInput" class="sliderCheckBox" style="border:1px solid black;margin-right:20px;">
+          </div>
+        </div>
       </div>
       <p id="playlistList"></p>
     </font>
@@ -315,6 +323,12 @@
         gebi("ostModeSliderDescription").style.width="200px";
         gebi("actualostModeSliderContainer").style.left="40px";
 
+        gebi("freeModeSliderContainer").style.left=window.innerWidth*0.25+"px";
+        gebi("freeModeSliderContainer").style.top=heightCalc(3)+"px";
+        gebi("freeModeParagraphContainer").style.left="-110px";
+        gebi("freeModeSliderDescription").style.width="200px";
+        gebi("actualfreeModeSliderContainer").style.left="40px";
+
         gebi("oaSliderContainer").style.left=window.innerWidth*0.25+"px";
         gebi("oaSliderContainer").style.top=heightCalc(1)+"px";
         gebi("oaParagraphContainer").style.left="-123px";
@@ -483,6 +497,11 @@
           }
         })
       },30*60*1000)
+
+      //routine to load locally stored query into free search box
+      if (!(localStorage.getItem("freeSearchBox")===null||localStorage.getItem("freeSearchBox")===undefined||localStorage.getItem("freeSearchBox")==="")){
+        document.getElementById("freeModeSliderInput").value=localStorage.getItem("freeSearchBox");
+      }
 
       function checkSongInStorage(){
         var bad=false;
@@ -861,6 +880,9 @@
                   }
                   if (document.getElementById("ostModeSliderCheckBox").checked){
                     searchQ+=" ost";
+                  }
+                  if (document.getElementById("freeModeSliderInput").value!==""){
+                    searchQ+=" "+document.getElementById("freeModeSliderInput").value;
                   }
                   
                   var rejectedIds = [
@@ -1607,6 +1629,9 @@
               }
               if (document.getElementById("ostModeSliderCheckBox").checked){
                 searchQ+=" ost";
+              }
+              if (document.getElementById("freeModeSliderInput").value!==""){
+                searchQ+=" "+document.getElementById("freeModeSliderInput").value;
               }
               
               var rejectedIds = [
