@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+
+#openerContainer {
+    @apply relative left-0 top-0;
+    width: auto;
+    height: 100vh;
+}
+#openerMain {
+    @apply absolute left-0 w-[70%] h-full;
+    background-color: #f4faff;
+}
+#openerMenuBg{
+    @apply absolute right-0 w-[30%] h-full;
+    background-color: #30292F;
+}
+#openerMenu {
+    @apply absolute flex flex-col justify-center items-center w-full h-full;
+    top:-100vh;
+    transition: top 1500ms ease-in-out;
+}
+#openerMenu p {
+    font-size:25px;
+    font-weight:bold;
+    color:var(--theme-white);
+    margin-bottom: 7px;
+    cursor:pointer;
+}
+
+.project-container{
+    background-color: var(--theme-blue);
+}
+.project-content{
+    background-color: var(--theme-dark-blue);
+    color:var(--theme-white);
+    cursor: pointer;
+    outline-offset: 4px;
+    display: block;
+    transition: transform 100ms ease-out;
+}
+.project-container:hover .project-content {
+    transition: transform 500ms ease-out;
+    transform: translateX(-6px) translateY(-6px);
+}
+
+
+.tech-item:hover .tech-img {
+    transition: transform 200ms ease-out;
+    transform: translateX(-2px) translateY(-2px);
+}

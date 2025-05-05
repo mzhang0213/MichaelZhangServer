@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+
+body {
+    font-family: Merriweather, sans-serif;
+}
+/* @apply bg-cover bg-center bg-fixed; */
+
+.object {
+    @apply rounded-lg;
+    box-shadow: 8px 8px 0px 0px var(--theme-blue);
+    border: 2px solid var(--theme-dark-gray);
+    background-color:white;
+}
+
+:root{
+    --theme-black: rgb(28, 24, 28);
+    --theme-dark-blue: #2f354c;
+    --theme-blue: #589bff;
+    --theme-light-blue: #adceff;
+    --theme-turquoise: #124559;
+    --theme-yellow:#FDCA40;
+    --theme-gray: #3f4145; /* #30292F */
+    --theme-dark-gray: #222425;
+    --theme-white: #f4faff;
+    --theme-green: #a5c748;
+    --theme-red: #ff5858;
+}
+
+#blackBackground-bg{
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    left:0;
+    top:0;
+    z-index: -10;
+    background-color:black;
+}
+
+#backgroundImg-bg{
+    @apply bg-cover bg-center bg-fixed;
+    position:fixed;
+    width:100vw;
+    height:100vh;
+    left:0;
+    top:0;
+    z-index:-5;
+    background-image:url("../public/resources/IMG_1376.jpg");
+    background-position-y:80%;
+    opacity:0.5;
+}
