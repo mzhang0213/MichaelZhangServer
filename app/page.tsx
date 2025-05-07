@@ -1,6 +1,6 @@
 "use client"
-import Navbar, {defaultItems, NavDataType} from './resources/Navbar'
-import React, {act, CSSProperties, useEffect} from "react";
+import Navbar from './resources/Navbar'
+import React, {useEffect} from "react";
 import "./page.css"
 import {gebi} from "@/app/resources/gebi";
 import {Background} from "@/app/resources/Background";
@@ -16,12 +16,14 @@ const smallTransition = 500;
 const largeTransition = 1000;
 const detailsMenuWipe = 300;
 
+/*
 function SampleCat() {
     return <img
         className={"relative w-[400px]"}
         src={"https://scrumbles.co.uk/cdn/shop/articles/scottish-straight-cat-breed-guide-964256.jpg?v=1720002125"}
     />
 }
+ */
 
 
 function scrollToElement(e: string) {
@@ -97,12 +99,12 @@ function getProjectParent(e: Element | null) {
     }
 }
 function Technology({techEntries}: { techEntries: TechnologyEntryType[] }) {
-    let technology:TechnologyType[] = [];
+    const technology:TechnologyType[] = [];
 
     for (let i=0;i<techEntries.length;i++){
         for (let j=0;j<technologies.length;j++){
             if (techEntries[i].id===technologies[j].id){
-                let customDesc = techEntries[i].description;
+                const customDesc = techEntries[i].description;
                 if (customDesc!=null){
                     technologies[j].description=customDesc;
                 }
@@ -129,7 +131,7 @@ function Projects() {
         let lastHovered: Element | null = event.target as Element;
         lastHovered = getProjectParent(lastHovered);
         setTimeout(function(){
-            let currHovered = getProjectParent(document.elementFromPoint(currX,currY));
+            const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
             if (lastHovered===currHovered){
                 //start animation for highlighted element
                 let currElement = currHovered as HTMLElement;
@@ -206,7 +208,7 @@ function Projects() {
                                 window.open(proj.link.link, "_blank")
                             }} className={"project-link text-white"}
                                style={{cursor: "pointer", textDecoration: "underline"}}>{proj.link.title}</p>
-                            <img src={"/icons/redirect.png"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
+                            <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
                         </>
                     );
                     detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
@@ -221,7 +223,7 @@ function Projects() {
                 <div key={"project-"+project.id} id={project.id} className={"project-container m-4 min-h-[250px] flex flex-col rounded-2xl"} >
                     <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
-                            <img className={"project-icon w-[50px] h-[50px]"}/>
+                            <img alt={project.title} className={"project-icon w-[50px] h-[50px]"}/>
                             <div className={"project-title ml-2 mr-6 text-2xl"}>{project.title}</div>
                         </div>
                         <div className={"project-bottomDiv"}>
@@ -271,9 +273,9 @@ function ContactLinks() {
     return (
         contactLinks.map(contact => {
             return <div key={contact.id} className={"flex p-2 mb-5 rounded-md"} onClick={()=>{window.open(contact.link,"_blank")}} style={{cursor: "pointer", boxShadow:"8px 8px 0px 0px var(--theme-green)", border:"2px solid var(--theme-dark-gray)"}}>
-                <img src={contact.icon} className={"w-[32px] h-[32px] mr-2"}/>
+                <img src={contact.icon} alt={contact.title} className={"w-[32px] h-[32px] mr-2"}/>
                 <p className={"w-[80%] flex items-center"}>{contact.title}</p>
-                <img src={"/icons/redirect.png"} className={"w-[12px] h-[12px] ml-2"}/>
+                <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[12px] h-[12px] ml-2"}/>
             </div>
         })
     )

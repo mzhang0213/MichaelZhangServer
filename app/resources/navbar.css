@@ -1,0 +1,68 @@
+@import "../../node_modules/tailwindcss";
+
+
+#navBar {
+    @apply flex items-center justify-between flex-wrap w-screen fixed px-4;
+    transition: background-color,opacity 200ms ease-in-out;
+    opacity:0;
+    background-color:var(--theme-black);
+    height:45px;
+    z-index:1;
+}
+
+/* 0 >> 45 px*/
+#navItemLogo {
+    @apply h-full flex items-center flex-shrink-0 text-white mr-6;
+    cursor: pointer;
+}
+
+#menuToggle {
+    @apply flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white;
+}
+
+#navItemContainer {
+    @apply w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm;
+}
+
+.navbar-item {
+    @apply relative h-full inline-block text-gray-200;
+}
+
+.navbar-item:hover{
+    background-color:#383838;
+    cursor:pointer;
+}
+
+.navbar-content{
+    display:none;
+    position:absolute;
+    justify-content:center;
+    background-color:rgb(36, 36, 36);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+    left: 50%;
+    right: auto;
+    text-align: center;
+    transform: translate(-50%, 0);
+}
+
+.navbar-content *{
+    @apply py-2 px-2;
+    text-decoration:none;
+    font-size:10px;
+    display:block;
+    white-space: nowrap;
+}
+
+.navbar-group-button {
+    @apply h-full px-3;
+}
+
+.navbar-group:hover .navbar-content {
+    display:flex;
+}
+
+.navbar-group *:hover {
+    background-color:#383838;
+    cursor:pointer;
+}

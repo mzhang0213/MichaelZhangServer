@@ -1,0 +1,17 @@
+.footer-item{
+    cursor:pointer;
+    color: #434357;
+}
+.footer-item:hover{
+    transform: translateX(1px) translateY(-2px);
+    color: #717085
+}
+
+.footer-header{
+    cursor:pointer;
+    color: #48484e;
+}
+.footer-header:hover{
+    transform: translateX(1px) translateY(-2px);
+    color: #7d7f88
+}
