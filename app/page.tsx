@@ -134,7 +134,7 @@ function Projects() {
             const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
             if (lastHovered===currHovered){
                 //start animation for highlighted element
-                let currElement = currHovered as HTMLElement;
+                const currElement = currHovered as HTMLElement;
                 if (!activeDetails) {
                     activeDetails = true;
                     gebi("bg_dim").style.display = "";
@@ -150,7 +150,7 @@ function Projects() {
                         directionLeft = true;
                         gebi("details_menu").style.left = "";
                         gebi("details_background").style.left = "";
-                        let oldTransition = gebi("details_menu").style.transition;
+                        const oldTransition = gebi("details_menu").style.transition;
 
                         gebi("details_menu").style.transition = ""; //set it to nothing to move the element right instantly
                         gebi("details_background").style.transition = "";
@@ -171,7 +171,7 @@ function Projects() {
                         directionLeft = false;
                         gebi("details_menu").style.right = "";
                         gebi("details_background").style.right = "";
-                        let oldTransition = gebi("details_menu").style.transition;
+                        const oldTransition = gebi("details_menu").style.transition;
 
                         gebi("details_menu").style.transition = ""; //set it to nothing to move the element right instantly
                         gebi("details_background").style.transition = "";
@@ -195,7 +195,7 @@ function Projects() {
 
                     const id = currElement.id;
                     let proj: ProjectType = projects[0];
-                    for (let p of projects) {
+                    for (const p of projects) {
                         if (p.id === id) {
                             proj = p
                         }
@@ -288,15 +288,15 @@ export default function Home() {
         detailsMenuRoot = createRoot(gebi("details_menu_top"));
 
         //initial animation
-        let showSmall = () => {
+        const showSmall = () => {
             gebi("messageSmall").style.top="15%";
             gebi("messageSmall").style.opacity="1";
         }
-        let showLarge = () =>{
+        const showLarge = () =>{
             gebi("messageLarge").style.top="40%";
             gebi("messageLarge").style.opacity="1";
         }
-        let showMenu = () =>{
+        const showMenu = () =>{
             gebi("openerMenu").style.top="0";
         }
         setTimeout(()=>{
@@ -327,7 +327,7 @@ export default function Home() {
                     gebi("details_menu").style.right="-10px";
                     gebi("details_background").style.right="-10px";
                 }
-                for(let e of gebi("projectsContainer").children){
+                for(const e of gebi("projectsContainer").children){
                     gebi(e.id).style.zIndex="0";
                 }
                 gebi("details_menu_title").innerHTML="";
