@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Merriweather_Sans } from "next/font/google"
-import Navbar from "./resources/Navbar";
 import React from "react";
 
 const merriweather = Merriweather_Sans({
