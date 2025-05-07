@@ -4,7 +4,7 @@ export const projects: ProjectType[] = [
     {
         id: "spotify-cracked",
         title: "Spotify Cracked",
-        description: "meep meep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meepmeep meep",
+        description: "Created in an effort to bring more accessibility to music streaming and improving students' focus.",
         technology: [
             {
                 id:"nodejs",
