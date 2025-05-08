@@ -11,35 +11,35 @@ export const technologies: TechnologyType[] = [
     {
         id: "nodejs",
         title: "Node.js",
-        color: "white",
-        description: "",
+        color: "#669933",
+        description: "Serves as server infrastructure for the application.",
         icon: "/icons/nodejs.png"
     },
     {
         id: "expressjs",
         title: "Express JS",
         color: "white",
-        description: "",
+        description: "Assists in communication between server and client.",
         icon: "/icons/expressjs.png"
     },
     {
+        id: "websocket",
+        title: "Websocket API",
+        color: "#669933",
+        description: "",
+        icon: "/icons/websocket.png"
+    },
+    {
         id: "mongodb",
-        title: "",
-        color: "white",
+        title: "MongoDB",
+        color: "#00ff66",
         description: "",
         icon: "/icons/mongodb.png"
     },
     {
-        id: "algorithms",
-        title: "",
-        color: "white",
-        description: "",
-        icon: "/icons/algorithms.png"
-    },
-    {
         id: "java",
         title: "Java",
-        color: "white",
+        color: "#E76F00",
         description: "",
         icon: "/icons/java.png"
     },
@@ -48,12 +48,12 @@ export const technologies: TechnologyType[] = [
         title: "JavaScript",
         color: "white",
         description: "",
-        icon: "/icons/javascript.png"
+        icon: "/icons/mozilla.png"
     },
     {
         id: "python",
         title: "Python",
-        color: "white",
+        color: "#6699cc",
         description: "",
         icon: "/icons/python.png"
     },
@@ -67,35 +67,28 @@ export const technologies: TechnologyType[] = [
     {
         id: "spotify-api",
         title: "Spotify API",
-        color: "white",
+        color: "#33cc66",
         description: "",
         icon: "/icons/spotify.png"
     },
     {
         id: "youtube-api",
         title: "YouTube Search API",
-        color: "white",
+        color: "#FF0033",
         description: "",
         icon: "/icons/youtube.png"
     },
     {
-        id: "smtp",
-        title: "SMTP (Python)",
-        color: "white",
-        description: "",
-        icon: "/icons/gmail.png"
-    },
-    {
         id: "react",
         title: "React",
-        color: "white",
+        color: "#66cccc",
         description: "",
         icon: "/icons/react.png"
     },
     {
         id: "typescript",
         title: "TypeScript",
-        color: "white",
+        color: "#3076C3",
         description: "",
         icon: "/icons/typescript.png"
     },
@@ -105,5 +98,5 @@ export const technologies: TechnologyType[] = [
         color: "white",
         description: "",
         icon: "/icons/nextjs.png"
-    },
+    }
 ]

@@ -76,6 +76,7 @@ export type ProjectType = {
     id: string,
     title: string,
     description: string,
+    icon:string,
     technology: TechnologyEntryType[],
     link:{
         title:string,
@@ -223,7 +224,7 @@ function Projects() {
                 <div key={"project-"+project.id} id={project.id} className={"project-container m-4 min-h-[250px] flex flex-col rounded-2xl"} >
                     <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
-                            <img alt={project.title} className={"project-icon w-[50px] h-[50px]"}/>
+                            <img alt={project.title} src={project.icon} className={"project-icon w-[50px] h-[50px]"}/>
                             <div className={"project-title ml-2 mr-6 text-2xl"}>{project.title}</div>
                         </div>
                         <div className={"project-bottomDiv"}>
