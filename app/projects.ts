@@ -89,7 +89,7 @@ export const projects: ProjectType[] = [
         technology: [
             {
                 id:"java",
-                description:"Converted images to Lists of LinkedLists containing Java's AWT Color class. Implemented DP techniques to store change in \"energy\" levels between rows of pixels, which was in effort to remove so-called \"seams\" in the image, a series of pixels across the rows of the image of least energy. Implemented Command design pattern in the image's editor."
+                description:"Converted images to Lists of LinkedLists containing Java's AWT Color class. Implemented DP techniques to remove so-called \"seams\" in the image, a series of pixels across the rows of the image of least energy (determined by brightness). Implemented Command design pattern in the image's editor."
             }
         ],
         link: {
