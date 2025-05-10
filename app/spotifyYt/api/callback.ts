@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import client from "@/app/resources/mongodb";
 import querystring from "querystring";
 import {client_id, client_secret} from "@/app/spotifyYt/api/keys";
 import {cookies} from "next/headers";
 import {lastPlaylist, stateKey} from "@/app/spotifyYt/api/login";
-import {request} from "node:http";
 
 
 export async function POST(req: Request) {

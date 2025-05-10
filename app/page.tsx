@@ -395,7 +395,7 @@ export default function Home() {
                     <div id={"summaryInfo"} className={"relative h-full flex flex-col justify-center"}>
                         <p id={"summary-title"} className={"text-4xl mb-2"}>Hi there!</p>
                         <p id={"summary-desc"} className={"w-[80%]"}>
-                            I'm Michael, a rising sophomore at Northeastern University studying CS. I'm extremely passionate about web development, ...
+                            I'm Michael, a rising sophomore at Northeastern University studying CS. I'm extremely passionate about full-stack web development,
                         </p>
                     </div>
                 </div>

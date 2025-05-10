@@ -3,8 +3,6 @@ import { MongoClient } from 'mongodb';
 const uri = process.env.MONGODB_URI!;
 const options = {};
 
-let theClient: MongoClient;
-let client: Promise<MongoClient>;
 
 declare global {
     let _mongoClientPromise: Promise<MongoClient> | undefined;
@@ -25,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 }
  */
 
-theClient = new MongoClient(uri, options);
-client = theClient.connect();
+const theClient = new MongoClient(uri, options);
+const client = theClient.connect();
 
 export default client;
