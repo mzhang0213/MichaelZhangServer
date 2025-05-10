@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import querystring from "querystring";
-import {client_id} from "@/app/spotifyYt/api/keys";
+import {client_id} from "@/app/resources/keys";
 
 /**
  * Generates a random string containing numbers and letters

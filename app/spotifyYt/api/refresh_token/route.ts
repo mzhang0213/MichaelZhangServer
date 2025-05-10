@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import querystring from "querystring";
-import {client_id, client_secret} from "@/app/spotifyYt/api/keys";
+import {client_id, client_secret} from "@/app/resources/keys";
 
 export async function GET(req: Request){
     // requesting access token from refresh token
