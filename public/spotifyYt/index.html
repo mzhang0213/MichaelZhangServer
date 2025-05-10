@@ -140,7 +140,7 @@
 
         var getAccs = new XMLHttpRequest();
         var accs = [];
-        getAccs.open("GET",window.location.origin+"/accounts");
+        getAccs.open("GET",window.location.origin+"/api/accounts");
         getAccs.send();
         getAccs.addEventListener("readystatechange", ()=>{
           if (getAccs.status === 200 && getAccs.readyState === 4) {
@@ -237,7 +237,7 @@
             name:localStorage.getItem("savedTimeLogin"),
             updatedDevice:pushDevice
           }
-          newAccReq.open("POST",window.location.origin+"/updateTime");
+          newAccReq.open("POST",window.location.origin+"/api/updateTime");
           newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
           newAccReq.send(JSON.stringify(body));
           newAccReq.addEventListener("readystatechange", ()=>{
@@ -304,7 +304,7 @@
                   name:document.getElementById("timeLoginField").value,
                   updatedDevice:submitDevice
                 }
-                newAccReq.open("POST",window.location.origin+"/updateTime");
+                newAccReq.open("POST",window.location.origin+"/api/updateTime");
                 newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
                 newAccReq.send(JSON.stringify(body));
                 newAccReq.addEventListener("readystatechange", ()=>{

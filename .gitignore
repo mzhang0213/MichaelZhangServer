@@ -1,2 +1,3 @@
 node_modules
 /app/todos.txt
+/app/spotifyYt/api/keys.ts
