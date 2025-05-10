@@ -122,7 +122,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const year = new Date().getUTCFullYear();
         document.getElementById("login").addEventListener("click",()=>{
-          var redirect = "./login";
+          var redirect = "./api/login";
           if (urlParams.has("playlistInfo")){
             redirect+="?playlistInfo=" + urlParams.get("playlistInfo");
           }

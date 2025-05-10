@@ -38,7 +38,7 @@ export async function GET(req: Request) {
         response_type: 'code',
         client_id: client_id,
         scope: scope,
-        redirect_uri: origin+'/spotifyYt/callback',
+        redirect_uri: origin+'/spotifyYt/api/callback',
         state: state
     });
 

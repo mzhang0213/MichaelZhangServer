@@ -44,7 +44,7 @@ export async function POST(req: Request) {
             },
             body: querystring.stringify({
                 code: code,
-                redirect_uri: origin + "/spotifyYt/callback",
+                redirect_uri: origin + "/spotifyYt/api/callback",
                 grant_type: "authorization_code"
             })
         };
