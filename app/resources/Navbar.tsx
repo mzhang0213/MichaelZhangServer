@@ -110,11 +110,13 @@ export const defaultItems: NavDataType[] = [
     {
         isList: true,
         childrenItems: [
+            /*
             {
                 id: "sampleProject",
                 onClick: ()=>window.location.href=window.location.origin+'/',
                 itemTitle: "Sample-Project"
             }
+             */
         ],
         id: "projects",
         onClick: ()=>window.location.href=window.location.origin+'/projects/',
@@ -123,11 +125,13 @@ export const defaultItems: NavDataType[] = [
     {
         isList: true,
         childrenItems: [
+            /*
             {
                 id: "sampleJob",
                 onClick: ()=>window.location.href=window.location.origin+'/',
                 itemTitle: "Sample-Job"
             }
+             */
         ],
         id: "experience",
         onClick: ()=>window.location.href=window.location.origin+'/experience/',
@@ -136,11 +140,13 @@ export const defaultItems: NavDataType[] = [
     {
         isList: true,
         childrenItems: [
+            /*
             {
                 id: "sampleJob",
                 onClick: ()=>window.location.href=window.location.origin+'/',
                 itemTitle: "Sample-Job"
             }
+            */
         ],
         id: "volunteer",
         onClick: ()=>window.location.href=window.location.origin+'/volunteer/',
