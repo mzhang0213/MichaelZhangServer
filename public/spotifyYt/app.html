@@ -461,7 +461,7 @@
 
       var getAccs = new XMLHttpRequest();
       var accs = [];
-      getAccs.open("GET",window.location.origin+"/accounts");
+      getAccs.open("GET",window.location.origin+"/spotifyYt/api/accounts");
       getAccs.send();
       getAccs.addEventListener("readystatechange", ()=>{
         if (getAccs.status === 200 && getAccs.readyState === 4) {
@@ -484,7 +484,7 @@
           name:localStorage.getItem("savedTimeLogin"),
           updatedDevice:pushDevice
         }
-        newAccReq.open("POST",window.location.origin+"/updateTime");
+        newAccReq.open("POST",window.location.origin+"/spotifyYt/api/updateTime");
         newAccReq.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         newAccReq.send(JSON.stringify(body));
         newAccReq.addEventListener("readystatechange", ()=>{
@@ -610,7 +610,7 @@
               console.log("getting new token, old: "+accessToken)
               var oldToken = accessToken;
               var req = new XMLHttpRequest()
-              req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+              req.open("GET",window.location.origin+"/spotifyYt/api/refresh_token?refresh_token="+refreshToken,true)
               req.onload=()=>{
                 accessToken=JSON.parse(req.responseText).access_token;
                 console.log("new token: "+accessToken)
@@ -629,7 +629,7 @@
       var tokenRefreshInterval = setInterval(function(){
         var oldToken = accessToken;
         var req = new XMLHttpRequest()
-        req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+        req.open("GET",window.location.origin+"/spotifyYt/api/refresh_token?refresh_token="+refreshToken,true)
         req.onload=()=>{
           accessToken=JSON.parse(req.responseText).access_token;
           console.log("new token: "+accessToken)
