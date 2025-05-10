@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import querystring from "querystring";
-import {client_id, client_secret} from "@/app/resources/keys";
+import {client_id, client_secret, stateKey} from "@/app/resources/keys";
 import {cookies} from "next/headers";
-import {lastPlaylist, stateKey} from "@/app/spotifyYt/api/login/route";
 
 
 export async function POST(req: Request) {
@@ -59,7 +58,7 @@ export async function POST(req: Request) {
                 querystring.stringify({
                     access_token: access_token,
                     refresh_token: refresh_token,
-                    playlistInfo: lastPlaylist
+                    //playlistInfo: lastPlaylist
                 })
             );
         }else{

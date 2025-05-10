@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import querystring from "querystring";
-import {client_id} from "@/app/resources/keys";
+import {client_id, stateKey} from "@/app/resources/keys";
 
 /**
  * Generates a random string containing numbers and letters
@@ -17,16 +17,13 @@ function generateRandomString(length: number): string {
     return text;
 }
 
-export const stateKey = 'spotify_auth_state';
-
-export let lastPlaylist = "";
 
 export async function GET(req: Request) {
     //const body = await req.json();
 
-    const shortUrl = req.url.substring(req.url.indexOf("?")+1);
-    const parsedQuery = querystring.parse(shortUrl) as {playlistInfo:string};
-    lastPlaylist=parsedQuery.playlistInfo;
+    //const shortUrl = req.url.substring(req.url.indexOf("?")+1);
+    //const parsedQuery = querystring.parse(shortUrl) as {playlistInfo:string};
+    //lastPlaylist=parsedQuery.playlistInfo;
 
     const state = generateRandomString(16);
 
