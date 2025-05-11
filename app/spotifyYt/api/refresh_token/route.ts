@@ -1,18 +1,19 @@
 import {NextResponse} from "next/server";
-import querystring from "querystring";
 import {client_id, client_secret} from "@/app/resources/keys";
 
 export async function GET(req: Request){
     // requesting access token from refresh token
-    const query = querystring.parse(req.url);
-    const refresh_token = query.refresh_token;
+    const {searchParams} = new URL(req.url);
+    const refresh_token = searchParams.get("refresh_token");
 
     const request = await fetch("https://accounts.spotify.com/api/token",{
         method: "POST",
-        headers: { 'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')) },
-        body: JSON.stringify({
+        headers: {
+            'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64'))
+        },
+        body: new URLSearchParams({
             grant_type: 'refresh_token',
-            refresh_token: refresh_token
+            refresh_token: refresh_token || ""
         })
     });
     if (request.ok){

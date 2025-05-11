@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import querystring from "querystring";
 import {client_id, stateKey} from "@/app/resources/keys";
 
 /**
@@ -31,13 +30,13 @@ export async function GET(req: Request) {
     const scope = "playlist-read-private";
     const url = new URL(req.url);
     const redirURL = new URL("https://accounts.spotify.com/authorize?");
-    redirURL.search = querystring.stringify({
+    redirURL.search = new URLSearchParams({
         response_type: "code",
         client_id: client_id,
         scope: scope,
         redirect_uri: url.origin+"/spotifyYt/api/callback",
         state: state
-    });
+    }).toString();
 
     const res = NextResponse.redirect(redirURL.toString());
     res.cookies.set(stateKey,state);

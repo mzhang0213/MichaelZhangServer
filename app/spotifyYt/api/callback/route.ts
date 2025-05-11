@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import querystring from "querystring";
 import {client_id, client_secret, stateKey} from "@/app/resources/keys";
 import {cookies} from "next/headers";
 
@@ -23,9 +22,9 @@ export async function GET(req: Request) {
 
     if (state === null || state !== storedState) {
         const res = NextResponse.redirect(url.origin+"/spotifyYt/#" +
-            querystring.stringify({
+            new URLSearchParams({
                 error: "state_mismatch"
-            }));
+            }).toString());
         res.headers.set("Set-Cookie", `${stateKey}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax`);
         return res;
     } else {
