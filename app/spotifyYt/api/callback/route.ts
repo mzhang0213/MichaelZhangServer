@@ -8,9 +8,9 @@ export async function GET(req: Request) {
     // your application requests refresh and access tokens
     // after checking the state parameter
 
-    const query = querystring.parse(req.url);
-    const code = query.code || null;
-    const state = query.state || null;
+    const {searchParams} = new URL(req.url);
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
     const url = new URL(req.url);
     const cookieStoreState = (await cookies()).get(stateKey);
     let storedState;
@@ -35,8 +35,8 @@ export async function GET(req: Request) {
                 "Authorization": "Basic " + Buffer.from(client_id + ":" + client_secret).toString("base64"),
                 "content-type": "application/x-www-form-urlencoded"
             },
-            body: querystring.stringify({
-                code: code,
+            body: new URLSearchParams({
+                code: code || "",
                 redirect_uri: url.origin + "/spotifyYt/api/callback",
                 grant_type: "authorization_code"
             })
@@ -47,7 +47,7 @@ export async function GET(req: Request) {
             const refresh_token = body.refresh_token;
 
             const res = NextResponse.redirect(url.origin+"/spotifyYt/app.html?" +
-                querystring.stringify({
+                new URLSearchParams({
                     access_token: access_token,
                     refresh_token: refresh_token,
                     //playlistInfo: lastPlaylist
@@ -57,7 +57,7 @@ export async function GET(req: Request) {
             return res;
         }else{
             const res = NextResponse.redirect(url.origin+"/spotifyYt/?" +
-                querystring.stringify({
+                new URLSearchParams({
                     error: "invalid_token"
                 }));
             res.headers.set("Set-Cookie", `${stateKey}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax`);
