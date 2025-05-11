@@ -29,14 +29,13 @@ export async function GET(req: Request) {
 
     // your application requests authorization
     const scope = "playlist-read-private";
-    const host = new URL(req.url).host;
-    const origin = "https://"+host;
+    const url = new URL(req.url);
     const redirURL = new URL("https://accounts.spotify.com/authorize?");
     redirURL.search = querystring.stringify({
         response_type: "code",
         client_id: client_id,
         scope: scope,
-        redirect_uri: origin+"/spotifyYt/api/callback",
+        redirect_uri: url.origin+"/spotifyYt/api/callback",
         state: state
     });
 
