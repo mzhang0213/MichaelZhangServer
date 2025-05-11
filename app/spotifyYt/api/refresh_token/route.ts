@@ -10,7 +10,7 @@ export async function GET(req: Request){
     const request = await fetch("https://accounts.spotify.com/api/token",{
         method: "POST",
         headers: { 'Authorization': 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')) },
-        body: querystring.stringify({
+        body: JSON.stringify({
             grant_type: 'refresh_token',
             refresh_token: refresh_token
         })

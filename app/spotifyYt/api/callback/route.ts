@@ -40,7 +40,7 @@ export async function GET(req: Request) {
             method: "POST",
             headers: {
                 "Authorization": "Basic " + Buffer.from(client_id + ":" + client_secret).toString("base64"),
-                "Content-Type": "application/x-www-form-urlencoded"
+                "content-type": "application/x-www-form-urlencoded"
             },
             body: JSON.stringify({
                 code: code,
