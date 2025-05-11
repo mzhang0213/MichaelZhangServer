@@ -42,12 +42,12 @@ export async function GET(req: Request) {
                 "Authorization": "Basic " + Buffer.from(client_id + ":" + client_secret).toString("base64"),
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: querystring.stringify({
+            body: {
                 code: code,
                 redirect_uri: origin + "/spotifyYt/api/callback",
                 grant_type: "authorization_code"
-            })
-        };
+            }
+        }
 
         const request = await fetch("https://accounts.spotify.com/api/token", authOptions);
         if (request.ok){
