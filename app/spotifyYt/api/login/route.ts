@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import querystring from "querystring";
 import {client_id, stateKey} from "@/app/resources/keys";
 
@@ -9,7 +9,7 @@ import {client_id, stateKey} from "@/app/resources/keys";
  */
 function generateRandomString(length: number): string {
     let text = "";
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     for (let i = 0; i < length; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -28,15 +28,15 @@ export async function GET(req: Request) {
     const state = generateRandomString(16);
 
     // your application requests authorization
-    const scope = 'playlist-read-private';
-    const origin = new URL(req.url).origin;
-    console.log(origin);
+    const scope = "playlist-read-private";
+    const host = new URL(req.url).host;
+    const origin = "https://"+host;
     const redirURL = new URL("https://accounts.spotify.com/authorize?");
     redirURL.search = querystring.stringify({
-        response_type: 'code',
+        response_type: "code",
         client_id: client_id,
         scope: scope,
-        redirect_uri: 'https://mzhang.dev/spotifyYt/api/callback',
+        redirect_uri: origin+"/spotifyYt/api/callback",
         state: state
     });
 

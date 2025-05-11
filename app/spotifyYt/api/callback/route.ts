@@ -11,8 +11,9 @@ export async function GET(req: Request) {
     const query = querystring.parse(req.url);
     const code = query.code || null;
     const state = query.state || null;
+    const host = new URL(req.url).host;
+    const origin = "https://"+host;
     const cookieStoreState = (await cookies()).get(stateKey);
-    console.log(cookieStoreState);
     let storedState;
     if (cookieStoreState==undefined){
         storedState = null;
@@ -27,7 +28,7 @@ export async function GET(req: Request) {
                 error: "state_mismatch"
             }));
     } else {
-        const res =  NextResponse.redirect("/spotifyYt/app.html?" +
+        const res =  NextResponse.redirect(origin+"/spotifyYt/app.html?" +
             querystring.stringify({
                 success: "true"
             }));
@@ -35,7 +36,6 @@ export async function GET(req: Request) {
             "Set-Cookie",
             `${stateKey}=; Max-Age=0; Path=/;`
         );
-        const origin = new URL(req.url).origin;
         const authOptions = {
             method: "POST",
             headers: {
@@ -55,7 +55,7 @@ export async function GET(req: Request) {
             const access_token = body.access_token;
             const refresh_token = body.refresh_token;
 
-            return NextResponse.redirect("/spotifyYt/app.html?" +
+            return NextResponse.redirect(origin+"/spotifyYt/app.html?" +
                 querystring.stringify({
                     access_token: access_token,
                     refresh_token: refresh_token,
@@ -63,7 +63,7 @@ export async function GET(req: Request) {
                 })
             );
         }else{
-            return NextResponse.redirect("/spotifyYt/?" +
+            return NextResponse.redirect(origin+"/spotifyYt/?" +
                 querystring.stringify({
                     error: "invalid_token"
                 }));
