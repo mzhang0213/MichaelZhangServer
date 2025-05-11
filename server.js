@@ -2713,7 +2713,7 @@ app.post("/updateTime", async (req,res)=>{
 })
 
 var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
-var client_secret = 'ff36185c433e4e11afe8b1a3baa089bf'; // Your secret
+var client_secret = 'bb795f1551654ef9bac92464d588a5d0'; // Your secret
 
 /**
  * Generates a random string containing numbers and letters
