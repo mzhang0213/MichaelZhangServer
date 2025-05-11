@@ -4,7 +4,7 @@ import {client_id, client_secret, stateKey} from "@/app/resources/keys";
 import {cookies} from "next/headers";
 
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     // your application requests refresh and access tokens
     // after checking the state parameter
 
