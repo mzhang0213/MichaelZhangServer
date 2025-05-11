@@ -76,6 +76,7 @@ export type ProjectType = {
     id: string,
     title: string,
     description: string,
+    detailsDefault?: string,
     icon:string,
     technology: TechnologyEntryType[],
     link:{
@@ -202,7 +203,6 @@ function Projects() {
                         }
                     }
 
-
                     linkRoot.render(
                         <>
                             <p onClick={() => {
@@ -213,6 +213,9 @@ function Projects() {
                         </>
                     );
                     detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
+                    if (proj.detailsDefault){
+                        gebi("details_menu_bottom").innerHTML=proj.detailsDefault;
+                    }
                 }
             }
         }, 500)

@@ -5,15 +5,24 @@ export const projects: ProjectType[] = [
         id: "spotify-cracked",
         title: "Spotify Cracked",
         description: "An app created in an effort to bring more accessibility to music streaming and improving focus while working. Serves YouTube videos in embeds for music streaming functionality. Time-tracking \"Spotify Wrapped\" feature implemented using JavaScript.",
+        detailsDefault:"Originally implemented as an all-in-one style client-side app on my personal website. Migrated to Next.js only changing authentication flow and its interaction with the server. The app itself is implemented in JavaScript and HTML.",
         icon:"/icons/spotifyYt.png",
         technology: [
             {
                 id:"nodejs",
-                description:"Used as server infrastructure for my website. Implemented OAuth v2.0 login flow for Spotify API."
+                description:"Early versions used as server infrastructure for my website. Implemented OAuth v2.0 login flow for Spotify API."
             },
             {
                 id:"expressjs",
                 description:"Server-side framework for app. Hooked up RESTful API calls allowing communication between server and client. Managed database calls and updates."
+            },
+            {
+                id:"nextjs",
+                description:"Used with Vercel serverless functions framework to implement a version of the app with Next.js and its benefits - hosting alongside my personal website, usage of TypeScript, and a clearer backend."
+            },
+            {
+                id:"typescript",
+                description:"Used to implement server-side functions used in Next.js app. Converted from equivalent functions used in Node.js app."
             },
             {
                 id:"mongodb",
@@ -29,8 +38,8 @@ export const projects: ProjectType[] = [
             },
         ],
         link: {
-            title:"coming soon!",
-            link:""
+            title:"live deployment",
+            link:"https://mzhang.dev/spotifyYt"
         }
     },
     {
