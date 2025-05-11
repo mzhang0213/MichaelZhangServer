@@ -42,7 +42,7 @@ export async function GET(req: Request) {
                 "Authorization": "Basic " + Buffer.from(client_id + ":" + client_secret).toString("base64"),
                 "content-type": "application/x-www-form-urlencoded"
             },
-            body: JSON.stringify({
+            body: querystring.stringify({
                 code: code,
                 redirect_uri: origin + "/spotifyYt/api/callback",
                 grant_type: "authorization_code"
