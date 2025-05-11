@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     const code = query.code || null;
     const state = query.state || null;
     const cookieStoreState = (await cookies()).get(stateKey);
+    console.log(cookieStoreState);
     let storedState;
     if (cookieStoreState==undefined){
         storedState = null;
