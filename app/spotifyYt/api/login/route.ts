@@ -30,6 +30,7 @@ export async function GET(req: Request) {
     // your application requests authorization
     const scope = 'playlist-read-private';
     const origin = new URL(req.url).origin;
+    console.log(origin);
     const redirURL = new URL("https://accounts.spotify.com/authorize?");
     redirURL.search = querystring.stringify({
         response_type: 'code',
