@@ -214,7 +214,7 @@ function Projects() {
                     );
                     detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
                     if (proj.detailsDefault){
-                        gebi("details_menu_bottom").innerHTML=proj.detailsDefault;
+                        gebi("details_menu_desc").innerHTML=proj.detailsDefault;
                     }
                 }
             }
