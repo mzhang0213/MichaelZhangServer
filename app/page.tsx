@@ -351,8 +351,8 @@ export default function Home() {
             <BackgroundDim/>
 
             <div id={"details_menu"} className={"absolute flex-col top-0 w-0 p-2 rounded-2xl"} style={{display:"none",backgroundColor:"var(--theme-dark-gray)", zIndex:"12", transition:`left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe/2}ms`}}>
-                <div id={"details_menu_link"} className={"w-full h-[10%] flex justify-center items-center"}></div>
-                <div id={"details_menu_top"} className={"w-full h-[30%] flex justify-center items-center"}></div>
+                <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
+                <div id={"details_menu_top"} className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
                 <div id={"details_menu_bottom"} className={"w-full h-[60%]"}>
                     <p id={"details_menu_title"} className={"text-white text-xl"} style={{fontWeight:"bold"}}></p>
                     <p id={"details_menu_desc"} className={"text-white text-sm"}></p>
