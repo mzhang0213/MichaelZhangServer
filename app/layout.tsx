@@ -10,7 +10,10 @@ const merriweather = Merriweather_Sans({
 
 export const metadata = {
     title: "Michael's Website",
-    description: "Learn more about Michael Zhang"
+    description: "Learn more about Michael Zhang",
+    icons:{
+        icon:"/icons/chillpanda-icon.png"
+    }
 }
 
 export default function RootLayout({

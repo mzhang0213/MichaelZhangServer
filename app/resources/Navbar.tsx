@@ -33,7 +33,7 @@ function Item({id, onClick, style, itemTitle, decoration}: ItemType) {
         <button
             id={id}
             onClick={onClick}
-            className={"navbar-item"}
+            className={"navbar-item relative h-full inline-block text-gray-200"}
             style={style}
         >
             <div
@@ -70,21 +70,11 @@ type DropdownListType = ItemType & {
 function DropdownList({id, onClick, itemTitle, children}: DropdownListType) {
     id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
     return (
-        <div
-            id={id}
-            className={"navbar-group navbar-item"}
-        >
-            <button
-                id={id+"Button"}
-                onClick={onClick}
-                className={"navbar-group-button"}
-            >
+        <div id={id} className={"navbar-group navbar-item relative h-full inline-block text-gray-200"}>
+            <button id={id+"Button"} onClick={onClick} className={"navbar-group-button w-full h-full px-3"}>
                 {itemTitle}
             </button>
-            <div
-                id={id+"Content"}
-                className={"navbar-content"}
-            >
+            <div id={id+"Content"} className={"navbar-content"}>
                 {children}
             </div>
         </div>
@@ -110,13 +100,21 @@ export const defaultItems: NavDataType[] = [
     {
         isList: true,
         childrenItems: [
-            /*
             {
-                id: "sampleProject",
-                onClick: ()=>window.location.href=window.location.origin+'/',
-                itemTitle: "Sample-Project"
+                id: "spotifyYt",
+                onClick: ()=>window.open(window.location.origin+"/spotifyYt/","_blank"),
+                itemTitle: "Cracked Spotify"
+            },
+            {
+                id: "emailBot",
+                onClick: ()=>window.open("https://github.com/mzhang0213/email-send-robot","_blank"),
+                itemTitle: "Email Robot"
+            },
+            {
+                id: "imageEditor",
+                onClick: ()=>window.open("https://github.com/mzhang0213/ae3","_blank"),
+                itemTitle: "Image Editor"
             }
-             */
         ],
         id: "projects",
         onClick: ()=>window.location.href=window.location.origin+'/projects/',
@@ -234,19 +232,19 @@ export default function Navbar({customItems}: { customItems: NavDataType[] | nul
     }, []);
     return (
         <nav id={"navBar"}>
-            <div id={"navItemLogo"} onClick={() => window.location.href=window.location.origin+'/bobabyte/'}>
-                <img id={"logo"} src={"./logo.png"} alt={"navlogo"} className={"h-8 mr-2"}/>
-                <button className={"text-xl tracking-tight"}> Michael Zhang </button>
+            <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)} className={"h-full flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"}>
+                <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-8 mr-2"}/>
+                <button className={"text-xl tracking-tight"}>Michael Zhang</button>
             </div>
             <div className={"block md:hidden"}>
-                <button id={"menuToggle"}>
+                <button id={"menuToggle"} className={"flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white"}>
                     <svg className={"fill-current h-3 w-3"} viewBox={"0 0 20 20"} xmlns="http://www.w3.org/2000/svg">
                         <title>Menu</title>
                         <path d={"M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"}/>
                     </svg>
                 </button>
             </div>
-            <div id={"navItemContainer"}>
+            <div id={"navItemContainer"} className={"w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm"}>
                 <RenderNavbar items={customItems?customItems:defaultItems} />
             </div>
         </nav>

@@ -82,7 +82,7 @@ export const projects: ProjectType[] = [
         technology: [
             {
                 id:"python",
-                description:"Implements SMTP library for sending SSL encrypted letters. User prompts included to control template, data, and a time for emails to be sent."
+                description:"Implements SMTP library for sending SSL encrypted letters. Uses command-line prompts to control template, data, and time for emails to be sent."
             }
         ],
         link: {
