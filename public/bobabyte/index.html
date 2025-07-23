@@ -46,7 +46,7 @@
       }
       resize();
     }
-    /*
+    /* REMOVE WEBSOCKETS (using serverless functions)
     socket.on("platform-anno",(body)=>{
       alert("NEW ANNOUNCEMENT: \n\n"+body.title+"\n"+body.body);
     })
@@ -86,7 +86,7 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
-          <a id="group"></a>
+          <!--REMOVE GROUP BUTTON: <a id="group"></a>-->
           <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
@@ -94,15 +94,16 @@
   </nav>
 
   <script>
-
     //check for account presence
     if (localStorage.getItem("platform-username")==null){
-      alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
+      //REMOVE FORCE SIGNIN
+      //alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
       gebi("userButton").innerHTML="Guest";
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
 
+    /* REMOVED GROUPS
     //join group button
     if (localStorage.getItem("platform-group")==null){
       gebi("group").innerHTML="Join your group";
@@ -113,6 +114,7 @@
         window.location=window.location.origin+'/bobabyte/team';
       })
     }
+      */
 
     if (Date.now()>1729980000000){
       gebi("navBarProjects").style.display="";
@@ -133,7 +135,7 @@
       gebi("voteButton").style.display="";
     }
 
-    /*
+    /* REMOVE GROUPS
     //remove member from group
     function unregisterGroup(){
       if (localStorage.getItem("platform-group")!==null){

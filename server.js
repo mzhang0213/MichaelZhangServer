@@ -270,7 +270,7 @@ app.post("/platform-login", async (req,res)=>{
 //req.body.user is the username submitted
 app.post("/platform-staff-login", async (req,res)=>{
 	async function run(){
-			try{
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("accounts");
 			const currContent = await db.findOne();
