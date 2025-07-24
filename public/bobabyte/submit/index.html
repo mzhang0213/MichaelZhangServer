@@ -97,15 +97,16 @@
     //check for account presence
     var guest = false;
     if (localStorage.getItem("platform-username")==null){
-      alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
+      //alert("You are using the platform as guest.\nSign in to your BobaByte account with the username on your badge to access the platform!");
       gebi("userButton").innerHTML="Guest";
       guest = true;
     }else{
       gebi("userButton").innerHTML="Hi "+localStorage.getItem("platform-first")+"!";
     }
     if (localStorage.getItem("platform-group")==null){
-      alert("Before you can submit your project, create or join your group");
-      window.location=window.location.origin+'/bobabyte/group/';
+      //alert("Before you can submit your project, create or join your group");
+      //window.location=window.location.origin+'/bobabyte/group/';
+      gebi("group").innerHTML="N/A";
     }else{
       gebi("group").innerHTML=localStorage.getItem("platform-group");
     }
