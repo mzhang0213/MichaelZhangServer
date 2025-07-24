@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Platform</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -57,8 +57,8 @@
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
     <div class="flex items-center flex-shrink-0 text-white mr-6" style="cursor:pointer;" onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()">
-      <img class="h-8 mr-2" id="logo" src="logo.png">
-      <button class="text-xl tracking-tight">BobaByte</span>
+      <img class="h-8 mr-2" id="logo" src="./bobabyte/logo.png">
+      <button class="text-xl tracking-tight">BobaByte</button>
     </div>
     <div class="block md:hidden">
       <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
@@ -73,8 +73,8 @@
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
-          <a id="group"></a>
-          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
+          <!--REMOVE GROUPS: <a id="group"></a>-->
+          <a onclick="(function(){/*unregisterGroup();*/localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -351,7 +351,7 @@ if (!guest){
           user:localStorage.getItem("platform-username"),
           round:ROUND
         }
-        req.open("POST",window.location.origin+"/platform-vote");
+        req.open("POST",window.location.origin+"/bobabyte/api/platform-vote");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         req.send(JSON.stringify(body));
         req.addEventListener("readystatechange", ()=>{
@@ -369,7 +369,7 @@ if (!guest){
 }
     })
     var req = new XMLHttpRequest();
-    req.open("GET",window.location.origin+"/platform-getProjects");
+    req.open("GET",window.location.origin+"/bobabyte/api/platform-getProjects");
     req.send();
     req.addEventListener("readystatechange", ()=>{
       if (req.status === 200 && req.readyState === 4) {
@@ -381,7 +381,7 @@ if (!guest){
           user:localStorage.getItem("platform-username"),
           round:ROUND
         }
-        req2.open("POST",window.location.origin+"/platform-getMyVotes");
+        req2.open("POST",window.location.origin+"/bobabyte/api/platform-getMyVotes");
         req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         req2.send(JSON.stringify(body2));
         req2.addEventListener("readystatechange", ()=>{
@@ -434,6 +434,7 @@ if (!guest){
       gebi("closedVotingBox").style.display="";
       gebi("submit").style.display="none";
     }
+    /* REMOVE WEBSOCKETS
     socket.on("platform-anno",(body)=>{
       alert("NEW ANNOUNCEMENT: \n\n"+body.title+"\n"+body.body);
     })
@@ -449,6 +450,8 @@ if (!guest){
         window.location.reload();
       }
     });
+
+     */
   </script>
   <!--
     schematic

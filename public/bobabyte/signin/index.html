@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Platform</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -155,17 +155,17 @@
       var body = {
         user:username
       }
-      req.open("POST",window.location.origin+"/platform-login");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-login");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           //now check for responded errors
-          if (body.error == 1) {
+          if (body.error === 1) {
             //code 1: invalid username
             alert("wrong / misspelled username. sorry!")
-          }else if (body.error == 0){
+          }else if (body.error === 0){
             //code 0: success
             console.log("acc signin success");
             localStorage.setItem("platform-username",body.user);

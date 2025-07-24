@@ -24,7 +24,7 @@ Note that this file is going to be inaccessible on mzhang.dev
 <head>
   <title>BobaByte Platform</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -141,7 +141,7 @@ Note that this file is going to be inaccessible on mzhang.dev
         group:groupname,
         user:localStorage.getItem("platform-username")
       }
-      req1.open("POST",window.location.origin+"/platform-glogin");
+      req1.open("POST",window.location.origin+"/bobabyte/api/platform-glogin");
       req1.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req1.send(JSON.stringify(submit1));
       req1.addEventListener("readystatechange", ()=>{
@@ -149,7 +149,7 @@ Note that this file is going to be inaccessible on mzhang.dev
           var body1 = JSON.parse(req1.responseText);
           console.log(body1);
           //now check for responded errors
-          if (body1.error == 1) {
+          if (body1.error === 1) {
             //code 1: confirm new team name
             var confirmation = confirm(`Confirm new group name "${body1.group}"?`);
             if (confirmation){
@@ -158,7 +158,7 @@ Note that this file is going to be inaccessible on mzhang.dev
                 group:body1.group,
                 user:body1.user
               }
-              req2.open("POST",window.location.origin+"/platform-glogin-confirm");
+              req2.open("POST",window.location.origin+"/bobabyte/api/platform-glogin-confirm");
               req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
               req2.send(JSON.stringify(submit2));
               req2.addEventListener("readystatechange", ()=>{
@@ -176,7 +176,7 @@ Note that this file is going to be inaccessible on mzhang.dev
             }else{
               alert("o.k. fix your name please");
             }
-          }else if (body1.error == 0){
+          }else if (body1.error === 0){
             //code 0: success
             alert(`Joined group ${body1.group}! Sending you home...`);
             localStorage.setItem("platform-group",body1.group);

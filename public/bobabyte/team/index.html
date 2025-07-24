@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>BobaByte Platform</title>
-  <meta charset="UTF-8 >
+  <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="./logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -116,14 +116,14 @@
       var body = {
         id:localStorage.getItem("platform-group-id")
       }
-      req.open("POST",window.location.origin+"/platform-getMembers");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-getMembers");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           console.log(body);
-          if (body.error==1){
+          if (body.error===1){
             alert("something bad happened - couldnt find group")
           }else{
             /*
@@ -166,7 +166,7 @@
           user:localStorage.getItem("platform-username"),
           id:localStorage.getItem("platform-group-id")
         }
-        req.open("POST",window.location.origin+"/platform-removeGroup");
+        req.open("POST",window.location.origin+"/bobabyte/api/platform-removeGroup");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         req.send(JSON.stringify(body));
         req.addEventListener("readystatechange", ()=>{

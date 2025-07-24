@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Platform</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -70,7 +70,7 @@
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
     <div class="flex items-center flex-shrink-0 text-white mr-6" style="cursor:pointer;" onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()">
-      <img class="h-8 mr-2" id="logo" src="logo.png">
+      <img class="h-8 mr-2" id="logo" src="./bobabyte/logo.png">
       <button class="text-xl tracking-tight">BobaByte</button>
     </div>
     <div class="block md:hidden">
@@ -87,7 +87,7 @@
         <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
           <!--REMOVE GROUP BUTTON: <a id="group"></a>-->
-          <a onclick="(function(){unregisterGroup();localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
+          <a onclick="(function(){/*unregisterGroup();*/localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -224,7 +224,7 @@
       titleE.className="relative w-full text-2xl";
       var created=false;
       for (var i=0;i<annos.length;i++){
-        if (annos[i].date==date){ //if the localstorage time = mongodb time
+        if (annos[i].date===date){ //if the localstorage time = mongodb time
           created=true;
         }
       }
@@ -237,7 +237,7 @@
         var newAnno = {
           title:title,
           date:date,
-          body,body
+          body:body
         }
         annos.push(newAnno);
       }
@@ -246,10 +246,10 @@
       var date_date = new Date(date);
       dateE.className="relative w-full text-sm mt-1 text-gray-600";
       var display = "Posted ";
+      var hrs = date_date.getHours();
       if ((new Date()).getHours()-hrs>24){
         display+="on "+date_date.getMonth()+" "+date_date.getDate()+", "+date_date.getFullYear()+" ";
       }
-      var hrs = date_date.getHours();
       var AM = true;
       if (hrs>12){
         AM=false;
@@ -286,7 +286,7 @@
       gebi("annoBox").innerHTML="";
       var req = new XMLHttpRequest();
       var db_annos = [];
-      req.open("GET",window.location.origin+"/platform-getAnnos");
+      req.open("GET",window.location.origin+"/bobabyte/api/platform-getAnnos");
       req.send();
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {

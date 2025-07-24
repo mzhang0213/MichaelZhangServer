@@ -510,7 +510,7 @@ req.body.votes: {
 //req.body.user req.body.votes req.body.round
 app.post("/platform-vote", async (req,res)=>{
 	async function run(){
-			try{
+		try{
 			await client.connect();
 			const db = client.db(hackDbName).collection("voting");
 			const currContent = await db.findOne();

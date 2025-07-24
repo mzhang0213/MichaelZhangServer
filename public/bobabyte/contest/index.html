@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Contest Results</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -120,7 +120,7 @@
     var body = {
       round:"groups"
     }
-    req.open("POST",window.location.origin+"/platform-getVoting");
+    req.open("POST",window.location.origin+"/bobabyte/api/platform-getVoting");
     req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
     req.send(JSON.stringify(body));
     req.addEventListener("readystatechange", ()=>{
@@ -166,7 +166,7 @@
         var body2 = {
           id:category1
         }
-        req2.open("POST",window.location.origin+"/platform-getMembers");
+        req2.open("POST",window.location.origin+"/bobabyte/api/platform-getMembers");
         req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         req2.send(JSON.stringify(body2));
         req2.addEventListener("readystatechange", ()=>{
@@ -175,7 +175,7 @@
             var body3 = {
               id:category2
             }
-            req3.open("POST",window.location.origin+"/platform-getMembers");
+            req3.open("POST",window.location.origin+"/bobabyte/api/platform-getMembers");
             req3.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
             req3.send(JSON.stringify(body3));
             req3.addEventListener("readystatechange", ()=>{

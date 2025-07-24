@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Staff</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -172,17 +172,17 @@
       var body = {
         user:username
       }
-      req.open("POST",window.location.origin+"/platform-staff-login");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-staff-login");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           //now check for responded errors
-          if (body.error == 1) {
+          if (body.error === 1) {
             //code 1: invalid username
             alert("wrong / misspelled username. sorry!")
-          }else if (body.error == 0){
+          }else if (body.error === 0){
             //code 0: success
             console.log("acc signin success");
             loadUI();
@@ -239,7 +239,7 @@
       var body = {
         names:accs
       }
-      req.open("POST",window.location.origin+"/platform-newUser");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-newUser");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
@@ -253,13 +253,14 @@
         }
       })
     })
-    
+
+    /* VOTING OFF HAS NO FUNCTIONALITY W/O WEBSOCKETS SORRY :(((
     gebi("votingOff").addEventListener("change",function(){
       var req = new XMLHttpRequest();
       var body = {
         votingStatus:gebi("votingOff").checked
       }
-      req.open("POST",window.location.origin+"/platform-votingOff");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-votingOff");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
@@ -272,13 +273,14 @@
         }
       })
     })
+     */
     gebi("annoSubmit").addEventListener("click",function(){
       var req = new XMLHttpRequest();
       var body = {
         title:gebi("annoTitle").value,
         body:gebi("annoBody").value
       }
-      req.open("POST",window.location.origin+"/platform-anno");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-anno");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
@@ -299,6 +301,7 @@
       }
     }
 
+    /* TURNING OFF WEBSOCKETS
     socket.on("platform-anno",(body)=>{
       alert("NEW ANNOUNCEMENT: \n\n"+body.title+"\n"+body.body)
     })
@@ -312,6 +315,8 @@
         gebi("votingOff").checked=false;
       }
     });
+     */
+
     /*
     var start = new Date();
     gebi("votingDeadline").value=start.getMinutes()+":"+start.getSeconds();

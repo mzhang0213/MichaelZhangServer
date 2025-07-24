@@ -3,7 +3,7 @@
 <head>
   <title>BobaByte Platform</title>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="./bobabyte/logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -70,8 +70,8 @@
   <!--navbar-->
   <nav id="navbar" class="z-50 flex items-center justify-between flex-wrap p-2 w-screen fixed pr-4" style="font-family: 'Merriweather';transition: background-color 200ms linear; background-color:rgba(0,0,0,0.5)">
     <div class="flex items-center flex-shrink-0 text-white mr-6" style="cursor:pointer;" onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()">
-      <img class="h-8 mr-2" id="logo" src="logo.png">
-      <button class="text-xl tracking-tight">BobaByte</span>
+      <img class="h-8 mr-2" id="logo" src="./bobabyte/logo.png">
+      <button class="text-xl tracking-tight">BobaByte</button>
     </div>
     <div class="block md:hidden">
       <button id="menuToggle" class="flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white">
@@ -120,7 +120,7 @@
           user:localStorage.getItem("platform-username"),
           id:localStorage.getItem("platform-group-id")
         }
-        req.open("POST",window.location.origin+"/platform-removeGroup");
+        req.open("POST",window.location.origin+"/bobabyte/api/platform-removeGroup");
         req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         req.send(JSON.stringify(body));
         req.addEventListener("readystatechange", ()=>{
@@ -270,14 +270,14 @@
       var body = {
         id:localStorage.getItem("platform-group-id")
       }
-      req.open("POST",window.location.origin+"/platform-getMembers");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-getMembers");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           console.log(body);
-          if (body.error==1){
+          if (body.error===1){
             alert("something bad happened - couldnt find group")
           }else{
             //groupBlurb
@@ -303,7 +303,7 @@
             var body2 = {
               id:localStorage.getItem("platform-group-id")
             }
-            req2.open("POST",window.location.origin+"/platform-getMyProject");
+            req2.open("POST",window.location.origin+"/bobabyte/api/platform-getMyProject");
             req2.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
             req2.send(JSON.stringify(body2));
             req2.addEventListener("readystatechange", ()=>{
@@ -355,17 +355,17 @@ if (!guest){
         projDesc:projDesc,
         mediaLink:mediaLink
       }
-      req.open("POST",window.location.origin+"/platform-proj");
+      req.open("POST",window.location.origin+"/bobabyte/api/platform-proj");
       req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       req.send(JSON.stringify(body));
       req.addEventListener("readystatechange", ()=>{
         if (req.status === 200 && req.readyState === 4) {
           var body = JSON.parse(req.responseText);
           //now check for responded errors
-          if (body.error == 1) {
+          if (body.error === 1) {
             //code 1: invalid username
             alert("couldn't find group :P")
-          }else if (body.error == 0){
+          }else if (body.error === 0){
             //code 0: success
             alert("success!!");
             loadEditor();
