@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import client from "@/app/resources/mongodb";
 
-export async function POST(req: Request) {
-    const body = await req.json();
+export async function GET(req: Request) {
 
     try{
         const db = (await client).db("bobabyte2024").collection("projects");
