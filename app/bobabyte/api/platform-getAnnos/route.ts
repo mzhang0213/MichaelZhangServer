@@ -19,5 +19,5 @@ export async function GET() {
             await (await client).close();
         }
     }
-    await run();
+    return await run();
 }
