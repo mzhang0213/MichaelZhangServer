@@ -70,7 +70,7 @@ export const projects: ProjectType[] = [
             }
         ],
         link: {
-            title:"coming soon!",
+            title:"live deployment",
             link:"https://mzhang.dev/bobabyte"
         }
     },
