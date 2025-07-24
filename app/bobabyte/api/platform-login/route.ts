@@ -6,6 +6,7 @@ export async function POST(req: Request) {
 
     async function run() {
         try{
+            await (await client).connect();
             const dbTracking = (await client).db("bobabyte2024").collection("accounts");
             const currContent = await dbTracking.findOne();
             if (currContent==null){

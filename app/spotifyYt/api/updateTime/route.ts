@@ -7,6 +7,7 @@ export async function POST(req: Request) {
     try{ //find if im creating a whole new account and then if in a) old acc new device or not and b) new acc new device
         const theName = body.name;
         const theUpdatedDevice = body.updatedDevice;
+        await (await client).connect();
         const dbTracking = (await client).db("spotifyYt").collection("timeTrack");
         const currContent = await dbTracking.findOne();
         if (currContent==null){

@@ -6,6 +6,7 @@ export async function POST(req: Request) {
 
     async function run() {
         try{
+            await (await client).connect();
             const db_annos = (await client).db("bobabyte2024").collection("annos");
             const currContent = await db_annos.findOne();
             if (currContent==null){

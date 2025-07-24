@@ -4,6 +4,7 @@ import client from "@/app/resources/mongodb";
 export async function GET() {
     async function run() {
         try{
+            await (await client).connect();
             const db = (await client).db("bobabyte2024").collection("projects");
             const currContent = await db.findOne();
             if (currContent==null){

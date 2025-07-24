@@ -6,13 +6,14 @@ export async function POST(req: Request) {
 
     async function run() {
         try{
+            await (await client).connect();
             const db = (await client).db("bobabyte2024").collection("voting");
             const currContent = await db.findOne();
             if (currContent==null){
                 throw new Error("couldn't find document");
             }
 
-            let allGroups = []; if (body.round==="groups")allGroups=currContent.groups; else allGroups=currContent.finals;
+            let allGroups; if (body.round==="groups")allGroups=currContent.groups; else allGroups=currContent.finals;
             let submit = []
             for (let i=0;i<allGroups.length;i++){
                 //for all existing groups, try to find our user-casted vote
