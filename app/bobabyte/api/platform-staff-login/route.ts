@@ -33,5 +33,5 @@ export async function POST(req: Request) {
             await (await client).close();
         }
     }
-    await run();
+    return await run();
 }

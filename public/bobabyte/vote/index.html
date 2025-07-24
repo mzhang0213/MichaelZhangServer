@@ -67,13 +67,13 @@
     </div>
     <div id="navItemContainer" class="w-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm">
       <button onclick="(function(){window.location=window.location.origin+'/bobabyte/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Home</b></button>
-      <button id="navBarProjects" onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4" style="display:none;"><b>Projects</b></button>
+      <button id="navBarProjects" onclick="(function(){window.location=window.location.origin+'/bobabyte/projects/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>Projects</b></button>
       <button id="myProjectButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/submit/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b>My Project</b></button>
       <button id="voteButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/vote/'})()" class="block mt-4 md:inline-block md:mt-0 text-gray-200 hover:text-white mr-4"><b style="text-decoration:underline;">Vote</b></button>
       <div id="user" class="block mt-4 md:inline-block md:mt-0 text-gray-200 text-bold hover:text-white ml-2 mr-4">
         <button id="userButton" onclick="(function(){window.location=window.location.origin+'/bobabyte/signin/'})()"></button>
         <div id="userContent">
-          <!--REMOVE GROUPS: <a id="group"></a>-->
+          <!--REMOVE GROUP BUTTON: <a id="group"></a>-->
           <a onclick="(function(){/*unregisterGroup();*/localStorage.removeItem('platform-username');localStorage.removeItem('platform-first');localStorage.removeItem('platform-last');localStorage.removeItem('platform-group');localStorage.removeItem('platform-group-id');localStorage.removeItem('platform-submitted');localStorage.removeItem('platform-votingOff');window.location.reload();})()" id="logout">Logout</a>
         </div>
       </div>
@@ -242,7 +242,7 @@
       }
       for (var i=0;i<boxes.length;i++){
         var catNum = categories[boxes[i].style.border];
-        if (catNum!==null&&catNum!==NaN&&catNum!==undefined){
+        if (catNum!==null&&!isNaN(catNum)&&catNum!==undefined){
           if (ret[catNum]===undefined)ret[catNum]=[];
           ret[catNum].push(boxes[i].id);
         }
