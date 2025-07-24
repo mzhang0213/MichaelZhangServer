@@ -71,7 +71,7 @@ export const projects: ProjectType[] = [
         ],
         link: {
             title:"coming soon!",
-            link:""
+            link:"https://mzhang.dev/bobabyte"
         }
     },
     {
