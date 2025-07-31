@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import "./navbar.css"
 import {gebi} from "@/app/resources/gebi";
+import {usePathname} from "next/navigation";
 
 type NavItemData = {
     id: string;
     className?: string;
-    onClick?: () => void; //a function that has no param return nothing (ie just redirecting window)
     style?: React.CSSProperties;
 }
 
@@ -13,6 +13,8 @@ type NavItemData = {
 //!! This means that its title is inlined, not in .innerHTML !!
 export type ItemType = NavItemData & {
     itemTitle: React.ReactNode;
+    page: string;
+    redirect?: boolean;
     decoration?: string;
     weight?: string;
 }
@@ -27,20 +29,20 @@ export type ItemType = NavItemData & {
  * @param decoration OPTIONAL Apply underline to the item
 // *hard-coded* @param weight OPTIONAL Apply bold to the item
  */
-function Item({id, onClick, style, itemTitle, decoration}: ItemType) {
+function Item({id, page, redirect, style, itemTitle}: ItemType) {
+    const newTab = redirect ? "_blank" : "_self";
+    const clickFunct = page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+page, newTab))) : (()=>(window.open(page, newTab)))
     id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
+    const buttonStyles = page == usePathname() ? {textDecoration: "underline"} : {}
     return (
         <button
             id={id}
-            onClick={onClick}
+            onClick={clickFunct}
             className={"navbar-item relative h-full inline-block text-gray-200"}
             style={style}
         >
             <div
-                style={{
-                    textDecoration: decoration,
-                    fontWeight: "bold" //not using weight; everything bold for now
-                }}
+                style={buttonStyles}
                 className={"px-3"} //adding padding to element under a hover button listener is good to extend the hover range (ie width) of the upper (parent) element w/o needing to do some bs calculations of 100% + 2px yk
             >
                 {itemTitle}
@@ -67,11 +69,13 @@ type DropdownListType = ItemType & {
  */
 // think of this as just code for the container
 // we dont gaf about whats inside, but MUST be item
-function DropdownList({id, onClick, itemTitle, children}: DropdownListType) {
+function DropdownList({id, page, redirect, itemTitle, children}: DropdownListType) {
+    const newTab = redirect ? "_blank" : "_self";
+    const clickFunct = page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+page, newTab))) : (()=>(window.open(page, newTab)))
     id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
     return (
         <div id={id} className={"navbar-group navbar-item relative h-full inline-block text-gray-200"}>
-            <button id={id+"Button"} onClick={onClick} className={"navbar-group-button w-full h-full px-3"}>
+            <button id={id+"Button"} onClick={clickFunct} className={"navbar-group-button w-full h-full px-3"}>
                 {itemTitle}
             </button>
             <div id={id+"Content"} className={"navbar-content"}>
@@ -93,63 +97,65 @@ export const defaultItems: NavDataType[] = [
         isList: false,
         childrenItems: [],
         id: "homeButton",
-        onClick: ()=>window.location.href=window.location.origin+'/',
-        decoration: "underline",
-        itemTitle: "Home"
+        page:"/",
+        itemTitle: "hi!",
+    },
+    {
+        isList: false,
+        childrenItems: [],
+        id: "experience",
+        page:"/experience",
+        itemTitle: "its me...",
+    },
+    {
+        isList: false,
+        childrenItems: [],
+        id: "aboutMe",
+        page:"/about",
+        itemTitle: "michael!!",
     },
     {
         isList: true,
         childrenItems: [
             {
                 id: "spotifyYt",
-                onClick: ()=>window.open(window.location.origin+"/spotifyYt/","_blank"),
+                page: "/spotifyYt",
+                redirect: true,
                 itemTitle: "Cracked Spotify"
             },
             {
                 id: "emailBot",
-                onClick: ()=>window.open("https://github.com/mzhang0213/email-send-robot","_blank"),
+                page: "https://github.com/mzhang0213/email-send-robot",
+                redirect: true,
                 itemTitle: "Email Robot"
             },
             {
                 id: "imageEditor",
-                onClick: ()=>window.open("https://github.com/mzhang0213/ae3","_blank"),
+                page: "https://github.com/mzhang0213/ae3",
+                redirect: true,
                 itemTitle: "Image Editor"
             }
         ],
         id: "projects",
-        onClick: ()=>window.location.href=window.location.origin+'/projects/',
-        itemTitle: "Projects"
+        page: "/projects",
+        itemTitle: "and i like to build"
     },
+    /*
     {
         isList: true,
         childrenItems: [
-            /*
+
             {
                 id: "sampleJob",
                 onClick: ()=>window.location.href=window.location.origin+'/',
                 itemTitle: "Sample-Job"
             }
-             */
+
         ],
         id: "experience",
         onClick: ()=>window.location.href=window.location.origin+'/experience/',
         itemTitle: "Experience"
-    },
-    {
-        isList: true,
-        childrenItems: [
-            /*
-            {
-                id: "sampleJob",
-                onClick: ()=>window.location.href=window.location.origin+'/',
-                itemTitle: "Sample-Job"
-            }
-            */
-        ],
-        id: "volunteer",
-        onClick: ()=>window.location.href=window.location.origin+'/volunteer/',
-        itemTitle: "Volunteer"
-    },
+    },*/
 ]
 
 /**
@@ -165,7 +171,8 @@ function RenderItems({items}: {items: ItemType[]}) {
                     <Item
                         id={item.id}
                         key={item.id}
-                        onClick={item.onClick}
+                        page={item.page}
+                        redirect={item.redirect}
                         style={item.style}
                         decoration={item.decoration}
                         weight={item.weight}
@@ -191,7 +198,8 @@ function RenderNavbar({ items }: { items: NavDataType[] }) {
                     return <DropdownList
                         id={navItem.id}
                         key={navItem.id}
-                        onClick={navItem.onClick}
+                        page={navItem.page}
+                        redirect={navItem.redirect}
                         style={navItem.style}
                         decoration={navItem.decoration}
                         weight={navItem.weight}
@@ -205,7 +213,8 @@ function RenderNavbar({ items }: { items: NavDataType[] }) {
                     return <Item
                         id={navItem.id}
                         key={navItem.id}
-                        onClick={navItem.onClick}
+                        page={navItem.page}
+                        redirect={navItem.redirect}
                         style={navItem.style}
                         decoration={navItem.decoration}
                         weight={navItem.weight}

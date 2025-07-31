@@ -9,6 +9,7 @@ import {createRoot, Root} from "react-dom/client";
 import Footer from "@/app/resources/Footer";
 import {projects} from "@/app/projects";
 import {technologies} from "@/app/technologies";
+import {experiences} from "@/app/experiences";
 
 
 const summaryContainerWidth = 85;
@@ -83,6 +84,16 @@ export type ProjectType = {
         title:string,
         link:string
     }
+}
+export type ExperienceType = {
+    id: string,
+    title: string,
+    role: string,
+    duration: string,
+    description: string,
+    icon: string,
+    type: "work" | "volunteer"
+    link: string //will just be applied on the title
 }
 
 
@@ -240,6 +251,35 @@ function Projects() {
     )
 }
 
+function Experiences() {
+    const mainFont = "var(--theme-white)"
+    return (
+        experiences.map(exp => {
+            return <div key={exp.id} id={exp.id} className={"flex p-2 mb-10 rounded-md"} style={{
+                boxShadow: "8px 8px 0px 0px var(--theme-purple)",
+                backgroundColor: "var(--theme-gray)",
+                border: "2px solid var(--theme-dark-gray)"
+            }}>
+                <img src={exp.icon} alt={exp.title} className={"h-[50px] mr-2"}/>
+                <div className={"flex flex-col w-full p-2 mb-10 rounded-md"}>
+                    <div className={"flex flex-row w-full"}>
+                        <p className={"text-2xl flex items-center w-fit"} style={{cursor: "pointer", color: mainFont}} onClick={() => {window.open(exp.link, "_blank")}}>
+                            {exp.title}
+                        </p>
+                    </div>
+                    <p className={"text-[12px] w-[100%] flex items-center mb-1 text-gray-400"}>
+                        {exp.role}&nbsp;&nbsp;|&nbsp;&nbsp;<i>{exp.duration}</i>
+                    </p>
+                    <p className={"text-[16px] w-[100%] flex items-center"} style={{color: mainFont}}>
+                        {exp.description}
+                    </p>
+                </div>
+            </div>
+            //<img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[12px] h-[12px] ml-2"}/>
+        })
+    )
+}
+
 type ContactLinksType = {
     id: string,
     title: string,
@@ -350,16 +390,27 @@ export default function Home() {
             <Background/>
             <BackgroundDim/>
 
-            <div id={"details_menu"} className={"absolute flex-col top-0 w-0 p-2 rounded-2xl"} style={{display:"none",backgroundColor:"var(--theme-dark-gray)", zIndex:"12", transition:`left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe/2}ms`}}>
+            <div id={"details_menu"} className={"absolute flex-col top-0 w-0 p-2 rounded-2xl"} style={{
+                display: "none",
+                backgroundColor: "var(--theme-dark-gray)",
+                zIndex: "12",
+                transition: `left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+            }}>
                 <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
-                <div id={"details_menu_top"} className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
+                <div id={"details_menu_top"}
+                     className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
                 <div id={"details_menu_bottom"} className={"w-full h-[60%]"}>
-                    <p id={"details_menu_title"} className={"text-white text-xl"} style={{fontWeight:"bold"}}></p>
+                    <p id={"details_menu_title"} className={"text-white text-xl"} style={{fontWeight: "bold"}}></p>
                     <p id={"details_menu_desc"} className={"text-white text-sm"}></p>
                 </div>
             </div>
 
-            <div id={"details_background"} className={"absolute top-0 w-0 p-2 rounded-xl opacity-90"} style={{display:"none",backgroundColor:"var(--theme-black)", zIndex:"11", transition:`left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe/2}ms`}}></div>
+            <div id={"details_background"} className={"absolute top-0 w-0 p-2 rounded-xl opacity-90"} style={{
+                display: "none",
+                backgroundColor: "var(--theme-black)",
+                zIndex: "11",
+                transition: `left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+            }}></div>
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>
                     <div id={"messageSmall"}
@@ -388,7 +439,13 @@ export default function Home() {
                 </div>
             </div>
 
-            <div id={"summaryContainer"} className={"relative flex rounded-xl py-32 my-52"} style={{width: summaryContainerWidth + "vw", backgroundColor:"var(--theme-green)", left: (100 - summaryContainerWidth) / 2 + "vw", boxShadow:"8px 8px 0px 0px var(--theme-yellow)", border:"2px solid var(--theme-dark-gray)"}}>
+            <div id={"summaryContainer"} className={"relative flex rounded-xl py-32 my-52"} style={{
+                width: summaryContainerWidth + "vw",
+                backgroundColor: "var(--theme-green)",
+                left: (100 - summaryContainerWidth) / 2 + "vw",
+                boxShadow: "8px 8px 0px 0px var(--theme-yellow)",
+                border: "2px solid var(--theme-dark-gray)"
+            }}>
                 <div id={"summaryContainerLeft"} className={"w-[35%]"}>
                     <img id={"summaryImg"} src={"/resources/IMG_1399.jpg"}
                          className={"relative object-cover object-center w-[300px] h-[400px]"} style={{float: "right"}}
@@ -398,20 +455,47 @@ export default function Home() {
                     <div id={"summaryInfo"} className={"relative h-full flex flex-col justify-center"}>
                         <p id={"summary-title"} className={"text-4xl mb-2"}>Hi there!</p>
                         <p id={"summary-desc"} className={"w-[80%]"}>
-                            I'm Michael, a rising sophomore at Northeastern University studying CS. I'm extremely passionate about everything computer science, from full-stack web development to computer vision and new fields like AI/Machine Learning. I'm excited to learn more and build my career in the world of tech!
+                            I'm Michael, a rising sophomore at Northeastern University studying CS. I'm extremely
+                            passionate about everything computer science, from full-stack web development to computer
+                            vision and new fields like AI/Machine Learning. I'm excited to learn more and build my
+                            career in the world of tech!
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div id={"projectsTitle"} className={"text-6xl text-white w-full mt-64 mb-8 flex justify-center items-center font-bold"}>
-                <p className={"rounded-xl w-fit py-7 px-12"} style={{backgroundColor:"var(--theme-gray)", boxShadow:"8px 8px 0px 0px var(--theme-black)", border:"2px solid var(--theme-dark-gray)"}}>Projects</p>
+            <div id={"projectsTitle"}
+                 className={"text-6xl text-white w-full mt-64 mb-8 flex justify-center items-center font-bold"}>
+                <p className={"rounded-xl w-fit py-7 px-12"} style={{
+                    backgroundColor: "var(--theme-gray)",
+                    boxShadow: "8px 8px 0px 0px var(--theme-black)",
+                    border: "2px solid var(--theme-dark-gray)"
+                }}>Projects</p>
             </div>
-            <div id={"projectsContainer"} className={"grid grid-cols-3 mx-5 mb-64"}>
+            <div id={"projectsContainer"} className={"grid grid-cols-3 mx-5 mb-56"}>
                 <Projects/>
             </div>
-            <div id={"contactContainer"} className={"relative flex flex-col justify-start items-center w-full pt-20 pb-60 mt-52"} style={{backgroundColor:"var(--theme-white)"}}>
-                <div id={"contact-title"} className={"text-5xl mb-12 p-7 rounded-xl"} style={{boxShadow:"8px 8px 0px 0px var(--theme-blue)", border:"2px solid var(--theme-dark-gray)"}}>Contact Info</div>
+
+            <div id={"experienceTitle"}
+                 className={"text-6xl text-white w-full mt-56 mb-8 flex justify-center items-center font-bold"}>
+                <p className={"rounded-xl w-fit py-7 px-12"} style={{
+                    backgroundColor: "var(--theme-gray)",
+                    boxShadow: "8px 8px 0px 0px var(--theme-black)",
+                    border: "2px solid var(--theme-dark-gray)"
+                }}>Experience</p>
+            </div>
+            <div id={"experienceContainer"} className={"flex flex-col mx-20 mb-64"}>
+                <Experiences/>
+            </div>
+
+            <div id={"contactContainer"}
+                 className={"relative flex flex-col justify-start items-center w-full pt-20 pb-60 mt-52"}
+                 style={{backgroundColor: "var(--theme-white)"}}>
+                <div id={"contact-title"} className={"text-5xl mb-12 p-7 rounded-xl"} style={{
+                    boxShadow: "8px 8px 0px 0px var(--theme-blue)",
+                    border: "2px solid var(--theme-dark-gray)"
+                }}>Contact Info
+                </div>
                 <div id={"contact-items"}>
                     <ContactLinks/>
                 </div>

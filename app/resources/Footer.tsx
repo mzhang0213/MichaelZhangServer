@@ -6,8 +6,10 @@ import "./footer.css"
 function Section({elems}: { elems: ItemType[] }){
     return (
         elems.map(item => {
+            const newTab = item.redirect ? "_blank" : "_self";
+            const clickFunct = item.page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+item.page, newTab))) : (()=>(window.open(item.page, newTab)))
             return <li key={item.id}>
-                <p className="footer-item text-[11px]" onClick={item.onClick}>
+                <p className="footer-item text-[11px]" onClick={clickFunct}>
                     {item.itemTitle}
                 </p>
             </li>
@@ -19,10 +21,12 @@ export function FooterSection({ sections }: { sections: NavDataType[] }) {
     const itemClassName = "footer-header font-bold text-sm mb-3";
     return (
         sections.map(section => {
+            const newTab = section.redirect ? "_blank" : "_self";
+            const clickFunct = section.page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+section.page, newTab))) : (()=>(window.open(section.page, newTab)))
             if (section.isList)
                 return (
                     <div key={section.id}>
-                        <p className={itemClassName} onClick={section.onClick}>{section.itemTitle}</p>
+                        <p className={itemClassName} onClick={clickFunct}>{section.itemTitle}</p>
                         <ul className="my-1">
                             <Section elems={section.childrenItems}/>
                         </ul>
@@ -31,7 +35,7 @@ export function FooterSection({ sections }: { sections: NavDataType[] }) {
             else
                 return (
                     <div key={section.id}>
-                        <p className={itemClassName} onClick={section.onClick}>{section.itemTitle}</p>
+                        <p className={itemClassName} onClick={clickFunct}>{section.itemTitle}</p>
                     </div>
                 );
         })
