@@ -19,5 +19,6 @@ export default defineConfig([{
         '@next/next/no-img-element': 'off',
         'prefer-const': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
     }
 }]);
