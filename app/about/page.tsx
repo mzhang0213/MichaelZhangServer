@@ -31,7 +31,7 @@ export default function Home() {
     }, []);
     return (
         <>
-            <Navbar customItems={null}/>
+            <Navbar customItems={null} alwaysShow={true}/>
 
             <Background/>
             <BackgroundDim/>
