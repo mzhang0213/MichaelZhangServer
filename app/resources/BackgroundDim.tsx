@@ -5,7 +5,8 @@ export default function BackgroundDim(){
             backgroundColor:"rgba(0,0,0,0.5)",
             width:"100vw",
             height:"100vh",
-            display:"none"
+            display:"none",
+            opacity:"0"
         }}/>
     )
 }

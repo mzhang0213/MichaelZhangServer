@@ -48,3 +48,36 @@
     transition: transform 200ms ease-out;
     transform: translateX(-2px) translateY(-2px);
 }
+
+@keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    0.01% {
+        display: block;
+        opacity: 0;
+    }
+    99.99% {
+        display: block;
+        opacity: 1;
+    }
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+@keyframes fadeOutToNone {
+    0% {
+        display: block;
+        opacity: 1;
+    }
+    0.01% {
+        display: block;
+        opacity: 1;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+    }
+}

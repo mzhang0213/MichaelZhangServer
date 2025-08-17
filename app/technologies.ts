@@ -5,7 +5,7 @@ export const technologies: TechnologyType[] = [
         id: "tailwind-css",
         title: "Tailwind CSS",
         color: "#33ccff",
-        description:"Efficient method of writing CSS properties",
+        description: "Efficient method of writing CSS properties",
         icon: "/icons/tailwind.png"
     },
     {
@@ -98,5 +98,54 @@ export const technologies: TechnologyType[] = [
         color: "white",
         description: "",
         icon: "/icons/nextjs.png"
+    },
+    {
+        id: "postgres",
+        title: "PostgreSQL",
+        color: "#336699",
+        description: "",
+        icon: "/icons/postgres.png"
+    },
+    {
+        id: "xcode",
+        title: "Xcode",
+        color: "#188ee9",
+        description: "",
+        icon: "/icons/xcode.png"
+    },
+    {
+        id: "flask",
+        title: "Flask",
+        color: "white",
+        description: "",
+        icon: "/icons/flask.png"
+    },
+    {
+        id: "aws",
+        title: "AWS",
+        color: "#ff9900",
+        description: "",
+        icon: "/icons/aws.png"
+    },
+    {
+        id: "yolo",
+        title: "YOLO by ultralytics",
+        color: "#0033cc",
+        description: "",
+        icon: "/icon/yolo.png"
+    },
+    {
+        id: "opencv",
+        title: "OpenCV",
+        color: "white",
+        description: "",
+        icon: "/icons/opencv.png"
+    },
+    {
+        id: "raspberrypi",
+        title: "Raspberry PI",
+        color: "#cc3333",
+        description: "",
+        icon: "/icons/raspberrypi.png"
     }
 ]

@@ -2,6 +2,34 @@ import {ProjectType} from "@/app/page";
 
 export const projects: ProjectType[] = [
     {
+        id: "bonsai",
+        title: "BonsAi",
+        description: "Fitness app bringing a comfortable UI",
+        detailsDefault:"Originally implemented as an all-in-one style client-side app on my personal website. Migrated to Next.js only changing authentication flow and its interaction with the server. The app itself is implemented in JavaScript and HTML.",
+        icon:"/icons/bonsai.png",
+        technology: [
+
+        ],
+        link: {
+            title:"live deployment",
+            link:""
+        }
+    },
+    {
+        id: "serviceEye",
+        title: "Service Eye",
+        description: "",
+        detailsDefault:"",
+        icon:"/icons/serviceeye.png",
+        technology: [
+
+        ],
+        link: {
+            title:"live deployment",
+            link:""
+        }
+    },
+    {
         id: "spotify-cracked",
         title: "Spotify Cracked",
         description: "An app created in an effort to bring more accessibility to music streaming and improving focus while working. Serves YouTube videos in embeds for music streaming functionality. Time-tracking \"Spotify Wrapped\" feature implemented using JavaScript.",
@@ -18,7 +46,7 @@ export const projects: ProjectType[] = [
             },
             {
                 id:"nextjs",
-                description:"Used with Vercel serverless functions framework to implement a version of the app with Next.js and its benefits - hosting alongside my personal website, usage of TypeScript, and a clearer backend."
+                description:"Used with Vercel serverless functions framework to implement a version of the app with Next.js and its benefits - easy deployment, usage of TypeScript, and clearer backend."
             },
             {
                 id:"typescript",
@@ -54,11 +82,11 @@ export const projects: ProjectType[] = [
             },
             {
                 id:"expressjs",
-                description:"Server-side framework for app functionality. Managed RESTful calls between server and client for managing competitor's projects and voting. Connected to the database to the server storing project and voting entries."
+                description:"Server-side framework for app functionality. Managed RESTful calls between server and client for managing competitor\'s projects and voting. Connected to the database to the server storing project and voting entries."
             },
             {
                 id:"mongodb",
-                description:"Created to store competitor's account information, group (team) information, project information for each group, as well as voting information. Additionally stored notification information from announcement feature."
+                description:"Created to store competitor\'s account information, group (team) information, project information for each group, as well as voting information. Additionally stored notification information from announcement feature."
             },
             {
                 id:"websocket",
@@ -77,7 +105,7 @@ export const projects: ProjectType[] = [
     {
         id: "email-bot",
         title: "Email Bot",
-        description: "A Python script bot assisting in mass-emailing for sponsorship and outreach in hackathons. Uses email templates populated with supplied data of email recipient to create MIME format emails.",
+        description: "Python script bot assisting in mass-emailing for sponsorship and outreach in my hackathons. Uses email templates populated with supplied data of email recipient to create MIME format emails.",
         icon:"/icons/emailbot.png",
         technology: [
             {
@@ -98,12 +126,12 @@ export const projects: ProjectType[] = [
         technology: [
             {
                 id:"java",
-                description:"Converted images to Lists of LinkedLists containing Java's AWT Color class. Implemented DP techniques to remove so-called \"seams\" in the image, a series of pixels across the rows of the image of least energy (determined by brightness). Implemented Command design pattern in the image's editor."
+                description:"Converted images to Lists of LinkedLists containing Java\'s AWT Color class. Implemented DP techniques to remove so-called \"seams\" in the image, a series of pixels across the rows of the image of least energy (determined by brightness). Implemented Command design pattern in the image\'s editor."
             }
         ],
         link: {
             title:"GitHub Repo",
             link:"https://github.com/mzhang0213/ae3"
         }
-    }
+    },
 ]

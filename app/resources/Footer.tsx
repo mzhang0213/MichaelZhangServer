@@ -9,7 +9,7 @@ function Section({elems}: { elems: ItemType[] }){
             const newTab = item.redirect ? "_blank" : "_self";
             const clickFunct = item.page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+item.page, newTab))) : (()=>(window.open(item.page, newTab)))
             return <li key={item.id}>
-                <p className="footer-item text-[11px]" onClick={clickFunct}>
+                <p className="footer-item text-[11px] cursor-pointer hover:text-gray-300 transition-colors" onClick={clickFunct}>
                     {item.itemTitle}
                 </p>
             </li>
@@ -18,14 +18,14 @@ function Section({elems}: { elems: ItemType[] }){
 }
 
 export function FooterSection({ sections }: { sections: NavDataType[] }) {
-    const itemClassName = "footer-header font-bold text-sm mb-3";
+    const itemClassName = "footer-header font-bold text-sm mb-3 cursor-pointer hover:text-gray-300 transition-colors";
     return (
         sections.map(section => {
             const newTab = section.redirect ? "_blank" : "_self";
             const clickFunct = section.page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+section.page, newTab))) : (()=>(window.open(section.page, newTab)))
             if (section.isList)
                 return (
-                    <div key={section.id}>
+                    <div key={section.id} className="mb-6 sm:mb-0">
                         <p className={itemClassName} onClick={clickFunct}>{section.itemTitle}</p>
                         <ul className="my-1">
                             <Section elems={section.childrenItems}/>
@@ -34,7 +34,7 @@ export function FooterSection({ sections }: { sections: NavDataType[] }) {
                 );
             else
                 return (
-                    <div key={section.id}>
+                    <div key={section.id} className="mb-6 sm:mb-0">
                         <p className={itemClassName} onClick={clickFunct}>{section.itemTitle}</p>
                     </div>
                 );
@@ -44,11 +44,11 @@ export function FooterSection({ sections }: { sections: NavDataType[] }) {
 
 export default function Footer({customItems}: { customItems: NavDataType[] | null }) {
     return (
-        <footer className="text-white px-30 py-10" style={{backgroundColor:"var(--theme-black)"}}>
-            <div className="flex justify-between px-15 pb-10">
+        <footer className="text-white px-4 sm:px-8 lg:px-30 py-8 sm:py-10" style={{backgroundColor:"var(--theme-black)"}}>
+            <div className="grid grid-cols-2 sm:flex sm:justify-between sm:px-15 pb-8 sm:pb-10 gap-4 sm:gap-4">
                 <FooterSection sections={customItems?customItems:defaultItems} />
             </div>
-            <div className="mt-10 text-center text-sm text-gray-500">
+            <div className="mt-8 sm:mt-10 text-center text-xs sm:text-sm text-gray-500">
                 © {new Date().getFullYear()} Michael Zhang. All rights reserved.
             </div>
         </footer>

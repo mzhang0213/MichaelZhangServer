@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "./navbar.css"
 import {gebi} from "@/app/resources/gebi";
 import {usePathname} from "next/navigation";
@@ -29,9 +29,16 @@ export type ItemType = NavItemData & {
  * @param decoration OPTIONAL Apply underline to the item
 // *hard-coded* @param weight OPTIONAL Apply bold to the item
  */
-function Item({id, page, redirect, style, itemTitle}: ItemType) {
+function Item({id, page, redirect, style, itemTitle, onMobileClick}: ItemType & {onMobileClick?: () => void}) {
     const newTab = redirect ? "_blank" : "_self";
-    const clickFunct = page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+page, newTab))) : (()=>(window.open(page, newTab)))
+    const clickFunct = () => {
+        const openPage = page.charAt(0)=="/" ?
+            () => window.open(window.location.origin+page, newTab) :
+            () => window.open(page, newTab);
+        openPage();
+        if (onMobileClick) onMobileClick();
+    }
+
     id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
     const buttonStyles = page == usePathname() ? {textDecoration: "underline"} : {}
     return (
@@ -69,7 +76,8 @@ type DropdownListType = ItemType & {
  */
 // think of this as just code for the container
 // we dont gaf about whats inside, but MUST be item
-function DropdownList({id, page, redirect, itemTitle, children}: DropdownListType) {
+function DropdownList({id, page, redirect, itemTitle, children, onMobileClick}: DropdownListType & {onMobileClick?: () => void}) {
+    const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
     const newTab = redirect ? "_blank" : "_self";
     const clickFunct = page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+page, newTab))) : (()=>(window.open(page, newTab)))
     id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
@@ -80,6 +88,33 @@ function DropdownList({id, page, redirect, itemTitle, children}: DropdownListTyp
             </button>
             <div id={id+"Content"} className={"navbar-content"}>
                 {children}
+            </div>
+
+            {/* for mobile */}
+            <div
+                className={`md:hidden overflow-hidden transition-all duration-300 ease-out bg-gray-900 ${
+                    isMobileDropdownOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+                style={{borderRadius: '0'}}
+            >
+                <div className="flex flex-col py-2">
+                    {React.Children.map(children, (child) => {
+                        if (React.isValidElement(child)) {
+                            return (
+                                <div key={child.key} className="border-b border-gray-800 last:border-b-0">
+                                    {React.cloneElement(child as React.ReactElement<any>, {
+                                        onMobileClick: () => {
+                                            setIsMobileDropdownOpen(false);
+                                            if (onMobileClick) onMobileClick();
+                                        },
+                                        className: "w-full text-left py-3 px-6 text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+                                    })}
+                                </div>
+                            );
+                        }
+                        return child;
+                    })}
+                </div>
             </div>
         </div>
     )
@@ -124,6 +159,12 @@ export const defaultItems: NavDataType[] = [
                 itemTitle: "Cracked Spotify"
             },
             {
+                id: "bobabyte",
+                page: "/bobabyte",
+                redirect: true,
+                itemTitle: "Hackathon Portal"
+            },
+            {
                 id: "emailBot",
                 page: "https://github.com/mzhang0213/email-send-robot",
                 redirect: true,
@@ -163,7 +204,7 @@ export const defaultItems: NavDataType[] = [
  *
  * @param items The items to be rendered
  */
-function RenderItems({items}: {items: ItemType[]}) {
+function RenderItems({items, onMobileClick}: {items: ItemType[], onMobileClick?: () => void}) {
     return (
         <>
             {items.map(item => {
@@ -177,6 +218,7 @@ function RenderItems({items}: {items: ItemType[]}) {
                         decoration={item.decoration}
                         weight={item.weight}
                         itemTitle={item.itemTitle}
+                        onMobileClick={onMobileClick}
                     />
                 )
             })}
@@ -189,7 +231,7 @@ function RenderItems({items}: {items: ItemType[]}) {
  *
  * @param items The items of dropdownlists and items to be included in the navbar
  */
-function RenderNavbar({ items }: { items: NavDataType[] }) {
+function RenderNavbar({ items, onMobileClick }: { items: NavDataType[], onMobileClick?: () => void }) {
     return (
         <>
             {items.map(navItem => {
@@ -204,9 +246,11 @@ function RenderNavbar({ items }: { items: NavDataType[] }) {
                         decoration={navItem.decoration}
                         weight={navItem.weight}
                         itemTitle={navItem.itemTitle}
+                        onMobileClick={onMobileClick}
                     >
                         <RenderItems
                             items={navItem.childrenItems}
+                            onMobileClick={onMobileClick}
                         />
                     </DropdownList>
                 }else{
@@ -219,6 +263,7 @@ function RenderNavbar({ items }: { items: NavDataType[] }) {
                         decoration={navItem.decoration}
                         weight={navItem.weight}
                         itemTitle={navItem.itemTitle}
+                        onMobileClick={onMobileClick}
                     />
                 }
             })}
@@ -226,10 +271,12 @@ function RenderNavbar({ items }: { items: NavDataType[] }) {
     )
 }
 
-export default function Navbar({customItems}: { customItems: NavDataType[] | null }) {
+export default function Navbar({customItems, alwaysShow}: { customItems: NavDataType[] | null, alwaysShow: boolean }) {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     useEffect(() => {
         const navBarFade = function(){
-            if (window.scrollY>window.innerHeight*0.9){
+            if (window.scrollY>window.innerHeight*0.9 || alwaysShow){
                 //show navbar
                 gebi("navBar").style.opacity="1";
             }else{
@@ -238,24 +285,93 @@ export default function Navbar({customItems}: { customItems: NavDataType[] | nul
         }
         navBarFade();
         document.addEventListener("scroll",navBarFade);
-    }, []);
+
+        const handleResize = () => {
+            if (window.innerWidth >= 768) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            document.removeEventListener('scroll', navBarFade);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [alwaysShow]);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
+
     return (
-        <nav id={"navBar"}>
-            <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)} className={"h-full flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"}>
-                <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-8 mr-2"}/>
-                <button className={"text-xl tracking-tight"}>Michael Zhang</button>
+        <>
+            <nav id={"navBar"}>
+                <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)} className={"h-full flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"}>
+                    <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-8 mr-2"}/>
+                    <button className={"text-xl tracking-tight"}>Michael Zhang</button>
+                </div>
+                <div id={"navItemContainer"} className={"w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm hidden md:block"}>
+                    <RenderNavbar items={customItems?customItems:defaultItems} />
+                </div>
+                <div className={"block md:hidden"}>
+                    <button
+                        id={"menuToggle"}
+                        onClick={toggleMobileMenu}
+                        className={"flex items-center px-3 py-2 rounded text-gray-300 border-gray-300 transition-all"}
+                    >
+                        <div className="relative w-5 h-4">
+                            <span
+                                className={`absolute block h-0.5 w-5 bg-current`}></span>
+                            <span
+                                className={`absolute block h-0.5 w-5 bg-current translate-y-1.5`}></span>
+                            <span
+                                className={`absolute block h-0.5 w-5 bg-current translate-y-3`}></span>
+                        </div>
+                    </button>
+                </div>
+            </nav>
+
+            {/* mobile menu */}
+            <div
+                className={`fixed inset-0 z-50 md:hidden bg-black bg-opacity-95 backdrop-blur-sm transition-all duration-300 ease-out ${
+                    isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
+                onClick={closeMobileMenu}
+            >
+                <div
+                    className={`bg-gray-900 min-h-screen transition-transform duration-300 ease-out ${
+                        isMobileMenuOpen ? 'transform translate-y-0' : 'transform -translate-y-full'
+                    }`}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="flex items-center justify-between p-4 border-b border-gray-700">
+                        <div className="flex items-center">
+                            <img src={"./icons/chillpanda.png"} alt={"logo"} className={"h-6 mr-2"}/>
+                            <span className="text-white text-lg">Michael Zhang</span>
+                        </div>
+                        <button
+                            onClick={closeMobileMenu}
+                            className="text-gray-300 hover:text-white p-2"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="px-0 py-4">
+                        <RenderNavbar
+                            items={customItems ? customItems : defaultItems}
+                            onMobileClick={closeMobileMenu}
+                        />
+                    </div>
+                </div>
             </div>
-            <div className={"block md:hidden"}>
-                <button id={"menuToggle"} className={"flex items-center px-3 py-2 border rounded text-gray-300 border-gray-300 hover:text-white hover:border-white"}>
-                    <svg className={"fill-current h-3 w-3"} viewBox={"0 0 20 20"} xmlns="http://www.w3.org/2000/svg">
-                        <title>Menu</title>
-                        <path d={"M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"}/>
-                    </svg>
-                </button>
-            </div>
-            <div id={"navItemContainer"} className={"w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm"}>
-                <RenderNavbar items={customItems?customItems:defaultItems} />
-            </div>
-        </nav>
+        </>
     )
 }
