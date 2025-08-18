@@ -64,7 +64,7 @@ export const projects: ProjectType[] = [
             }, */
             {
                 id:"raspberrypi",
-                description: "Hardware behind communication between camera and user. Hosted web server for server to client connection. Custom physical squeeze with Raspberry PI pinouts to enhance caution alerts."
+                description: "Hardware behind communication between camera and user. Hosted web server for server to client connection. Custom physical squeeze with Raspberry PI pinouts to enhance caution alerts. Shoutout @michaelreeves808 and William Osman for showing me the creative ways electronics can interface with computer programming to meet at robotics."
             }
         ],
         link: {
