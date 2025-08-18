@@ -51,23 +51,24 @@ export const projects: ProjectType[] = [
         technology: [
             {
                 id:"python",
-                description: ""
+                description: "I fully exploited Python's language accessibility for file manipulation for managing the training data powering the YOLO object detection model. Utilized to compile data from COCO dataset, Berkeley DeepDrive dataset, and manually labeled images with CVAT."
             },
             {
                 id:"yolo",
-                description: ""
+                description: "Object detection-based machine learning model primarily used in detecting objects and hazards on the road. Researched effective and efficient model training practice and optimized datasets to conform to proper practice. Interfaced with video stream from Raspberry PI Camera for live object detection."
             },
+            /* IS THIS GONNA HAPPEN? IDK MAYBE I DONT NEED TS
             {
                 id:"gpt",
-                description: ""
-            },
+                description: "Inputted results from object detection to synthesize small alert phrases"
+            }, */
             {
                 id:"raspberrypi",
-                description: ""
+                description: "Hardware behind communication between camera and user. Hosted web server for server to client connection. Custom physical squeeze with Raspberry PI pinouts to enhance caution alerts."
             }
         ],
         link: {
-            title:"live deployment",
+            title:"coming soon!",
             link:""
         }
     },

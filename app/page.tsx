@@ -306,7 +306,7 @@ function Projects() {
                     <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
                             <img alt={project.title} src={project.icon} className={"project-icon w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]"}/>
-                            <div className={"project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl"}>{project.title}</div>
+                            <div className={"project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl text-center"}>{project.title}</div>
                         </div>
                         <div className={"project-bottomDiv"}>
                             <p className={"text-center text-sm sm:text-base"}>{project.description}</p>
