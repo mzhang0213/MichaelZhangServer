@@ -114,6 +114,13 @@ export const technologies: TechnologyType[] = [
         icon: "/icons/xcode.png"
     },
     {
+        id: "swift",
+        title: "Swift",
+        color: "#ff6633",
+        description: "",
+        icon: "/icons/swift.png"
+    },
+    {
         id: "flask",
         title: "Flask",
         color: "white",
@@ -132,7 +139,7 @@ export const technologies: TechnologyType[] = [
         title: "YOLO by ultralytics",
         color: "#0033cc",
         description: "",
-        icon: "/icon/yolo.png"
+        icon: "/icons/yolo.png"
     },
     {
         id: "opencv",
@@ -147,5 +154,12 @@ export const technologies: TechnologyType[] = [
         color: "#cc3333",
         description: "",
         icon: "/icons/raspberrypi.png"
+    },
+    {
+        id: "gpt",
+        title: "GPT (LLM)",
+        color: "#0000ff",
+        description: "",
+        icon: "/icons/gpt.png"
     }
 ]

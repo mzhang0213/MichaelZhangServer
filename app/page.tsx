@@ -497,7 +497,7 @@ export default function Home() {
                 <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
                 <div id={"details_menu_top"}
                      className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
-                <div id={"details_menu_bottom"} className={"w-full h-[60%]"}>
+                <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
                     <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"} style={{fontWeight: "bold"}}></p>
                     <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
                 </div>
