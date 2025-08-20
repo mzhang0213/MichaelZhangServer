@@ -25,13 +25,15 @@ end DAT
 ) INHERITS (plan)
 
 CREATE TYPE workout (
+name VARCHAR(25) NOT NULL,
+target muscles[],
+#idk what else
+)
 
+CREATE TYPE muscle (
+#smth
 )
 
 CREATE TYPE food (
 quantity integer,
-nutrients macros
-)
-
-CREATE TYPE macros (
-calories inte
+nutrients 
