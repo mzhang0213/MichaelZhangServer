@@ -356,8 +356,8 @@ type ContactLinksType = {
 const contactLinks: ContactLinksType[] = [
     {
         id: "email",
-        title: "mzhang0213@gmail.com",
-        link: "mailto:mzhang0213@gmail.com",
+        title: "michael@mzhang.dev",
+        link: "mailto:michael@mzhang.dev",
         icon: "/icons/gmail.png"
     },
     {
@@ -371,12 +371,6 @@ const contactLinks: ContactLinksType[] = [
         title: "GitHub",
         link: "https://github.com/mzhang0213",
         icon: "/icons/github.png"
-    },
-    {
-        id: "instagram",
-        title: "Instagram",
-        link: "https://instagram.com/mzjklol",
-        icon: "/icons/instagram.png"
     }
 
 ]
