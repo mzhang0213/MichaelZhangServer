@@ -51,6 +51,20 @@ export const technologies: TechnologyType[] = [
         icon: "/icons/mozilla.png"
     },
     {
+        id: "css",
+        title: "CSS",
+        color: "#3366ff",
+        description: "",
+        icon: "/icons/css.png"
+    },
+    {
+        id: "html",
+        title: "HTML",
+        color: "#339966",
+        description: "",
+        icon: "/icons/html.png"
+    },
+    {
         id: "python",
         title: "Python",
         color: "#6699cc",

@@ -42,6 +42,7 @@ export const projects: ProjectType[] = [
             link:"https://bulk.mzhang.dev"
         }
     },
+    /*
     {
         id: "serviceEye",
         title: "Service Eye",
@@ -57,11 +58,11 @@ export const projects: ProjectType[] = [
                 id:"yolo",
                 description: "Object detection-based machine learning model primarily used in detecting objects and hazards on the road. Researched effective and efficient model training practice and optimized datasets to conform to proper practice. Interfaced with video stream from Raspberry PI Camera for live object detection."
             },
-            /* IS THIS GONNA HAPPEN? IDK MAYBE I DONT NEED TS
+            // IS THIS GONNA HAPPEN? IDK MAYBE I DONT NEED TS
             {
                 id:"gpt",
                 description: "Inputted results from object detection to synthesize small alert phrases"
-            }, */
+            },
             {
                 id:"raspberrypi",
                 description: "Hardware behind communication between camera and user. Hosted web server for server to client connection. Custom physical squeeze with Raspberry PI pinouts to enhance caution alerts. Shoutout @michaelreeves808 and William Osman for showing me the creative ways electronics can interface with computer programming to meet at robotics."
@@ -72,9 +73,10 @@ export const projects: ProjectType[] = [
             link:""
         }
     },
+    */
     {
-        id: "spotify-cracked",
-        title: "Spotify Cracked",
+        id: "lockin-focus",
+        title: "Lock-In Focus",
         description: "An app created in an effort to bring more accessibility to music streaming and improving focus while working. Serves YouTube videos in embeds for music streaming functionality. Time-tracking \"Spotify Wrapped\" feature implemented using JavaScript.",
         detailsDefault:"Originally implemented as an all-in-one style client-side app on my personal website. Migrated to Next.js only changing authentication flow and its interaction with the server. The app itself is implemented in JavaScript and HTML.",
         icon:"/icons/spotifyYt.png",
@@ -162,6 +164,35 @@ export const projects: ProjectType[] = [
         }
     },
     {
+        id:"cappy",
+        title: "Cappy",
+        description: "I built this to package remote access in an all-in-one app that can help people monitor their computers remotely from another device (for instance, when stepping to the bathroom).",
+        icon:"/icons/.png",
+        technology: [
+            {
+                id:"nodejs",
+                description:""
+            },
+            {
+                id:"expressjs",
+                description:""
+            },
+            {
+                id:"html",
+                description:""
+            },
+            {
+                id:"css",
+                description:""
+            },
+        ],
+        link: {
+            title: "GitHub Repo",
+            link:""
+        }
+    }
+    /*
+    {
         id: "image-editor",
         title: "Dynamic Image Editor",
         description: "A class project designed to edit images based on a system of image brightness given by the assignment prompt.",
@@ -177,4 +208,6 @@ export const projects: ProjectType[] = [
             link:"https://github.com/mzhang0213/ae3"
         }
     },
+
+     */
 ]

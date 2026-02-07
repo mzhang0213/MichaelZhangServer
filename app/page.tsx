@@ -171,7 +171,7 @@ function Projects() {
             projectContent.style.border="3px solid var(--theme-blue)"
             projectContent.innerHTML = `
                 <div class="flex justify-center items-center mb-3">
-                    <a href="${project.link.link}" target="_blank" class="text-white underline text-sm flex items-center">
+                    <a href="${project.link.link}" target="_blank" class="project-link-mobile text-white underline text-sm flex items-center">
                         ${project.link.title}
                         <img src="/icons/redirect.png" alt="redirect" class="w-[8px] h-[8px] ml-2" style="filter:invert(1)"/>
                     </a>
@@ -327,7 +327,7 @@ function Experiences() {
                 backgroundColor: "var(--theme-gray)",
                 border: "2px solid var(--theme-dark-gray)"
             }}>
-                <img src={exp.icon} alt={exp.title} className={"h-[40px] sm:h-[50px] mr-2"}/>
+                <img src={exp.icon} alt={exp.title} className={"h-[40px] sm:h-[50px] mt-[10px] ml-1 mr-1 rounded-lg"}/>
                 <div className={"flex flex-col w-full p-1 sm:p-2 mb-6 sm:mb-10 rounded-md"}>
                     <div className={"flex flex-row w-full"}>
                         <p className={"text-lg sm:text-2xl flex items-center w-fit"} style={{cursor: "pointer", color: mainFont}} onClick={() => {window.open(exp.link, "_blank")}}>
@@ -396,6 +396,8 @@ export default function Home() {
 
         document.body.addEventListener('click', function(event: Event) {
             const target = event.target as HTMLElement;
+            
+            // Handle technology item clicks
             const techItem = target.closest('.tech-item');
             if (techItem && techItem.hasAttribute('data-tech-id')) {
                 event.stopPropagation();
@@ -412,6 +414,16 @@ export default function Home() {
                 }
                 let currItem = techItem as HTMLElement;
                 currItem.style.border = `2px solid ${currItem.style.backgroundColor}`;
+            }
+            
+            // Handle project link clicks
+            const projectLink = target.closest('.project-link-mobile');
+            if (projectLink) {
+                event.preventDefault();
+                const href = projectLink.getAttribute('href');
+                if (href) {
+                    window.open(href, '_blank');
+                }
             }
         });
 
