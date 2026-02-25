@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prep Yourself</title>
+</head>
+<body>
+<div class="centered">
+  <textarea id="topics" placeholder="Enter your resume topics separated by commas no spaces eg: Amazon,Project1,Kumon"></textarea>
+</div>
+<div id="main" class="centered">
+  <div id="left"></div>
+  <div id="right"></div>
+</div>
+<br><br>
+<div class="centered">
+  <button id="refresh">New Question!</button>
+</div>
+<script>
+  // let topics = [
+  //         "Pawfect Paradise",
+  //         "Stat Project",
+  //         "KidSpirit"
+  // ]
+  let questions = [
+    "Tell me a challenge you faced - what was the challenge, <br>and how did you go about tackling it...",
+    "Tell me about...",
+    "Describe a goal you had when working for one of your roles...",
+    "Tell me about when you faced a problem in a team...",
+    "Tell me about a time where you faced multiple deadlines<br> How did you go about completing them...",
+    "Describe a time when you had to adapt to a new situation..."
+  ]
+  function refresh() {
+    if (localStorage.getItem("intv-prep")!==null){
+      document.getElementById("topics").value = localStorage.getItem("intv-prep");
+      let topics = document.getElementById("topics").value.split(",");
+      let question = questions[Math.floor(Math.random()*questions.length)]
+      let topic = topics[Math.floor(Math.random()*topics.length)]
+      if (Math.floor(Math.random()*10)<3){
+        //open ended
+        document.getElementById("left").innerHTML=question;
+        document.getElementById("right").innerHTML="";
+        console.log(question);
+      }else{
+        document.getElementById("left").innerHTML=question;
+        document.getElementById("right").innerHTML=topic;
+        console.log(question,topic);
+      }
+    }
+  }
+  document.getElementById("refresh").addEventListener("click",()=>{
+    refresh();
+  })
+  document.getElementById("topics").addEventListener("input", function(){
+    localStorage.setItem("intv-prep", document.getElementById("topics").value);
+  })
+  refresh();
+</script>
+<style>
+  .centered{
+    display:flex;
+    width:100vw;
+    margin-top:20px;
+    justify-content: center;
+    align-items: center;
+  }
+  #left{
+    text-align:right;
+    margin-right:5px;
+  }
+  #topics{
+    width:500px;
+    height:50px;
+  }
+</style>
+</body>
+</html>
