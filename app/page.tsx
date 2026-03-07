@@ -221,6 +221,7 @@ function Projects() {
 
                     const marginOffset = 25;
                     //see if put details on left or right
+                    /*
                     if (currElement.offsetLeft + currElement.offsetWidth * 2 > window.innerWidth) {
                         //left side (the main element on right)
                         directionLeft = true;
@@ -239,9 +240,6 @@ function Projects() {
 
                         gebi("details_menu").style.right = (window.innerWidth - currElement.offsetLeft + marginOffset) + "px"; //now coming from right to the left
                         gebi("details_background").style.right = (window.innerWidth - currElement.offsetLeft - currElement.offsetWidth - marginOffset) + "px";
-
-                        gebi("details_menu").style.transition = oldTransition;
-                        gebi("details_background").style.transition = oldTransition;
                     } else {
                         //right side (the main element on left)
                         directionLeft = false;
@@ -261,16 +259,28 @@ function Projects() {
                         gebi("details_menu").style.left = (currElement.offsetLeft + currElement.offsetWidth + marginOffset) + "px";
                         gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
                     }
-                    gebi("details_menu").style.top = (currElement.offsetTop) + "px";
+                    */
+
+                    // const oldTransition = gebi("details_menu").style.transition;
+                    // gebi("details_menu").style.transition = "";
+                    // gebi("details_background").style.transition = "";
+                    gebi("details_menu").style.left = (currElement.offsetLeft) + "px";
+                    gebi("details_menu").style.top = (currElement.offsetTop+currElement.offsetHeight) + "px";
+                    gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
+                    gebi("details_background").style.top = (currElement.offsetTop - marginOffset) + "px";
+                    gebi("details_background").style.width = (currElement.offsetWidth + marginOffset * 2) + "px";
                     gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
                     gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu").style.height = (currElement.offsetHeight) + "px";
+                    gebi("details_menu").style.height = (currElement.offsetHeight) + "px"; //this is important
 
-                    gebi("details_background").style.top = (currElement.offsetTop - marginOffset) + "px";
-                    gebi("details_background").style.width = (currElement.offsetWidth * 2 + marginOffset * 3) + "px";
-                    gebi("details_background").style.height = (currElement.offsetHeight + marginOffset * 2) + "px";
+                    gebi("details_background").style.height = (currElement.offsetHeight * 2 + marginOffset * 2) + "px";
+
+                    // gebi("details_menu").style.transition = oldTransition;
+                    // gebi("details_background").style.transition = oldTransition;
+
+
 
                     const id = currElement.id;
                     let proj: ProjectType = projects[0];
@@ -461,11 +471,11 @@ export default function Home() {
                 gebi("bg_dim").style.animation=`fadeOutToNone ${detailsMenuWipe}ms ease-out`;
                 gebi("bg_dim").style.opacity="0";
                 gebi("bg_dim").style.display="none";
-                gebi("details_menu").style.width="";
-                gebi("details_menu_desc").style.width="";
-                gebi("details_menu_link").style.width="";
-                gebi("details_menu_top").style.width="";
-                gebi("details_background").style.width="";
+                // gebi("details_menu").style.height="";
+                // gebi("details_menu_desc").style.height="";
+                // gebi("details_menu_link").style.height="";
+                // gebi("details_menu_top").style.height="";
+                gebi("details_background").style.height="";
                 gebi("details_background").style.zIndex="0";
                 if (!directionLeft){
                     gebi("details_menu").style.left=(-gebi("details_menu").offsetWidth-10)+"px";
@@ -498,7 +508,8 @@ export default function Home() {
                 backgroundColor: "var(--theme-dark-gray)",
                 zIndex: "12",
                 overflow: "hidden",
-                transition: `left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+                //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
+                // transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
             }}>
                 <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
                 <div id={"details_menu_top"}
@@ -513,7 +524,8 @@ export default function Home() {
                 display: "none",
                 backgroundColor: "var(--theme-black)",
                 zIndex: "11",
-                transition: `left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out, width ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+                //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
+                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
             }}></div>
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>
