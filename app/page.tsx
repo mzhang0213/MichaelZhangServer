@@ -140,6 +140,8 @@ function Technology({techEntries}: { techEntries: TechnologyEntryType[] }) {
         })
     )
 }
+const MARGINOFFSET = 15;
+const MINDETAILSHEIGHT = 300;
 function Projects() {
     function handleMobileClick(event: React.MouseEvent, project: ProjectType) {
         if (window.innerWidth >= 640) return; // mobile only
@@ -209,6 +211,7 @@ function Projects() {
             if (lastHovered===currHovered){
                 //start animation for highlighted element
                 const currElement = currHovered as HTMLElement;
+                const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
                 if (!activeDetails) {
                     activeDetails = true;
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
@@ -219,19 +222,18 @@ function Projects() {
                     gebi("details_background").style.visibility = "visible";
                     gebi("details_background").style.opacity = "1";
 
-                    const marginOffset = 20;
-                    gebi("details_menu_container").style.height = (currElement.offsetHeight * 2 + marginOffset * 3) + "px";
+                    gebi("details_menu_container").style.height = containerHeight + "px";
 
-                    gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
-                    gebi("details_background").style.top = (currElement.offsetTop - marginOffset) + "px";
-                    gebi("details_background").style.width = (currElement.offsetWidth + marginOffset * 2) + "px";
+                    gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
+                    gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
+                    gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
                     gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
                     gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu").style.height = (currElement.offsetHeight) + "px"; //this is important
-                    gebi("details_menu").style.marginBottom = (marginOffset) + "px";
-                    gebi("details_background").style.height = (currElement.offsetHeight * 2 + marginOffset * 3) + "px";
+                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px"; //this is important
+                    gebi("details_menu").style.marginBottom = (MARGINOFFSET+10) + "px";
+                    gebi("details_background").style.height = containerHeight + "px";
 
                     const id = currElement.id;
                     let proj: ProjectType = projects[0];
@@ -262,7 +264,8 @@ function Projects() {
     return (
         projects.map(project => {
             return (
-                <div key={"project-"+project.id} id={project.id} className={"project-container m-2 sm:m-4 min-h-[200px] sm:min-h-[250px] flex flex-col rounded-2xl"}
+                //min-h-[200px] sm:min-h-[250px]
+                <div key={"project-"+project.id} id={project.id} className={"project-container m-2 sm:m-4 flex flex-col rounded-2xl"}
                      onClick={(e) => handleMobileClick(e, project)}>
                     <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
@@ -270,7 +273,7 @@ function Projects() {
                             <div className={"project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl text-center"}>{project.title}</div>
                         </div>
                         <div className={"project-bottomDiv"}>
-                            <p className={"text-center text-sm sm:text-base"}>{project.description}</p>
+                            {/*<p className={"text-center text-sm sm:text-base"}>{project.description}</p>*/}
                         </div>
                     </div>
                 </div>
@@ -534,7 +537,7 @@ export default function Home() {
                     border: "2px solid var(--theme-dark-gray)"
                 }}>Projects</p>
             </div>
-            <div id={"projectsContainer"} className={"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mx-2 sm:mx-5 mb-32 sm:mb-56"}>
+            <div id={"projectsContainer"} className={"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-[80%] mx-auto mb-32"}>
                 <Projects/>
             </div>
 
