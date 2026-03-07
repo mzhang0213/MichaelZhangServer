@@ -220,6 +220,7 @@ function Projects() {
                     gebi("details_background").style.opacity = "1";
 
                     const marginOffset = 20;
+                    gebi("details_menu_container").style.height = (currElement.offsetHeight * 2 + marginOffset * 3) + "px";
 
                     gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
                     gebi("details_background").style.top = (currElement.offsetTop - marginOffset) + "px";
@@ -444,7 +445,7 @@ export default function Home() {
             <BackgroundDim/>
 
 
-            <div id={"details_background"} className={"absolute top-0 w-0 h-0 p-2 rounded-xl opacity-0 flex justify-center items-end"} style={{
+            <div id={"details_background"} className={"absolute top-0 w-0 h-0 p-2 rounded-xl opacity-0"} style={{
                 visibility: "hidden",
                 backgroundColor: "var(--theme-black)",
                 zIndex: "11",
@@ -452,21 +453,23 @@ export default function Home() {
                 //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
                 transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms, opacity ${detailsMenuWipe}ms ease-in-out`
             }}>
-                <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
-                    display:"flex",
-                    position:"relative",
-                    backgroundColor: "var(--theme-dark-gray)",
-                    // zIndex: "12",
-                    overflow: "hidden",
-                    // transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
-                }}>
-                    <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
-                    <div id={"details_menu_top"}
-                         className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
-                    <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
-                        <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"}
-                           style={{fontWeight: "bold"}}></p>
-                        <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
+                <div id={"details_menu_container"} className={"w-full flex justify-center items-end"}>
+                    <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
+                        display:"flex",
+                        position:"relative",
+                        backgroundColor: "var(--theme-dark-gray)",
+                        // zIndex: "12",
+                        overflow: "hidden",
+                        // transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+                    }}>
+                        <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
+                        <div id={"details_menu_top"}
+                             className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
+                        <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
+                            <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"}
+                               style={{fontWeight: "bold"}}></p>
+                            <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
+                        </div>
                     </div>
                 </div>
             </div>
