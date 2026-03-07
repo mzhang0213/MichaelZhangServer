@@ -216,56 +216,11 @@ function Projects() {
                     gebi("bg_dim").style.opacity = "1";
                     currElement.style.zIndex = "12";
                     gebi("details_background").style.zIndex = "11";
-                    gebi("details_menu").style.display = "flex";
-                    gebi("details_background").style.display = "";
+                    gebi("details_background").style.visibility = "visible";
+                    gebi("details_background").style.opacity = "1";
 
-                    const marginOffset = 25;
-                    //see if put details on left or right
-                    /*
-                    if (currElement.offsetLeft + currElement.offsetWidth * 2 > window.innerWidth) {
-                        //left side (the main element on right)
-                        directionLeft = true;
-                        gebi("details_menu").style.left = "";
-                        gebi("details_background").style.left = "";
-                        const oldTransition = gebi("details_menu").style.transition;
+                    const marginOffset = 20;
 
-                        gebi("details_menu").style.transition = ""; //set it to nothing to move the element right instantly
-                        gebi("details_background").style.transition = "";
-
-                        gebi("details_menu").style.right = (-10) + "px";
-                        gebi("details_background").style.right = (-10) + "px";
-
-                        gebi("details_menu").style.transition = oldTransition;
-                        gebi("details_background").style.transition = oldTransition;
-
-                        gebi("details_menu").style.right = (window.innerWidth - currElement.offsetLeft + marginOffset) + "px"; //now coming from right to the left
-                        gebi("details_background").style.right = (window.innerWidth - currElement.offsetLeft - currElement.offsetWidth - marginOffset) + "px";
-                    } else {
-                        //right side (the main element on left)
-                        directionLeft = false;
-                        gebi("details_menu").style.right = "";
-                        gebi("details_background").style.right = "";
-                        const oldTransition = gebi("details_menu").style.transition;
-
-                        gebi("details_menu").style.transition = ""; //set it to nothing to move the element right instantly
-                        gebi("details_background").style.transition = "";
-
-                        gebi("details_menu").style.left = (-10) + "px";
-                        gebi("details_background").style.left = (-10) + "px";
-
-                        gebi("details_menu").style.transition = oldTransition;
-                        gebi("details_background").style.transition = oldTransition;
-
-                        gebi("details_menu").style.left = (currElement.offsetLeft + currElement.offsetWidth + marginOffset) + "px";
-                        gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
-                    }
-                    */
-
-                    // const oldTransition = gebi("details_menu").style.transition;
-                    // gebi("details_menu").style.transition = "";
-                    // gebi("details_background").style.transition = "";
-                    gebi("details_menu").style.left = (currElement.offsetLeft) + "px";
-                    gebi("details_menu").style.top = (currElement.offsetTop+currElement.offsetHeight) + "px";
                     gebi("details_background").style.left = (currElement.offsetLeft - marginOffset) + "px";
                     gebi("details_background").style.top = (currElement.offsetTop - marginOffset) + "px";
                     gebi("details_background").style.width = (currElement.offsetWidth + marginOffset * 2) + "px";
@@ -274,13 +229,8 @@ function Projects() {
                     gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
                     gebi("details_menu").style.height = (currElement.offsetHeight) + "px"; //this is important
-
-                    gebi("details_background").style.height = (currElement.offsetHeight * 2 + marginOffset * 2) + "px";
-
-                    // gebi("details_menu").style.transition = oldTransition;
-                    // gebi("details_background").style.transition = oldTransition;
-
-
+                    gebi("details_menu").style.marginBottom = (marginOffset) + "px";
+                    gebi("details_background").style.height = (currElement.offsetHeight * 2 + marginOffset * 3) + "px";
 
                     const id = currElement.id;
                     let proj: ProjectType = projects[0];
@@ -471,27 +421,17 @@ export default function Home() {
                 gebi("bg_dim").style.animation=`fadeOutToNone ${detailsMenuWipe}ms ease-out`;
                 gebi("bg_dim").style.opacity="0";
                 gebi("bg_dim").style.display="none";
-                // gebi("details_menu").style.height="";
-                // gebi("details_menu_desc").style.height="";
-                // gebi("details_menu_link").style.height="";
-                // gebi("details_menu_top").style.height="";
-                gebi("details_background").style.height="";
+                gebi("details_background").style.height="0";
+                gebi("details_background").style.opacity="0";
                 gebi("details_background").style.zIndex="0";
-                if (!directionLeft){
-                    gebi("details_menu").style.left=(-gebi("details_menu").offsetWidth-10)+"px";
-                    gebi("details_background").style.left=(-gebi("details_background").offsetWidth-10)+"px";
-                }else{
-                    gebi("details_menu").style.right="-10px";
-                    gebi("details_background").style.right="-10px";
-                }
+                gebi("details_background").style.left=(-gebi("details_background").offsetWidth-10)+"px";
                 for(const e of gebi("projectsContainer").children){
                     gebi(e.id).style.zIndex="0";
                 }
                 gebi("details_menu_title").innerHTML="";
                 gebi("details_menu_desc").innerHTML="";
                 setTimeout(function(){
-                    gebi("details_menu").style.display="none";
-                    gebi("details_background").style.display="none";
+                    gebi("details_background").style.visibility="hidden";
                 },detailsMenuWipe);
             }
         })
@@ -503,30 +443,33 @@ export default function Home() {
             <Background/>
             <BackgroundDim/>
 
-            <div id={"details_menu"} className={"absolute flex-col top-0 w-0 p-2 rounded-2xl"} style={{
-                display: "none",
-                backgroundColor: "var(--theme-dark-gray)",
-                zIndex: "12",
-                overflow: "hidden",
-                //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
-                // transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
-            }}>
-                <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
-                <div id={"details_menu_top"}
-                     className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
-                <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
-                    <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"} style={{fontWeight: "bold"}}></p>
-                    <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
-                </div>
-            </div>
 
-            <div id={"details_background"} className={"absolute top-0 w-0 p-2 rounded-xl opacity-90"} style={{
-                display: "none",
+            <div id={"details_background"} className={"absolute top-0 w-0 h-0 p-2 rounded-xl opacity-0 flex justify-center items-end"} style={{
+                visibility: "hidden",
                 backgroundColor: "var(--theme-black)",
                 zIndex: "11",
+                overflow:"hidden",
                 //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
-                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
-            }}></div>
+                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms, opacity ${detailsMenuWipe}ms ease-in-out`
+            }}>
+                <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
+                    display:"flex",
+                    position:"relative",
+                    backgroundColor: "var(--theme-dark-gray)",
+                    // zIndex: "12",
+                    overflow: "hidden",
+                    // transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms`
+                }}>
+                    <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
+                    <div id={"details_menu_top"}
+                         className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
+                    <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
+                        <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"}
+                           style={{fontWeight: "bold"}}></p>
+                        <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
+                    </div>
+                </div>
+            </div>
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>
                     <div id={"messageSmall"}
