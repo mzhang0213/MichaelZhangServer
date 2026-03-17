@@ -16,8 +16,8 @@
 }
 #openerMenu {
     @apply absolute flex flex-col justify-center items-center w-full h-full;
-    top:-100vh;
-    transition: top 1500ms ease-in-out;
+    right:-30vw;
+    transition: right 1000ms ease-in-out;
 }
 #openerMenu p {
     font-size:25px;

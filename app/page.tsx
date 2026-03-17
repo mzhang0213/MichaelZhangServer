@@ -141,7 +141,7 @@ function Technology({techEntries}: { techEntries: TechnologyEntryType[] }) {
     )
 }
 const MARGINOFFSET = 15;
-const MINDETAILSHEIGHT = 300;
+const MINDETAILSHEIGHT = 275;
 function Projects() {
     function handleMobileClick(event: React.MouseEvent, project: ProjectType) {
         if (window.innerWidth >= 640) return; // mobile only
@@ -211,7 +211,7 @@ function Projects() {
             if (lastHovered===currHovered){
                 //start animation for highlighted element
                 const currElement = currHovered as HTMLElement;
-                const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
+                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight
                 if (!activeDetails) {
                     activeDetails = true;
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
@@ -253,9 +253,13 @@ function Projects() {
                         </>
                     );
                     detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
+                    gebi("details_menu_desc").innerHTML=proj.description; //update 030926: just keep all descriptions on homepage
+                    /*
                     if (proj.detailsDefault){
                         gebi("details_menu_desc").innerHTML=proj.detailsDefault;
                     }
+
+                     */
                 }
             }
         }, 500)
@@ -266,7 +270,12 @@ function Projects() {
             return (
                 //min-h-[200px] sm:min-h-[250px]
                 <div key={"project-"+project.id} id={project.id} className={"project-container m-2 sm:m-4 flex flex-col rounded-2xl"}
-                     onClick={(e) => handleMobileClick(e, project)}>
+                     onClick={(e) => handleMobileClick(e, project)}
+                     onMouseMove={function(e){
+                         gebi("details_menu_title").innerHTML="";
+                         gebi("details_menu_desc").innerHTML=project.description;
+                     }}
+                >
                     <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
                             <img alt={project.title} src={project.icon} className={"project-icon w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]"}/>
@@ -401,15 +410,15 @@ export default function Home() {
             gebi("messageLarge").style.opacity="1";
         }
         const showMenu = () =>{
-            gebi("openerMenu").style.top="0";
+            gebi("openerMenu").style.right="0";
         }
         setTimeout(()=>{
             showSmall(); //0 ms from start
             setTimeout(()=>{
                 showLarge(); //750 ms from start
-                setTimeout(()=>{
-                    showMenu(); //750+1000 ms from start
-                },1000)
+            },250)
+            setTimeout(()=>{
+                showMenu(); //750+1000 ms from start
             },750)
         },0);
 
@@ -422,19 +431,19 @@ export default function Home() {
         gebi("bg_dim").addEventListener("mousemove",function(){
             if (activeDetails && window.innerWidth >= 640){ // dim only on comp
                 activeDetails=false;
-                gebi("bg_dim").style.animation=`fadeOutToNone ${detailsMenuWipe}ms ease-out`;
-                gebi("bg_dim").style.opacity="0";
-                gebi("bg_dim").style.display="none";
                 gebi("details_background").style.height="0";
                 gebi("details_background").style.opacity="0";
-                gebi("details_background").style.zIndex="0";
-                gebi("details_background").style.left=(-gebi("details_background").offsetWidth-10)+"px";
-                for(const e of gebi("projectsContainer").children){
-                    gebi(e.id).style.zIndex="0";
-                }
-                gebi("details_menu_title").innerHTML="";
-                gebi("details_menu_desc").innerHTML="";
+                gebi("bg_dim").style.animation=`fadeOutToNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.opacity="0";
                 setTimeout(function(){
+                    gebi("details_menu_title").innerHTML="";
+                    gebi("details_menu_desc").innerHTML="";
+                    for(const e of gebi("projectsContainer").children){
+                        gebi(e.id).style.zIndex="0";
+                    }
+                    gebi("bg_dim").style.display="none";
+                    gebi("details_background").style.zIndex="0";
+                    gebi("details_background").style.left=(-gebi("details_background").offsetWidth-10)+"px";
                     gebi("details_background").style.visibility="hidden";
                 },detailsMenuWipe);
             }
@@ -454,7 +463,7 @@ export default function Home() {
                 zIndex: "11",
                 overflow:"hidden",
                 //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
-                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms, opacity ${detailsMenuWipe}ms ease-in-out`
+                transition: `height ${detailsMenuWipe}ms ease-in-out, opacity ${detailsMenuWipe}ms ease-in-out`
             }}>
                 <div id={"details_menu_container"} className={"w-full flex justify-center items-end"}>
                     <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
@@ -467,8 +476,8 @@ export default function Home() {
                     }}>
                         <div id={"details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
                         <div id={"details_menu_top"}
-                             className={"w-full h-fit py-3 flex flex-wrap justify-center items-center"}></div>
-                        <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"}>
+                             className={"w-full h-fit mb-auto py-3 flex flex-wrap justify-center items-center"}></div>
+                        <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"} style={{scrollbarWidth:"thin"}}>
                             <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"}
                                style={{fontWeight: "bold"}}></p>
                             <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
@@ -511,7 +520,7 @@ export default function Home() {
                 boxShadow: "8px 8px 0px 0px var(--theme-yellow)",
                 border: "2px solid var(--theme-dark-gray)"
             }}>
-                <div id={"summaryContainerLeft"} className={"w-full sm:w-[35%] flex justify-center sm:block"}>
+                <div id={"summaryContainerLeft"} className={"w-full ml-8 sm:w-[35%] flex justify-center sm:block"}>
                     <img id={"summaryImg"} src={"/resources/IMG_1399.jpg"}
                          className={"relative object-cover object-center w-[250px] sm:w-[300px] h-[300px] sm:h-[400px]"} style={{float: "right"}}
                          alt={"portrait photo"}/>
@@ -520,10 +529,13 @@ export default function Home() {
                     <div id={"summaryInfo"} className={"relative h-full flex flex-col justify-center px-4 sm:px-0"}>
                         <p id={"summary-title"} className={"text-2xl sm:text-4xl mb-2"}>Hi there!</p>
                         <p id={"summary-desc"} className={"w-full sm:w-[80%] text-base sm:text-lg"}>
-                            I'm Michael, a rising sophomore at Northeastern University studying CS. I'm extremely
+                            I'm Michael, a sophomore at Northeastern University studying CS. I'm extremely
                             passionate about everything computer science, from full-stack web development to computer
                             vision and new fields like AI/Machine Learning. I'm excited to learn more and build my
                             career in the world of tech!
+                            <br/>
+                            <br/>
+                            <span style={{fontSize:"16px"}}>Outside of programming I enjoy basketball, skating, piano, travelling, discovering new food, and j-pop.</span>
                         </p>
                     </div>
                 </div>

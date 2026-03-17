@@ -19,7 +19,7 @@ console.log(process.env.HOST);
 console.log()
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://mzhang0213:jIdggOURnfAJOROQ@heroku.qkcqp9r.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI;
 
 // "mongodb+srv://mzhang0213:<db_password>@heroku.qkcqp9r.mongodb.net/?retryWrites=true&w=majority&appName=heroku"
 
@@ -2712,8 +2712,8 @@ app.post("/updateTime", async (req,res)=>{
 	}
 })
 
-var client_id = 'dba5356ba91643569a1c3d516c91dcc0'; // Your client id
-var client_secret = 'bb795f1551654ef9bac92464d588a5d0'; // Your secret
+var client_id = process.env.SPOTIFY_CLIENT_ID;
+var client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 
 /**
  * Generates a random string containing numbers and letters
@@ -2959,7 +2959,9 @@ var oAuth2Client;
 const SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly", "https://www.googleapis.com/auth/classroom.coursework.me.readonly", "https://www.googleapis.com/auth/classroom.courseworkmaterials.readonly", "https://www.googleapis.com/auth/classroom.announcements.readonly"];
 
 app.get("/classroom/login", (req,res)=>{
-	const {client_secret, client_id, redirect_uris} = {"client_id":"964270111872-332f6vopavq4lr71hl2ifvel1fh6jpm2.apps.googleusercontent.com","project_id":"michaeltest-1","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://"+req.hostname+"/classroom/callback/"]};
+	const client_id = process.env.GOOGLE_CLIENT_ID;
+	const client_secret = process.env.GOOGLE_CLIENT_SECRET;
+	const redirect_uris = ["https://"+req.hostname+"/classroom/callback/"];
 	oAuth2Client = new google.auth.OAuth2(
 		client_id, client_secret, redirect_uris[0]);
 

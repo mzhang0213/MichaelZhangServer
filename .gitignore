@@ -4,3 +4,9 @@
 node_modules
 /app/todos.txt
 /app/resources/keys.ts
+
+# environment variables
+.env
+.env.local
+.env*.local
+token.json

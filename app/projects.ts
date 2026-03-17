@@ -42,6 +42,19 @@ export const projects: ProjectType[] = [
             link:"https://bulk.mzhang.dev"
         }
     },
+    {
+        id: "rebound",
+        title: "Rebound",
+        description:"I joined two teammates in 24 hours for Hack Health 2026 hosted by Northeastern's ACM. I met two guys from BU and together we designed an app to help support anyone facing injuries in the rehabilitation process. We had many features, and with features many bugs, frankly, but we were able to present an amazing app which helped us win <span class=''>first place</span> for the physical health track.", //PUT GRADIENT HERE ON FIRST PLACEp
+        detailsDefault:"",
+        icon:"/icons/flock-cut.png",
+        technology: [
+        ],
+        link: {
+            title:"live deployment",
+            link:"https://mzhang.dev/spotifyYt"
+        }
+    },
     /*
     {
         id: "serviceEye",
@@ -116,6 +129,32 @@ export const projects: ProjectType[] = [
         }
     },
     {
+        id: "flock",
+        title: "Flock",
+        description:"I built this app in a team of five for HackBeanpot 2026 where we decided on this app that matches commuters the other commuters on the long boring daily commute to make it more fun and help people meet new friends. We had some difficulty with app design but ultimately pulled through within 24 hours to get the app finished.",
+        detailsDefault:"",
+        icon:"/icons/flock-cut.png",
+        technology: [
+        ],
+        link: {
+            title:"live deployment",
+            link:"https://mzhang.dev/spotifyYt"
+        }
+    },
+    {
+        id: "bci26",
+        title: "Cortex Crew",
+        description: "",
+        detailsDefault:"",
+        icon:"/icons/bci-icon.png",
+        technology: [
+        ],
+        link: {
+            title:"live deployment",
+            link:"https://mzhang.dev/spotifyYt"
+        }
+    },
+    {
         id: "hackathon-portal",
         title: "Hackathon Portal",
         description: "Developed for usage in my two hackathons I founded and hosted. Functions as the main portal for the hackathons where competitors are able to form groups and submit their projects. Additionally had voting functionality for the competitions. Assisted in communication between staff and participants.",
@@ -163,6 +202,7 @@ export const projects: ProjectType[] = [
             link:"https://github.com/mzhang0213/email-send-robot"
         }
     },
+    /*s
     {
         id:"cappy",
         title: "Cappy",
@@ -190,7 +230,33 @@ export const projects: ProjectType[] = [
             title: "GitHub Repo",
             link:""
         }
-    }
+    },*/
+    {
+        id: "yes_coach",
+        title: "Yes, Coach!",
+        description: "",
+        detailsDefault:"",
+        icon:"/icons/yescoach.png",
+        technology: [
+            {
+                id:"python",
+                description:""
+            },
+            {
+                id:"opencv",
+                description:""
+            },
+            {
+                id:"fastapi",
+                description:""
+            },
+        ],
+        link: {
+            title:"live deployment",
+            link:"https://mzhang.dev/spotifyYt"
+        }
+    },
+
     /*
     {
         id: "image-editor",
