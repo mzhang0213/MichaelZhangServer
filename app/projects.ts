@@ -43,16 +43,77 @@ export const projects: ProjectType[] = [
         }
     },
     {
-        id: "rebound",
-        title: "Rebound",
-        description:"I joined two teammates in 24 hours for Hack Health 2026 hosted by Northeastern's ACM. I met two guys from BU and together we designed an app to help support anyone facing injuries in the rehabilitation process. We had many features, and with features many bugs, frankly, but we were able to present an amazing app which helped us win <span class=''>first place</span> for the physical health track.", //PUT GRADIENT HERE ON FIRST PLACEp
+        id: "yes_coach",
+        title: "Yes, Coach!",
+        description: "",
         detailsDefault:"",
-        icon:"/icons/flock-cut.png",
+        icon:"/icons/yescoach.png",
         technology: [
+            {
+                id:"python",
+                description:""
+            },
+            {
+                id:"opencv",
+                description:""
+            },
+            {
+                id:"fastapi",
+                description:""
+            },
         ],
         link: {
             title:"live deployment",
             link:"https://mzhang.dev/spotifyYt"
+        }
+    },
+    {
+        id: "rebound",
+        title: "Rebound",
+        description:"I joined two teammates in 24 hours for Hack Health 2026 hosted by Northeastern's ACM. I met two guys from BU and together we designed an app to help support anyone facing injuries in the rehabilitation process. We had many features, and with features many bugs, frankly, but we were able to present an amazing app which helped us win <span class='bg-clip-text bg-gradient-to-tr from-yellow-300 to-white'>first place</span> for the physical health track.", //PUT GRADIENT HERE ON FIRST PLACE
+        detailsDefault:"",
+        icon:"/icons/serviceeye.png",
+        technology: [
+            {
+                id:"react-native",
+                description:""
+            },
+            {
+                id:"expo",
+                description:""
+            },
+            {
+                id:"fastapi",
+                description:""
+            },
+            {
+                id:"supabase",
+                description:""
+            },
+            {
+                id:"openstreetmap",
+                description:""
+            },
+            {
+                id:"gemini",
+                description:""
+            },
+            {
+                id:"yolo",
+                description:""
+            },
+            {
+                id:"cloudflare",
+                description:""
+            },
+            {
+                id:"nginx",
+                description:""
+            },
+        ],
+        link: {
+            title:"Devpost",
+            link:"https://devpost.com/software/rebound-l42rzs"
         }
     },
     /*
@@ -135,12 +196,41 @@ export const projects: ProjectType[] = [
         detailsDefault:"",
         icon:"/icons/flock-cut.png",
         technology: [
+            {
+                id:"react-native",
+                description:""
+            },
+            {
+                id:"expo",
+                description:""
+            },
+            {
+                id:"fastapi",
+                description:""
+            },
+            {
+                id:"mongodb",
+                description:""
+            },
+            {
+                id:"redis",
+                description:""
+            },
+            {
+                id:"openstreetmap",
+                description:""
+            },
+            {
+                id:"gemini",
+                description:""
+            },
         ],
         link: {
             title:"live deployment",
             link:"https://mzhang.dev/spotifyYt"
         }
     },
+    /*
     {
         id: "bci26",
         title: "Cortex Crew",
@@ -154,6 +244,8 @@ export const projects: ProjectType[] = [
             link:"https://mzhang.dev/spotifyYt"
         }
     },
+
+     */
     {
         id: "hackathon-portal",
         title: "Hackathon Portal",
@@ -231,31 +323,6 @@ export const projects: ProjectType[] = [
             link:""
         }
     },*/
-    {
-        id: "yes_coach",
-        title: "Yes, Coach!",
-        description: "",
-        detailsDefault:"",
-        icon:"/icons/yescoach.png",
-        technology: [
-            {
-                id:"python",
-                description:""
-            },
-            {
-                id:"opencv",
-                description:""
-            },
-            {
-                id:"fastapi",
-                description:""
-            },
-        ],
-        link: {
-            title:"live deployment",
-            link:"https://mzhang.dev/spotifyYt"
-        }
-    },
 
     /*
     {

@@ -214,6 +214,7 @@ function Projects() {
                 const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight
                 if (!activeDetails) {
                     activeDetails = true;
+                    currElement.classList.add('see-more-active');
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
                     gebi("bg_dim").style.display = "";
                     gebi("bg_dim").style.opacity = "1";
@@ -245,6 +246,7 @@ function Projects() {
 
                     linkRoot.render(
                         <>
+                            {proj.link.link.includes("github.com") && <img src={"/icons/github.png"} alt={"github"} className={"w-[12px] h-[12px] mr-1"} style={{filter:"invert(1)"}}/>}
                             <p onClick={() => {
                                 window.open(proj.link.link, "_blank")
                             }} className={"project-link text-white"}
@@ -283,6 +285,46 @@ function Projects() {
                         </div>
                         <div className={"project-bottomDiv"}>
                             {/*<p className={"text-center text-sm sm:text-base"}>{project.description}</p>*/}
+                        </div>
+                    </div>
+                    <div className={"see-more-wrapper hidden sm:block"}>
+                        <svg width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
+                            <path
+                                className={"see-more-arrow-path"}
+                                d="M 5 40 C 25 20, 65 10, 73 65"
+                                stroke="rgba(255,255,255,0.8)"
+                                strokeWidth="2"
+                                fill="none"
+                                pathLength="100"
+                            />
+                            <path
+                                className={"see-more-arrow-head"}
+                                d="M 73 70 L 79 56"
+                                stroke="rgba(255,255,255,0.8)"
+                                strokeWidth="2"
+                                fill="none"
+                                strokeLinecap="round"
+                                pathLength="100"
+                            />
+                            <path
+                                className={"see-more-arrow-head"}
+                                d="M 73 70 L 64 59"
+                                stroke="rgba(255,255,255,0.8)"
+                                strokeWidth="2"
+                                fill="none"
+                                strokeLinecap="round"
+                                pathLength="100"
+                            />
+                        </svg>
+                        <div
+                            className={"see-more-bubble"}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(project.link.link, "_blank");
+                            }}
+                        >
+                            <span>See more!</span>
+                            <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
                         </div>
                     </div>
                 </div>
@@ -440,6 +482,7 @@ export default function Home() {
                     gebi("details_menu_desc").innerHTML="";
                     for(const e of gebi("projectsContainer").children){
                         gebi(e.id).style.zIndex="0";
+                        gebi(e.id).classList.remove('see-more-active');
                     }
                     gebi("bg_dim").style.display="none";
                     gebi("details_background").style.zIndex="0";

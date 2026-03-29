@@ -29,6 +29,7 @@
 
 .project-container{
     background-color: var(--theme-blue);
+    position: relative;
 }
 .project-content{
     background-color: var(--theme-dark-blue);
@@ -43,6 +44,88 @@
     transform: translateX(-6px) translateY(-6px);
 }
 
+
+/* See More unfurl animation */
+.see-more-wrapper {
+    position: absolute;
+    top: 80%;
+    transform: translateY(-50%);
+    width: 160px;
+    left: 120%;
+    height: 87px;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.see-more-arrow-path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 200ms ease-in 0ms;
+}
+
+.project-container:hover .see-more-arrow-path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 380ms ease-out 500ms;
+}
+
+.project-container.see-more-active .see-more-arrow-path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 380ms ease-out 0ms;
+}
+
+.see-more-arrow-head {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 200ms ease-in 0ms;
+}
+
+.project-container:hover .see-more-arrow-head {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 180ms ease-out 850ms;
+}
+
+.project-container.see-more-active .see-more-arrow-head {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 180ms ease-out 350ms;
+}
+
+.see-more-bubble {
+    position: absolute;
+    right: 50px;
+    top: 80px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #f5c4a0;
+    border: 2px solid var(--theme-dark-gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #1c181c;
+    box-shadow: 3px 3px 0px 0px var(--theme-dark-gray);
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.65);
+    transform-origin: center center;
+    pointer-events: none;
+    transition: opacity 150ms ease-in 0ms, transform 150ms ease-in 0ms;
+}
+
+.project-container:hover .see-more-bubble,
+.project-container.see-more-active .see-more-bubble {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    transition: opacity 240ms ease-out 920ms, transform 240ms ease-out 920ms;
+}
+
+.project-container.see-more-active .see-more-bubble {
+    transition: opacity 240ms ease-out 420ms, transform 240ms ease-out 420ms;
+}
 
 .tech-item:hover .tech-img {
     transition: transform 200ms ease-out;

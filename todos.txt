@@ -1,0 +1,10 @@
+- add devpost icon
+- fix arrow popup
+- create github popup icon asw (and make the og github links arbituary)
+
+- (technology) icon combiner for parallel tech
+
+- add media transfer
+
+
+- fixup the other sites

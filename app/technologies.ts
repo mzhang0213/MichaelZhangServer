@@ -175,5 +175,194 @@ export const technologies: TechnologyType[] = [
         color: "#0000ff",
         description: "",
         icon: "/icons/gpt.png"
+    },
+    {
+        id: "claude",
+        title: "Claude (LLM)",
+        color: "#D97706",
+        description: "",
+        icon: "/icons/claude.png"
+    },
+    {
+        id: "gemini",
+        title: "Gemini (LLM)",
+        color: "#8E75B2",
+        description: "",
+        icon: "/icons/gemini.png"
+    },
+    {
+        id: "docker",
+        title: "Docker",
+        color: "#2496ED",
+        description: "",
+        icon: "/icons/docker.png"
+    },
+    {
+        id: "git",
+        title: "Git",
+        color: "#F05032",
+        description: "",
+        icon: "/icons/git.png"
+    },
+    {
+        id: "linux",
+        title: "Linux",
+        color: "#FCC624",
+        description: "",
+        icon: "/icons/linux.png"
+    },
+    {
+        id: "c",
+        title: "C",
+        color: "#A8B9CC",
+        description: "",
+        icon: "/icons/c.png"
+    },
+    {
+        id: "cpp",
+        title: "C++",
+        color: "#00599C",
+        description: "",
+        icon: "/icons/cpp.png"
+    },
+    {
+        id: "react-native",
+        title: "React Native",
+        color: "#61DAFB",
+        description: "",
+        icon: "/icons/react-native.png"
+    },
+    {
+        id: "expo",
+        title: "Expo Go",
+        color: "#000020",
+        description: "",
+        icon: "/icons/expo.png"
+    },
+    {
+        id: "openstreetmap",
+        title: "OpenStreetMap",
+        color: "#7EBC6F",
+        description: "",
+        icon: "/icons/openstreetmap.png"
+    },
+    {
+        id: "fastapi",
+        title: "FastAPI",
+        color: "#009688",
+        description: "",
+        icon: "/icons/fastapi.png"
+    },
+    {
+        id: "redis",
+        title: "Redis",
+        color: "#DC382D",
+        description: "",
+        icon: "/icons/redis.png"
+    },
+    {
+        id: "supabase",
+        title: "Supabase",
+        color: "#3ECF8E",
+        description: "",
+        icon: "/icons/supabase.png"
+    },
+    {
+        id: "terraform",
+        title: "Terraform",
+        color: "#7B42BC",
+        description: "",
+        icon: "/icons/terraform.png"
+    },
+    {
+        id: "cloudflare",
+        title: "Cloudflare",
+        color: "#F6821F",
+        description: "",
+        icon: "/icons/cloudflare.png"
+    },
+    {
+        id: "vercel",
+        title: "Vercel",
+        color: "white",
+        description: "",
+        icon: "/icons/vercel.png"
+    },
+    {
+        id: "heroku",
+        title: "Heroku",
+        color: "#430098",
+        description: "",
+        icon: "/icons/heroku.png"
+    },
+    {
+        id: "nginx",
+        title: "Nginx",
+        color: "#009900",
+        description: "",
+        icon: "/icons/nginx-dark.png"
+    },
+    {
+        id: "tensorflow",
+        title: "TensorFlow",
+        color: "#FF6F00",
+        description: "",
+        icon: "/icons/tensorflow.png"
+    },
+    {
+        id: "figma",
+        title: "Figma",
+        color: "#F24E1E",
+        description: "",
+        icon: "/icons/figma.png"
+    },
+    {
+        id: "blender",
+        title: "Blender",
+        color: "#E87D0D",
+        description: "",
+        icon: "/icons/blender.png"
+    },
+    {
+        id: "fusion360",
+        title: "Fusion 360",
+        color: "#FF6600",
+        description: "",
+        icon: "/icons/fusion360.png"
+    },
+    {
+        id: "autocad",
+        title: "AutoCAD",
+        color: "#E51937",
+        description: "",
+        icon: "/icons/autocad.png"
+    },
+    {
+        id: "latex",
+        title: "LaTeX",
+        color: "#008080",
+        description: "",
+        icon: "/icons/latex.png"
+    },
+    {
+        id: "intellij",
+        title: "IntelliJ IDEA",
+        color: "#FF318C",
+        description: "",
+        icon: "/icons/intellij.png"
+    },
+    {
+        id: "apple",
+        title: "Apple / macOS",
+        color: "#999999",
+        description: "",
+        icon: "/icons/apple.png"
+    },
+    {
+        id: "windows",
+        title: "Windows",
+        color: "#0078D7",
+        description: "",
+        icon: "/icons/windows8.png"
     }
 ]
