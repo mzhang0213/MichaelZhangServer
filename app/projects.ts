@@ -292,7 +292,8 @@ export const projects: ProjectType[] = [
         link: {
             title:"GitHub Repo",
             link:"https://github.com/mzhang0213/email-send-robot"
-        }
+        },
+        github:"https://github.com/mzhang0213/email-send-robot"
     },
     /*s
     {

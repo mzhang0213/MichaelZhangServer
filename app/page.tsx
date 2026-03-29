@@ -84,7 +84,8 @@ export type ProjectType = {
     link:{
         title:string,
         link:string
-    }
+    },
+    github?: string
 }
 export type ExperienceType = {
     id: string,
@@ -327,6 +328,17 @@ function Projects() {
                             <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
                         </div>
                     </div>
+                    {project.github && (
+                        <div
+                            className={"github-bubble hidden sm:block"}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(project.github!, "_blank");
+                            }}
+                        >
+                            <img src={"/icons/github.png"} alt={"GitHub"} style={{width:"34px",height:"34px"}}/>
+                        </div>
+                    )}
                 </div>
             )
         })

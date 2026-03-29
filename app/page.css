@@ -127,6 +127,39 @@
     transition: opacity 240ms ease-out 420ms, transform 240ms ease-out 420ms;
 }
 
+/* GitHub bubble — opposite side, appears after see-more bubble */
+.github-bubble {
+    position: absolute;
+    left: -20px;
+    top: 80%;
+    transform: translateY(-50%) translateX(-18px);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: var(--theme-white);
+    border: 2px solid var(--theme-dark-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 0px 0px var(--theme-dark-gray);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-in 0ms, transform 200ms ease-in 0ms;
+}
+
+.project-container:hover .github-bubble,
+.project-container.see-more-active .github-bubble {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+    transition: opacity 250ms ease-out 1220ms, transform 250ms ease-out 1220ms;
+}
+
+.project-container.see-more-active .github-bubble {
+    transition: opacity 250ms ease-out 720ms, transform 250ms ease-out 720ms;
+}
+
 .tech-item:hover .tech-img {
     transition: transform 200ms ease-out;
     transform: translateX(-2px) translateY(-2px);
