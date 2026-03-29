@@ -57,10 +57,8 @@ function FrontMenuOptions() {
     )
 }
 
-let currX = 0;
-let currY = 0;
 let activeDetails = false;
-let directionLeft = false;
+let holdTimer: ReturnType<typeof setTimeout> | null = null;
 let mobileToggleStates: {[key: string]: boolean} = {};
 
 export type TechnologyType = {
@@ -203,69 +201,58 @@ function Projects() {
     }
 
     function detailsMenu(event: React.MouseEvent) {
-        if (window.innerWidth < 640) return; // skip on mobile
+        if (window.innerWidth < 640) return;
+        if (activeDetails) return;
 
-        let lastHovered: Element | null = event.target as Element;
-        lastHovered = getProjectParent(lastHovered);
-        setTimeout(function(){
-            const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
-            if (lastHovered===currHovered){
-                //start animation for highlighted element
-                const currElement = currHovered as HTMLElement;
-                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight
-                if (!activeDetails) {
-                    activeDetails = true;
-                    currElement.classList.add('see-more-active');
-                    gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
-                    gebi("bg_dim").style.display = "";
-                    gebi("bg_dim").style.opacity = "1";
-                    currElement.style.zIndex = "12";
-                    gebi("details_background").style.zIndex = "11";
-                    gebi("details_background").style.visibility = "visible";
-                    gebi("details_background").style.opacity = "1";
+        if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
 
-                    gebi("details_menu_container").style.height = containerHeight + "px";
+        const targetElement = getProjectParent(event.target as Element) as HTMLElement;
+        if (!targetElement) return;
 
-                    gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
-                    gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
-                    gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
-                    gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
-                    gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px"; //this is important
-                    gebi("details_menu").style.marginBottom = (MARGINOFFSET+10) + "px";
-                    gebi("details_background").style.height = containerHeight + "px";
+        targetElement.classList.add('card-held');
 
-                    const id = currElement.id;
-                    let proj: ProjectType = projects[0];
-                    for (const p of projects) {
-                        if (p.id === id) {
-                            proj = p
-                        }
-                    }
+        holdTimer = setTimeout(function() {
+            holdTimer = null;
+            if (!activeDetails) {
+                const currElement = targetElement;
+                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight;
+                activeDetails = true;
+                currElement.classList.add('see-more-active');
+                gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.display = "";
+                gebi("bg_dim").style.opacity = "1";
+                currElement.style.zIndex = "12";
+                gebi("details_background").style.zIndex = "11";
+                gebi("details_background").style.visibility = "visible";
+                gebi("details_background").style.opacity = "1";
 
-                    linkRoot.render(
-                        <>
-                            {proj.link.link.includes("github.com") && <img src={"/icons/github.png"} alt={"github"} className={"w-[12px] h-[12px] mr-1"} style={{filter:"invert(1)"}}/>}
-                            <p onClick={() => {
-                                window.open(proj.link.link, "_blank")
-                            }} className={"project-link text-white"}
-                               style={{cursor: "pointer", textDecoration: "underline"}}>{proj.link.title}</p>
-                            <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
-                        </>
-                    );
-                    detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
-                    gebi("details_menu_desc").innerHTML=proj.description; //update 030926: just keep all descriptions on homepage
-                    /*
-                    if (proj.detailsDefault){
-                        gebi("details_menu_desc").innerHTML=proj.detailsDefault;
-                    }
+                gebi("details_menu_container").style.height = containerHeight + "px";
+                gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
+                gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
+                gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
+                gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
+                gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
+                gebi("details_menu").style.marginBottom = (MARGINOFFSET+10) + "px";
+                gebi("details_background").style.height = containerHeight + "px";
 
-                     */
-                }
+                const id = currElement.id;
+                let proj: ProjectType = projects[0];
+                for (const p of projects) { if (p.id === id) { proj = p; } }
+
+                linkRoot.render(
+                    <>
+                        {proj.link.link.includes("github.com") && <img src={"/icons/github.png"} alt={"github"} className={"w-[12px] h-[12px] mr-1"} style={{filter:"invert(1)"}}/>}
+                        <p onClick={() => { window.open(proj.link.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{proj.link.title}</p>
+                        <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
+                    </>
+                );
+                detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
+                gebi("details_menu_desc").innerHTML = proj.description;
             }
-        }, 500)
+        }, 500);
     }
 
     return (
@@ -279,7 +266,7 @@ function Projects() {
                          gebi("details_menu_desc").innerHTML=project.description;
                      }}
                 >
-                    <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
+                    <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => detailsMenu(e)}>
                         <div className={"project-topDiv flex justify-center items-center"}>
                             <img alt={project.title} src={project.icon} className={"project-icon w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]"}/>
                             <div className={"project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl text-center"}>{project.title}</div>
@@ -497,7 +484,14 @@ export default function Home() {
         updateCardColumns();
         window.addEventListener('resize', updateCardColumns);
 
-        gebi("bg_dim").addEventListener("mousemove",function(){
+        document.addEventListener("mouseup", function() {
+            if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
+            for (const e of gebi("projectsContainer").children) {
+                (e as HTMLElement).classList.remove('card-held');
+            }
+        });
+
+        gebi("bg_dim").addEventListener("click",function(){
             if (activeDetails && window.innerWidth >= 640){ // dim only on comp
                 activeDetails=false;
                 gebi("details_background").style.height="0";
@@ -510,6 +504,7 @@ export default function Home() {
                     for(const e of gebi("projectsContainer").children){
                         gebi(e.id).style.zIndex="0";
                         gebi(e.id).classList.remove('see-more-active');
+                        gebi(e.id).classList.remove('card-held');
                     }
                     gebi("bg_dim").style.display="none";
                     gebi("details_background").style.zIndex="0";

@@ -39,8 +39,12 @@
     display: block;
     transition: transform 100ms ease-out;
 }
-.project-container:hover .project-content {
+.project-container.card-held .project-content {
     transition: transform 500ms ease-out;
+    transform: translateX(-6px) translateY(-6px);
+}
+.project-container.see-more-active:hover .project-content {
+    transition: transform 150ms ease-out;
     transform: translateX(-6px) translateY(-6px);
 }
 
@@ -77,11 +81,6 @@
     transition: stroke-dashoffset 200ms ease-in 0ms;
 }
 
-.project-container:hover .see-more-arrow-path {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 380ms ease-out 500ms;
-}
-
 .project-container.see-more-active .see-more-arrow-path {
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 380ms ease-out 0ms;
@@ -91,11 +90,6 @@
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
     transition: stroke-dashoffset 200ms ease-in 0ms;
-}
-
-.project-container:hover .see-more-arrow-head {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 180ms ease-out 850ms;
 }
 
 .project-container.see-more-active .see-more-arrow-head {
@@ -129,15 +123,10 @@
     transition: opacity 150ms ease-in 0ms, transform 150ms ease-in 0ms;
 }
 
-.project-container:hover .see-more-bubble,
 .project-container.see-more-active .see-more-bubble {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
-    transition: opacity 240ms ease-out 920ms, transform 240ms ease-out 920ms;
-}
-
-.project-container.see-more-active .see-more-bubble {
     transition: opacity 240ms ease-out 420ms, transform 240ms ease-out 420ms;
 }
 
@@ -162,15 +151,10 @@
     transition: opacity 200ms ease-in 0ms, transform 200ms ease-in 0ms;
 }
 
-.project-container:hover .github-bubble,
 .project-container.see-more-active .github-bubble {
     opacity: 1;
     transform: translateY(75px) translateX(-100px);
     pointer-events: auto;
-    transition: opacity 250ms ease-out 1220ms, transform 250ms ease-out 1220ms;
-}
-
-.project-container.see-more-active .github-bubble {
     transition: opacity 250ms ease-out 720ms, transform 250ms ease-out 720ms;
 }
 
@@ -181,7 +165,6 @@
     top: 300px;
     transform: translateY(-150px) translateX(0);
 }
-.project-container.card-col-left:hover .github-bubble,
 .project-container.card-col-left.see-more-active .github-bubble {
     transform: translateY(-100px) translateX(100px);
 }
@@ -193,7 +176,6 @@
     top: 300px;
     transform: translateY(-150px) translateX(0);
 }
-.project-container.card-col-right:hover .github-bubble,
 .project-container.card-col-right.see-more-active .github-bubble {
     transform: translateY(-100px) translateX(-100px);
 }

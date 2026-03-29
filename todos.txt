@@ -1,10 +1,19 @@
 - add devpost icon
-- fix arrow popup
+- fix see more icon, make it work
+- change arrow thickness
 - create github popup icon asw (and make the og github links arbituary)
+
 
 - (technology) icon combiner for parallel tech
 
+
+new tech
 - add media transfer
 
 
-- fixup the other sites
+fixup the other sites
+
+
+
+minor:
+- the arrow into the see more info undo animation is not the same process
