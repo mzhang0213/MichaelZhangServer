@@ -165,7 +165,7 @@
 .project-container:hover .github-bubble,
 .project-container.see-more-active .github-bubble {
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(75px) translateX(-100px);
     pointer-events: auto;
     transition: opacity 250ms ease-out 1220ms, transform 250ms ease-out 1220ms;
 }
@@ -188,7 +188,14 @@
 
 /* Right column: github stays left but moves higher (see-more is also left at 80%) */
 .card-col-right .github-bubble {
+    left: -20px;
+    right: auto;
     top: 300px;
+    transform: translateY(-150px) translateX(0);
+}
+.project-container.card-col-right:hover .github-bubble,
+.project-container.card-col-right.see-more-active .github-bubble {
+    transform: translateY(-100px) translateX(-100px);
 }
 
 .tech-item:hover .tech-img {
