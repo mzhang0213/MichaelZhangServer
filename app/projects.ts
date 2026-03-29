@@ -295,6 +295,40 @@ export const projects: ProjectType[] = [
         },
         github:"https://github.com/mzhang0213/email-send-robot"
     },
+    {
+        id: "email-bot",
+        title: "Email Bot",
+        description: "Python script bot assisting in mass-emailing for sponsorship and outreach in my hackathons. Uses email templates populated with supplied data of email recipient to create MIME format emails.",
+        icon:"/icons/emailbot.png",
+        technology: [
+            {
+                id:"python",
+                description:"Implements SMTP library for sending SSL encrypted letters. Uses command-line prompts to control template, data, and time for emails to be sent."
+            }
+        ],
+        link: {
+            title:"GitHub Repo",
+            link:"https://github.com/mzhang0213/email-send-robot"
+        },
+        github:"https://github.com/mzhang0213/email-send-robot"
+    },
+    {
+        id: "email-bot",
+        title: "Email Bot",
+        description: "Python script bot assisting in mass-emailing for sponsorship and outreach in my hackathons. Uses email templates populated with supplied data of email recipient to create MIME format emails.",
+        icon:"/icons/emailbot.png",
+        technology: [
+            {
+                id:"python",
+                description:"Implements SMTP library for sending SSL encrypted letters. Uses command-line prompts to control template, data, and time for emails to be sent."
+            }
+        ],
+        link: {
+            title:"GitHub Repo",
+            link:"https://github.com/mzhang0213/email-send-robot"
+        },
+        github:"https://github.com/mzhang0213/email-send-robot"
+    },
     /*s
     {
         id:"cappy",

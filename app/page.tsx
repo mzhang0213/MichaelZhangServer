@@ -289,33 +289,17 @@ function Projects() {
                         </div>
                     </div>
                     <div className={"see-more-wrapper hidden sm:block"}>
-                        <svg width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
-                            <path
-                                className={"see-more-arrow-path"}
-                                d="M 5 40 C 25 20, 65 10, 73 65"
-                                stroke="rgba(255,255,255,0.8)"
-                                strokeWidth="2"
-                                fill="none"
-                                pathLength="100"
-                            />
-                            <path
-                                className={"see-more-arrow-head"}
-                                d="M 73 70 L 79 56"
-                                stroke="rgba(255,255,255,0.8)"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                pathLength="100"
-                            />
-                            <path
-                                className={"see-more-arrow-head"}
-                                d="M 73 70 L 64 59"
-                                stroke="rgba(255,255,255,0.8)"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                pathLength="100"
-                            />
+                        {/* Right-pointing arrow (left/mid column cards) */}
+                        <svg className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
+                            <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                            <path className={"see-more-arrow-head"} d="M 73 70 L 79 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                            <path className={"see-more-arrow-head"} d="M 73 70 L 64 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                        </svg>
+                        {/* Left-pointing arrow (right column cards) */}
+                        <svg className={"see-more-arrow-left-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
+                            <path className={"see-more-arrow-path"} d="M 155 40 C 135 20, 95 10, 87 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                            <path className={"see-more-arrow-head"} d="M 87 70 L 81 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                            <path className={"see-more-arrow-head"} d="M 87 70 L 96 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
                         </svg>
                         <div
                             className={"see-more-bubble"}
@@ -482,6 +466,37 @@ export default function Home() {
                 currY = event.clientY;
             }
         })
+        function updateCardColumns() {
+            const container = gebi("projectsContainer");
+            const cards = Array.from(container.children) as HTMLElement[];
+            if (!cards.length) return;
+            let currentTop = -1;
+            let currentRow: HTMLElement[] = [];
+            const rows: HTMLElement[][] = [];
+            for (const card of cards) {
+                const el = card as HTMLElement;
+                if (el.offsetTop !== currentTop) {
+                    if (currentRow.length) rows.push(currentRow);
+                    currentRow = [el];
+                    currentTop = el.offsetTop;
+                } else {
+                    currentRow.push(el);
+                }
+            }
+            if (currentRow.length) rows.push(currentRow);
+            for (const row of rows) {
+                const n = row.length;
+                row.forEach((card, i) => {
+                    card.classList.remove('card-col-left', 'card-col-mid', 'card-col-right');
+                    if (n <= 1 || i === 0) card.classList.add('card-col-left');
+                    else if (i === n - 1) card.classList.add('card-col-right');
+                    else card.classList.add('card-col-mid');
+                });
+            }
+        }
+        updateCardColumns();
+        window.addEventListener('resize', updateCardColumns);
+
         gebi("bg_dim").addEventListener("mousemove",function(){
             if (activeDetails && window.innerWidth >= 640){ // dim only on comp
                 activeDetails=false;
@@ -503,6 +518,7 @@ export default function Home() {
                 },detailsMenuWipe);
             }
         })
+        return () => window.removeEventListener('resize', updateCardColumns);
     }, []);
     return (
         <>

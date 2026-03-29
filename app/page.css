@@ -57,6 +57,20 @@
     z-index: 20;
 }
 
+/* Right column: flip see-more to left side */
+.card-col-right .see-more-wrapper {
+    left: auto;
+    right: 120%;
+}
+.card-col-right .see-more-bubble {
+    left: 50px;
+    right: auto;
+}
+/* Arrow direction toggles */
+.see-more-arrow-left-svg { display: none; }
+.card-col-right .see-more-arrow-left-svg { display: block; }
+.card-col-right .see-more-arrow-right-svg { display: none; }
+
 .see-more-arrow-path {
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
@@ -158,6 +172,23 @@
 
 .project-container.see-more-active .github-bubble {
     transition: opacity 250ms ease-out 720ms, transform 250ms ease-out 720ms;
+}
+
+/* Left column: github bubble flips to right side (same side as see-more), higher up */
+.card-col-left .github-bubble {
+    left: auto;
+    right: -20px;
+    top: 300px;
+    transform: translateY(-150px) translateX(0);
+}
+.project-container.card-col-left:hover .github-bubble,
+.project-container.card-col-left.see-more-active .github-bubble {
+    transform: translateY(-100px) translateX(100px);
+}
+
+/* Right column: github stays left but moves higher (see-more is also left at 80%) */
+.card-col-right .github-bubble {
+    top: 300px;
 }
 
 .tech-item:hover .tech-img {
