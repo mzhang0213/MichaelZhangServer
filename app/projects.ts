@@ -114,6 +114,36 @@ export const projects: ProjectType[] = [
         link: {
             title:"Devpost",
             link:"https://devpost.com/software/rebound-l42rzs"
+        },
+        github:""
+    },
+    {
+        id: "transitshark",
+        title: "TransitShark",
+        description:"", //PUT GRADIENT HERE ON FIRST PLACE
+        detailsDefault:"",
+        icon:"/icons/serviceeye.png",
+        technology: [
+            {
+                id:"spring",
+                description:""
+            },
+            {
+                id:"supabase",
+                description:""
+            },
+            {
+                id:"openstreetmap",
+                description:"Used with react-leaflet-heatmap-layer-v3"
+            },
+            {
+                id:"cloudflare",
+                description:""
+            }
+        ],
+        link: {
+            title:"Devpost",
+            link:"https://devpost.com/software/rebound-l42rzs"
         }
     },
     /*

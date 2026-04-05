@@ -129,12 +129,12 @@ function Technology({techEntries}: { techEntries: TechnologyEntryType[] }) {
 
     return (
         technology.map(item => {
-            return <div key={item.id} id={"tech-" + item.id} className={`tech-item w-[36px] h-[36px] sm:w-[48px] sm:h-[48px] rounded-full mx-1 sm:mx-2`} style={{backgroundColor: item.color, boxShadow:"inset 0px 0px 0px 1px var(--theme-gray)"}} onMouseMove={() => {
+            return <div key={item.id} id={"tech-" + item.id} className={`tech-item w-[48px] h-[48px] rounded-full mx-2`} style={{backgroundColor: item.color, boxShadow:"inset 0px 0px 0px 1px var(--theme-gray)"}} onMouseMove={() => {
                 gebi("details_menu_title").innerHTML = item.title;
                 gebi("details_menu_desc").innerHTML = item.description;
             }}>
                 <img id={`tech-img-${item.id}`} src={`${item.icon}`}
-                     className={"tech-img relative object-cover object-center w-full h-full p-1 sm:p-2 rounded-full"} style={{backgroundColor:"var(--theme-gray)"}}
+                     className={"tech-img relative object-cover object-center w-full h-full p-2 rounded-full"} style={{backgroundColor:"var(--theme-gray)"}}
                      alt={`${item.title} icon`}/>
             </div>
         })
@@ -191,11 +191,11 @@ function Projects() {
             projectContent.style.border="2px solid var(--theme-dark-gray)";
             projectContent.innerHTML = `
                 <div class="project-topDiv flex justify-center items-center">
-                    <img alt="${project.title}" src="${project.icon}" class="project-icon w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]"/>
-                    <div class="project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl">${project.title}</div>
+                    <img alt="${project.title}" src="${project.icon}" class="project-icon w-[50px] h-[50px]"/>
+                    <div class="project-title ml-2 mr-6 text-2xl">${project.title}</div>
                 </div>
                 <div class="project-bottomDiv">
-                    <p class="text-center text-sm sm:text-base">${project.description}</p>
+                    <p class="text-center text-base">${project.description}</p>
                 </div>
             `;
         }
@@ -260,23 +260,23 @@ function Projects() {
         projects.map(project => {
             return (
                 //min-h-[200px] sm:min-h-[250px]
-                <div key={"project-"+project.id} id={project.id} className={"project-container m-2 sm:m-4 flex flex-col rounded-2xl"}
+                <div key={"project-"+project.id} id={project.id} className={"project-container m-4 flex flex-col rounded-2xl"}
                      onClick={(e) => handleMobileClick(e, project)}
                      onMouseMove={function(e){
                          gebi("details_menu_title").innerHTML="";
                          gebi("details_menu_desc").innerHTML=project.description;
                      }}
                 >
-                    <div className={"project-content h-full p-2 sm:p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => detailsMenu(e)}>
+                    <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => detailsMenu(e)}>
                         <div className={"project-topDiv flex justify-center items-center"}>
-                            <img alt={project.title} src={project.icon} className={"project-icon w-[40px] h-[40px] sm:w-[50px] sm:h-[50px]"}/>
-                            <div className={"project-title ml-2 mr-2 sm:mr-6 text-lg sm:text-2xl text-center"}>{project.title}</div>
+                            <img alt={project.title} src={project.icon} className={"project-icon w-[50px] h-[50px]"}/>
+                            <div className={"project-title ml-2 mr-6 text-2xl text-center"}>{project.title}</div>
                         </div>
                         <div className={"project-bottomDiv"}>
                             {/*<p className={"text-center text-sm sm:text-base"}>{project.description}</p>*/}
                         </div>
                     </div>
-                    <div className={"see-more-wrapper hidden sm:block"}>
+                    <div className={"see-more-wrapper block"}>
                         {/* Right-pointing arrow (left/mid column cards) */}
                         <svg className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
                             <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
@@ -302,7 +302,7 @@ function Projects() {
                     </div>
                     {project.github && (
                         <div
-                            className={"github-bubble hidden sm:block"}
+                            className={"github-bubble block"}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 window.open(project.github!, "_blank");
@@ -374,13 +374,13 @@ function ExperienceGrid() {
 
     return (
         experiences.map(exp => (
-            <div key={"exp-" + exp.id} id={exp.id} className={"project-container m-2 sm:m-4 flex flex-col rounded-2xl"}
+            <div key={"exp-" + exp.id} id={exp.id} className={"project-container m-4 flex flex-col rounded-2xl"}
                  onMouseMove={() => { gebi("details_menu_title").innerHTML = ""; }}
             >
-                <div className={"project-content h-full p-4 sm:p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => expDetailsMenu(e)}>
-                    <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] object-contain"}/>
+                <div className={"h-full p-6 rounded-2xl flex justify-center items-center bg-[var(--theme-dark-blue)]"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => expDetailsMenu(e)}>
+                    <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] object-contain rounded-sm"}/>
                 </div>
-                <div className={"see-more-wrapper hidden sm:block"}>
+                <div className={"see-more-wrapper block"}>
                     <svg className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
                         <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
                         <path className={"see-more-arrow-head"} d="M 73 70 L 79 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
@@ -431,10 +431,10 @@ const contactLinks: ContactLinksType[] = [
 function ContactLinks() {
     return (
         contactLinks.map(contact => {
-            return <div key={contact.id} className={"flex p-2 mb-3 sm:mb-5 rounded-md"} onClick={()=>{window.open(contact.link,"_blank")}} style={{cursor: "pointer", boxShadow:"8px 8px 0px 0px var(--theme-green)", border:"2px solid var(--theme-dark-gray)"}}>
-                <img src={contact.icon} alt={contact.title} className={"w-[28px] h-[28px] sm:w-[32px] sm:h-[32px] mr-2"}/>
-                <p className={"w-[80%] flex items-center text-sm sm:text-base"}>{contact.title}</p>
-                <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[10px] h-[10px] sm:w-[12px] sm:h-[12px] ml-2"}/>
+            return <div key={contact.id} className={"flex p-2 mb-5 rounded-md"} onClick={()=>{window.open(contact.link,"_blank")}} style={{cursor: "pointer", boxShadow:"8px 8px 0px 0px var(--theme-green)", border:"2px solid var(--theme-dark-gray)"}}>
+                <img src={contact.icon} alt={contact.title} className={"w-[32px] h-[32px] mr-2"}/>
+                <p className={"w-[80%] flex items-center text-base"}>{contact.title}</p>
+                <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[12px] h-[12px] ml-2"}/>
             </div>
         })
     )
@@ -453,7 +453,7 @@ export default function Home() {
 
         document.body.addEventListener('click', function(event: Event) {
             const target = event.target as HTMLElement;
-            
+
             // Handle technology item clicks
             const techItem = target.closest('.tech-item');
             if (techItem && techItem.hasAttribute('data-tech-id')) {
@@ -472,7 +472,7 @@ export default function Home() {
                 let currItem = techItem as HTMLElement;
                 currItem.style.border = `2px solid ${currItem.style.backgroundColor}`;
             }
-            
+
             // Handle project link clicks
             const projectLink = target.closest('.project-link-mobile');
             if (projectLink) {
@@ -709,9 +709,9 @@ export default function Home() {
                         <div id={"details_menu_top"}
                              className={"w-full h-fit mb-auto py-3 flex flex-wrap justify-center items-center"}></div>
                         <div id={"details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"} style={{scrollbarWidth:"thin"}}>
-                            <p id={"details_menu_title"} className={"text-white text-lg sm:text-xl"}
+                            <p id={"details_menu_title"} className={"text-white text-xl"}
                                style={{fontWeight: "bold"}}></p>
-                            <p id={"details_menu_desc"} className={"text-white text-xs sm:text-sm"}></p>
+                            <p id={"details_menu_desc"} className={"text-white text-sm"}></p>
                         </div>
                     </div>
                 </div>
@@ -719,15 +719,15 @@ export default function Home() {
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>
                     <div id={"messageSmall"}
-                         className={"object absolute flex justify-center items-center left-[5%] sm:left-[15%] w-fit px-4 sm:px-7 py-4 sm:py-7 top-0 opacity-0"}
+                         className={"object absolute flex justify-center items-center left-[15%] w-fit px-7 py-7 top-0 opacity-0"}
                          style={{
                              top: 0, // 0 >> 15%
                              transition: `opacity ${smallTransition}ms ease-in-out, top ${smallTransition}ms ease-in-out`
                          }}>
-                        <p className={"text-sm sm:text-base"} style={{textAlign: "center"}}>Welcome to my portfolio!</p>
+                        <p className={"text-base"} style={{textAlign: "center"}}>Welcome to my portfolio!</p>
                     </div>
                     <div id={"messageLarge"}
-                         className={"object absolute flex justify-center items-center left-[10%] sm:left-[27%] w-[80%] sm:w-[50%] h-[35%] text-2xl sm:text-4xl px-6 sm:px-12 py-6 sm:py-12 opacity-0"}
+                         className={"object absolute flex justify-center items-center left-[27%] w-[50%] h-[35%] text-4xl px-12 py-12 opacity-0"}
                          style={{
                              top: 0, //0 >> 40%
                              transition: `opacity ${largeTransition}ms ease-in-out, top ${largeTransition}ms ease-in-out`
@@ -737,29 +737,29 @@ export default function Home() {
                 </div>
                 <div id={"openerMenuBg"}>
                     <div id={"openerMenu"}>
-                        <img src={"/resources/explore.png"} alt={"explore more!"} className={"w-32 sm:w-48 py-1"}
+                        <img src={"/resources/explore.png"} alt={"explore more!"} className={"w-48 py-1"}
                              style={{filter: "invert(1)"}}/>
                         <FrontMenuOptions/>
                     </div>
                 </div>
             </div>
 
-            <div id={"summaryContainer"} className={"relative flex flex-col sm:flex-row rounded-xl py-16 sm:py-32 my-32 sm:my-52"} style={{
+            <div id={"summaryContainer"} className={"relative flex flex-row rounded-xl py-32 my-52"} style={{
                 width: summaryContainerWidth + "vw",
                 backgroundColor: "var(--theme-green)",
                 left: (100 - summaryContainerWidth) / 2 + "vw",
                 boxShadow: "8px 8px 0px 0px var(--theme-yellow)",
                 border: "2px solid var(--theme-dark-gray)"
             }}>
-                <div id={"summaryContainerLeft"} className={"w-full ml-8 sm:w-[35%] flex justify-center sm:block"}>
+                <div id={"summaryContainerLeft"} className={"w-[35%] ml-8 block"}>
                     <img id={"summaryImg"} src={"/resources/IMG_1399.jpg"}
-                         className={"relative object-cover object-center w-[250px] sm:w-[300px] h-[300px] sm:h-[400px]"} style={{float: "right"}}
+                         className={"relative object-cover object-center w-[300px] h-[400px]"} style={{float: "right"}}
                          alt={"portrait photo"}/>
                 </div>
-                <div id={"summaryContainerRight"} className={"w-full sm:w-[65%] ml-0 sm:ml-5 mt-6 sm:mt-0"}>
-                    <div id={"summaryInfo"} className={"relative h-full flex flex-col justify-center px-4 sm:px-0"}>
-                        <p id={"summary-title"} className={"text-2xl sm:text-4xl mb-2"}>Hi there!</p>
-                        <p id={"summary-desc"} className={"w-full sm:w-[80%] text-base sm:text-lg"}>
+                <div id={"summaryContainerRight"} className={"w-[65%] ml-5 mt-0"}>
+                    <div id={"summaryInfo"} className={"relative h-full flex flex-col justify-center px-0"}>
+                        <p id={"summary-title"} className={"text-4xl mb-2"}>Hi there!</p>
+                        <p id={"summary-desc"} className={"w-[80%] text-lg"}>
                             I'm Michael, a sophomore at Northeastern University studying CS. I'm extremely
                             passionate about everything computer science, from full-stack web development to computer
                             vision and new fields like AI/Machine Learning. I'm excited to learn more and build my
@@ -772,34 +772,38 @@ export default function Home() {
                 </div>
             </div>
 
-            <div id={"projectsTitle"}
-                 className={"text-4xl sm:text-6xl text-white w-full mt-32 sm:mt-64 mb-6 sm:mb-8 flex justify-center items-center font-bold"}>
-                <p className={"rounded-xl w-fit py-4 sm:py-7 px-6 sm:px-12"} style={{
-                    backgroundColor: "var(--theme-gray)",
-                    boxShadow: "8px 8px 0px 0px var(--theme-black)",
-                    border: "2px solid var(--theme-dark-gray)"
-                }}>Projects</p>
-            </div>
-            <div id={"projectsContainer"} className={"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-[80%] mx-auto mb-32"}>
-                <Projects/>
+            <div className="bg-[#a9c4eb] pt-1 pb-24">
+                <div id={"projectsTitle"}
+                     className={"text-6xl text-white w-full mt-64 mb-8 flex justify-center items-center font-bold"}>
+                    <p className={"rounded-xl w-fit py-7 px-12"} style={{
+                        backgroundColor: "var(--theme-gray)",
+                        boxShadow: "8px 8px 0px 0px var(--theme-black)",
+                        border: "2px solid var(--theme-dark-gray)"
+                    }}>Projects</p>
+                </div>
+                <div id={"projectsContainer"} className={"grid grid-cols-2 lg:grid-cols-3 w-[80%] mx-auto mb-32"}>
+                    <Projects/>
+                </div>
             </div>
 
-            <div id={"experienceTitle"}
-                 className={"text-4xl sm:text-6xl text-white w-full mt-32 sm:mt-56 mb-6 sm:mb-8 flex justify-center items-center font-bold"}>
-                <p className={"rounded-xl w-fit py-4 sm:py-7 px-6 sm:px-12"} style={{
-                    backgroundColor: "var(--theme-gray)",
-                    boxShadow: "8px 8px 0px 0px var(--theme-black)",
-                    border: "2px solid var(--theme-dark-gray)"
-                }}>Experience</p>
-            </div>
-            <div id={"experienceContainer"} className={"grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-[80%] mx-auto mb-32"}>
-                <ExperienceGrid/>
+            <div className="bg-[#cb84d9] pt-1 pb-24">
+                <div id={"experienceTitle"}
+                     className={"text-6xl text-white w-full mt-56 mb-8 flex justify-center items-center font-bold"}>
+                    <p className={"rounded-xl w-fit py-7 px-12"} style={{
+                        backgroundColor: "var(--theme-gray)",
+                        boxShadow: "8px 8px 0px 0px var(--theme-black)",
+                        border: "2px solid var(--theme-dark-gray)"
+                    }}>Experience</p>
+                </div>
+                <div id={"experienceContainer"} className={"grid grid-cols-3 lg:grid-cols-4 w-[50%] mx-auto mb-32"}>
+                    <ExperienceGrid/>
+                </div>
             </div>
 
             <div id={"contactContainer"}
-                 className={"relative flex flex-col justify-start items-center w-full pt-12 sm:pt-20 pb-32 sm:pb-60 mt-32 sm:mt-52"}
+                 className={"relative flex flex-col justify-start items-center w-full pt-20 pb-60"}
                  style={{backgroundColor: "var(--theme-white)"}}>
-                <div id={"contact-title"} className={"text-3xl sm:text-5xl mb-8 sm:mb-12 p-4 sm:p-7 rounded-xl"} style={{
+                <div id={"contact-title"} className={"text-5xl mb-12 p-7 rounded-xl"} style={{
                     boxShadow: "8px 8px 0px 0px var(--theme-blue)",
                     border: "2px solid var(--theme-dark-gray)"
                 }}>Contact Info
@@ -825,7 +829,7 @@ export default function Home() {
 
             {/* Help pointer — bobbing ptr_mm.png with bubble, shown only on first 3 visits */}
             <div id="help_ptr" style={{
-                position:"fixed", bottom:"0px", right:"12px",
+                position:"fixed", bottom:"80px", right:"12px",
                 zIndex:21, display:"none",
                 flexDirection:"column", alignItems:"end",
                 pointerEvents:"none", gap:"6px"
@@ -886,7 +890,7 @@ export default function Home() {
                         <div>
                             <p className="help-step-title">Projects</p>
                             <p className="help-step-desc">
-                                <span className="hidden sm:inline">Hold</span><span className="inline sm:hidden">Tap</span>
+                                <span className="inline">Hold</span>
                                 {" "}on a project card (~0.5s) to expand details, tech stack &amp; links
                             </p>
                         </div>

@@ -254,6 +254,13 @@ export const technologies: TechnologyType[] = [
         icon: "/icons/fastapi.png"
     },
     {
+        id: "spring",
+        title: "Spring",
+        color: "#73b622",
+        description: "",
+        icon: "/icons/spring.png"
+    },
+    {
         id: "redis",
         title: "Redis",
         color: "#DC382D",
