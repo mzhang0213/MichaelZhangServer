@@ -2,6 +2,8 @@
 - fix see more icon, make it work
 - change arrow thickness
 - create github popup icon asw (and make the og github links arbituary)
+- currx curry not exist oh noes
+- add ibm iconp
 
 
 - (technology) icon combiner for parallel tech

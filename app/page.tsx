@@ -58,6 +58,7 @@ function FrontMenuOptions() {
 }
 
 let activeDetails = false;
+let helpModalActive = false;
 let holdTimer: ReturnType<typeof setTimeout> | null = null;
 let mobileToggleStates: {[key: string]: boolean} = {};
 
@@ -316,33 +317,88 @@ function Projects() {
     )
 }
 
-function Experiences() {
-    const mainFont = "var(--theme-white)"
+function ExperienceGrid() {
+    function expDetailsMenu(event: React.MouseEvent) {
+        if (window.innerWidth < 640) return;
+        if (activeDetails) return;
+
+        if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
+
+        const targetElement = getProjectParent(event.target as Element) as HTMLElement;
+        if (!targetElement) return;
+
+        targetElement.classList.add('card-held');
+
+        holdTimer = setTimeout(function() {
+            holdTimer = null;
+            if (!activeDetails) {
+                const currElement = targetElement;
+                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight;
+                activeDetails = true;
+                currElement.classList.add('see-more-active');
+                gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.display = "";
+                gebi("bg_dim").style.opacity = "1";
+                currElement.style.zIndex = "12";
+                gebi("details_background").style.zIndex = "11";
+                gebi("details_background").style.visibility = "visible";
+                gebi("details_background").style.opacity = "1";
+
+                gebi("details_menu_container").style.height = containerHeight + "px";
+                gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
+                gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
+                gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
+                gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
+                gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
+                gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
+                gebi("details_menu").style.marginBottom = (MARGINOFFSET + 10) + "px";
+                gebi("details_background").style.height = containerHeight + "px";
+
+                const id = currElement.id;
+                let exp: ExperienceType = experiences[0];
+                for (const e of experiences) { if (e.id === id) { exp = e; } }
+
+                linkRoot.render(
+                    <>
+                        <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{exp.title}</p>
+                        <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
+                    </>
+                );
+                detailsMenuRoot.render(<></>);
+                gebi("details_menu_desc").innerHTML = `<span style="color:gray;font-size:12px">${exp.role} &nbsp;|&nbsp; <i>${exp.duration}</i></span><br/><br/>${exp.description}`;
+            }
+        }, 500);
+    }
+
     return (
-        experiences.map(exp => {
-            return <div key={exp.id} id={exp.id} className={"flex p-2 mb-6 sm:mb-10 rounded-md"} style={{
-                boxShadow: "8px 8px 0px 0px var(--theme-purple)",
-                backgroundColor: "var(--theme-gray)",
-                border: "2px solid var(--theme-dark-gray)"
-            }}>
-                <img src={exp.icon} alt={exp.title} className={"h-[40px] sm:h-[50px] mt-[10px] ml-1 mr-1 rounded-lg"}/>
-                <div className={"flex flex-col w-full p-1 sm:p-2 mb-6 sm:mb-10 rounded-md"}>
-                    <div className={"flex flex-row w-full"}>
-                        <p className={"text-lg sm:text-2xl flex items-center w-fit"} style={{cursor: "pointer", color: mainFont}} onClick={() => {window.open(exp.link, "_blank")}}>
-                            {exp.title}
-                        </p>
+        experiences.map(exp => (
+            <div key={"exp-" + exp.id} id={exp.id} className={"project-container m-2 sm:m-4 flex flex-col rounded-2xl"}
+                 onMouseMove={() => { gebi("details_menu_title").innerHTML = ""; }}
+            >
+                <div className={"project-content h-full p-4 sm:p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => expDetailsMenu(e)}>
+                    <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] object-contain"}/>
+                </div>
+                <div className={"see-more-wrapper hidden sm:block"}>
+                    <svg className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
+                        <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                        <path className={"see-more-arrow-head"} d="M 73 70 L 79 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                        <path className={"see-more-arrow-head"} d="M 73 70 L 64 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                    </svg>
+                    <svg className={"see-more-arrow-left-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
+                        <path className={"see-more-arrow-path"} d="M 155 40 C 135 20, 95 10, 87 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                        <path className={"see-more-arrow-head"} d="M 87 70 L 81 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                        <path className={"see-more-arrow-head"} d="M 87 70 L 96 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                    </svg>
+                    <div className={"see-more-bubble"} onClick={(e) => { e.stopPropagation(); window.open(exp.link, "_blank"); }}>
+                        <span>See more!</span>
+                        <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
                     </div>
-                    <p className={"text-[10px] sm:text-[12px] w-[100%] flex items-center mb-1 text-gray-400"}>
-                        {exp.role}&nbsp;&nbsp;|&nbsp;&nbsp;<i>{exp.duration}</i>
-                    </p>
-                    <p className={"text-[14px] sm:text-[16px] w-[100%] flex items-center"} style={{color: mainFont}}>
-                        {exp.description}
-                    </p>
                 </div>
             </div>
-            //<img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[12px] h-[12px] ml-2"}/>
-        })
-    )
+        ))
+    );
 }
 
 type ContactLinksType = {
@@ -385,6 +441,9 @@ function ContactLinks() {
 }
 
 export default function Home() {
+    let currX:number=0;
+    let currY:number=0;
+
     useEffect(() => {
 
         linkRoot = createRoot(gebi("details_menu_link"));
@@ -484,36 +543,142 @@ export default function Home() {
         updateCardColumns();
         window.addEventListener('resize', updateCardColumns);
 
+        function updateExpColumns() {
+            const container = gebi("experienceContainer");
+            const cards = Array.from(container.children) as HTMLElement[];
+            if (!cards.length) return;
+            let currentTop = -1;
+            let currentRow: HTMLElement[] = [];
+            const rows: HTMLElement[][] = [];
+            for (const card of cards) {
+                if (card.offsetTop !== currentTop) {
+                    if (currentRow.length) rows.push(currentRow);
+                    currentRow = [card];
+                    currentTop = card.offsetTop;
+                } else {
+                    currentRow.push(card);
+                }
+            }
+            if (currentRow.length) rows.push(currentRow);
+            for (const row of rows) {
+                const n = row.length;
+                row.forEach((card, i) => {
+                    card.classList.remove('card-col-left', 'card-col-mid', 'card-col-right');
+                    if (n <= 1 || i === 0) card.classList.add('card-col-left');
+                    else if (i === n - 1) card.classList.add('card-col-right');
+                    else card.classList.add('card-col-mid');
+                });
+            }
+        }
+        updateExpColumns();
+        window.addEventListener('resize', updateExpColumns);
+
         document.addEventListener("mouseup", function() {
             if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
             for (const e of gebi("projectsContainer").children) {
                 (e as HTMLElement).classList.remove('card-held');
             }
+            for (const e of gebi("experienceContainer").children) {
+                (e as HTMLElement).classList.remove('card-held');
+            }
         });
 
-        gebi("bg_dim").addEventListener("click",function(){
-            if (activeDetails && window.innerWidth >= 640){ // dim only on comp
-                activeDetails=false;
-                gebi("details_background").style.height="0";
-                gebi("details_background").style.opacity="0";
-                gebi("bg_dim").style.animation=`fadeOutToNone ${detailsMenuWipe}ms ease-out`;
-                gebi("bg_dim").style.opacity="0";
-                setTimeout(function(){
-                    gebi("details_menu_title").innerHTML="";
-                    gebi("details_menu_desc").innerHTML="";
-                    for(const e of gebi("projectsContainer").children){
-                        gebi(e.id).style.zIndex="0";
-                        gebi(e.id).classList.remove('see-more-active');
-                        gebi(e.id).classList.remove('card-held');
+        const seeMoreDismissDuration = 970;
+        function closeDetails() {
+            if (activeDetails && window.innerWidth >= 640) {
+                activeDetails = false;
+                gebi("details_background").style.height = "0";
+                gebi("details_background").style.opacity = "0";
+                gebi("bg_dim").style.animation = `fadeOutToNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.opacity = "0";
+
+                // Remove see-more-active immediately to start the mirrored dismiss animation
+                for (const e of gebi("projectsContainer").children) {
+                    gebi(e.id).classList.remove('see-more-active');
+                    gebi(e.id).classList.remove('card-held');
+                }
+                for (const e of gebi("experienceContainer").children) {
+                    gebi(e.id).classList.remove('see-more-active');
+                    gebi(e.id).classList.remove('card-held');
+                }
+
+                // Clean up bg_dim and details panel after their fade
+                setTimeout(function() {
+                    gebi("details_menu_title").innerHTML = "";
+                    gebi("details_menu_desc").innerHTML = "";
+                    gebi("bg_dim").style.display = "none";
+                    gebi("details_background").style.zIndex = "0";
+                    gebi("details_background").style.left = (-gebi("details_background").offsetWidth - 10) + "px";
+                    gebi("details_background").style.visibility = "hidden";
+                }, detailsMenuWipe);
+
+                // Reset z-index after the mirrored see-more/github dismiss finishes
+                setTimeout(function() {
+                    for (const e of gebi("projectsContainer").children) {
+                        gebi(e.id).style.zIndex = "0";
                     }
-                    gebi("bg_dim").style.display="none";
-                    gebi("details_background").style.zIndex="0";
-                    gebi("details_background").style.left=(-gebi("details_background").offsetWidth-10)+"px";
-                    gebi("details_background").style.visibility="hidden";
-                },detailsMenuWipe);
+                    for (const e of gebi("experienceContainer").children) {
+                        gebi(e.id).style.zIndex = "0";
+                    }
+                }, seeMoreDismissDuration);
             }
-        })
-        return () => window.removeEventListener('resize', updateCardColumns);
+        }
+
+        gebi("bg_dim").addEventListener("click", function() {
+            if (helpModalActive) {
+                helpModalActive = false;
+                gebi("bg_dim").style.animation = `fadeOutToNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.opacity = "0";
+                setTimeout(function() {
+                    gebi("bg_dim").style.display = "none";
+                    gebi("help_modal").style.display = "none";
+                }, detailsMenuWipe);
+            } else {
+                closeDetails();
+            }
+        });
+
+        // Help system — track lifetime visits via localStorage
+        const visitKey = 'mz_help_visits';
+        const visitCount = parseInt(localStorage.getItem(visitKey) || '0') + 1;
+        localStorage.setItem(visitKey, visitCount.toString());
+        const showHelpPtr = visitCount <= 3;
+
+        let helpBtnVisible = false;
+
+        const helpScrollHandler = function() {
+            const pastOpener = window.scrollY > window.innerHeight * 0.5;
+            if (pastOpener && !helpBtnVisible) {
+                helpBtnVisible = true;
+                gebi("help_btn").style.opacity = "1";
+                gebi("help_btn").style.pointerEvents = "auto";
+                if (showHelpPtr) {
+                    gebi("help_ptr").style.display = "flex";
+                }
+            } else if (!pastOpener && helpBtnVisible) {
+                helpBtnVisible = false;
+                gebi("help_btn").style.opacity = "0";
+                gebi("help_btn").style.pointerEvents = "none";
+                gebi("help_ptr").style.display = "none";
+            }
+        };
+        window.addEventListener('scroll', helpScrollHandler);
+
+        gebi("help_btn").addEventListener('click', function(e) {
+            e.stopPropagation();
+            gebi("help_ptr").style.display = "none";
+            helpModalActive = true;
+            gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+            gebi("bg_dim").style.display = "";
+            gebi("bg_dim").style.opacity = "1";
+            gebi("help_modal").style.display = "flex";
+        });
+
+        return () => {
+            window.removeEventListener('resize', updateCardColumns);
+            window.removeEventListener('resize', updateExpColumns);
+            window.removeEventListener('scroll', helpScrollHandler);
+        };
     }, []);
     return (
         <>
@@ -627,8 +792,8 @@ export default function Home() {
                     border: "2px solid var(--theme-dark-gray)"
                 }}>Experience</p>
             </div>
-            <div id={"experienceContainer"} className={"flex flex-col mx-4 sm:mx-20 mb-32 sm:mb-64"}>
-                <Experiences/>
+            <div id={"experienceContainer"} className={"grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-[80%] mx-auto mb-32"}>
+                <ExperienceGrid/>
             </div>
 
             <div id={"contactContainer"}
@@ -641,6 +806,113 @@ export default function Home() {
                 </div>
                 <div id={"contact-items"}>
                     <ContactLinks/>
+                </div>
+            </div>
+
+            {/* Help button — fixed circle 'i', fades in after scrolling past opener */}
+            <div id="help_btn" style={{
+                position:"fixed", bottom:"24px", right:"24px",
+                width:"44px", height:"44px", borderRadius:"50%",
+                backgroundColor:"var(--theme-dark-gray)",
+                border:"2px solid var(--theme-blue)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                zIndex:20, cursor:"pointer",
+                opacity:0, pointerEvents:"none",
+                transition:"opacity 300ms ease-in-out",
+                color:"var(--theme-blue)", fontSize:"22px", fontWeight:"bold", fontStyle:"italic",
+                userSelect:"none", boxShadow:"3px 3px 0px 0px var(--theme-black)"
+            }}>i&nbsp;</div>
+
+            {/* Help pointer — bobbing ptr_mm.png with bubble, shown only on first 3 visits */}
+            <div id="help_ptr" style={{
+                position:"fixed", bottom:"0px", right:"12px",
+                zIndex:21, display:"none",
+                flexDirection:"column", alignItems:"end",
+                pointerEvents:"none", gap:"6px"
+            }}>
+                <div style={{
+                    backgroundColor:"var(--theme-white)", color:"var(--theme-black)",
+                    borderRadius:"10px", padding:"6px 10px",
+                    fontSize:"11px", fontWeight:"bold", whiteSpace:"nowrap",
+                    boxShadow:"3px 3px 0px 0px var(--theme-dark-gray)",
+                    border:"1.5px solid var(--theme-dark-gray)", position:"relative"
+                }}>
+                    need some help?
+                    {/* bubble tail border */}
+                    <div style={{
+                        position:"absolute", bottom:"-7px", left:"50%",
+                        transform:"translateX(200%)",
+                        width:0, height:0,
+                        borderLeft:"6px solid transparent", borderRight:"6px solid transparent",
+                        borderTop:"7px solid var(--theme-dark-gray)"
+                    }}/>
+                    {/* bubble tail fill */}
+                    <div style={{
+                        position:"absolute", bottom:"-5px", left:"50%",
+                        transform:"translateX(245%)",
+                        width:0, height:0,
+                        borderLeft:"5px solid transparent", borderRight:"5px solid transparent",
+                        borderTop:"6px solid var(--theme-white)"
+                    }}/>
+                </div>
+                <img id="help_ptr_img" src="/icons/ptr_mm.png" alt="pointer" style={{
+                    width:"40px", height:"40px", objectFit:"contain", marginRight:"10px",marginTop:"15px"
+                }}/>
+            </div>
+
+            {/* Help modal — centered card above bg_dim, pointer-events none on wrapper */}
+            <div id="help_modal" style={{
+                position:"fixed", top:0, left:0,
+                width:"100vw", height:"100vh",
+                zIndex:15, display:"none",
+                alignItems:"center", justifyContent:"center",
+                pointerEvents:"none"
+            }}>
+                <div id="help_modal_inner" onClick={(e) => e.stopPropagation()} style={{
+                    backgroundColor:"var(--theme-dark-gray)",
+                    border:"2px solid var(--theme-gray)",
+                    borderRadius:"16px", padding:"24px",
+                    maxWidth:"340px", width:"90vw",
+                    boxShadow:"8px 8px 0px 0px var(--theme-black)",
+                    pointerEvents:"auto"
+                }}>
+                    <p style={{color:"var(--theme-white)", fontSize:"20px", fontWeight:"bold", textAlign:"center", marginBottom:"20px"}}>
+                        Navigation Help
+                    </p>
+
+                    <div className="help-step">
+                        <div className="help-step-icon" style={{backgroundColor:"var(--theme-blue)"}}>
+                        </div>
+                        <div>
+                            <p className="help-step-title">Projects</p>
+                            <p className="help-step-desc">
+                                <span className="hidden sm:inline">Hold</span><span className="inline sm:hidden">Tap</span>
+                                {" "}on a project card (~0.5s) to expand details, tech stack &amp; links
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="help-step">
+                        <div className="help-step-icon" style={{backgroundColor:"var(--theme-purple)"}}>
+                        </div>
+                        <div>
+                            <p className="help-step-title">Experience</p>
+                            <p className="help-step-desc">Click experience titles to open their links</p>
+                        </div>
+                    </div>
+
+                    <div className="help-step">
+                        <div className="help-step-icon" style={{backgroundColor:"var(--theme-gray)"}}>
+                        </div>
+                        <div>
+                            <p className="help-step-title">Close</p>
+                            <p className="help-step-desc">Click the dark overlay to close any open panel — try it now!</p>
+                        </div>
+                    </div>
+
+                    <p style={{color:"#666", fontSize:"11px", textAlign:"center", marginTop:"16px"}}>
+                        click outside to close
+                    </p>
                 </div>
             </div>
 
