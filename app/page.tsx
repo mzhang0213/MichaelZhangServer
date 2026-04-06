@@ -10,6 +10,7 @@ import Footer from "@/app/resources/Footer";
 import {projects} from "@/app/projects";
 import {technologies} from "@/app/technologies";
 import {experiences} from "@/app/experiences";
+import {reset} from "next/dist/lib/picocolors";
 
 
 const summaryContainerWidth = 85;
@@ -114,6 +115,16 @@ function getProjectParent(e: Element | null) {
         return e;
     }
 }
+function resetChildrenZIndex(){
+    for (const e of gebi("projectsContainer").children) {
+        gebi(e.id).style.zIndex = "0";
+    }
+    for (const e of gebi("experienceContainer").children) {
+        gebi(e.id).style.zIndex = "0";
+    }
+}
+
+
 function Technology({techEntries}: { techEntries: TechnologyEntryType[] }) {
     const technology:TechnologyType[] = [];
 
@@ -218,10 +229,13 @@ function Projects() {
                 const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
                 if (!activeDetails) {
                     activeDetails = true;
+                    currElement.classList.add('see-more-active');
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
                     gebi("bg_dim").style.display = "";
                     gebi("bg_dim").style.opacity = "1";
+                    resetChildrenZIndex()
                     currElement.style.zIndex = "12";
+                    console.log(currElement.style.zIndex)
                     gebi("details_background").style.zIndex = "11";
                     gebi("details_background").style.visibility = "visible";
                     gebi("details_background").style.opacity = "1";
@@ -341,6 +355,7 @@ function ExperienceGrid() {
                 gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
                 gebi("bg_dim").style.display = "";
                 gebi("bg_dim").style.opacity = "1";
+                resetChildrenZIndex()
                 currElement.style.zIndex = "12";
                 gebi("details_background").style.zIndex = "11";
                 gebi("details_background").style.visibility = "visible";
@@ -571,7 +586,6 @@ export default function Home() {
         updateExpColumns();
         window.addEventListener('resize', updateExpColumns);
 
-        const seeMoreDismissDuration = 970;
         function closeDetails() {
             if (activeDetails && window.innerWidth >= 640) {
                 activeDetails = false;
@@ -590,7 +604,6 @@ export default function Home() {
                     gebi(e.id).classList.remove('card-held');
                 }
 
-                // Clean up bg_dim and details panel after their fade
                 setTimeout(function() {
                     gebi("details_menu_title").innerHTML = "";
                     gebi("details_menu_desc").innerHTML = "";
@@ -599,16 +612,6 @@ export default function Home() {
                     gebi("details_background").style.left = (-gebi("details_background").offsetWidth - 10) + "px";
                     gebi("details_background").style.visibility = "hidden";
                 }, detailsMenuWipe);
-
-                // Reset z-index after the mirrored see-more/github dismiss finishes
-                setTimeout(function() {
-                    for (const e of gebi("projectsContainer").children) {
-                        gebi(e.id).style.zIndex = "0";
-                    }
-                    for (const e of gebi("experienceContainer").children) {
-                        gebi(e.id).style.zIndex = "0";
-                    }
-                }, seeMoreDismissDuration);
             }
         }
 
