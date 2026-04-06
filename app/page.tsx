@@ -17,6 +17,7 @@ const summaryContainerWidth = 85;
 const smallTransition = 500;
 const largeTransition = 1000;
 const detailsMenuWipe = 300;
+const BLOOM_WIDTH = 420;
 
 /*
 function SampleCat() {
@@ -235,23 +236,29 @@ function Projects() {
                     gebi("bg_dim").style.opacity = "1";
                     resetChildrenZIndex()
                     currElement.style.zIndex = "12";
-                    console.log(currElement.style.zIndex)
                     gebi("details_background").style.zIndex = "11";
                     gebi("details_background").style.visibility = "visible";
                     gebi("details_background").style.opacity = "1";
+                    gebi("details_background").style.transform = "scale(1)";
 
-                    gebi("details_menu_container").style.height = containerHeight + "px";
+                    const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
+                    const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2;
+                    const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
+                    const cardCenterY = currElement.offsetTop + currElement.offsetHeight / 2;
+                    const bloomLeft = cardCenterX - bloomWidth / 2;
+                    const bloomTop = cardCenterY - bloomHeight / 2;
 
-                    gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
-                    gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
-                    gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
-                    gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
-                    gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px"; //this is important
-                    gebi("details_menu").style.marginBottom = (MARGINOFFSET + 10) + "px";
-                    gebi("details_background").style.height = containerHeight + "px";
+                    gebi("details_background").style.left = bloomLeft + "px";
+                    gebi("details_background").style.top = bloomTop + "px";
+                    gebi("details_background").style.width = bloomWidth + "px";
+                    gebi("details_background").style.height = bloomHeight + "px";
+                    gebi("details_menu_container").style.height = bloomHeight + "px";
+                    gebi("details_menu").style.width = (bloomWidth - MARGINOFFSET * 2) + "px";
+                    gebi("details_menu_desc").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu_link").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu_top").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
+                    gebi("details_menu").style.marginBottom = "0px";
 
                     const id = currElement.id;
                     let proj: ProjectType = projects[0];
@@ -339,62 +346,69 @@ function Projects() {
 function ExperienceGrid() {
     function expDetailsMenu(event: React.MouseEvent) {
         if (window.innerWidth < 640) return;
-        if (activeDetails) return;
 
-        const targetElement = getProjectParent(event.target as Element) as HTMLElement;
-        if (!targetElement) return;
+        let lastHovered: Element | null = event.target as Element;
+        lastHovered = getProjectParent(lastHovered);
+        setTimeout(function(){
+            const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
+            if (lastHovered===currHovered){
+                const currElement = currHovered as HTMLElement;
+                const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
+                if (!activeDetails) {
+                    activeDetails = true;
+                    currElement.classList.add('see-more-active');
+                    gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+                    gebi("bg_dim").style.display = "";
+                    gebi("bg_dim").style.opacity = "1";
+                    resetChildrenZIndex()
+                    // currElement.style.zIndex = "12";
+                    gebi("details_background").style.zIndex = "11";
+                    gebi("details_background").style.visibility = "visible";
+                    gebi("details_background").style.opacity = "1";
+                    gebi("details_background").style.transform = "scale(1)";
 
-        targetElement.classList.add('card-held');
+                    const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
+                    const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2;
+                    const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
+                    const cardCenterY = currElement.offsetTop + currElement.offsetHeight / 2;
+                    const bloomLeft = cardCenterX - bloomWidth / 2;
+                    const bloomTop = cardCenterY - bloomHeight / 2;
 
-        setTimeout(function() {
-            if (!activeDetails) {
-                const currElement = targetElement;
-                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight;
-                activeDetails = true;
-                currElement.classList.add('see-more-active');
-                gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
-                gebi("bg_dim").style.display = "";
-                gebi("bg_dim").style.opacity = "1";
-                resetChildrenZIndex()
-                currElement.style.zIndex = "12";
-                gebi("details_background").style.zIndex = "11";
-                gebi("details_background").style.visibility = "visible";
-                gebi("details_background").style.opacity = "1";
+                    gebi("details_background").style.left = bloomLeft + "px";
+                    gebi("details_background").style.top = bloomTop + "px";
+                    gebi("details_background").style.width = bloomWidth + "px";
+                    gebi("details_background").style.height = bloomHeight + "px";
+                    gebi("details_menu_container").style.height = bloomHeight + "px";
+                    gebi("details_menu").style.width = (bloomWidth - MARGINOFFSET * 2) + "px";
+                    gebi("details_menu_desc").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu_link").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu_top").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
+                    gebi("details_menu").style.marginBottom = "0px";
 
-                gebi("details_menu_container").style.height = containerHeight + "px";
-                gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
-                gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
-                gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
-                gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
-                gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
-                gebi("details_menu").style.marginBottom = (MARGINOFFSET + 10) + "px";
-                gebi("details_background").style.height = containerHeight + "px";
+                    const id = currElement.id;
+                    let exp: ExperienceType = experiences[0];
+                    for (const e of experiences) { if (e.id === id) { exp = e; } }
 
-                const id = currElement.id;
-                let exp: ExperienceType = experiences[0];
-                for (const e of experiences) { if (e.id === id) { exp = e; } }
-
-                linkRoot.render(
-                    <>
-                        <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{exp.title}</p>
-                        <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
-                    </>
-                );
-                detailsMenuRoot.render(<></>);
-                gebi("details_menu_desc").innerHTML = `<span style="color:gray;font-size:12px">${exp.role} &nbsp;|&nbsp; <i>${exp.duration}</i></span><br/><br/>${exp.description}`;
+                    linkRoot.render(
+                        <>
+                            <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{exp.title}</p>
+                            <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
+                        </>
+                    );
+                    detailsMenuRoot.render(<></>);
+                    gebi("details_menu_desc").innerHTML = `<span style="color:gray;font-size:12px">${exp.role} &nbsp;|&nbsp; <i>${exp.duration}</i></span><br/><br/>${exp.description}`;
+                }
             }
-        }, 500);
+        }, 500)
     }
 
     return (
         experiences.map(exp => (
-            <div key={"exp-" + exp.id} id={exp.id} className={"project-container m-4 flex flex-col rounded-2xl"}
+            <div key={"exp-" + exp.id} id={exp.id} className={"project-container experience-container m-4 flex flex-col rounded-2xl"}
                  onMouseMove={() => { gebi("details_menu_title").innerHTML = ""; }}
             >
-                <div className={"h-full p-6 rounded-2xl flex justify-center items-center bg-[var(--theme-dark-blue)]"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => expDetailsMenu(e)}>
+                <div className={"project-content h-full p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={expDetailsMenu}>
                     <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] object-contain rounded-sm"}/>
                 </div>
                 <div className={"see-more-wrapper block"}>
@@ -589,7 +603,7 @@ export default function Home() {
         function closeDetails() {
             if (activeDetails && window.innerWidth >= 640) {
                 activeDetails = false;
-                gebi("details_background").style.height = "0";
+                gebi("details_background").style.transform = "scale(0)";
                 gebi("details_background").style.opacity = "0";
                 gebi("bg_dim").style.animation = `fadeOutToNone ${detailsMenuWipe}ms ease-out`;
                 gebi("bg_dim").style.opacity = "0";
@@ -684,8 +698,9 @@ export default function Home() {
                 backgroundColor: "var(--theme-black)",
                 zIndex: "11",
                 overflow:"hidden",
-                //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
-                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms, opacity ${detailsMenuWipe}ms ease-in-out`
+                transformOrigin: "center center",
+                transform: "scale(0)",
+                transition: `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`
             }}>
                 <div id={"details_menu_container"} className={"w-full flex justify-center items-end"}>
                     <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{

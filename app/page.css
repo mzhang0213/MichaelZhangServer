@@ -31,6 +31,10 @@
     background-color: var(--theme-blue);
     position: relative;
 }
+.experience-container{
+    background-color: var(--theme-purple);
+    position: relative;
+}
 .project-content{
     background-color: var(--theme-dark-blue);
     color:var(--theme-white);
