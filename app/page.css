@@ -39,7 +39,7 @@
     display: block;
     transition: transform 100ms ease-out;
 }
-.project-container.card-held .project-content {
+.project-container:hover .project-content {
     transition: transform 500ms ease-out;
     transform: translateX(-6px) translateY(-6px);
 }

@@ -57,9 +57,11 @@ function FrontMenuOptions() {
     )
 }
 
+let currX = 0;
+let currY = 0;
 let activeDetails = false;
 let helpModalActive = false;
-let holdTimer: ReturnType<typeof setTimeout> | null = null;
+let directionLeft = false;
 let mobileToggleStates: {[key: string]: boolean} = {};
 
 export type TechnologyType = {
@@ -202,58 +204,66 @@ function Projects() {
     }
 
     function detailsMenu(event: React.MouseEvent) {
-        if (window.innerWidth < 640) return;
-        if (activeDetails) return;
+        if (window.innerWidth < 640) return; // skip on mobile
 
-        if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
+        let lastHovered: Element | null = event.target as Element;
+        lastHovered = getProjectParent(lastHovered);
+        console.log(lastHovered)
+        setTimeout(function(){
+            const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
+            console.log(currHovered)
+            if (lastHovered===currHovered){
+                //start animation for highlighted element
+                const currElement = currHovered as HTMLElement;
+                const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
+                if (!activeDetails) {
+                    activeDetails = true;
+                    gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+                    gebi("bg_dim").style.display = "";
+                    gebi("bg_dim").style.opacity = "1";
+                    currElement.style.zIndex = "12";
+                    gebi("details_background").style.zIndex = "11";
+                    gebi("details_background").style.visibility = "visible";
+                    gebi("details_background").style.opacity = "1";
 
-        const targetElement = getProjectParent(event.target as Element) as HTMLElement;
-        if (!targetElement) return;
+                    gebi("details_menu_container").style.height = containerHeight + "px";
 
-        targetElement.classList.add('card-held');
+                    gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
+                    gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
+                    gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
+                    gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
+                    gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
+                    gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
+                    gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
+                    gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px"; //this is important
+                    gebi("details_menu").style.marginBottom = (MARGINOFFSET + 10) + "px";
+                    gebi("details_background").style.height = containerHeight + "px";
 
-        holdTimer = setTimeout(function() {
-            holdTimer = null;
-            if (!activeDetails) {
-                const currElement = targetElement;
-                const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight;
-                activeDetails = true;
-                currElement.classList.add('see-more-active');
-                gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
-                gebi("bg_dim").style.display = "";
-                gebi("bg_dim").style.opacity = "1";
-                currElement.style.zIndex = "12";
-                gebi("details_background").style.zIndex = "11";
-                gebi("details_background").style.visibility = "visible";
-                gebi("details_background").style.opacity = "1";
-
-                gebi("details_menu_container").style.height = containerHeight + "px";
-                gebi("details_background").style.left = (currElement.offsetLeft - MARGINOFFSET) + "px";
-                gebi("details_background").style.top = (currElement.offsetTop - MARGINOFFSET) + "px";
-                gebi("details_background").style.width = (currElement.offsetWidth + MARGINOFFSET * 2) + "px";
-                gebi("details_menu").style.width = (currElement.offsetWidth) + "px";
-                gebi("details_menu_desc").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu_link").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu_top").style.width = (currElement.offsetWidth - 16) + "px";
-                gebi("details_menu").style.height = (MINDETAILSHEIGHT) + "px";
-                gebi("details_menu").style.marginBottom = (MARGINOFFSET+10) + "px";
-                gebi("details_background").style.height = containerHeight + "px";
-
-                const id = currElement.id;
-                let proj: ProjectType = projects[0];
-                for (const p of projects) { if (p.id === id) { proj = p; } }
-
-                linkRoot.render(
-                    <>
-                        {proj.link.link.includes("github.com") && <img src={"/icons/github.png"} alt={"github"} className={"w-[12px] h-[12px] mr-1"} style={{filter:"invert(1)"}}/>}
-                        <p onClick={() => { window.open(proj.link.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{proj.link.title}</p>
-                        <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
-                    </>
-                );
-                detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
-                gebi("details_menu_desc").innerHTML = proj.description;
+                    const id = currElement.id;
+                    let proj: ProjectType = projects[0];
+                    for (const p of projects) {
+                        if (p.id === id) {
+                            proj = p
+                        }
+                    }
+                    linkRoot.render(
+                      <>
+                          {proj.link.link.includes("github.com") &&
+                            <img src={"/icons/github.png"} alt={"github"} className={"w-[12px] h-[12px] mr-1"}
+                                 style={{filter: "invert(1)"}}/>}
+                          <p onClick={() => {
+                              window.open(proj.link.link, "_blank");
+                          }} className={"project-link text-white"}
+                             style={{cursor: "pointer", textDecoration: "underline"}}>{proj.link.title}</p>
+                          <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"}
+                               style={{filter: "invert(1)"}}/>
+                      </>
+                    );
+                    detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
+                    gebi("details_menu_desc").innerHTML = proj.description;
+                }
             }
-        }, 500);
+        }, 500)
     }
 
     return (
@@ -261,13 +271,8 @@ function Projects() {
             return (
                 //min-h-[200px] sm:min-h-[250px]
                 <div key={"project-"+project.id} id={project.id} className={"project-container m-4 flex flex-col rounded-2xl"}
-                     onClick={(e) => handleMobileClick(e, project)}
-                     onMouseMove={function(e){
-                         gebi("details_menu_title").innerHTML="";
-                         gebi("details_menu_desc").innerHTML=project.description;
-                     }}
-                >
-                    <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseDown={(e) => detailsMenu(e)}>
+                     onClick={(e) => handleMobileClick(e, project)}>
+                    <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
                         <div className={"project-topDiv flex justify-center items-center"}>
                             <img alt={project.title} src={project.icon} className={"project-icon w-[50px] h-[50px]"}/>
                             <div className={"project-title ml-2 mr-6 text-2xl text-center"}>{project.title}</div>
@@ -322,15 +327,12 @@ function ExperienceGrid() {
         if (window.innerWidth < 640) return;
         if (activeDetails) return;
 
-        if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
-
         const targetElement = getProjectParent(event.target as Element) as HTMLElement;
         if (!targetElement) return;
 
         targetElement.classList.add('card-held');
 
-        holdTimer = setTimeout(function() {
-            holdTimer = null;
+        setTimeout(function() {
             if (!activeDetails) {
                 const currElement = targetElement;
                 const containerHeight = MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight;
@@ -441,11 +443,7 @@ function ContactLinks() {
 }
 
 export default function Home() {
-    let currX:number=0;
-    let currY:number=0;
-
     useEffect(() => {
-
         linkRoot = createRoot(gebi("details_menu_link"));
         detailsMenuRoot = createRoot(gebi("details_menu_top"));
 
@@ -573,16 +571,6 @@ export default function Home() {
         updateExpColumns();
         window.addEventListener('resize', updateExpColumns);
 
-        document.addEventListener("mouseup", function() {
-            if (holdTimer !== null) { clearTimeout(holdTimer); holdTimer = null; }
-            for (const e of gebi("projectsContainer").children) {
-                (e as HTMLElement).classList.remove('card-held');
-            }
-            for (const e of gebi("experienceContainer").children) {
-                (e as HTMLElement).classList.remove('card-held');
-            }
-        });
-
         const seeMoreDismissDuration = 970;
         function closeDetails() {
             if (activeDetails && window.innerWidth >= 640) {
@@ -694,7 +682,7 @@ export default function Home() {
                 zIndex: "11",
                 overflow:"hidden",
                 //left ${detailsMenuWipe}ms ease-in-out, right ${detailsMenuWipe}ms ease-in-out,
-                transition: `height ${detailsMenuWipe}ms ease-in-out, opacity ${detailsMenuWipe}ms ease-in-out`
+                transition: `height ${detailsMenuWipe}ms ease-in-out ${detailsMenuWipe / 2}ms, opacity ${detailsMenuWipe}ms ease-in-out`
             }}>
                 <div id={"details_menu_container"} className={"w-full flex justify-center items-end"}>
                     <div id={"details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
