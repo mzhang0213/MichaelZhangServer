@@ -75,26 +75,39 @@
 .card-col-right .see-more-arrow-left-svg { display: block; }
 .card-col-right .see-more-arrow-right-svg { display: none; }
 
+/* Unfurl animation timing — mirrored: hide_delay = total - show_delay - duration */
+:root {
+    --unfurl-total: 800ms;
+    --arrow-path-dur: 200ms;
+    --arrow-path-delay: 0ms;
+    --arrow-head-dur: 200ms;
+    --arrow-head-delay: 200ms;
+    --bubble-dur: 300ms;
+    --bubble-delay: 200ms;
+    --github-dur: 300ms;
+    --github-delay: 500ms;
+}
+
 .see-more-arrow-path {
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
-    transition: stroke-dashoffset 380ms ease-in 590ms;
+    transition: stroke-dashoffset var(--arrow-path-dur) ease-in calc(var(--unfurl-total) - var(--arrow-path-delay) - var(--arrow-path-dur));
 }
 
 .project-container.see-more-active .see-more-arrow-path {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 380ms ease-out 0ms;
+    transition: stroke-dashoffset var(--arrow-path-dur) ease-out var(--arrow-path-delay);
 }
 
 .see-more-arrow-head {
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
-    transition: stroke-dashoffset 180ms ease-in 440ms;
+    transition: stroke-dashoffset var(--arrow-head-dur) ease-in calc(var(--unfurl-total) - var(--arrow-head-delay) - var(--arrow-head-dur));
 }
 
 .project-container.see-more-active .see-more-arrow-head {
     stroke-dashoffset: 0;
-    transition: stroke-dashoffset 180ms ease-out 350ms;
+    transition: stroke-dashoffset var(--arrow-head-dur) ease-out var(--arrow-head-delay);
 }
 
 .see-more-bubble {
@@ -120,14 +133,14 @@
     transform: scale(0.65);
     transform-origin: center center;
     pointer-events: none;
-    transition: opacity 240ms ease-in 310ms, transform 240ms ease-in 310ms;
+    transition: opacity var(--bubble-dur) ease-in calc(var(--unfurl-total) - var(--bubble-delay) - var(--bubble-dur)), transform var(--bubble-dur) ease-in calc(var(--unfurl-total) - var(--bubble-delay) - var(--bubble-dur));
 }
 
 .project-container.see-more-active .see-more-bubble {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
-    transition: opacity 240ms ease-out 420ms, transform 240ms ease-out 420ms;
+    transition: opacity var(--bubble-dur) ease-out var(--bubble-delay), transform var(--bubble-dur) ease-out var(--bubble-delay);
 }
 
 /* GitHub bubble — opposite side, appears after see-more bubble */
@@ -148,14 +161,14 @@
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 250ms ease-in 0ms, transform 250ms ease-in 0ms;
+    transition: opacity var(--github-dur) ease-in calc(var(--unfurl-total) - var(--github-delay) - var(--github-dur)), transform var(--github-dur) ease-in calc(var(--unfurl-total) - var(--github-delay) - var(--github-dur));
 }
 
 .project-container.see-more-active .github-bubble {
     opacity: 1;
     transform: translateY(75px) translateX(-100px);
     pointer-events: auto;
-    transition: opacity 250ms ease-out 720ms, transform 250ms ease-out 720ms;
+    transition: opacity var(--github-dur) ease-out var(--github-delay), transform var(--github-dur) ease-out var(--github-delay);
 }
 
 /* Left column: github bubble flips to right side (same side as see-more), higher up */
