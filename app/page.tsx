@@ -352,13 +352,10 @@ function ExperienceGrid() {
                 const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
                 if (!activeExpDetails) {
                     activeExpDetails = true;
-                    currElement.classList.add('see-more-active');
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
                     gebi("bg_dim").style.display = "";
                     gebi("bg_dim").style.opacity = "1";
                     resetChildrenZIndex()
-                    const wrapper = currElement.querySelector('.see-more-wrapper') as HTMLElement;
-                    if (wrapper) wrapper.style.zIndex = "12";
                     const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
                     const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2;
                     const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
@@ -391,19 +388,37 @@ function ExperienceGrid() {
                     gebi("exp_details_menu").style.height = (MINDETAILSHEIGHT) + "px";
                     gebi("exp_details_menu").style.marginBottom = "0px";
 
-                    if (wrapper) {
-                        if (currElement.classList.contains('card-col-right')) {
-                            wrapper.style.left = 'auto';
-                            wrapper.style.right = ((currElement.offsetLeft + currElement.offsetWidth) - bloomLeft) + 'px';
-                        } else {
-                            wrapper.style.left = ((bloomLeft + bloomWidth) - currElement.offsetLeft) + 'px';
-                            wrapper.style.right = 'auto';
-                        }
-                    }
-
                     const id = currElement.id;
                     let exp: ExperienceType = experiences[0];
                     for (const e of experiences) { if (e.id === id) { exp = e; } }
+
+                    // Position & activate standalone see-more wrapper
+                    const smw = gebi("exp_see_more_wrapper");
+                    const smArrowR = gebi("exp_see_more_arrow_right");
+                    const smArrowL = gebi("exp_see_more_arrow_left");
+                    const isRightCol = currElement.classList.contains('card-col-right');
+                    const smWidth = 160;
+                    smw.style.visibility = "visible";
+                    smw.style.top = (bloomTop + bloomHeight * 0.5 - 43) + "px";
+                    if (isRightCol) {
+                        smw.style.left = (bloomLeft - smWidth) + "px";
+                        smArrowR.style.display = "none";
+                        smArrowL.style.display = "block";
+                    } else {
+                        smw.style.left = (bloomLeft + bloomWidth) + "px";
+                        smArrowR.style.display = "block";
+                        smArrowL.style.display = "none";
+                    }
+                    const smBubble = gebi("exp_see_more_bubble");
+                    if (isRightCol) {
+                        smBubble.style.left = "50px";
+                        smBubble.style.right = "auto";
+                    } else {
+                        smBubble.style.left = "auto";
+                        smBubble.style.right = "50px";
+                    }
+                    smBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.link, "_blank"); };
+                    smw.classList.add('see-more-active');
 
                     expLinkRoot.render(
                         <>
@@ -425,22 +440,6 @@ function ExperienceGrid() {
             >
                 <div className={"project-content h-full p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={expDetailsMenu}>
                     <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] object-contain rounded-sm"}/>
-                </div>
-                <div className={"see-more-wrapper block"}>
-                    <svg className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
-                        <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
-                        <path className={"see-more-arrow-head"} d="M 73 70 L 79 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
-                        <path className={"see-more-arrow-head"} d="M 73 70 L 64 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
-                    </svg>
-                    <svg className={"see-more-arrow-left-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0}}>
-                        <path className={"see-more-arrow-path"} d="M 155 40 C 135 20, 95 10, 87 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
-                        <path className={"see-more-arrow-head"} d="M 87 70 L 81 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
-                        <path className={"see-more-arrow-head"} d="M 87 70 L 96 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
-                    </svg>
-                    <div className={"see-more-bubble"} onClick={(e) => { e.stopPropagation(); window.open(exp.link, "_blank"); }}>
-                        <span>See more!</span>
-                        <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
-                    </div>
                 </div>
             </div>
         ))
@@ -471,6 +470,12 @@ const contactLinks: ContactLinksType[] = [
         title: "GitHub",
         link: "https://github.com/mzhang0213",
         icon: "/icons/github.png"
+    },
+    {
+        id: "resume",
+        title: "Resume",
+        link: "https://resume.mzhang.dev",
+        icon: "/icons/document.png"
     }
 
 ]
@@ -649,11 +654,8 @@ export default function Home() {
                 activeExpDetails = false;
                 gebi("exp_details_background").style.transform = "scale(0)";
                 gebi("exp_details_background").style.opacity = "0";
-                // Reset see-more wrapper positions back to CSS defaults
-                for (const e of gebi("experienceContainer").children) {
-                    const w = (e as HTMLElement).querySelector('.see-more-wrapper') as HTMLElement;
-                    if (w) { w.style.left = ''; w.style.right = ''; w.style.zIndex = ''; }
-                }
+                // Trigger dismiss animations on standalone see-more wrapper
+                gebi("exp_see_more_wrapper").classList.remove('see-more-active');
                 setTimeout(function() {
                     gebi("exp_details_menu_title").innerHTML = "";
                     gebi("exp_details_menu_desc").innerHTML = "";
@@ -782,6 +784,22 @@ export default function Home() {
                             <p id={"exp_details_menu_desc"} className={"text-white text-sm"}></p>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div id={"exp_see_more_wrapper"} className={"see-more-wrapper"} style={{top:0, left:0, transform:"none", visibility:"hidden"}}>
+                <svg id={"exp_see_more_arrow_right"} className={"see-more-arrow-right-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0,display:"block"}}>
+                    <path className={"see-more-arrow-path"} d="M 5 40 C 25 20, 65 10, 73 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                    <path className={"see-more-arrow-head"} d="M 73 70 L 79 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                    <path className={"see-more-arrow-head"} d="M 73 70 L 64 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                </svg>
+                <svg id={"exp_see_more_arrow_left"} className={"see-more-arrow-left-svg"} width="160" height="80" overflow="visible" style={{position:"absolute",top:0,left:0,display:"none"}}>
+                    <path className={"see-more-arrow-path"} d="M 155 40 C 135 20, 95 10, 87 65" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" pathLength="100"/>
+                    <path className={"see-more-arrow-head"} d="M 87 70 L 81 56" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                    <path className={"see-more-arrow-head"} d="M 87 70 L 96 59" stroke="rgba(255,255,255,0.8)" strokeWidth="2" fill="none" strokeLinecap="round" pathLength="100"/>
+                </svg>
+                <div id={"exp_see_more_bubble"} className={"see-more-bubble"}>
+                    <span>See more!</span>
+                    <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
                 </div>
             </div>
             <div id={"openerContainer"} className={"animate"}>

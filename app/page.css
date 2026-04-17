@@ -98,7 +98,8 @@
     transition: stroke-dashoffset var(--arrow-path-dur) ease-in calc(var(--unfurl-total) - var(--arrow-path-delay) - var(--arrow-path-dur));
 }
 
-.project-container.see-more-active .see-more-arrow-path {
+.project-container.see-more-active .see-more-arrow-path,
+.see-more-wrapper.see-more-active .see-more-arrow-path {
     stroke-dashoffset: 0;
     transition: stroke-dashoffset var(--arrow-path-dur) ease-out var(--arrow-path-delay);
 }
@@ -109,7 +110,8 @@
     transition: stroke-dashoffset var(--arrow-head-dur) ease-in calc(var(--unfurl-total) - var(--arrow-head-delay) - var(--arrow-head-dur));
 }
 
-.project-container.see-more-active .see-more-arrow-head {
+.project-container.see-more-active .see-more-arrow-head,
+.see-more-wrapper.see-more-active .see-more-arrow-head {
     stroke-dashoffset: 0;
     transition: stroke-dashoffset var(--arrow-head-dur) ease-out var(--arrow-head-delay);
 }
@@ -140,7 +142,8 @@
     transition: opacity var(--bubble-dur) ease-in calc(var(--unfurl-total) - var(--bubble-delay) - var(--bubble-dur)), transform var(--bubble-dur) ease-in calc(var(--unfurl-total) - var(--bubble-delay) - var(--bubble-dur));
 }
 
-.project-container.see-more-active .see-more-bubble {
+.project-container.see-more-active .see-more-bubble,
+.see-more-wrapper.see-more-active .see-more-bubble {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
