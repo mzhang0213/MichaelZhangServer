@@ -98,6 +98,7 @@ export type ExperienceType = {
     duration: string,
     description: string,
     icon: string,
+    bgIcon: string,
     type: "work" | "volunteer"
     link: string //will just be applied on the title
 }
@@ -374,7 +375,7 @@ function ExperienceGrid() {
                     db.style.zIndex = "11";
                     db.style.visibility = "visible";
                     db.style.opacity = "0";
-                    gebi("exp_details_menu_container").style.height = bloomHeight + "px";
+                    // gebi("exp_details_menu_container").style.height = bloomHeight + "px";
 
                     requestAnimationFrame(() => {
                         db.style.transition = `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`;
@@ -385,8 +386,7 @@ function ExperienceGrid() {
                     gebi("exp_details_menu_desc").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
                     gebi("exp_details_menu_link").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
                     gebi("exp_details_menu_top").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
-                    gebi("exp_details_menu").style.height = (MINDETAILSHEIGHT) + "px";
-                    gebi("exp_details_menu").style.marginBottom = "0px";
+                    // gebi("exp_details_menu").style.height = (MINDETAILSHEIGHT) + "px";
 
                     const id = currElement.id;
                     let exp: ExperienceType = experiences[0];
@@ -422,11 +422,19 @@ function ExperienceGrid() {
 
                     expLinkRoot.render(
                         <>
-                            <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{exp.title}</p>
+                            <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{"Website link!"}</p>
                             <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
                         </>
                     );
-                    expDetailsMenuRoot.render(<></>);
+                    expDetailsMenuRoot.render(
+                    <>
+                        <div className="asdf pointer-events-none absolute inset-0 z-0 overflow-hidden">
+                            <div
+                              className={`h-[150%] w-[150%] -translate-x-10 -translate-y-10 -skew-y-12 bg-[url('${exp.bgIcon}')] bg-[length:60px_60px] bg-repeat opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]`}>
+                            </div>
+                        </div>
+                    </>
+                    );
                     gebi("exp_details_menu_desc").innerHTML = `<span style="color:gray;font-size:12px">${exp.role} &nbsp;|&nbsp; <i>${exp.duration}</i></span><br/><br/>${exp.description}`;
                 }
             }
@@ -434,9 +442,11 @@ function ExperienceGrid() {
     }
 
     return (
-        experiences.map(exp => (
-            <div key={"exp-" + exp.id} id={exp.id} className={"project-container experience-container m-4 flex flex-col rounded-2xl"}
-                 onMouseMove={() => { gebi("exp_details_menu_title").innerHTML = ""; }}
+      experiences.map(exp => (
+        <div key={"exp-" + exp.id} id={exp.id}
+             className={"project-container experience-container m-4 flex flex-col rounded-2xl"}
+             onMouseMove={() => {
+                 gebi("exp_details_menu_title").innerHTML = ""; }}
             >
                 <div className={"project-content h-full p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={expDetailsMenu}>
                     <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] object-contain rounded-sm"}/>
@@ -761,19 +771,16 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div id={"exp_details_background"} className={"absolute top-0 w-0 h-0 p-2 rounded-xl opacity-0"} style={{
+            <div id={"exp_details_background"} className={"absolute top-0 w-0 h-0 p-6 rounded-xl opacity-0"} style={{
                 visibility: "hidden",
                 backgroundColor: "var(--theme-black)",
                 zIndex: "11",
                 overflow:"hidden",
                 transition: `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`
             }}>
-                <div id={"exp_details_menu_container"} className={"w-full flex justify-center items-end"}>
-                    <div id={"exp_details_menu"} className={"relative flex-col top-0 w-0 p-2 rounded-2xl"} style={{
-                        display:"flex",
-                        position:"relative",
-                        backgroundColor: "var(--theme-dark-gray)",
-                        overflow: "hidden",
+                <div id={"exp_details_menu_container"} className={"w-full h-full flex justify-center items-end"}>
+                    <div id={"exp_details_menu"} className={"relative flex flex-col top-0 w-0 h-full p-2 rounded-2xl bg-(--theme-dark-gray)"} style={{
+                        overflow: "hidden"
                     }}>
                         <div id={"exp_details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
                         <div id={"exp_details_menu_top"}

@@ -17,6 +17,14 @@ new tech
 fixup the other sites
 
 
+fix details menu div margin paddings
+
 
 minor:
 - the arrow into the see more info undo animation is not the same process
+
+
+rn:
+-fix the div margins and shit experience section
+-bug: the seemore items are hovering on the project item
+-bug: the project item hover doesn't show og desc anymore

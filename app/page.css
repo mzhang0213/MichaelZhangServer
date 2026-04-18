@@ -40,7 +40,6 @@
     color:var(--theme-white);
     cursor: pointer;
     outline-offset: 4px;
-    display: block;
     transition: transform 100ms ease-out;
 }
 .project-container:hover .project-content {
