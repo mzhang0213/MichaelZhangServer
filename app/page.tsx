@@ -10,7 +10,6 @@ import Footer from "@/app/resources/Footer";
 import {projects} from "@/app/projects";
 import {technologies} from "@/app/technologies";
 import {experiences} from "@/app/experiences";
-import {reset} from "next/dist/lib/picocolors";
 
 
 const summaryContainerWidth = 85;
@@ -104,9 +103,10 @@ export type ExperienceType = {
 }
 
 
-let detailsMenuRoot: Root;
+let detailsMenuRootTop: Root;
 let linkRoot: Root;
 let expDetailsMenuRoot: Root;
+let expDetailsMenuRootTop: Root;
 let expLinkRoot: Root;
 function getProjectParent(e: Element | null) {
     if (e !== null) {
@@ -277,7 +277,7 @@ function Projects() {
                                style={{filter: "invert(1)"}}/>
                       </>
                     );
-                    detailsMenuRoot.render(<Technology techEntries={proj.technology}/>);
+                    detailsMenuRootTop.render(<Technology techEntries={proj.technology}/>);
                     gebi("details_menu_desc").innerHTML = proj.description;
                 }
             }
@@ -426,15 +426,9 @@ function ExperienceGrid() {
                             <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
                         </>
                     );
-                    expDetailsMenuRoot.render(
-                    <>
-                        <div className="asdf pointer-events-none absolute inset-0 z-0 overflow-hidden">
-                            <div
-                              className={`h-[150%] w-[150%] -translate-x-10 -translate-y-10 -skew-y-12 bg-[url('${exp.bgIcon}')] bg-[length:60px_60px] bg-repeat opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]`}>
-                            </div>
-                        </div>
-                    </>
-                    );
+
+                    gebi("expTiledBgImage").setAttribute("href", exp.bgIcon);
+
                     gebi("exp_details_menu_desc").innerHTML = `<span style="color:gray;font-size:12px">${exp.role} &nbsp;|&nbsp; <i>${exp.duration}</i></span><br/><br/>${exp.description}`;
                 }
             }
@@ -504,9 +498,10 @@ function ContactLinks() {
 export default function Home() {
     useEffect(() => {
         linkRoot = createRoot(gebi("details_menu_link"));
-        detailsMenuRoot = createRoot(gebi("details_menu_top"));
+        detailsMenuRootTop = createRoot(gebi("details_menu_top"));
         expLinkRoot = createRoot(gebi("exp_details_menu_link"));
-        expDetailsMenuRoot = createRoot(gebi("exp_details_menu_top"));
+        expDetailsMenuRoot = createRoot(gebi("exp_details_menu"));
+        expDetailsMenuRootTop = createRoot(gebi("exp_details_menu_top"));
 
         document.body.style.overflowX = "hidden";
 
@@ -782,13 +777,28 @@ export default function Home() {
                     <div id={"exp_details_menu"} className={"relative flex flex-col top-0 w-0 h-full p-2 rounded-2xl bg-(--theme-dark-gray)"} style={{
                         overflow: "hidden"
                     }}>
-                        <div id={"exp_details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
-                        <div id={"exp_details_menu_top"}
-                             className={"w-full h-fit mb-auto py-3 flex flex-wrap justify-center items-center"}></div>
-                        <div id={"exp_details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"} style={{scrollbarWidth:"thin"}}>
-                            <p id={"exp_details_menu_title"} className={"text-white text-xl"}
-                               style={{fontWeight: "bold"}}></p>
-                            <p id={"exp_details_menu_desc"} className={"text-white text-sm"}></p>
+                        <div className={"z-10"}>
+                            <div id={"exp_details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
+                            <div id={"exp_details_menu_top"}
+                                 className={"w-full h-fit mb-auto py-3 flex flex-wrap justify-center items-center"}></div>
+                            <div id={"exp_details_menu_bottom"} className={"w-full h-[60%] overflow-x-hidden overflow-y-auto"} style={{scrollbarWidth:"thin"}}>
+                                <p id={"exp_details_menu_title"} className={"text-white text-xl"}
+                                   style={{fontWeight: "bold"}}></p>
+                                <p id={"exp_details_menu_desc"} className={"text-white text-sm"}></p>
+                            </div>
+                        </div>
+                        <div className="asdf pointer-events-none absolute inset-0 z-0 overflow-hidden">
+                            <svg
+                              id={"expTiledBg"}
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-full w-full opacity-80`}>
+                                <defs>
+                                    <pattern id="expTiledBgPattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse" patternTransform="rotate(-15)">
+                                        <image id="expTiledBgImage" x="10" y="10" width="75" height="75"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="100%" height="100%" fill="url(#expTiledBgPattern)"/>
+                            </svg>
                         </div>
                     </div>
                 </div>
