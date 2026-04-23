@@ -10,6 +10,7 @@ import Footer from "@/app/resources/Footer";
 import {projects} from "@/app/projects";
 import {technologies} from "@/app/technologies";
 import {experiences} from "@/app/experiences";
+import {Image} from "next/dist/client/image-component";
 
 
 const summaryContainerWidth = 85;
@@ -572,12 +573,16 @@ export default function Home() {
 
         //initial animation
         const showSmall = () => {
-            gebi("messageSmall").style.top="15%";
+            gebi("messageSmall").style.top="13%";
             gebi("messageSmall").style.opacity="1";
         }
         const showLarge = () =>{
-            gebi("messageLarge").style.top="40%";
+            gebi("messageLarge").style.top="45%";
             gebi("messageLarge").style.opacity="1";
+        }
+        const showMZImg = () =>{
+            gebi("messageImg").style.top="9.5%";
+            gebi("messageImg").style.opacity="1";
         }
         const showMenu = () =>{
             gebi("openerMenu").style.right="0";
@@ -585,10 +590,13 @@ export default function Home() {
         setTimeout(()=>{
             showSmall(); //0 ms from start
             setTimeout(()=>{
-                showLarge(); //750 ms from start
+                showLarge(); //250 ms from start
+                setTimeout(()=>{
+                    showMZImg(); //900 ms from start
+                },300)
             },250)
             setTimeout(()=>{
-                showMenu(); //750+1000 ms from start
+                showMenu(); //750 ms from start
             },750)
         },0);
 
@@ -858,7 +866,7 @@ export default function Home() {
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>
                     <div id={"messageSmall"}
-                         className={"object absolute flex justify-center items-center left-[15%] w-fit px-7 py-7 top-0 opacity-0"}
+                         className={"object absolute flex justify-center items-center left-[11%] w-fit px-7 py-7 top-0 opacity-0"}
                          style={{
                              top: 0, // 0 >> 15%
                              transition: `opacity ${smallTransition}ms ease-in-out, top ${smallTransition}ms ease-in-out`
@@ -866,12 +874,20 @@ export default function Home() {
                         <p className={"text-base"} style={{textAlign: "center"}}>Welcome to my portfolio!</p>
                     </div>
                     <div id={"messageLarge"}
-                         className={"object absolute flex justify-center items-center left-[27%] w-[50%] h-[35%] text-4xl px-12 py-12 opacity-0"}
+                         className={"object absolute flex justify-center items-center left-[20%] w-[50%] h-[35%] text-4xl px-12 py-12 opacity-0"}
                          style={{
                              top: 0, //0 >> 40%
                              transition: `opacity ${largeTransition}ms ease-in-out, top ${largeTransition}ms ease-in-out`
                          }}>
                         <p>Michael Zhang</p>
+                    </div>
+                    <div id={"messageImg"}
+                         className={"object absolute flex justify-center items-center right-[14%] text-4xl p-3 opacity-0"}
+                         style={{
+                             top: 0, //0 >> 40%
+                             transition: `opacity ${largeTransition}ms ease-in-out, top ${largeTransition}ms ease-in-out`
+                         }}>
+                        <img src={"/icons/headshot.jpg"} className={"relative object-cover object-center w-[10vw] h-[20vh]"} alt={"pfp"}/>
                     </div>
                 </div>
                 <div id={"openerMenuBg"}>
@@ -961,7 +977,7 @@ export default function Home() {
                 display:"flex", alignItems:"center", justifyContent:"center",
                 zIndex:20, cursor:"pointer",
                 opacity:0, pointerEvents:"none",
-                transition:"opacity 300ms ease-in-out",
+                transition:"opacity 300ms ease-in-out, transform 150ms ease-out, box-shadow 150ms ease-out",
                 color:"var(--theme-blue)", fontSize:"22px", fontWeight:"bold", fontStyle:"italic",
                 userSelect:"none", boxShadow:"3px 3px 0px 0px var(--theme-black)"
             }}>i&nbsp;</div>

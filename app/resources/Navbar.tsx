@@ -323,14 +323,18 @@ export default function Navbar({customItems, alwaysShow}: { customItems: NavData
     return (
         <>
             <nav id={"navBar"}>
-                <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)}
-                     className={"navbar-chip flex-shrink-0"}
-                     style={{"--accent": "var(--theme-purple)"} as React.CSSProperties}>
-                    <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-6 mr-2"}/>
-                    <span className={"tracking-tight"}>Michael Zhang</span>
-                </div>
-                <div id={"navItemContainer"} className={"w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm hidden md:block"}>
-                    <RenderNavbar items={customItems?customItems:defaultItems} />
+                <div id={"navItemContainer"} className={"absolute top-0 right-0 flex flex-col justify-start items-end text-sm mt-4 mr-6 p-5 rounded-md"}>
+                    <div className={"nav-logo-group"}>
+                        <div id={"navItemLogo"}
+                             className={"navbar-chip flex-shrink-0"}
+                             style={{"--accent": "var(--theme-purple)"} as React.CSSProperties}>
+                            <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-6 mr-2"}/>
+                            <span className={"tracking-tight"}>Michael Zhang</span>
+                        </div>
+                        <div className={"nav-logo-dropdown"}>
+                            <RenderNavbar items={customItems?customItems:defaultItems} />
+                        </div>
+                    </div>
                 </div>
                 <div className={"block md:hidden"}>
                     <button

@@ -244,6 +244,11 @@
     animation: helpBob 1.1s ease-in-out infinite;
 }
 
+#help_btn:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--theme-black) !important;
+}
+
 .help-step {
     display: flex;
     align-items: flex-start;

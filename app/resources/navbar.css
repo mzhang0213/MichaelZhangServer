@@ -2,11 +2,9 @@
 
 
 #navBar {
-    @apply flex items-center justify-between flex-wrap w-screen fixed px-4;
+    @apply flex fixed w-screen px-4;
     transition: background-color 200ms ease-in-out, opacity 200ms ease-in-out;
     opacity: 0;
-    background-color: var(--theme-black);
-    height: 60px;
     z-index: 2;
     top: 0;
     left: 0;
@@ -23,8 +21,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 36px;
-    padding: 0 14px;
+    min-height: 36px;
+    flex-shrink: 0;
+    padding: 8px 14px;
     color: var(--theme-white);
     background-color: var(--theme-dark-gray);
     border: 2px solid var(--theme-dark-gray);
@@ -59,6 +58,34 @@
     padding: 0;
 }
 
+/* Logo → hover reveals main nav items below */
+#navItemContainer {
+    transition: background-color 150ms ease-out;
+}
+
+#navItemContainer:hover {
+    background-color: var(--theme-black);
+}
+
+.nav-logo-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.nav-logo-dropdown {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#navItemContainer:hover .nav-logo-dropdown,
+.nav-logo-group:hover .nav-logo-dropdown {
+    display: flex;
+}
+
 /* Dropdown group wrapper — not a chip; positions the panel */
 .navbar-group {
     position: relative;
@@ -85,14 +112,14 @@
 .navbar-content {
     display: none;
     position: absolute;
-    top: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    right: calc(100%);
+    transform: translateY(-50%);
     min-width: 200px;
     background-color: var(--theme-dark-gray);
     border: 2px solid var(--theme-dark-gray);
     border-radius: 8px;
-    box-shadow: 4px 4px 0 0 var(--accent, var(--theme-blue));
+    box-shadow: none;
     padding: 6px;
     z-index: 10;
 }
