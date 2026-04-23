@@ -10,17 +10,19 @@ export const experiences: ExperienceType[] = [
         icon: "/icons/ibm.png",
         bgIcon: "/icons/ibm_dark.png",
         type:"work",
+        bgColor:"#0066ff",
         link:"https://ibm.com"
     },
     {
         id: "oasis",
-        title: "Oasis at Northeastern",
+        title: "Oasis",
         role: "Software Development Project Mentor",
         duration:"Since Jan 2026",
         description:"I am mentoring two groups of students during this semester with their first full-stack projects, giving them weekly advice in our Hack Sessions at all stages of the project development phase - from ideation to development, testing/debugging and production. I help cover all areas of the tech stack, from backend Node.js and FastAPI with Python to React, HTML, Tailwind CSS, and using JavaScript to manage the DOM, as well as databases using PostgreSQL and some ML frameworks - TensorFlow and scikit-learn.",
         icon: "/icons/oasis.jpg",
-        bgIcon: "",
+        bgIcon: "/icons/oasis_white.png",
         type:"work",
+        bgColor:"#336666",
         link:"https://oasisneu.com"
     },
     {
@@ -41,7 +43,7 @@ export const experiences: ExperienceType[] = [
         duration:"Since 2023",
         description:"Taught students in 1-on-1 settings for all levels of Java as well as block-code.",
         icon: "/icons/ktbyte.png",
-        bgIcon: "",
+        bgIcon: "/icons/ktbyte.png",
         type:"work",
         link:"https://ktbyte.com"
     },
@@ -52,7 +54,8 @@ export const experiences: ExperienceType[] = [
         duration:"2021 - 2025",
         description:"At Kumon, I worked 1-on-1 with students of all levels of math and reading skill. I also helped manage the Kumon database and trained new workers, creating materials and giving them a walkthrough of the role for them to work most effectively.",
         icon: "/icons/kumon.png",
-        bgIcon: "",
+        bgIcon: "/icons/kumon_dark.png",
+        bgColor:"#373737",
         type:"work",
         link:"https://kumon.com"
     },

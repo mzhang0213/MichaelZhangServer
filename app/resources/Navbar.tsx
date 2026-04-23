@@ -7,6 +7,7 @@ type NavItemData = {
     id: string;
     className?: string;
     style?: React.CSSProperties;
+    accent?: string;
 }
 
 //ItemType no longer uses children; to improve consistency with DropdownType
@@ -29,7 +30,7 @@ export type ItemType = NavItemData & {
  * @param decoration OPTIONAL Apply underline to the item
 // *hard-coded* @param weight OPTIONAL Apply bold to the item
  */
-function Item({id, page, redirect, style, itemTitle, onMobileClick}: ItemType & {onMobileClick?: () => void}) {
+function Item({id, page, redirect, style, itemTitle, accent, onMobileClick}: ItemType & {onMobileClick?: () => void}) {
     const newTab = redirect ? "_blank" : "_self";
     const clickFunct = () => {
         const openPage = page.charAt(0)=="/" ?
@@ -39,19 +40,20 @@ function Item({id, page, redirect, style, itemTitle, onMobileClick}: ItemType & 
         if (onMobileClick) onMobileClick();
     }
 
-    id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
-    const buttonStyles = page == usePathname() ? {textDecoration: "underline"} : {}
+    id="nav-"+id;
+    const isActive = page === usePathname();
+    const mergedStyle = {
+        ...style,
+        ...(accent ? {"--accent": accent} : {})
+    } as React.CSSProperties;
     return (
         <button
             id={id}
             onClick={clickFunct}
-            className={"navbar-item relative h-full inline-block text-gray-200"}
-            style={style}
+            className={`navbar-item${isActive ? " nav-active" : ""}`}
+            style={mergedStyle}
         >
-            <div
-                style={buttonStyles}
-                className={"px-3"} //adding padding to element under a hover button listener is good to extend the hover range (ie width) of the upper (parent) element w/o needing to do some bs calculations of 100% + 2px yk
-            >
+            <div className={"nav-label"}>
                 {itemTitle}
             </div>
         </button>
@@ -76,15 +78,18 @@ type DropdownListType = ItemType & {
  */
 // think of this as just code for the container
 // we dont gaf about whats inside, but MUST be item
-function DropdownList({id, page, redirect, itemTitle, children, onMobileClick}: DropdownListType & {onMobileClick?: () => void}) {
+function DropdownList({id, page, redirect, itemTitle, children, accent, onMobileClick}: DropdownListType & {onMobileClick?: () => void}) {
     const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
     const newTab = redirect ? "_blank" : "_self";
     const clickFunct = page.charAt(0)=="/" ? (()=>(window.open(window.location.origin+page, newTab))) : (()=>(window.open(page, newTab)))
-    id="nav-"+id; //!! distinguish cuz yeah !!, maybe malpractice
+    id="nav-"+id;
+    const isActive = page === usePathname();
+    const groupStyle = (accent ? {"--accent": accent} : {}) as React.CSSProperties;
     return (
-        <div id={id} className={"navbar-group navbar-item relative h-full inline-block text-gray-200"}>
-            <button id={id+"Button"} onClick={clickFunct} className={"navbar-group-button w-full h-full px-3"}>
-                {itemTitle}
+        <div id={id} className={"navbar-group"} style={groupStyle}>
+            <button id={id+"Button"} onClick={clickFunct}
+                    className={`navbar-item${isActive ? " nav-active" : ""}`}>
+                <span className={"nav-label"}>{itemTitle}</span>
             </button>
             <div id={id+"Content"} className={"navbar-content"}>
                 {children}
@@ -134,6 +139,7 @@ export const defaultItems: NavDataType[] = [
         id: "homeButton",
         page:"/",
         itemTitle: "hi!",
+        accent: "var(--theme-blue)",
     },
     {
         isList: false,
@@ -141,6 +147,7 @@ export const defaultItems: NavDataType[] = [
         id: "experience",
         page:"/experience",
         itemTitle: "its me...",
+        accent: "var(--theme-yellow)",
     },
     {
         isList: false,
@@ -148,6 +155,7 @@ export const defaultItems: NavDataType[] = [
         id: "aboutMe",
         page:"/about",
         itemTitle: "michael!!",
+        accent: "var(--theme-red)",
     },
     {
         isList: true,
@@ -179,7 +187,8 @@ export const defaultItems: NavDataType[] = [
         ],
         id: "projects",
         page: "/projects",
-        itemTitle: "and i like to build"
+        itemTitle: "and i like to build",
+        accent: "var(--theme-green)",
     },
     /*
     {
@@ -215,6 +224,7 @@ function RenderItems({items, onMobileClick}: {items: ItemType[], onMobileClick?:
                         page={item.page}
                         redirect={item.redirect}
                         style={item.style}
+                        accent={item.accent}
                         decoration={item.decoration}
                         weight={item.weight}
                         itemTitle={item.itemTitle}
@@ -243,6 +253,7 @@ function RenderNavbar({ items, onMobileClick }: { items: NavDataType[], onMobile
                         page={navItem.page}
                         redirect={navItem.redirect}
                         style={navItem.style}
+                        accent={navItem.accent}
                         decoration={navItem.decoration}
                         weight={navItem.weight}
                         itemTitle={navItem.itemTitle}
@@ -260,6 +271,7 @@ function RenderNavbar({ items, onMobileClick }: { items: NavDataType[], onMobile
                         page={navItem.page}
                         redirect={navItem.redirect}
                         style={navItem.style}
+                        accent={navItem.accent}
                         decoration={navItem.decoration}
                         weight={navItem.weight}
                         itemTitle={navItem.itemTitle}
@@ -311,9 +323,11 @@ export default function Navbar({customItems, alwaysShow}: { customItems: NavData
     return (
         <>
             <nav id={"navBar"}>
-                <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)} className={"h-full flex items-center flex-shrink-0 text-white mr-6 cursor-pointer"}>
-                    <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-8 mr-2"}/>
-                    <button className={"text-xl tracking-tight"}>Michael Zhang</button>
+                <div id={"navItemLogo"} onClick={() => window.open(window.location.origin)}
+                     className={"navbar-chip flex-shrink-0"}
+                     style={{"--accent": "var(--theme-purple)"} as React.CSSProperties}>
+                    <img id={"logo"} src={"./icons/chillpanda.png"} alt={"navlogo"} className={"h-6 mr-2"}/>
+                    <span className={"tracking-tight"}>Michael Zhang</span>
                 </div>
                 <div id={"navItemContainer"} className={"w-full h-full block flex-grow md:flex md:items-center md:justify-end md:w-auto text-sm hidden md:block"}>
                     <RenderNavbar items={customItems?customItems:defaultItems} />
@@ -322,7 +336,8 @@ export default function Navbar({customItems, alwaysShow}: { customItems: NavData
                     <button
                         id={"menuToggle"}
                         onClick={toggleMobileMenu}
-                        className={"flex items-center px-3 py-2 rounded text-gray-300 border-gray-300 transition-all"}
+                        className={"navbar-chip"}
+                        style={{"--accent": "var(--theme-yellow)"} as React.CSSProperties}
                     >
                         <div className="relative w-5 h-4">
                             <span
@@ -364,7 +379,7 @@ export default function Navbar({customItems, alwaysShow}: { customItems: NavData
                             </svg>
                         </button>
                     </div>
-                    <div className="px-0 py-4">
+                    <div className="mobile-nav px-4 py-4">
                         <RenderNavbar
                             items={customItems ? customItems : defaultItems}
                             onMobileClick={closeMobileMenu}

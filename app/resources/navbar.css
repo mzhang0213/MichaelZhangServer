@@ -3,45 +3,141 @@
 
 #navBar {
     @apply flex items-center justify-between flex-wrap w-screen fixed px-4;
-    transition: background-color,opacity 200ms ease-in-out;
-    opacity:0;
-    background-color:var(--theme-black);
-    height:45px; /* 0 >> 45 px*/
-    z-index:2;
+    transition: background-color 200ms ease-in-out, opacity 200ms ease-in-out;
+    opacity: 0;
+    background-color: var(--theme-black);
+    height: 60px;
+    z-index: 2;
     top: 0;
     left: 0;
 }
 
-.navbar-item:hover{
-    background-color:#383838;
-    cursor:pointer;
+#navItemContainer {
+    gap: 14px;
 }
 
-.navbar-content{
-    display:none;
-    position:absolute;
-    justify-content:center;
-    background-color:rgb(36, 36, 36);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 2;
-    left: 50%;
-    right: auto;
-    text-align: center;
-    transform: translate(-50%, 0);
-}
-
-.navbar-content *{
-    @apply w-full py-2 px-2;
-    text-decoration:none;
-    font-size:10px;
+/* Shared chip styling — nav items, logo, hamburger */
+.navbar-chip,
+.navbar-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 14px;
+    color: var(--theme-white);
+    background-color: var(--theme-dark-gray);
+    border: 2px solid var(--theme-dark-gray);
+    border-radius: 6px;
+    box-shadow: 3px 3px 0 0 var(--accent, var(--theme-blue));
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
     white-space: nowrap;
+    user-select: none;
+}
+
+.navbar-chip:hover,
+.navbar-item:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--accent, var(--theme-blue));
+}
+
+.navbar-item.nav-active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--accent, var(--theme-blue));
+    background-color: color-mix(in srgb, var(--accent, var(--theme-blue)) 22%, var(--theme-dark-gray));
+}
+
+.navbar-item.nav-active .nav-label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.navbar-item > .nav-label {
+    padding: 0;
+}
+
+/* Dropdown group wrapper — not a chip; positions the panel */
+.navbar-group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* The dropdown's trigger is itself a .navbar-item chip, so no extra button styling here */
+.navbar-group .navbar-group-button {
+    background: transparent;
+    color: inherit;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    width: 100%;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dropdown panel */
+.navbar-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 200px;
+    background-color: var(--theme-dark-gray);
+    border: 2px solid var(--theme-dark-gray);
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 0 var(--accent, var(--theme-blue));
+    padding: 6px;
+    z-index: 10;
 }
 
 .navbar-group:hover .navbar-content {
-    display:block;
+    display: block;
 }
 
-.navbar-group button:hover {
-    background-color:#383838;
-    cursor:pointer;
+/* Items inside the panel: flat rows (override chip styling) */
+.navbar-content .navbar-item {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    border-radius: 4px;
+    height: auto;
+    padding: 0;
+    width: 100%;
+    display: block;
 }
+.navbar-content .navbar-item:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: color-mix(in srgb, var(--accent, var(--theme-blue)) 30%, transparent);
+}
+.navbar-content .navbar-item > .nav-label {
+    padding: 8px 14px;
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Mobile menu: stack chips vertically, full-width */
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.mobile-nav .navbar-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+.mobile-nav .navbar-item {
+    width: 100%;
+    justify-content: flex-start;
+}
+
