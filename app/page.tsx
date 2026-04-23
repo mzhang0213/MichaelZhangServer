@@ -108,6 +108,8 @@ export type ExperienceType = {
     id: string,
     title: string,
     role: string,
+    location: string,
+    locationLink?: string,
     duration: string,
     description: string,
     icon: string,
@@ -373,7 +375,7 @@ function ExperienceGrid() {
                     gebi("bg_dim").style.opacity = "1";
                     resetChildrenZIndex()
                     const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
-                    const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2;
+                    const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2 + 40;
                     const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
                     const cardCenterY = currElement.offsetTop + currElement.offsetHeight / 2;
                     const bloomLeft = cardCenterX - bloomWidth / 2;
@@ -433,6 +435,18 @@ function ExperienceGrid() {
                     smBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.link, "_blank"); };
                     smw.classList.add('see-more-active');
 
+                    const locBubble = gebi("exp_location_bubble");
+                    if (exp.locationLink) {
+                        locBubble.style.visibility = "visible";
+                        locBubble.style.top = (bloomTop + 32) + "px";
+                        locBubble.style.left = (bloomLeft + bloomWidth + 32) + "px";
+                        locBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.locationLink, "_blank"); };
+                        locBubble.classList.add('see-more-active');
+                    } else {
+                        locBubble.classList.remove('see-more-active');
+                        locBubble.style.visibility = "hidden";
+                    }
+
                     expLinkRoot.render(
                         <>
                             <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{"Website link!"}</p>
@@ -443,7 +457,7 @@ function ExperienceGrid() {
                     gebi("exp_details_menu_title1").innerHTML = exp.role;
                     fitOneLine(gebi("exp_details_menu_title1"), 20);
                     gebi("exp_details_menu_title2").innerHTML=`<div>@ ${exp.title}</div>`
-                    gebi("exp_details_menu_subtitle").innerHTML=`<div>${exp.duration}</div>`
+                    gebi("exp_details_menu_subtitle").innerHTML=`<span style="font-style:italic">${exp.duration}</span><span>${exp.location}</span>`
 
                     gebi("expTiledBgImage").setAttribute("href", exp.bgIcon);
                     gebi("exp_details_menu").style.backgroundColor = exp.bgColor || "var(--theme-dark-gray)";
@@ -679,6 +693,7 @@ export default function Home() {
                 gebi("exp_details_background").style.opacity = "0";
                 // Trigger dismiss animations on standalone see-more wrapper
                 gebi("exp_see_more_wrapper").classList.remove('see-more-active');
+                gebi("exp_location_bubble").classList.remove('see-more-active');
                 setTimeout(function() {
                     gebi("exp_details_menu_title1").innerHTML = "";
                     gebi("exp_details_menu_title2").innerHTML = "";
@@ -686,6 +701,7 @@ export default function Home() {
                     gebi("exp_details_background").style.zIndex = "0";
                     gebi("exp_details_background").style.left = (-gebi("exp_details_background").offsetWidth - 10) + "px";
                     gebi("exp_details_background").style.visibility = "hidden";
+                    gebi("exp_location_bubble").style.visibility = "hidden";
                 }, detailsMenuWipe);
             }
 
@@ -790,7 +806,7 @@ export default function Home() {
                 transition: `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`
             }}>
                 <div id={"exp_details_menu_container"} className={"w-full h-full flex justify-center items-end"}>
-                    <div id={"exp_details_menu"} className={"relative flex flex-col top-0 h-full p-2 rounded-2xl"}>
+                    <div id={"exp_details_menu"} className={"relative flex flex-col top-0 h-full pt-2 rounded-2xl"}>
                         <div className="asdf pointer-events-none absolute inset-0 z-0 opacity-50 overflow-hidden">
                             <svg
                               id={"expTiledBg"}
@@ -804,7 +820,7 @@ export default function Home() {
                                 <rect width="100%" height="100%" fill="url(#expTiledBgPattern)"/>
                             </svg>
                         </div>
-                        <div className={"z-10 w-full h-full"}>
+                        <div className={"z-10 w-full h-full flex flex-col"}>
                             <div id={"exp_details_menu_link"} className={"w-full h-fit flex justify-center items-center"}></div>
                             <div id={"exp_details_menu_top"}
                                  className={"w-full h-fit mb-auto py-3 flex flex-wrap justify-center items-center"}></div>
@@ -812,10 +828,9 @@ export default function Home() {
                                    style={{fontWeight: "bold"}}></p>
                                 <p id={"exp_details_menu_title2"} className={"text-white text-right text-lg pr-8 flex flex-row justify-end"}
                                    style={{fontWeight: "bold"}}></p>
-                                <p id={"exp_details_menu_subtitle"} className={"text-white text-sm pl-2 pt-2 flex flex-row items-end"}
-                                   style={{fontStyle: "italic"}}></p>
-                            <div id={"exp_details_menu_bottom"} className={"w-full flex-1 min-h-0 mt-5 "} style={{scrollbarWidth:"thin"}}>
-                                <p id={"exp_details_menu_desc"} className={"text-white text-sm h-full overflow-x-hidden overflow-y-auto"}></p>
+                                <p id={"exp_details_menu_subtitle"} className={"text-white text-sm px-2 pt-2 flex flex-row items-end justify-between"}></p>
+                            <div id={"exp_details_menu_bottom"} className={"w-full flex-1 min-h-0 mt-5 pl-2"} style={{scrollbarWidth:"thin"}}>
+                                <p id={"exp_details_menu_desc"} className={"text-white text-sm w-full h-full overflow-x-hidden overflow-y-auto"}></p>
                             </div>
                         </div>
                     </div>
@@ -836,6 +851,9 @@ export default function Home() {
                     <span>See more!</span>
                     <img src={"/icons/redirect.png"} alt={"redirect"} style={{width:"8px",height:"8px"}}/>
                 </div>
+            </div>
+            <div id={"exp_location_bubble"} className={"exp-location-bubble"} style={{visibility:"hidden"}}>
+                <span>📍</span>
             </div>
             <div id={"openerContainer"} className={"animate"}>
                 <div id={"openerMain"}>

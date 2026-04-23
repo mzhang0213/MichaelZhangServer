@@ -122,7 +122,7 @@ export const projects: ProjectType[] = [
         title: "TransitShark",
         description:"", //PUT GRADIENT HERE ON FIRST PLACE
         detailsDefault:"",
-        icon:"/icons/serviceeye.png",
+        icon:"/icons/chillpanda.png",
         technology: [
             {
                 id:"spring",
@@ -329,7 +329,7 @@ export const projects: ProjectType[] = [
         id: "finalog",
         title: "Finalog",
         description: "",
-        icon:"/icons/serviceeye.png",
+        icon:"/icons/chillpanda.png",
         technology: [
             {
                 id: "python",
