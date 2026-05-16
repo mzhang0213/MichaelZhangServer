@@ -2,50 +2,51 @@ import {ProjectType} from "@/app/page";
 
 export const projects: ProjectType[] = [
     {
-        id: "bonsai",
-        title: "BonsAi",
-        description: "A mobile fitness app bringing a comfortable experience to fitness tracking and calorie logging, all in one. Designed to be user-friendly for everyone, from first time lifters needing direction to experienced lifters wanting to level up their gains. Flagship progress tracking features powered by AI implemented in a virtual assistant.",
-        detailsDefault:"",
-        icon:"/icons/bonsai.png",
+        id: "bm-keyboard",
+        title: "BM Keyboard",
+        description: "A keyboard for ",
+        icon:"/icons/bm-keyboard.png",
         technology: [
             {
-                id:"swift",
-                description:"My first time developing with Swift and mobile apps - it was a challenge but I got the hang of it by thinking in the same way as I did with web development. Ended up really enjoying recreating the features and animations I see in apps I use everyday. Mobile iOS platform entirely developed in Swift."
+                id: "rust",
+                description: "This app is entirely built with Rust using the iced library as the main driver behind UI elements."
             },
             {
-                id:"flask",
-                description:"I applied my experience with Python to use Flask. I drew many parallels to Node.js, and with both Python and JS being very simple, it wasn't very difficult to get it spun up. Implemented logic to utilize WebSockets and communicate with database. Used for all backend development."
+                id: "claude",
+                description: "As this project being my first experience using Rust and first sincere experience working with advanced system-level programming and scripting, I made liberal but conscious use of Claude Code with the help of the Opus model to guide my developmental work and learning. I first created skeletons and basic guides to Rust and made sure to understand the code it was writing every step of the way. Gradually, I applied my knowledge of JS, Python, and Java to understand the numerous quirks and advanced concepts that make Rust so powerful - including enums, exhaustive matching, etc. Claude also helped me learn more about keyboard input on Unix and Windows systems: how they are inputted and processed into their corresponding characters, how different input modes can use keymapping and input for their languages, and most importantly, how I can 'swallow' and map input to the proper Korean letters for my app."
+            }
+        ],
+        link: {
+            title:"Project page",
+            link:"https://github.com/mzhang0213/bm-keyboard"
+        },
+        github:"https://github.com/mzhang0213/bm-keyboard"
+    },
+    {
+        id: "finalog",
+        title: "Finalog",
+        description: "Your new financials tracker: Finalog enables you to log any app's transactions and fully track your spending, giving you holistic analytics about your spending at a quick and easy glance.",
+        icon:"/icons/finalog.png",
+        technology: [
+            {
+                id: "python",
+                description: null
             },
             {
-                id:"aws",
-                description:"I was able to explore the implementation of cloud computing and system design techniques using AWS. Used ECS for deploying my code in horizontally scalable containers behind a ALB. Also utilized RDS with PostgreSQL for storage of user accounts and user progress. Shoutout @arjay_the_dev for such great videos about system design."
-            },
-            {
-                id:"gpt",
-                description:"I used the GPT-4o-mini to help retrieve bi-weekly graded fitness scores, which is used to track a user's fitness progress towards their goals across a timeframe. Implemented with OpenAI's API and custom prompt engineering to control costs."
-            },
-            {
-                id:"opencv",
-                description:"I had a lot of fun earlier in Summer '25 messing around with OpenCV's python library. I sought after a more cost-effective way to read the information off of a calorie label using computer vision techniques rather than a plug-and-chug into a LLM. Used to flatten and section boxes on a calorie label before feeding row-by-row to an OCR text detection service (PyTesseract) for text parsing."
-            },
-            {
-                id:"postgres",
-                description: "I applied what I studied about SQL to create tables for my waitlist and my main user account information storage. Implemented relational database to track user account information, meal and workout information and history, and fitness progress (history). Used as RDS with AWS."
-            },
-            {
-                id:"docker",
-                description:"Containerized project files with Docker for deployment on AWS ECS. Wrote Dockerfiles for production and docker-compose files for testing."
+                id: "opencv",
+                description: null
             },
         ],
         link: {
-            title:"concept page",
-            link:"https://bulk.mzhang.dev"
-        }
+            title:"product page",
+            link:"https://finalog.mzhang.dev"
+        },
+        github:"https://github.com/mzhang0213/finalog"
     },
     {
         id: "yes_coach",
         title: "Yes, Coach!",
-        description: "",
+        description: "Having been an avid player of League of Legends, I found myself chasing dopamine highs after wins and great plays. With wins, however, come losses too. I also found myself meddled in a string of losses at 2 in the morning, longing for a single win (and only to rack up another 10 deaths in the next game). 'Yes, Coach!' is an AI-powered assistant that coaches users live during gameplay, from the champion select phase of the game through team-fights and winning strategy.",
         detailsDefault:"",
         icon:"/icons/yescoach.png",
         technology: [
@@ -54,17 +55,21 @@ export const projects: ProjectType[] = [
                 description:""
             },
             {
-                id:"opencv",
-                description:""
+                id:"gemini",
+                description:"Your coach! Gemini powers all coaching, helping give directions, encouragement, tips, and on-screen pointers. Gemini is prompt engineered to look at the game state progressively and determine best decisions at any point in time."
             },
             {
-                id:"fastapi",
-                description:""
+                id:"opencv",
+                description:"Screenshots of the game state are captured and analyzed, providing supplemental information to Gemini that the Riot Games API cannot otherwise include - primarily map information and player positioning."
             },
+            {
+                id:"riot-games",
+                description:"Riot Games API is used to harvest information about the game's current state - this includes player gold and items, game time and objective statuses, and much more."
+            }
         ],
         link: {
-            title:"live deployment",
-            link:"https://mzhang.dev/spotifyYt"
+            title:"Project page",
+            link:""
         }
     },
     {
@@ -144,6 +149,47 @@ export const projects: ProjectType[] = [
         link: {
             title:"Devpost",
             link:"https://devpost.com/software/rebound-l42rzs"
+        }
+    },
+    {
+        id: "bonsai",
+        title: "BonsAi",
+        description: "A mobile fitness app bringing a comfortable experience to fitness tracking and calorie logging, all in one. Designed to be user-friendly for everyone, from first time lifters needing direction to experienced lifters wanting to level up their gains. Flagship progress tracking features powered by AI implemented in a virtual assistant.",
+        detailsDefault:"",
+        icon:"/icons/bonsai.png",
+        technology: [
+            {
+                id:"swift",
+                description:"My first time developing with Swift and mobile apps - it was a challenge but I got the hang of it by thinking in the same way as I did with web development. Ended up really enjoying recreating the features and animations I see in apps I use everyday. Mobile iOS platform entirely developed in Swift."
+            },
+            {
+                id:"flask",
+                description:"I applied my experience with Python to use Flask. I drew many parallels to Node.js, and with both Python and JS being very simple, it wasn't very difficult to get it spun up. Implemented logic to utilize WebSockets and communicate with database. Used for all backend development."
+            },
+            {
+                id:"aws",
+                description:"I was able to explore the implementation of cloud computing and system design techniques using AWS. Used ECS for deploying my code in horizontally scalable containers behind a ALB. Also utilized RDS with PostgreSQL for storage of user accounts and user progress. Shoutout @arjay_the_dev for such great videos about system design."
+            },
+            {
+                id:"gpt",
+                description:"I used the GPT-4o-mini to help retrieve bi-weekly graded fitness scores, which is used to track a user's fitness progress towards their goals across a timeframe. Implemented with OpenAI's API and custom prompt engineering to control costs."
+            },
+            {
+                id:"opencv",
+                description:"I had a lot of fun earlier in Summer '25 messing around with OpenCV's python library. I sought after a more cost-effective way to read the information off of a calorie label using computer vision techniques rather than a plug-and-chug into a LLM. Used to flatten and section boxes on a calorie label before feeding row-by-row to an OCR text detection service (PyTesseract) for text parsing."
+            },
+            {
+                id:"postgres",
+                description: "I applied what I studied about SQL to create tables for my waitlist and my main user account information storage. Implemented relational database to track user account information, meal and workout information and history, and fitness progress (history). Used as RDS with AWS."
+            },
+            {
+                id:"docker",
+                description:"Containerized project files with Docker for deployment on AWS ECS. Wrote Dockerfiles for production and docker-compose files for testing."
+            },
+        ],
+        link: {
+            title:"concept page",
+            link:"https://bulk.mzhang.dev"
         }
     },
     /*
@@ -324,23 +370,6 @@ export const projects: ProjectType[] = [
             link:"https://github.com/mzhang0213/email-send-robot"
         },
         github:"https://github.com/mzhang0213/email-send-robot"
-    },
-    {
-        id: "finalog",
-        title: "Finalog",
-        description: "",
-        icon:"/icons/chillpanda.png",
-        technology: [
-            {
-                id: "python",
-                description: null
-            }
-        ],
-        link: {
-            title:"pip install finalog",
-            link:"https://github.com/mzhang0213/finalog"
-        },
-        github:"https://github.com/mzhang0213/finalog"
     },
     /*s
     {

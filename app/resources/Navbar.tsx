@@ -323,7 +323,7 @@ export default function Navbar({customItems, alwaysShow}: { customItems: NavData
     return (
         <>
             <nav id={"navBar"}>
-                <div id={"navItemContainer"} className={"absolute top-0 right-0 flex flex-col justify-start items-end text-sm mt-4 mr-6 p-5 rounded-md"}>
+                <div id={"navItemContainer"} className={"hidden md:flex absolute top-0 right-0 flex-col justify-start items-end text-sm mt-4 mr-6 p-5 rounded-md"}>
                     <div className={"nav-logo-group"}>
                         <div id={"navItemLogo"}
                              className={"navbar-chip flex-shrink-0"}

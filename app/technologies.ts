@@ -171,21 +171,21 @@ export const technologies: TechnologyType[] = [
     },
     {
         id: "gpt",
-        title: "GPT (LLM)",
+        title: "GPT",
         color: "#0000ff",
         description: "",
         icon: "/icons/gpt.png"
     },
     {
         id: "claude",
-        title: "Claude (LLM)",
+        title: "Claude",
         color: "#D97706",
         description: "",
         icon: "/icons/claude.png"
     },
     {
         id: "gemini",
-        title: "Gemini (LLM)",
+        title: "Gemini",
         color: "#8E75B2",
         description: "",
         icon: "/icons/gemini.png"
@@ -371,5 +371,26 @@ export const technologies: TechnologyType[] = [
         color: "#0078D7",
         description: "",
         icon: "/icons/windows8.png"
+    },
+    {
+        id: "apple",
+        title: "Apple / macOS",
+        color: "#999999",
+        description: "",
+        icon: "/icons/apple.png"
+    },
+    {
+        id: "google-sheets",
+        title: "Google Sheets",
+        color: "#01AD48",
+        description: "",
+        icon: "/icons/google-sheets.png"
+    },
+    {
+        id: "rust",
+        title: "Rust",
+        color: "#c87d55",
+        description: "",
+        icon: "/icons/rust.png"
     }
 ]

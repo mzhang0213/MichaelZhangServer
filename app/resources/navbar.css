@@ -168,3 +168,14 @@
     justify-content: flex-start;
 }
 
+/* Mobile (≤ 767px): position hamburger top-right */
+@media (max-width: 767px) {
+    #navBar {
+        justify-content: flex-end;
+        padding: 16px;
+    }
+    #menuToggle {
+        margin: 0;
+    }
+}
+

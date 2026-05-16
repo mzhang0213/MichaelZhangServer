@@ -44,8 +44,8 @@ export function FooterSection({ sections }: { sections: NavDataType[] }) {
 
 export default function Footer({customItems}: { customItems: NavDataType[] | null }) {
     return (
-        <footer className="text-white px-8 lg:px-30 py-10" style={{backgroundColor:"var(--theme-black)"}}>
-            <div className="flex justify-between px-15 pb-10 gap-4">
+        <footer className="text-white px-4 sm:px-8 lg:px-30 py-10" style={{backgroundColor:"var(--theme-black)"}}>
+            <div className="flex flex-wrap justify-between sm:flex-nowrap px-2 sm:px-15 pb-10 gap-6 sm:gap-4">
                 <FooterSection sections={customItems?customItems:defaultItems} />
             </div>
             <div className="mt-10 text-center text-sm text-gray-500">

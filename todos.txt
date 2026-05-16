@@ -18,6 +18,9 @@ fixup the other sites
 
 
 fix details menu div margin paddings
+-add bg images
+	-if none put black filter on existing logo images
+-think about text bg highlights
 
 
 minor:

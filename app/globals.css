@@ -3,6 +3,13 @@
 body {
     font-family: Merriweather, sans-serif;
 }
+
+@media (max-width: 639px) {
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+}
 /* @apply bg-cover bg-center bg-fixed; */
 
 .object {
