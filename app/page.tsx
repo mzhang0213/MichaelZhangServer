@@ -91,6 +91,19 @@ type TechnologyEntryType = {
     id:string,
     description:string | null
 }
+export type ProjectSection = {
+    title: string,
+    body: string
+}
+export type ProjectGalleryItem = {
+    src: string,
+    caption?: string
+}
+export type ProjectTimelineItem = {
+    date: string,
+    label: string,
+    body?: string
+}
 export type ProjectType = {
     id: string,
     title: string,
@@ -103,7 +116,15 @@ export type ProjectType = {
         title:string,
         link:string
     },
-    github?: string
+    github?: string,
+    /** Optional override for the concepts-grid preview — path to a PNG or full URL. If absent, the page auto-renders an iframe of `link.link` when same-origin, else falls back to a gradient + icon placeholder. */
+    preview?: string,
+    /** Bubble-box content sections for the project info view. */
+    sections?: ProjectSection[],
+    /** Gallery images shown in the project info view. */
+    gallery?: ProjectGalleryItem[],
+    /** Vertical timeline events in the project info view. */
+    timeline?: ProjectTimelineItem[]
 }
 export type ExperienceType = {
     id: string,
