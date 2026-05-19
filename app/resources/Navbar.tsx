@@ -158,7 +158,7 @@ export const defaultItems: NavDataType[] = [
         accent: "var(--theme-red)",
     },
     {
-        isList: true,
+        isList: false,
         childrenItems: [
             {
                 id: "spotifyYt",

@@ -53,6 +53,8 @@
     transition: transform 180ms ease-out, box-shadow 180ms ease-out;
     display: flex;
     flex-direction: column;
+    text-decoration: none;
+    color: inherit;
 }
 .concept-card:hover {
     transform: translate(3px, 3px);
@@ -131,8 +133,12 @@
     overflow-x: auto;
     padding: 12px 4px 16px;
     margin-bottom: 24px;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+}
+.info-selector-strip::-webkit-scrollbar {
+    display: none;
 }
 
 .info-selector-chip {
@@ -282,14 +288,16 @@
     padding: 2px;
 }
 
-/* Tooltip — floats from the bottom-center of the chip, scales 0→1 on hover */
+/* Tooltip — floats from the bottom-center of the chip, scales 0→1 on hover.
+   --tooltip-shift is set by JS at hover time to keep the tooltip inside the viewport. */
 .info-tech-tooltip {
+    --tooltip-shift: 0px;
     position: absolute;
     top: calc(100% + 8px);
     left: 50%;
     width: max-content;
     min-width: 240px;
-    max-width: 420px;
+    max-width: min(420px, calc(100vw - 24px));
     padding: 10px 12px;
     background-color: var(--theme-dark-gray);
     border: 2px solid var(--theme-gray);
@@ -303,7 +311,7 @@
     z-index: 30;
     pointer-events: none;
     opacity: 0;
-    transform: translate(-50%, -4px) scale(0);
+    transform: translate(calc(-50% + var(--tooltip-shift)), -4px) scale(0);
     transform-origin: top center;
     transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
                 opacity 160ms ease-out;
@@ -311,7 +319,7 @@
 .info-tech-chip:hover .info-tech-tooltip,
 .info-tech-chip:focus-visible .info-tech-tooltip {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: translate(calc(-50% + var(--tooltip-shift)), 0) scale(1);
 }
 .info-tech-tooltip-title {
     font-weight: 700;
@@ -452,6 +460,51 @@
     font-size: 13px;
 }
 
+/* ── Detail page (/projects/[projectId]) ────────────────── */
+.project-detail-page {
+    width: 100%;
+    padding: 100px 24px 80px;
+    color: var(--theme-white);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.project-detail-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.project-detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background-color: var(--theme-dark-gray);
+    border: 2px solid var(--theme-gray);
+    border-radius: 999px;
+    color: var(--theme-white);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 0 var(--theme-blue);
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+}
+.project-detail-back:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 var(--theme-blue);
+}
+
+/* Scrollbar hider utility */
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1023px) {
     .concepts-grid {
@@ -462,6 +515,9 @@
 @media (max-width: 639px) {
     .projects-page {
         padding: 96px 12px 60px;
+    }
+    .project-detail-page {
+        padding: 88px 12px 60px;
     }
     .projects-hero-title {
         font-size: 36px;
