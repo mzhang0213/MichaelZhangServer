@@ -42,12 +42,8 @@
     outline-offset: 4px;
     transition: transform 100ms ease-out;
 }
-.project-container:hover .project-content {
+.project-content:hover {
     transition: transform 500ms ease-out;
-    transform: translateX(-6px) translateY(-6px);
-}
-.project-container.see-more-active .project-content:hover {
-    transition: transform 150ms ease-out;
     transform: translateX(-6px) translateY(-6px);
 }
 

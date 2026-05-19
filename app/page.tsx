@@ -329,7 +329,10 @@ function Projects() {
                 <div key={"project-"+project.id} id={project.id} className={"project-container m-4 flex flex-col rounded-2xl"}
                      style={project.color ? {backgroundColor: project.color} : undefined}
                      onClick={(e) => handleMobileClick(e, project)}>
-                    <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu}>
+                    <div className={"project-content h-full p-3 rounded-2xl"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={detailsMenu} onMouseMove={() => {
+                        gebi("details_menu_title").innerHTML = project.title;
+                        gebi("details_menu_desc").innerHTML = project.description;
+                    }}>
                         <div className={"project-topDiv flex justify-center items-center"}>
                             <img alt={project.title} src={project.icon} className={"project-icon w-[50px] h-[50px]"}/>
                             <div className={"project-title ml-2 mr-6 text-2xl text-center"}>{project.title}</div>
@@ -389,7 +392,6 @@ function ExperienceGrid() {
             const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
             if (lastHovered===currHovered){
                 const currElement = currHovered as HTMLElement;
-                const containerHeight = (MINDETAILSHEIGHT + MARGINOFFSET * 3 + currElement.offsetHeight)
                 if (!activeExpDetails) {
                     activeExpDetails = true;
                     gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
