@@ -121,6 +121,17 @@
 }
 
 /* ── Info panel ──────────────────────────────────────────── */
+.info-hero {
+    max-width: 920px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+.info-hero-title {
+    font-size: 36px;
+    padding: 14px 22px;
+    box-shadow: 6px 6px 0 0 var(--theme-blue);
+}
+
 .info-section-wrap {
     max-width: 1100px;
     margin: 0 auto;
@@ -222,6 +233,8 @@
     font-size: 14px;
     line-height: 1.5;
     color: var(--theme-light-blue);
+    text-align: center;
+    padding: 0px 50px 0px 50px; /*todo:fix*/
 }
 
 .info-header-links {
@@ -357,7 +370,7 @@
     color: var(--theme-white);
 }
 .info-bubble-placeholder {
-    border-style: dashed;
+    /*border-style: dashed;*/
     opacity: 0.85;
 }
 
@@ -453,7 +466,7 @@
 
 .info-empty {
     padding: 24px;
-    border: 2px dashed var(--theme-gray);
+    /*border: 2px dashed var(--theme-gray);*/
     border-radius: 12px;
     text-align: center;
     color: var(--theme-light-blue);
@@ -463,12 +476,15 @@
 /* ── Detail page (/projects/[projectId]) ────────────────── */
 .project-detail-page {
     width: 100%;
-    padding: 100px 24px 80px;
+    padding: 50px 40px 100px;
     color: var(--theme-white);
     max-width: 1100px;
     margin: 0 auto;
 }
 .project-detail-topbar {
+    position: fixed;
+    top: 15px;
+    right: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;

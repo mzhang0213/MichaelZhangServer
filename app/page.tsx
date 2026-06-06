@@ -1102,3 +1102,43 @@ export default function Home() {
         </>
     );
 }
+
+
+
+/*
+prompts
+
+can u help make my app mobile-browser-compatible and ensure that it works on smooshed screens and mobile dimensions? please also ensure that a normal screen size does not get affected by your changes
+
+
+look at my website styling on my main page.tsx. please help me create two other pages for my portfolio: a current project concepts page and a project info page. the project info page is a core component to my website where i elaborate more about the project dev processes. the project concepts page is a grid of my current projects and their corresponding demo pages + install pages/links/methods. for concepts pg, i just want a flex grid of divs, where each div item is a low quality png sample taken by peeking at the page's html with a small title at the bottom of this image with the project title. maybe ill ad more to it later. its kinda like linkedin's featured posts. i dont have a plan for the project info page - just take what i told u and come up with a meaningful way to have a project navigation selecting which project the user wants to look more into before showing the expanded information. the expanded information should be able to support images, timeline display, and lots of text in organized div bubble boxes. maybe the two pages can be merged too? idk please lmk what u think before implementation.
+- get ss of linkedin featured posts
+
+[maybe have a prompt shortening project desc on my curr homepage and saving that for the /projects page. dont change the ts json file tho. just frontend]
+
+
+
+
+- see more bubbles go to project pages (now that i impl it)
+- make a yes coach concept page
+
+
+
+
+
+
+
+
+todos
+- create project demo page (demos.mzhang.dev or mzhang.dev/demos)
+- deploy project concept pages - bm keyboard, finalog
+	- edit these and ensure they are ready
+- remove default see more bubble (wait but this will be here when the /projects page is done)
+
+icons
+- google, gsheets
+- finalog
+- rust
+- bm keyboard
+
+ */

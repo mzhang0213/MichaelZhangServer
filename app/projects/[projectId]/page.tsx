@@ -78,14 +78,20 @@ function TechList({project}: {project: ProjectType}) {
 function ProjectInfo({project}: {project: ProjectType}) {
     return (
         <div className="info-content" key={project.id}>
+            <div className="info-hero">
+                <img src={project.icon} alt={project.title} className="info-header-icon"/>
+                <div className="info-hero-title">
+                    <h2 className="">{project.title}</h2>
+                </div>
+            </div>
             <div className="info-header bubble">
                 <div className="info-header-row">
-                    <img src={project.icon} alt={project.title} className="info-header-icon"/>
+                    {/*<img src={project.icon} alt={project.title} className="info-header-icon"/>*/}
                     <div className="info-header-text">
-                        <h2 className="info-header-title">{project.title}</h2>
+                        {/*<h2 className="info-header-title">{project.title}</h2>*/}
                         <p
-                            className="info-header-desc"
-                            dangerouslySetInnerHTML={{__html: project.description || "—"}}
+                          className="info-header-desc"
+                          dangerouslySetInnerHTML={{__html: project.description || "—"}}
                         />
                     </div>
                 </div>
@@ -128,8 +134,7 @@ function ProjectInfo({project}: {project: ProjectType}) {
                     <div className="bubble info-bubble info-bubble-placeholder">
                         <h3 className="info-bubble-title">Process & Notes</h3>
                         <p className="info-bubble-body">
-                            More on this project&apos;s development process is coming soon —
-                            architecture choices, what I&apos;d do differently, and what I learned.
+                            Coming soon!
                         </p>
                     </div>
                 )}
@@ -190,18 +195,19 @@ export default function ProjectDetailPage() {
 
     return (
         <>
-            <Navbar customItems={null} alwaysShow={true}/>
+            {/*<Navbar customItems={null} alwaysShow={true}/>*/}
             <Background/>
             <BackgroundDim/>
 
-            <main className="project-detail-page">
-                <div className="project-detail-topbar">
-                    <Link href="/projects" className="project-detail-back">
-                        <span>←</span>
-                        <span>All projects</span>
-                    </Link>
-                </div>
+            <div className="project-detail-topbar">
+                <Link href="/projects" className="project-detail-back">
+                    <span>←</span>
+                    <span>All projects</span>
+                </Link>
+            </div>
 
+            <main className="project-detail-page">
+                {/*
                 <div className="info-selector-strip scrollbar-hide" role="tablist" aria-label="Switch project">
                     {projects.map(p => (
                         <button
@@ -218,6 +224,7 @@ export default function ProjectDetailPage() {
                         </button>
                     ))}
                 </div>
+                */}
 
                 {project ? (
                     <ProjectInfo project={project}/>
