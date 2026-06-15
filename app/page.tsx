@@ -138,6 +138,7 @@ export type ExperienceType = {
     bgIcon: string,
     type: "work" | "volunteer"
     bgColor?: string,
+    bgImage?: string,
     link: string //will just be applied on the title
 }
 
@@ -164,6 +165,12 @@ function resetChildrenZIndex(){
     }
     for (const e of gebi("experienceContainer").children) {
         gebi(e.id).style.zIndex = "0";
+    }
+    const vc = document.getElementById("volunteerContainer");
+    if (vc) {
+        for (const e of Array.from(vc.children)) {
+            (e as HTMLElement).style.zIndex = "0";
+        }
     }
 }
 
@@ -382,120 +389,136 @@ function Projects() {
     )
 }
 
-function ExperienceGrid() {
-    function expDetailsMenu(event: React.MouseEvent) {
-        if (window.innerWidth < 640) return;
+function expDetailsMenu(event: React.MouseEvent) {
+    if (window.innerWidth < 640) return;
 
-        let lastHovered: Element | null = event.target as Element;
-        lastHovered = getProjectParent(lastHovered);
-        setTimeout(function(){
-            const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
-            if (lastHovered===currHovered){
-                const currElement = currHovered as HTMLElement;
-                if (!activeExpDetails) {
-                    activeExpDetails = true;
-                    gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
-                    gebi("bg_dim").style.display = "";
-                    gebi("bg_dim").style.opacity = "1";
-                    resetChildrenZIndex()
-                    const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
-                    const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2 + 40;
-                    const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
-                    const cardCenterY = currElement.offsetTop + currElement.offsetHeight / 2;
-                    const bloomLeft = cardCenterX - bloomWidth / 2;
-                    const bloomTop = cardCenterY - bloomHeight / 2;
+    let lastHovered: Element | null = event.target as Element;
+    lastHovered = getProjectParent(lastHovered);
+    setTimeout(function(){
+        const currHovered = getProjectParent(document.elementFromPoint(currX,currY));
+        if (lastHovered===currHovered){
+            const currElement = currHovered as HTMLElement;
+            if (!activeExpDetails) {
+                activeExpDetails = true;
+                gebi("bg_dim").style.animation = `fadeInFromNone ${detailsMenuWipe}ms ease-out`;
+                gebi("bg_dim").style.display = "";
+                gebi("bg_dim").style.opacity = "1";
+                resetChildrenZIndex()
+                const bloomWidth = Math.max(BLOOM_WIDTH, currElement.offsetWidth + MARGINOFFSET * 2);
+                const bloomHeight = MINDETAILSHEIGHT + MARGINOFFSET * 2 + 40;
+                const cardCenterX = currElement.offsetLeft + currElement.offsetWidth / 2;
+                const cardCenterY = currElement.offsetTop + currElement.offsetHeight / 2;
+                const bloomLeft = cardCenterX - bloomWidth / 2;
+                const bloomTop = cardCenterY - bloomHeight / 2;
 
-                    const db = gebi("exp_details_background");
-                    db.style.transition = "none";
-                    db.style.transformOrigin = "center center";
-                    db.style.transform = "scale(0)";
-                    db.style.left = bloomLeft + "px";
-                    db.style.top = bloomTop + "px";
-                    db.style.width = bloomWidth + "px";
-                    db.style.height = bloomHeight + "px";
-                    db.style.zIndex = "11";
-                    db.style.visibility = "visible";
-                    db.style.opacity = "0";
+                const db = gebi("exp_details_background");
+                db.style.transition = "none";
+                db.style.transformOrigin = "center center";
+                db.style.transform = "scale(0)";
+                db.style.left = bloomLeft + "px";
+                db.style.top = bloomTop + "px";
+                db.style.width = bloomWidth + "px";
+                db.style.height = bloomHeight + "px";
+                db.style.zIndex = "11";
+                db.style.visibility = "visible";
+                db.style.opacity = "0";
 
-                    requestAnimationFrame(() => {
-                        db.style.transition = `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`;
-                        db.style.transform = "scale(1)";
-                        db.style.opacity = "1";
-                    });
-                    gebi("exp_details_menu").style.width = (bloomWidth - MARGINOFFSET * 2) + "px";
-                    gebi("exp_details_menu_desc").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
-                    gebi("exp_details_menu_link").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
-                    gebi("exp_details_menu_top").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                requestAnimationFrame(() => {
+                    db.style.transition = `transform ${detailsMenuWipe}ms ease-out, opacity ${detailsMenuWipe}ms ease-out`;
+                    db.style.transform = "scale(1)";
+                    db.style.opacity = "1";
+                });
+                gebi("exp_details_menu").style.width = (bloomWidth - MARGINOFFSET * 2) + "px";
+                gebi("exp_details_menu_desc").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                gebi("exp_details_menu_link").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
+                gebi("exp_details_menu_top").style.width = (bloomWidth - MARGINOFFSET * 2 - 16) + "px";
 
-                    const id = currElement.id;
-                    let exp: ExperienceType = experiences[0];
-                    for (const e of experiences) { if (e.id === id) { exp = e; } }
+                const id = currElement.id;
+                let exp: ExperienceType = experiences[0];
+                for (const e of experiences) { if (e.id === id) { exp = e; } }
 
-                    // Position & activate standalone see-more wrapper
-                    const smw = gebi("exp_see_more_wrapper");
-                    const smArrowR = gebi("exp_see_more_arrow_right");
-                    const smArrowL = gebi("exp_see_more_arrow_left");
-                    const isRightCol = currElement.classList.contains('card-col-right');
-                    const smWidth = 160;
-                    smw.style.visibility = "visible";
-                    smw.style.top = (bloomTop + bloomHeight * 0.5 - 43) + "px";
-                    if (isRightCol) {
-                        smw.style.left = (bloomLeft - smWidth) + "px";
-                        smArrowR.style.display = "none";
-                        smArrowL.style.display = "block";
-                    } else {
-                        smw.style.left = (bloomLeft + bloomWidth) + "px";
-                        smArrowR.style.display = "block";
-                        smArrowL.style.display = "none";
-                    }
-                    const smBubble = gebi("exp_see_more_bubble");
-                    if (isRightCol) {
-                        smBubble.style.left = "50px";
-                        smBubble.style.right = "auto";
-                    } else {
-                        smBubble.style.left = "auto";
-                        smBubble.style.right = "50px";
-                    }
-                    smBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.link, "_blank"); };
-                    smw.classList.add('see-more-active');
-
-                    const locBubble = gebi("exp_location_bubble");
-                    if (exp.locationLink) {
-                        locBubble.style.visibility = "visible";
-                        locBubble.style.top = (bloomTop + 32) + "px";
-                        locBubble.style.left = (bloomLeft + bloomWidth + 32) + "px";
-                        locBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.locationLink, "_blank"); };
-                        locBubble.classList.add('see-more-active');
-                    } else {
-                        locBubble.classList.remove('see-more-active');
-                        locBubble.style.visibility = "hidden";
-                    }
-
-                    expLinkRoot.render(
-                        <>
-                            <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{"Website link!"}</p>
-                            <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
-                        </>
-                    );
-
-                    gebi("exp_details_menu_title1").innerHTML = exp.role;
-                    fitOneLine(gebi("exp_details_menu_title1"), 20);
-                    gebi("exp_details_menu_title2").innerHTML=`<div>@ ${exp.title}</div>`
-                    gebi("exp_details_menu_subtitle").innerHTML=`<span style="font-style:italic">${exp.duration}</span><span>${exp.location}</span>`
-
-                    gebi("expTiledBgImage").setAttribute("href", exp.bgIcon);
-                    gebi("exp_details_menu").style.backgroundColor = exp.bgColor || "var(--theme-dark-gray)";
-
-                    gebi("exp_details_menu_desc").innerHTML = `${exp.description}`;
+                const smw = gebi("exp_see_more_wrapper");
+                const smArrowR = gebi("exp_see_more_arrow_right");
+                const smArrowL = gebi("exp_see_more_arrow_left");
+                const isRightCol = currElement.classList.contains('card-col-right');
+                const smWidth = 160;
+                smw.style.visibility = "visible";
+                smw.style.top = (bloomTop + bloomHeight * 0.5 - 43) + "px";
+                if (isRightCol) {
+                    smw.style.left = (bloomLeft - smWidth) + "px";
+                    smArrowR.style.display = "none";
+                    smArrowL.style.display = "block";
+                } else {
+                    smw.style.left = (bloomLeft + bloomWidth) + "px";
+                    smArrowR.style.display = "block";
+                    smArrowL.style.display = "none";
                 }
-            }
-        }, 500)
-    }
+                const smBubble = gebi("exp_see_more_bubble");
+                if (isRightCol) {
+                    smBubble.style.left = "50px";
+                    smBubble.style.right = "auto";
+                } else {
+                    smBubble.style.left = "auto";
+                    smBubble.style.right = "50px";
+                }
+                smBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.link, "_blank"); };
+                smw.classList.add('see-more-active');
 
+                const locBubble = gebi("exp_location_bubble");
+                if (exp.locationLink) {
+                    locBubble.style.visibility = "visible";
+                    locBubble.style.top = (bloomTop + 32) + "px";
+                    locBubble.style.left = (bloomLeft + bloomWidth + 32) + "px";
+                    locBubble.onclick = (e) => { e.stopPropagation(); window.open(exp.locationLink, "_blank"); };
+                    locBubble.classList.add('see-more-active');
+                } else {
+                    locBubble.classList.remove('see-more-active');
+                    locBubble.style.visibility = "hidden";
+                }
+
+                expLinkRoot.render(
+                    <>
+                        <p onClick={() => { window.open(exp.link, "_blank"); }} className={"project-link text-white"} style={{cursor:"pointer",textDecoration:"underline"}}>{"Website link!"}</p>
+                        <img src={"/icons/redirect.png"} alt={"redirect"} className={"w-[8px] h-[8px] ml-2"} style={{filter:"invert(1)"}}/>
+                    </>
+                );
+
+                gebi("exp_details_menu_title1").innerHTML = exp.role;
+                fitOneLine(gebi("exp_details_menu_title1"), 20);
+                gebi("exp_details_menu_title2").innerHTML=`<div>@ ${exp.title}</div>`
+                gebi("exp_details_menu_subtitle").innerHTML=`<span style="font-style:italic">${exp.duration}</span><span>${exp.location}</span>`
+
+                gebi("expTiledBgImage").setAttribute("href", exp.bgIcon);
+                gebi("exp_details_menu").style.backgroundColor = exp.bgColor || "var(--theme-dark-gray)";
+                gebi("expBgImageLayer").style.backgroundImage = exp.bgImage ? `url(${exp.bgImage})` : "";
+
+                gebi("exp_details_menu_desc").innerHTML = `${exp.description}`;
+            }
+        }
+    }, 500)
+}
+
+function ExperienceGrid() {
     return (
-      experiences.map(exp => (
+      experiences.filter(exp => exp.type === "work").map(exp => (
         <div key={"exp-" + exp.id} id={exp.id}
-             className={"project-container experience-container m-4 flex flex-col rounded-2xl"}
+             className={"project-container experience-container m-4 flex flex-col rounded-2xl w-[110px]"}
+             onMouseMove={() => {
+                 gebi("exp_details_menu_top").innerHTML = ""; }}
+            >
+                <div className={"project-content h-full p-6 rounded-2xl flex justify-center items-center"} style={{border: "2px solid var(--theme-dark-gray)"}} onMouseEnter={expDetailsMenu}>
+                    <img alt={exp.title} src={exp.icon} className={"w-[60px] h-[60px] object-contain rounded-sm"}/>
+                </div>
+            </div>
+        ))
+    );
+}
+
+function VolunteerGrid() {
+    return (
+      experiences.filter(exp => exp.type === "volunteer").map(exp => (
+        <div key={"vol-" + exp.id} id={exp.id}
+             className={"project-container volunteer-container m-4 flex flex-col rounded-2xl w-[110px]"}
              onMouseMove={() => {
                  gebi("exp_details_menu_top").innerHTML = ""; }}
             >
@@ -690,6 +713,37 @@ export default function Home() {
         updateExpColumns();
         window.addEventListener('resize', updateExpColumns);
 
+        function updateVolunteerColumns() {
+            const container = document.getElementById("volunteerContainer");
+            if (!container) return;
+            const cards = Array.from(container.children) as HTMLElement[];
+            if (!cards.length) return;
+            let currentTop = -1;
+            let currentRow: HTMLElement[] = [];
+            const rows: HTMLElement[][] = [];
+            for (const card of cards) {
+                if (card.offsetTop !== currentTop) {
+                    if (currentRow.length) rows.push(currentRow);
+                    currentRow = [card];
+                    currentTop = card.offsetTop;
+                } else {
+                    currentRow.push(card);
+                }
+            }
+            if (currentRow.length) rows.push(currentRow);
+            for (const row of rows) {
+                const n = row.length;
+                row.forEach((card, i) => {
+                    card.classList.remove('card-col-left', 'card-col-mid', 'card-col-right');
+                    if (n <= 1 || i === 0) card.classList.add('card-col-left');
+                    else if (i === n - 1) card.classList.add('card-col-right');
+                    else card.classList.add('card-col-mid');
+                });
+            }
+        }
+        updateVolunteerColumns();
+        window.addEventListener('resize', updateVolunteerColumns);
+
         function closeDetails() {
             if ((!activeDetails && !activeExpDetails) || window.innerWidth < 640) return;
 
@@ -703,6 +757,14 @@ export default function Home() {
             for (const e of gebi("experienceContainer").children) {
                 gebi(e.id).classList.remove('see-more-active');
                 gebi(e.id).classList.remove('card-held');
+            }
+            const vc = document.getElementById("volunteerContainer");
+            if (vc) {
+                for (const e of Array.from(vc.children)) {
+                    const el = e as HTMLElement;
+                    el.classList.remove('see-more-active');
+                    el.classList.remove('card-held');
+                }
             }
 
             if (activeDetails) {
@@ -794,6 +856,7 @@ export default function Home() {
         return () => {
             window.removeEventListener('resize', updateCardColumns);
             window.removeEventListener('resize', updateExpColumns);
+            window.removeEventListener('resize', updateVolunteerColumns);
             window.removeEventListener('scroll', helpScrollHandler);
         };
     }, []);
@@ -838,6 +901,7 @@ export default function Home() {
             }}>
                 <div id={"exp_details_menu_container"} className={"w-full h-full flex justify-center items-end"}>
                     <div id={"exp_details_menu"} className={"relative flex flex-col top-0 h-full pt-2 rounded-2xl"}>
+                        <div id={"expBgImageLayer"} className={"pointer-events-none absolute inset-0 z-0 rounded-2xl overflow-hidden"} style={{opacity: 0.45, backgroundSize:"cover", backgroundPosition:"center"}}></div>
                         <div className="asdf pointer-events-none absolute inset-0 z-0 opacity-50 overflow-hidden">
                             <svg
                               id={"expTiledBg"}
@@ -973,8 +1037,22 @@ export default function Home() {
                         border: "2px solid var(--theme-dark-gray)"
                     }}>Experience</p>
                 </div>
-                <div id={"experienceContainer"} className={"grid grid-cols-3 lg:grid-cols-4 w-[50%] mx-auto mb-32"}>
+                <div id={"experienceContainer"} className={"flex flex-wrap justify-center w-[50%] mx-auto mb-32"}>
                     <ExperienceGrid/>
+                </div>
+            </div>
+
+            <div className="bg-[#b5e07a] pt-1 pb-40">
+                <div id={"volunteerTitle"}
+                     className={"text-6xl text-white w-full mt-56 mb-8 flex justify-center items-center font-bold"}>
+                    <p className={"rounded-xl w-fit py-7 px-12"} style={{
+                        backgroundColor: "var(--theme-gray)",
+                        boxShadow: "8px 8px 0px 0px var(--theme-black)",
+                        border: "2px solid var(--theme-dark-gray)"
+                    }}>Volunteer</p>
+                </div>
+                <div id={"volunteerContainer"} className={"flex flex-wrap justify-center w-[50%] mx-auto mb-32"}>
+                    <VolunteerGrid/>
                 </div>
             </div>
 

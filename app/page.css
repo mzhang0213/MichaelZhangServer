@@ -35,6 +35,10 @@
     background-color: var(--theme-purple);
     position: relative;
 }
+.volunteer-container{
+    background-color: #88b151;
+    position: relative;
+}
 .project-content{
     background-color: var(--theme-dark-blue);
     color:var(--theme-white);

@@ -2,6 +2,20 @@ import {ExperienceType} from "@/app/page";
 
 export const experiences: ExperienceType[] = [
     {
+        id: "cibc",
+        title: "CIBC",
+        role: "Software Engineering Intern",
+        location: "Chicago",
+        locationLink: "https://us.cibc.com/en/about-us/locations.html",
+        duration:"June 2026 - Aug 2026",
+        description:"",
+        icon: "/icons/cibc.png",
+        bgIcon: "/icons/cibc_white.png",
+        type:"work",
+        bgColor:"#bb1f3b",
+        link:"https://us.cibc.com"
+    },
+    {
         id: "ibm",
         title: "IBM",
         role: "Software Development (Co-op)",
@@ -39,7 +53,7 @@ export const experiences: ExperienceType[] = [
         description:"I mentored two groups of students during the semester with their first full-stack projects, giving them weekly advice in our Hack Sessions at all stages of the project development phase - from ideation to development, testing/debugging and production. I helped cover all areas of the tech stack, from backend Node.js and FastAPI with Python to React, HTML, Tailwind CSS, and using JavaScript to manage the DOM, as well as databases using PostgreSQL and some ML frameworks - TensorFlow and scikit-learn.",
         icon: "/icons/oasis.jpg",
         bgIcon: "/icons/oasis_white.png",
-        type:"work",
+        type:"volunteer",
         bgColor:"#336666",
         link:"https://oasisneu.com"
     },
@@ -95,7 +109,7 @@ export const experiences: ExperienceType[] = [
         bgIcon: "/icons/bobabyte_penguin.png",
         // type:"work",
         link: "https://bobabyte.org",
-        type: "work"
+        type: "volunteer"
     },
     {
         id: "hippohack",
@@ -107,7 +121,22 @@ export const experiences: ExperienceType[] = [
         description: "I hosted Hippo Hack with my cousin along with a bunch of other friends where we set out to host a hackathon for younger students as a regional hackathon in our local area. Hosting was very insightful - looking past the deadlines, expenses, and probably some stress, I learned a lot about leading teams, collaborative tools, and hosting big events in general. After pushing back the hackathon date twice, we were able to pull it together towards the end of the summer with 40+ people attending.",
         icon: "/icons/hippohack.png",
         bgIcon: "",
-        type: "work",
+        type: "volunteer",
         link: "https://hippohack.org",
+    },
+    {
+        id: "arboretum",
+        title: "Acton Arboretum",
+        role: "Gardener",
+        location: "Acton",
+        locationLink: "https://actonarboretum.org/",
+        duration: "High School - Summers",
+        description: "Fun way during the summer to get outside and be productive while helping out the community. Enjoying nature too.",
+        icon: "/icons/arboretum.png",
+        bgIcon: "",
+        bgImage: "/icons/arboretum_bg.png",
+        // type:"work",
+        link: "https://actonarboretum.org/",
+        type: "volunteer"
     },
 ]
