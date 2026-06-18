@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import DOMPurify from "dompurify";
 import PondScene from "./PondScene";
 import SoundToggle from "./SoundToggle";
 import "./pond.css";
@@ -30,10 +31,17 @@ function formatDate(value?: string | null): string {
 
 // Mirror of the server's titleFromContent (Windows-Notepad style).
 function titleFromContent(note: string): string {
-    const first = note
-        .split("\n")
-        .map((l) => l.trim())
-        .find((l) => l.length > 0);
+    const text = (note ?? "")
+        .replace(/<\/(div|p|h[1-6]|li|blockquote|tr)>/gi, "\n")
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]+>/g, "") // strip remaining tags
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&amp;/gi, "&")
+        .replace(/&lt;/gi, "<")
+        .replace(/&gt;/gi, ">");
+    let first = text.split("\n").map((l) => l.trim()).find((l) => l.length > 0);
+    if (!first) return "Untitled";
+    first = first.replace(/^#{1,6}\s+/, "").replace(/[*_`~]/g, "").trim();
     if (!first) return "Untitled";
     return first.length > 40 ? first.slice(0, 40) + "…" : first;
 }
@@ -47,7 +55,19 @@ export default function PondPage() {
     const [status, setStatus] = useState("");
     const [expanded, setExpanded] = useState<Set<string>>(new Set()); // folders start collapsed
     const [dragOver, setDragOver] = useState<string | null>(null);
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const [codeView, setCodeView] = useState(false); // show raw HTML source + preview
+    const [color, setColor] = useState("#1f6feb");
+    const editorRef = useRef<HTMLDivElement | null>(null); // wysiwyg contentEditable
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null); // code-view source
+    const loadedRef = useRef<string>("");
+
+    // restore source-view preference
+    useEffect(() => {
+        if (typeof window !== "undefined" && localStorage.getItem("pond-code") === "1") setCodeView(true);
+    }, []);
+    useEffect(() => {
+        if (typeof window !== "undefined") localStorage.setItem("pond-code", codeView ? "1" : "0");
+    }, [codeView]);
 
     const toggleFolder = useCallback((folder: string) => {
         setExpanded((prev) => {
@@ -74,6 +94,76 @@ export default function PondPage() {
 
     const activeTab = tabs.find((t) => t.id === activeKey) ?? null;
     const dirty = activeTab ? activeTab.content !== activeTab.savedContent : false;
+
+    const setActiveContent = useCallback(
+        (html: string) => {
+            setTabs((prev) => prev.map((t) => (t.id === activeKey ? { ...t, content: html } : t)));
+        },
+        [activeKey]
+    );
+
+    // Formatting. In WYSIWYG we use the browser's native rich-text commands, which
+    // apply to the selection OR toggle on for the text typed next from the caret —
+    // exactly "bold/blue out from my cursor". In source view we wrap with raw tags.
+    const format = useCallback(
+        (kind: "bold" | "italic" | "underline" | "color") => {
+            if (activeKey === HOME) return;
+            if (codeView) {
+                const ta = textareaRef.current;
+                if (!ta) return;
+                const tags: Record<string, [string, string]> = {
+                    bold: ["<b>", "</b>"],
+                    italic: ["<i>", "</i>"],
+                    underline: ["<u>", "</u>"],
+                    color: [`<span style="color:${color}">`, "</span>"],
+                };
+                const [b, a] = tags[kind];
+                const s = ta.selectionStart, e = ta.selectionEnd, v = ta.value;
+                setActiveContent(v.slice(0, s) + b + v.slice(s, e) + a + v.slice(e));
+                requestAnimationFrame(() => {
+                    ta.focus();
+                    ta.setSelectionRange(s + b.length, e + b.length);
+                });
+                return;
+            }
+            const el = editorRef.current;
+            if (!el) return;
+            el.focus();
+            if (kind === "color") {
+                document.execCommand("styleWithCSS", false, "true");
+                document.execCommand("foreColor", false, color);
+            } else {
+                document.execCommand(kind);
+            }
+            setActiveContent(el.innerHTML);
+        },
+        [activeKey, codeView, color, setActiveContent]
+    );
+
+    // Load note HTML into the contentEditable when the note / mode / load-state
+    // changes — never on plain keystrokes, so the caret never jumps.
+    const editorSig = `${activeKey}|${codeView ? "code" : "wys"}|${activeTab?.loading ? "l" : "r"}`;
+    useEffect(() => {
+        if (activeKey === HOME) return;
+        // In code view the contentEditable is unmounted — record the signature so
+        // that returning to WYSIWYG counts as a change and reloads the innerHTML.
+        if (codeView) {
+            loadedRef.current = editorSig;
+            return;
+        }
+        const el = editorRef.current;
+        if (!el || !activeTab || activeTab.loading) return;
+        if (loadedRef.current !== editorSig) {
+            el.innerHTML = activeTab.content || "";
+            loadedRef.current = editorSig;
+        }
+    }, [editorSig, codeView, activeKey, activeTab]);
+
+    // sanitized HTML for the read-only preview shown beside the source in code view
+    const previewHtml = useMemo(() => {
+        if (!codeView || !activeTab) return "";
+        return DOMPurify.sanitize(activeTab.content || "", { ADD_ATTR: ["style"] });
+    }, [codeView, activeTab]);
 
     const openNote = useCallback(
         async (id: string) => {
@@ -232,14 +322,19 @@ export default function PondPage() {
     // Ctrl/Cmd+S saves the active note.
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+            if (!(e.metaKey || e.ctrlKey)) return;
+            const k = e.key.toLowerCase();
+            if (k === "s") {
                 e.preventDefault();
                 if (activeKey !== HOME) saveTab(activeKey);
+            } else if (activeKey !== HOME && (k === "b" || k === "i" || k === "u")) {
+                e.preventDefault();
+                format(k === "b" ? "bold" : k === "i" ? "italic" : "underline");
             }
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, [activeKey, saveTab]);
+    }, [activeKey, saveTab, format]);
 
     return (
         <div className="pond-root">
@@ -396,27 +491,73 @@ export default function PondPage() {
                                 {dirty ? "save" : "saved"}
                             </button>
                             <span className="pond-status">{status}</span>
+
+                            {/* formatting — applies to selection or future typing */}
+                            <button className="fmt-btn" title="Bold (⌘/Ctrl+B)" onMouseDown={(e) => e.preventDefault()} onClick={() => format("bold")}>
+                                <b>B</b>
+                            </button>
+                            <button className="fmt-btn" title="Italic (⌘/Ctrl+I)" onMouseDown={(e) => e.preventDefault()} onClick={() => format("italic")}>
+                                <i>I</i>
+                            </button>
+                            <button className="fmt-btn" title="Underline (⌘/Ctrl+U)" onMouseDown={(e) => e.preventDefault()} onClick={() => format("underline")}>
+                                <u>U</u>
+                            </button>
+
+                            {/* code/source toggle: off = formatted (WYSIWYG), on = see the code */}
+                            <label className="pond-switch" title="off: type formatted text · on: show the underlying code + preview">
+                                <input type="checkbox" checked={codeView} onChange={(e) => setCodeView(e.target.checked)} />
+                                <span className="track"><span className="thumb" /></span>
+                                <span className="sw-label">{"</>"}</span>
+                            </label>
+
                             <div className="spacer" />
                             {activeTab?.updatedAt && (
                                 <span className="pond-status">edited {formatDate(activeTab.updatedAt)}</span>
                             )}
+
+                            {/* color picker — left of folder name */}
+                            <span className="color-ctrl" title="color selected / future text">
+                                <button
+                                    className="fmt-btn color-apply"
+                                    style={{ color }}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={() => format("color")}
+                                >
+                                    A
+                                </button>
+                                <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="pick text color" />
+                            </span>
+
                             <span className="pond-status" style={{ textAlign: "right" }}>
                                 {activeTab?.folder ? `🌿 ${activeTab.folder}` : ""}
                             </span>
                         </div>
-                        <textarea
-                            ref={textareaRef}
-                            className="pond-textarea"
-                            placeholder={activeTab?.loading ? "loading…" : "start typing… the first line becomes the title"}
-                            value={activeTab?.content ?? ""}
-                            disabled={activeTab?.loading}
-                            onChange={(e) => {
-                                const v = e.target.value;
-                                setTabs((prev) =>
-                                    prev.map((t) => (t.id === activeKey ? { ...t, content: v } : t))
-                                );
-                            }}
-                        />
+
+                        {codeView ? (
+                            <div className="pond-editor split">
+                                <textarea
+                                    ref={textareaRef}
+                                    className="pond-textarea code"
+                                    placeholder={activeTab?.loading ? "loading…" : "<p>source code…</p>"}
+                                    value={activeTab?.content ?? ""}
+                                    disabled={activeTab?.loading}
+                                    spellCheck={false}
+                                    onChange={(e) => setActiveContent(e.target.value)}
+                                />
+                                <div className="pond-preview" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                            </div>
+                        ) : (
+                            <div className="pond-editor">
+                                <div
+                                    ref={editorRef}
+                                    className="pond-textarea wysiwyg"
+                                    contentEditable={!activeTab?.loading}
+                                    suppressContentEditableWarning
+                                    data-placeholder={activeTab?.loading ? "loading…" : "start typing… the first line becomes the title"}
+                                    onInput={(e) => setActiveContent((e.target as HTMLDivElement).innerHTML)}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

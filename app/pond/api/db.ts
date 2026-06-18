@@ -9,11 +9,20 @@ export async function noteCollection() {
 }
 
 // Windows-Notepad behavior: the first non-empty line becomes the display title.
+// Notes are stored as HTML (rich text), so convert block tags to newlines, strip
+// the rest, and drop any leftover markdown markers so the title reads cleanly.
 export function titleFromContent(note: string): string {
-    const firstLine = (note ?? "")
-        .split("\n")
-        .map((l) => l.trim())
-        .find((l) => l.length > 0);
+    const text = (note ?? "")
+        .replace(/<\/(div|p|h[1-6]|li|blockquote|tr)>/gi, "\n")
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&amp;/gi, "&")
+        .replace(/&lt;/gi, "<")
+        .replace(/&gt;/gi, ">");
+    let firstLine = text.split("\n").map((l) => l.trim()).find((l) => l.length > 0);
+    if (!firstLine) return "Untitled";
+    firstLine = firstLine.replace(/^#{1,6}\s+/, "").replace(/[*_`~]/g, "").trim();
     if (!firstLine) return "Untitled";
     return firstLine.length > 60 ? firstLine.slice(0, 60) + "…" : firstLine;
 }
