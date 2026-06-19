@@ -70,6 +70,7 @@ export default function PondPage() {
     const [fontSize, setFontSize] = useState(16);
     const [fmt, setFmt] = useState({ bold: false, italic: false, underline: false });
     const [authed, setAuthed] = useState(false);
+    const [zen, setZen] = useState(false); // hide tabs + editor to watch the pond
     const editorRef = useRef<HTMLDivElement | null>(null); // wysiwyg contentEditable
     const textareaRef = useRef<HTMLTextAreaElement | null>(null); // code-view source
     const loadedRef = useRef<string>("");
@@ -487,7 +488,28 @@ export default function PondPage() {
             <PondScene />
             <LoginGate onAuthed={handleAuthed} />
 
-            <div className="pond-app">
+            {/* peaceful-pond toggle: hides tabs + editor (volume stays up top) */}
+            <button
+                className="pond-zen-btn"
+                onClick={() => setZen((z) => !z)}
+                title={zen ? "show notes" : "hide everything — just the pond"}
+                aria-label={zen ? "show notes" : "hide UI"}
+            >
+                {zen ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                        <line x1="3" y1="3" x2="21" y2="21" />
+                    </svg>
+                ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                )}
+            </button>
+
+            <div className={`pond-app ${zen ? "zen" : ""}`}>
                 {/* tab bar: scrollable tabs + a fixed sound toggle */}
                 <div className="pond-tabbar">
                     <div className="pond-tabs-scroll">
