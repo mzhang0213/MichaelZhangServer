@@ -8,6 +8,6 @@ export async function GET() {
         const result = await dbTracking.findOne();
         return NextResponse.json(result);
     }finally{
-        await (await client).close();
+        // shared Mongo client is a singleton; do not close it
     }
 }

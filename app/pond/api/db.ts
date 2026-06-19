@@ -13,7 +13,7 @@ export async function noteCollection() {
 // the rest, and drop any leftover markdown markers so the title reads cleanly.
 export function titleFromContent(note: string): string {
     const text = (note ?? "")
-        .replace(/<\/(div|p|h[1-6]|li|blockquote|tr)>/gi, "\n")
+        .replace(/<\/?(div|p|h[1-6]|li|blockquote|tr)[^>]*>/gi, "\n") // block tags (open OR close) → newline
         .replace(/<br\s*\/?>/gi, "\n")
         .replace(/<[^>]+>/g, "")
         .replace(/&nbsp;/gi, " ")

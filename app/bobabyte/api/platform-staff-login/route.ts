@@ -30,7 +30,7 @@ export async function POST(req: Request) {
             }
             NextResponse.json(msg)
         }finally{
-            await (await client).close();
+            // shared Mongo client is a singleton; do not close it
         }
     }
     return await run();
