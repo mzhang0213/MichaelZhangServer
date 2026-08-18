@@ -189,7 +189,7 @@
     "id": "media_bridge",
     "title": "Media Bridge",
     "description": "I built this a while ago to solve major file transportation issues I was having across OS and from mobile to computer quickly (airdrop became way too unreliable for huge sets of files). Some creative features are metadata copying, segmented file loading, and support for huge swaths of files (ie an archive of thousands of photos) or huge videos being able to be transported over https in local environments personal to the user.",
-    "icon": "",
+    "icon": "/icons/chillpanda.png",
     "technology": [],
     "link": {
       "title": "GitHub",
