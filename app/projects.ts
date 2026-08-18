@@ -1,8 +1,7 @@
 import {ProjectType} from "@/app/page";
-import fs from "node:fs";
+import projectsData from "@/app/projects_data.json";
 
-const data = fs.readFileSync("@/app/projects_data.json", 'utf8');
-export const projects: ProjectType[] = JSON.parse(data)
+export const projects: ProjectType[] = projectsData as ProjectType[];
 
 /*
 notes:

@@ -1,5 +1,4 @@
 import {ExperienceType} from "@/app/page";
-import fs from "node:fs";
+import experiencesData from "@/app/experiences_data.json";
 
-const data = fs.readFileSync("@/app/projects_data.json", 'utf8');
-export const experiences: ExperienceType[] = JSON.parse(data)
+export const experiences: ExperienceType[] = experiencesData as ExperienceType[];
