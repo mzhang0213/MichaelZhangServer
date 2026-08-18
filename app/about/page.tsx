@@ -1,5 +1,6 @@
 "use client"
 import React, {useEffect} from "react";
+import "../page.css";
 import {gebi} from "@/app/resources/gebi";
 import {Background} from "@/app/resources/Background";
 import BackgroundDim from "@/app/resources/BackgroundDim";
