@@ -19,9 +19,10 @@ export async function GET(req: Request){
     if (request.ok){
         const body = await request.json();
         return NextResponse.json({
-            "access_token": body.access_token
+            "access_token": body.access_token,
+            "refresh_token": body.refresh_token // only present when spotify rotates it
         })
     }else{
-        throw new Error("unable to get access token from refresh token");
+        return NextResponse.json({error: "unable to get access token from refresh token"}, {status: request.status});
     }
 }
