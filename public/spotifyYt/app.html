@@ -413,6 +413,36 @@
         resize();
       }
 
+      //destroy and rebuild the iframe on the same video + timestamp, no yt search
+      var resetPlayer = function(){
+        clearTimeout(retryTimeout);
+        var videoId = player.getVideoData().video_id;
+        var time = player.getCurrentTime();
+        var volume = player.getVolume();
+        var display = gebi("player").style.display;
+        player.destroy();
+        if (gebi("player")===null){
+          var div = document.createElement("div");
+          div.id="player";
+          gebi("centered").prepend(div);
+        }
+        gebi("player").style.display=display;
+        lastState=9999;
+        player = new YT.Player('player', {
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': function(){
+              player.setVolume(volume);
+              if (videoId) player.loadVideoById({videoId:videoId,startSeconds:time});
+            },
+            'onStateChange': onPlayerStateChange
+          }
+        });
+        resize();
+      }
+
       document.getElementById("tooFastAlert").style.display="none";
       var start = "";
       var end = "";
@@ -454,8 +484,8 @@
         }else{
           console.log("start: "+start);
           console.log("end: "+end);
-          alert("ERROR: Time save invalid\nDetails:   "+"start: "+start+", end: "+end+"\nPage refreshing after dialogue closes...");
-          window.location.reload();
+          alert("ERROR: Time save invalid\nDetails:   "+"start: "+start+", end: "+end+"\nResetting player after dialogue closes...");
+          setTimeout(resetPlayer,0); //defer, addTime runs inside the player's own state change event
         }
         start = "";
         clearInterval(intervalId);
@@ -563,6 +593,7 @@
       }
 
       var lastState = 9999;
+      var retryTimeout = "";
       var currSongIds = [];
       var currSongPos = 0;
 
@@ -588,7 +619,8 @@
           if (!checkSongInStorage())document.getElementById("saveSong").disabled=false;
           else document.getElementById("saveSong").disabled=true;
           //bugged: when seeking video, player state put on 3 for no reason
-          setTimeout(function(){
+          clearTimeout(retryTimeout); //only one pending retry, stacked ones loop forever
+          retryTimeout = setTimeout(function(){
             if (player.getPlayerState()!==1){
               console.log("cycled from onplayerstatechange")
               if (currSongPos!==currSongIds.length-1){
