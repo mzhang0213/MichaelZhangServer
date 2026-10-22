@@ -365,9 +365,32 @@
       
       const urlParams = new URLSearchParams(window.location.search);
       var accessToken = urlParams.get("access_token");
-      const refreshToken = urlParams.get("refresh_token");
+      var refreshToken = urlParams.get("refresh_token");
       console.log(accessToken)
-      var getRequest = (apiLink, access_token, callback) => {
+      var refreshCallbacks = []; //requests waiting on the in flight token refresh
+      var refreshAccessToken = function(callback){
+        refreshCallbacks.push(callback);
+        if (refreshCallbacks.length>1) return; //refresh already in flight, just wait on it
+        var req = new XMLHttpRequest();
+        req.open("GET",window.location.origin+"/spotifyYt/api/refresh_token?refresh_token="+refreshToken,true);
+        req.onload=()=>{
+          var body = {};
+          try{body=JSON.parse(req.responseText)}catch(e){}
+          if (req.status!==200||!body.access_token){
+            alert("Relogging you in :P\nGoing home...");
+            window.location=window.location.origin+"/spotifyYt?exp=true";
+            return;
+          }
+          accessToken=body.access_token;
+          if (body.refresh_token) refreshToken=body.refresh_token; //spotify sometimes rotates it
+          console.log("token refreshed");
+          var waiting = refreshCallbacks;
+          refreshCallbacks=[];
+          waiting.forEach(function(cb){cb()});
+        }
+        req.send();
+      }
+      var getRequest = (apiLink, access_token, callback, retried) => {
         var req = new XMLHttpRequest();
         req.open("GET", apiLink);
         if (access_token!==undefined)req.setRequestHeader("Authorization", "Bearer " + access_token);
@@ -378,6 +401,11 @@
             var type = "";
             callback(undefined, arr); //undefined is basically null which means nothing
           } else if (req.readyState === 4){
+            if (access_token!==undefined&&!retried&&(req.status===400||req.status===401)){
+              //expired / bad token: refresh then retry once with the new one
+              refreshAccessToken(()=>getRequest(apiLink, accessToken, callback, true));
+              return;
+            }
             console.log("REEEEEEEEEEe", undefined)
             callback(req.responseText, undefined)
           }
@@ -687,18 +715,7 @@
         })
       }
       var tokenRefreshInterval = setInterval(function(){
-        var oldToken = accessToken;
-        var req = new XMLHttpRequest()
-        req.open("GET",window.location.origin+"/spotifyYt/api/refresh_token?refresh_token="+refreshToken,true)
-        req.onload=()=>{
-          accessToken=JSON.parse(req.responseText).access_token;
-          console.log("new token: "+accessToken)
-          if (oldToken===accessToken||accessToken===undefined||accessToken===null||accessToken===""){
-            alert("Relogging you in :P\nGoing home...");
-            window.location=window.location.origin+"/spotifyYt?exp=true";
-          }else console.log("token refreshed")
-        }
-        req.send()
+        refreshAccessToken(function(){});
       },45*60*1000)
       //see if access token expired
       var resetSongColor = function() {
@@ -776,7 +793,7 @@
             console.log("getting new token, old: "+accessToken)
             var oldToken = accessToken;
             var req = new XMLHttpRequest()
-            req.open("GET",window.location.origin+"/spotifyYt/refresh_token?refresh_token="+refreshToken,true)
+            req.open("GET",window.location.origin+"/spotifyYt/api/refresh_token?refresh_token="+refreshToken,true)
             req.onload=()=>{
               accessToken=JSON.parse(req.responseText).access_token;
               console.log("new token: "+accessToken)
