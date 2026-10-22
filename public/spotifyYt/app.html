@@ -279,6 +279,9 @@
       .sliderCheckBox:checked + .sliderSlider {
         background-color: #2196F3;
       }
+      .sliderCheckBox.loopTrack:checked + .sliderSlider {
+        background-color: #1db954;
+      }
       .sliderCheckBox:checked + .sliderSlider:before {
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
@@ -567,7 +570,11 @@
         if (player.getPlayerState()===0){
           //song ended, play next
           addTime();
-          document.getElementById("next").dispatchEvent(new Event("click")); // :EZ:
+          if (repeatMode===2){
+            //loop curr track
+            player.seekTo(0);
+            player.playVideo();
+          }else document.getElementById("next").dispatchEvent(new Event("click")); // :EZ:
         } else if (player.getPlayerState()===1){
           //changed and is playing
           if (intervalId=="") trackTime();
@@ -602,6 +609,27 @@
       var fromRepeat = false;
       var currentPos = -1; //represents current position in the array
       var playedSongs = []; //PUSH IDS
+
+      //repeat slider cycles: 0 = off, 1 = loop playlist, 2 = loop curr track
+      var repeatMode = 0;
+      gebi("repeatSliderCheckBox").addEventListener("change", function(){
+        repeatMode=(repeatMode+1)%3;
+        this.checked=repeatMode!==0;
+        this.classList.toggle("loopTrack",repeatMode===2);
+        gebi("repeatSliderDescription").innerHTML=repeatMode===2?"🔂":"🔁";
+      })
+
+      //per playlist song position memory for curr session
+      var playlistMemory = {};
+      var currListKey = "";
+      var switchList = function(key){
+        if (currListKey!=="") playlistMemory[currListKey]={playedSongs:playedSongs,currentPos:currentPos,firstRandom:firstRandom};
+        var mem = playlistMemory[key] || {playedSongs:[],currentPos:-1,firstRandom:false};
+        playedSongs=mem.playedSongs;
+        currentPos=mem.currentPos;
+        firstRandom=mem.firstRandom;
+        currListKey=key;
+      }
 
       function testToken(callback){
         getRequest("https://api.spotify.com/v1/me/", accessToken, (bonesErr, theStuffData)=>{
@@ -687,6 +715,7 @@
                         for(var a=0;a<lists.length;a++){
                           lists[a].style.color=this.style.color="#94bdff";
                         }
+                        switchList("sp"+this.id.substring(8));
                         getSongs(this.id.substring(8),totalPlaylists);
                         gebi("playPause").disabled=false;
                         totalSongs=[];
@@ -1385,6 +1414,7 @@
             for(var a=0;a<lists.length;a++){
               lists[a].style.color=this.style.color="#f57373";
             }
+            switchList("yt"+this.id.substring(10));
             getYtSongs(this.id.substring(10));
             gebi("playPause").disabled=false;
             totalSongs=[];
@@ -1490,6 +1520,7 @@
       }
       document.getElementById("myQueue").addEventListener("click", function(){
         var songsData = JSON.parse(localStorage.getItem("myQueue"));
+        switchList("queue");
         document.getElementById("songs").innerHTML="";
         totalSongs = [];
         var searchBox = document.createElement("input");
